@@ -15,6 +15,23 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <!-- CLI Tool Configuration -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>shellui</ToolCommandName>
+    <PackageId>ShellUI.CLI</PackageId>
+    <Version>0.1.0-alpha</Version>
+    <Authors>Shell Technologies</Authors>
+    <Description>CLI tool for ShellUI - Blazor component library inspired by shadcn/ui</Description>
+    <PackageTags>blazor;components;cli;shadcn;tailwind;dotnet</PackageTags>
+    <PackageProjectUrl>https://github.com/Shell-Technologies/shellui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Shell-Technologies/shellui</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>
