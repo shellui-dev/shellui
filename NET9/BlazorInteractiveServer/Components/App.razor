@@ -1,19 +1,53 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
+    
+    <!-- Tailwind CSS v4 Play CDN (No Node.js required!) -->
+    <script src="https://cdn.jsdelivr.net/npm/@@tailwindcss/browser@@4"></script>
+    
+    <!-- ShellUI Theme CSS -->
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["BlazorInteractiveServer.styles.css"]" />
-    <link rel="stylesheet" href="@Assets["_content/Sysinfocus.AspNetCore.Components/styles.css"]" />
-    <link rel="stylesheet" href="@Assets["_content/Sysinfocus.AspNetCore.Components/Sysinfocus.AspNetCore.Components.bundle.scp.css"]" />
+    
+    <!-- Dark Mode Toggle Script -->
+    <script>
+        // Initialize dark mode (default to dark to save your eyes!)
+        if (!localStorage.getItem('theme')) {
+            localStorage.setItem('theme', 'dark');
+        }
+        
+        // Apply theme on load
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        // Toggle function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+    </script>
+    
     <ImportMap />
     <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
-<body>
+<body class="bg-background text-foreground">
     <Routes @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
 </body>

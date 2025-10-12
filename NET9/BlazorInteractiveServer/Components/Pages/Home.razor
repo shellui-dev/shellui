@@ -1,19 +1,85 @@
 ﻿@page "/"
+@using ShellUI.Components
 
-<PageTitle>Home</PageTitle>
+<PageTitle>ShellUI - Button Demo</PageTitle>
 
-<div class="flex-col">
-    <h1>Hello, world!</h1>
-    <Button Text="Click Me!" OnClick="() => showAlert = true" />
-    @if (showAlert)
-    {
-        <Alert Title="Sysinfocus simple/ui" Description="Congratulations! you have successfully installed Sysinfocus simple/ui components." />
-        <Separator />
-        <AboutSysinfocus />
-    }
+<div class="p-8 max-w-4xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold mb-2 text-foreground">ShellUI Button Component</h1>
+        <p class="text-muted-foreground">Beautiful, accessible buttons inspired by shadcn/ui</p>
+    </div>
+
+    <div class="space-y-8">
+        <!-- Variants Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Variants</h2>
+            <div class="flex flex-wrap gap-4">
+                <Button Variant="default" OnClick="HandleClick">Default</Button>
+                <Button Variant="secondary" OnClick="HandleClick">Secondary</Button>
+                <Button Variant="destructive" OnClick="HandleClick">Destructive</Button>
+                <Button Variant="outline" OnClick="HandleClick">Outline</Button>
+                <Button Variant="ghost" OnClick="HandleClick">Ghost</Button>
+                <Button Variant="link" OnClick="HandleClick">Link</Button>
+            </div>
+        </section>
+
+        <!-- Sizes Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Sizes</h2>
+            <div class="flex flex-wrap items-center gap-4">
+                <Button Size="sm" OnClick="HandleClick">Small</Button>
+                <Button Size="md" OnClick="HandleClick">Medium</Button>
+                <Button Size="lg" OnClick="HandleClick">Large</Button>
+                <Button Size="icon" OnClick="HandleClick">+</Button>
+            </div>
+        </section>
+
+        <!-- States Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">States</h2>
+            <div class="flex flex-wrap gap-4">
+                <Button OnClick="HandleClick">Normal</Button>
+                <Button Disabled="true">Disabled</Button>
+                <Button IsLoading="@isLoading" OnClick="HandleLoadingClick">
+                    @(isLoading ? "Loading..." : "Click to Load")
+                </Button>
+            </div>
+        </section>
+
+        <!-- Click Counter -->
+        @if (clickCount > 0)
+        {
+            <div class="bg-accent border border-border rounded-lg p-4">
+                <p class="text-accent-foreground font-medium">
+                    Button clicked @clickCount time(s)!
+                </p>
+            </div>
+        }
+    </div>
+
+    <div class="mt-12 p-6 bg-muted rounded-lg border border-border">
+        <h3 class="font-semibold mb-2 text-foreground">Installation</h3>
+        <code class="text-sm px-2 py-1 bg-background rounded border border-border">dotnet shellui add button</code>
+        <p class="text-sm text-muted-foreground mt-2">
+            Component will be copied to your Components/UI folder for full customization!
+        </p>
+    </div>
 </div>
 
-@code
-{
-    bool showAlert;
+@code {
+    private int clickCount = 0;
+    private bool isLoading = false;
+
+    private async Task HandleClick(MouseEventArgs args)
+    {
+        clickCount++;
+    }
+
+    private async Task HandleLoadingClick(MouseEventArgs args)
+    {
+        isLoading = true;
+        clickCount++;
+        await Task.Delay(2000); // Simulate async operation
+        isLoading = false;
+    }
 }

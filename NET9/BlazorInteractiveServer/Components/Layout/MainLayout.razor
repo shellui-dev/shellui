@@ -1,26 +1,45 @@
 ﻿@inherits LayoutComponentBase
-@inject Initialization init
+@inject IJSRuntime JSRuntime
 
-<div class="container" @onclick="init.HandleMainLayoutClickEvent">
-    <div class="flex jcsb mb1">
-        <h3 class="normal large">Brand Name</h3>
+<div class="min-h-screen bg-background text-foreground">
+    <header class="border-b border-border bg-card">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-foreground">ShellUI</h1>
+                <nav class="flex items-center gap-4">
+                    <a href="/" class="text-sm hover:underline text-muted-foreground hover:text-foreground">Home</a>
+                    <a href="/docs" class="text-sm hover:underline text-muted-foreground hover:text-foreground">Docs</a>
+                    <a href="https://github.com/Shell-Technologies/shellui" target="_blank" class="text-sm hover:underline text-muted-foreground hover:text-foreground">GitHub</a>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button 
+                        onclick="toggleTheme()" 
+                        class="ml-2 p-2 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+                        title="Toggle theme">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                            </path>
+                        </svg>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-        <Icon Name="@(init.CurrentTheme == "light" ? "dark_mode" : "light_mode")"
-              OnClick="init.ToggleTheme" />
-    </div>
-    @Body
+    <main>
+        @Body
+    </main>
+
+    <footer class="border-t border-border mt-12 bg-card">
+        <div class="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
+            Built with ShellUI - CLI-first Blazor component library
+        </div>
+    </footer>
 </div>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+    <a class="dismiss">x</a>
 </div>
-
-@code
-{
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender) await init.InitializeTheme();
-    }
-}

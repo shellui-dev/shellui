@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sysinfocus.AspNetCore.Components" Version="0.0.1" />
+    <ProjectReference Include="..\..\src\ShellUI.Components\ShellUI.Components.csproj" />
   </ItemGroup>
 
 </Project>
