@@ -40,12 +40,12 @@ class Program
         command.AddOption(forceOption);
         command.AddOption(styleOption);
 
-        command.SetHandler((force, style) =>
+        command.SetHandler(async (force, style) =>
         {
             try
             {
                 AnsiConsole.Write(new FigletText("ShellUI").Color(Color.Blue));
-                InitService.Initialize(style, force);
+                await InitService.InitializeAsync(style, force);
             }
             catch (Exception ex)
             {
