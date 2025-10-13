@@ -7,7 +7,8 @@ public static class ComponentRegistry
 {
     public static readonly Dictionary<string, ComponentMetadata> Components = new()
     {
-        { "button", ButtonTemplate.Metadata }
+        { "button", ButtonTemplate.Metadata },
+        { "theme-toggle", ThemeToggleTemplate.Metadata }
     };
 
     public static string? GetComponentContent(string componentName)
@@ -15,6 +16,7 @@ public static class ComponentRegistry
         return componentName.ToLower() switch
         {
             "button" => ButtonTemplate.Content,
+            "theme-toggle" => ThemeToggleTemplate.Content,
             _ => null
         };
     }
