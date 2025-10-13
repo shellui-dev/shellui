@@ -2,6 +2,7 @@
 using Spectre.Console;
 using ShellUI.Templates;
 using ShellUI.Core.Models;
+using ShellUI.CLI.Services;
 
 namespace ShellUI.CLI;
 
@@ -41,22 +42,15 @@ class Program
 
         command.SetHandler((force, style) =>
         {
-            AnsiConsole.Write(new FigletText("ShellUI").Color(Color.Blue));
-            AnsiConsole.MarkupLine("[green]Initializing ShellUI...[/]");
-            AnsiConsole.MarkupLine($"[dim]Style: {style}[/]");
-            
-            if (force)
+            try
             {
-                AnsiConsole.MarkupLine("[yellow]Force mode enabled[/]");
+                AnsiConsole.Write(new FigletText("ShellUI").Color(Color.Blue));
+                InitService.Initialize(style, force);
             }
-            
-            AnsiConsole.MarkupLine("\n[yellow]Coming soon in Milestone 1![/]");
-            AnsiConsole.MarkupLine("[dim]This will:[/]");
-            AnsiConsole.MarkupLine("[dim]  - Detect your project type (Server/WASM/SSR)[/]");
-            AnsiConsole.MarkupLine("[dim]  - Create Components/UI folder[/]");
-            AnsiConsole.MarkupLine("[dim]  - Download Tailwind standalone CLI (no Node.js!)[/]");
-            AnsiConsole.MarkupLine("[dim]  - Create shellui.json config[/]");
-            AnsiConsole.MarkupLine("[dim]  - Set up Tailwind CSS v4[/]");
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
+            }
         }, forceOption, styleOption);
 
         return command;
@@ -81,54 +75,14 @@ class Program
 
         command.SetHandler((components, force) =>
         {
-            AnsiConsole.MarkupLine("[green]Adding components:[/]\n");
-            
-            // Parse comma-separated components
-            var componentList = new List<string>();
-            foreach (var comp in components)
+            try
             {
-                componentList.AddRange(comp.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+                ComponentInstaller.InstallComponents(components, force);
             }
-            
-            var table = new Table();
-            table.AddColumn("Component");
-            table.AddColumn("Status");
-            table.AddColumn("Version");
-            
-            foreach (var componentName in componentList)
+            catch (Exception ex)
             {
-                var exists = ComponentRegistry.Exists(componentName);
-                if (exists)
-                {
-                    var metadata = ComponentRegistry.GetMetadata(componentName);
-                    table.AddRow(
-                        componentName,
-                        "[yellow]Implementation pending[/]",
-                        $"[dim]{metadata?.Version ?? "0.1.0"}[/]"
-                    );
-                }
-                else
-                {
-                    table.AddRow(
-                        componentName,
-                        "[red]Not found[/]",
-                        "[dim]-[/]"
-                    );
-                }
+                AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
             }
-            
-            AnsiConsole.Write(table);
-            
-            if (force)
-            {
-                AnsiConsole.MarkupLine("\n[yellow]Force mode: Will overwrite existing components[/]");
-            }
-            
-            AnsiConsole.MarkupLine("\n[dim]Multiple component syntax supported:[/]");
-            AnsiConsole.MarkupLine("[dim]  dotnet shellui add button card alert[/]");
-            AnsiConsole.MarkupLine("[dim]  dotnet shellui add button,card,alert[/]");
-            
-            AnsiConsole.MarkupLine("\n[yellow]Component copying implementation coming soon![/]");
         }, componentsArg, forceOption);
 
         return command;
