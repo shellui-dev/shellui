@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * ShellUI - Customize your theme here!
+ *
+ * Add your color variables and theme customizations below.
+ * These will be processed by the Tailwind standalone CLI.
+ *
+ * Example:
+ *
+ * @theme {
+ *   --color-primary: #3b82f6;
+ *   --color-secondary: #64748b;
+ * }
+ */

@@ -11,4 +11,6 @@
     <ProjectReference Include="..\..\src\ShellUI.Components\ShellUI.Components.csproj" />
   </ItemGroup> -->
 
+  <Import Project="Build\ShellUI.targets" />
+
 </Project>

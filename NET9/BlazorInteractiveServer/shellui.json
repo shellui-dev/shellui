@@ -10,9 +10,9 @@
   },
   "InstalledComponents": [
     {
-      "Name": "button",
+      "Name": "theme-toggle",
       "Version": "0.1.0",
-      "InstalledAt": "2025-10-12T02:00:23.4449527Z",
+      "InstalledAt": "2025-10-13T22:11:02.8329485Z",
       "IsCustomized": false
     }
   ],
