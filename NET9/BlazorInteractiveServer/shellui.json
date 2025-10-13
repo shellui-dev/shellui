@@ -1,0 +1,20 @@
+{
+  "Schema": "https://shellui.dev/schema.json",
+  "Style": "default",
+  "ComponentsPath": "Components/UI",
+  "Tailwind": {
+    "Enabled": true,
+    "Version": "4.1.0",
+    "ConfigPath": "tailwind.config.js",
+    "CssPath": "wwwroot/app.css"
+  },
+  "InstalledComponents": [
+    {
+      "Name": "button",
+      "Version": "0.1.0",
+      "InstalledAt": "2025-10-12T02:00:23.4449527Z",
+      "IsCustomized": false
+    }
+  ],
+  "ProjectType": 1
+}
