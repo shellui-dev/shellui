@@ -1,0 +1,24 @@
+@namespace BlazorInteractiveServer.Components.UI
+
+<label class="@CssClass" @attributes="AdditionalAttributes">
+    @ChildContent
+</label>
+
+@code {
+    [Parameter] public string For { get; set; } = "";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string CssClass => BuildCssClass();
+
+    private string BuildCssClass()
+    {
+        var classes = new List<string>
+        {
+            "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        };
+
+        return string.Join(" ", classes);
+    }
+}
