@@ -5,7 +5,4 @@ export default {
     './Pages/**/*.{razor,html,cshtml}',
   ],
   darkMode: 'class',
-  theme: {
-    extend: {},
-  },
 }
