@@ -8,7 +8,14 @@ public static class ComponentRegistry
     public static readonly Dictionary<string, ComponentMetadata> Components = new()
     {
         { "button", ButtonTemplate.Metadata },
-        { "theme-toggle", ThemeToggleTemplate.Metadata }
+        { "theme-toggle", ThemeToggleTemplate.Metadata },
+        { "input", InputTemplate.Metadata },
+        { "card", CardTemplate.Metadata },
+        { "alert", AlertTemplate.Metadata },
+        { "badge", BadgeTemplate.Metadata },
+        { "label", LabelTemplate.Metadata },
+        { "textarea", TextareaTemplate.Metadata },
+        { "dialog", DialogTemplate.Metadata }
     };
 
     public static string? GetComponentContent(string componentName)
@@ -17,6 +24,13 @@ public static class ComponentRegistry
         {
             "button" => ButtonTemplate.Content,
             "theme-toggle" => ThemeToggleTemplate.Content,
+            "input" => InputTemplate.Content,
+            "card" => CardTemplate.Content,
+            "alert" => AlertTemplate.Content,
+            "badge" => BadgeTemplate.Content,
+            "label" => LabelTemplate.Content,
+            "textarea" => TextareaTemplate.Content,
+            "dialog" => DialogTemplate.Content,
             _ => null
         };
     }
