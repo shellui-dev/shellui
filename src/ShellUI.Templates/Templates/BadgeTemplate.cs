@@ -17,54 +17,16 @@ public static class BadgeTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@CssClass"" @attributes=""AdditionalAttributes"">
+<span class=""inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 @(Variant == ""secondary"" ? ""border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"" : Variant == ""destructive"" ? ""border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80"" : Variant == ""outline"" ? ""text-foreground"" : ""border-transparent bg-primary text-primary-foreground hover:bg-primary/80"")"">
     @ChildContent
-</div>
+</span>
 
 @code {
-    [Parameter] public string Variant { get; set; } = ""default"";
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter]
+    public string Variant { get; set; } = ""default"";
 
-    private string CssClass => BuildCssClass();
-
-    private string BuildCssClass()
-    {
-        var classes = new List<string>
-        {
-            ""inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold"",
-            ""transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2""
-        };
-
-        // Add variant-specific styling
-        switch (Variant.ToLower())
-        {
-            case ""secondary"":
-                classes.Add(""border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"");
-                break;
-            case ""destructive"":
-                classes.Add(""border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80"");
-                break;
-            case ""outline"":
-                classes.Add(""text-foreground"");
-                break;
-            case ""success"":
-                classes.Add(""border-transparent bg-green-500 text-white hover:bg-green-600"");
-                break;
-            case ""warning"":
-                classes.Add(""border-transparent bg-yellow-500 text-white hover:bg-yellow-600"");
-                break;
-            case ""info"":
-                classes.Add(""border-transparent bg-blue-500 text-white hover:bg-blue-600"");
-                break;
-            default:
-                classes.Add(""border-transparent bg-primary text-primary-foreground hover:bg-primary/80"");
-                break;
-        }
-
-        return string.Join("" "", classes);
-    }
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 }
 ";
 }

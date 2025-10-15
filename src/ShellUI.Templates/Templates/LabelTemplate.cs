@@ -17,27 +17,22 @@ public static class LabelTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<label class=""@CssClass"" @attributes=""AdditionalAttributes"">
+<label 
+    for=""@For""
+    class=""text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70""
+    @attributes=""AdditionalAttributes"">
     @ChildContent
 </label>
 
 @code {
-    [Parameter] public string For { get; set; } = """";
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter]
+    public string? For { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private string CssClass => BuildCssClass();
-
-    private string BuildCssClass()
-    {
-        var classes = new List<string>
-        {
-            ""text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70""
-        };
-
-        return string.Join("" "", classes);
-    }
 }
 ";
 }

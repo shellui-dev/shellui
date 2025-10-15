@@ -17,18 +17,21 @@ public static class CardTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@CssClass"" @attributes=""AdditionalAttributes"">
+<div class=""rounded-lg border border-border bg-card text-card-foreground shadow-sm"">
     @if (Header != null)
     {
         <div class=""flex flex-col space-y-1.5 p-6"">
             @Header
         </div>
     }
-
-    <div class=""p-6 pt-0"">
-        @ChildContent
-    </div>
-
+    
+    @if (ChildContent != null)
+    {
+        <div class=""p-6 pt-0"">
+            @ChildContent
+        </div>
+    }
+    
     @if (Footer != null)
     {
         <div class=""flex items-center p-6 pt-0"">
@@ -38,23 +41,14 @@ public static class CardTemplate
 </div>
 
 @code {
-    [Parameter] public RenderFragment? Header { get; set; }
-    [Parameter] public RenderFragment? Footer { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter]
+    public RenderFragment? Header { get; set; }
 
-    private string CssClass => BuildCssClass();
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
-    private string BuildCssClass()
-    {
-        var classes = new List<string>
-        {
-            ""rounded-lg border bg-card text-card-foreground shadow-sm""
-        };
-
-        return string.Join("" "", classes);
-    }
+    [Parameter]
+    public RenderFragment? Footer { get; set; }
 }
 ";
 }
