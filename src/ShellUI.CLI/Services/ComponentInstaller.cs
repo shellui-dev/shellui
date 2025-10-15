@@ -71,7 +71,30 @@ public class ComponentInstaller
             AnsiConsole.MarkupLine($"[red]Failed: {string.Join(", ", failedComponents)}[/]");
     }
 
+    public static void InstallComponent(string componentName, ComponentMetadata metadata, bool force, bool skipConfig = false)
+    {
+        var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
+        var configJson = File.ReadAllText(configPath);
+        var config = JsonSerializer.Deserialize<ShellUIConfig>(configJson);
+        
+        if (config == null) return;
+        
+        var projectInfo = ProjectDetector.DetectProject();
+        var result = InstallComponentInternal(componentName, config, projectInfo, force);
+        
+        if (!skipConfig && result == InstallResult.Success)
+        {
+            var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(configPath, updatedJson);
+        }
+    }
+
     private static InstallResult InstallComponent(string componentName, ShellUIConfig config, ProjectInfo projectInfo, bool force)
+    {
+        return InstallComponentInternal(componentName, config, projectInfo, force);
+    }
+
+    private static InstallResult InstallComponentInternal(string componentName, ShellUIConfig config, ProjectInfo projectInfo, bool force)
     {
         if (!ComponentRegistry.Exists(componentName))
         {
