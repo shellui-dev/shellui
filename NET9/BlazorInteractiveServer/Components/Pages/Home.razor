@@ -1,16 +1,22 @@
 ﻿@page "/"
 
-<PageTitle>ShellUI - Button Demo</PageTitle>
+<PageTitle>ShellUI - Component Demo</PageTitle>
 
-<div class="p-8 max-w-4xl mx-auto">
-    <!-- Theme Toggle -->
-    <div class="flex justify-end mb-4">
-        <ThemeToggle />
+<div class="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-foreground">ShellUI Components</h1>
+        <p class="text-sm sm:text-base text-muted-foreground">Beautiful, accessible components inspired by shadcn/ui</p>
     </div>
 
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold mb-2 text-foreground">ShellUI Button Component</h1>
-        <p class="text-muted-foreground">Beautiful, accessible buttons inspired by shadcn/ui</p>
+    <!-- Responsive Design Info -->
+    <div class="mb-8 rounded-lg border border-border bg-muted/50 p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-semibold mb-2 text-foreground">Responsive Design</h2>
+        <p class="text-sm text-muted-foreground mb-3">All components support Tailwind's responsive utilities. Resize your browser to see it in action!</p>
+        <div class="flex flex-col sm:flex-row gap-2">
+            <Button class="w-full sm:w-auto" Size="sm">Mobile First</Button>
+            <Button class="hidden sm:inline-flex">Tablet+</Button>
+            <Button class="hidden md:inline-flex">Desktop+</Button>
+        </div>
     </div>
 
     <div class="space-y-8">
@@ -50,6 +56,73 @@
             </div>
         </section>
 
+        <!-- New Components Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Form Components</h2>
+            <div class="space-y-4 max-w-md">
+                <div>
+                    <Label>Name</Label>
+                    <Input @bind-Value="userName" Placeholder="Enter your name" />
+                </div>
+                <div>
+                    <Label>Email</Label>
+                    <Input @bind-Value="userEmail" Type="email" Placeholder="Enter your email" />
+                </div>
+                <div>
+                    <Label>Message</Label>
+                    <Textarea @bind-Value="userMessage" Placeholder="Enter your message" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Cards and Alerts Section -->
+        <div class="grid md:grid-cols-2 gap-6">
+            <section class="border border-border rounded-lg p-6 bg-card">
+                <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Card</h2>
+                <Card>
+                    <Header>
+                        <h3 class="text-lg font-semibold">Card Title</h3>
+                        <p class="text-sm text-muted-foreground">Card description goes here.</p>
+                    </Header>
+                    <ChildContent>
+                        <p>This is the main content of the card. It can contain any content you want.</p>
+                    </ChildContent>
+                    <Footer>
+                        <Button Variant="outline" Size="sm">Action</Button>
+                    </Footer>
+                </Card>
+            </section>
+
+            <section class="border border-border rounded-lg p-6 bg-card">
+                <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Alerts</h2>
+                <div class="space-y-4">
+                    <Alert Variant="default" Title="Info">
+                        This is an informational alert.
+                    </Alert>
+                    <Alert Variant="success" Title="Success">
+                        Operation completed successfully!
+                    </Alert>
+                    <Alert Variant="warning" Title="Warning">
+                        Please check your input.
+                    </Alert>
+                </div>
+            </section>
+        </div>
+
+        <!-- Badges and Dialog Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Badges & Dialog</h2>
+            <div class="flex flex-wrap gap-4 mb-4">
+                <Badge Variant="default">Default</Badge>
+                <Badge Variant="secondary">Secondary</Badge>
+                <Badge Variant="destructive">Destructive</Badge>
+                <Badge Variant="success">Success</Badge>
+                <Badge Variant="warning">Warning</Badge>
+                <Badge Variant="info">Info</Badge>
+            </div>
+            <Button @onclick="OpenDialog">Open Dialog</Button>
+        </section>
+
         <!-- Click Counter -->
         @if (clickCount > 0)
         {
@@ -58,8 +131,8 @@
                     Button clicked @clickCount time(s)!
                 </p>
             </div>
-        }
-    </div>
+    }
+</div>
 
     <div class="mt-12 p-6 bg-muted rounded-lg border border-border">
         <h3 class="font-semibold mb-2 text-foreground">Installation</h3>
@@ -68,11 +141,28 @@
             Component will be copied to your Components/UI folder for full customization!
         </p>
     </div>
+
+    <!-- Demo Dialog -->
+    <Dialog IsOpen="isDialogOpen" Title="ShellUI Dialog" Description="This is a demo of the Dialog component." OnClose="CloseDialog">
+        <ChildContent>
+            <p>This dialog demonstrates the ShellUI Dialog component. You can put any content here!</p>
+        </ChildContent>
+        <Footer>
+            <Button Variant="outline" @onclick="CloseDialog">Cancel</Button>
+            <Button @onclick="CloseDialog">Confirm</Button>
+        </Footer>
+    </Dialog>
 </div>
 
 @code {
     private int clickCount = 0;
     private bool isLoading = false;
+    private bool isDialogOpen = false;
+
+    // Form inputs
+    private string userName = "";
+    private string userEmail = "";
+    private string userMessage = "";
 
     private void HandleClick(MouseEventArgs args)
     {
@@ -85,5 +175,15 @@
         clickCount++;
         await Task.Delay(2000); // Simulate async operation
         isLoading = false;
+    }
+
+    private void OpenDialog()
+    {
+        isDialogOpen = true;
+    }
+
+    private void CloseDialog()
+    {
+        isDialogOpen = false;
     }
 }
