@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@inject IJSRuntime JSRuntime
 
 <div class="min-h-screen bg-background text-foreground">
     <header class="border-b border-border bg-card">
@@ -11,17 +10,8 @@
                     <a href="/docs" class="text-sm hover:underline text-muted-foreground hover:text-foreground">Docs</a>
                     <a href="https://github.com/Shell-Technologies/shellui" target="_blank" class="text-sm hover:underline text-muted-foreground hover:text-foreground">GitHub</a>
                     
-                    <!-- Dark Mode Toggle -->
-                    <button 
-                        onclick="toggleTheme()" 
-                        class="ml-2 p-2 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-                        title="Toggle theme">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                            </path>
-                        </svg>
-                    </button>
+                    <!-- Theme Toggle Component -->
+                    <ThemeToggle />
                 </nav>
             </div>
         </div>
