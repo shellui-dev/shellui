@@ -104,33 +104,14 @@ class Program
 
         command.SetHandler((installed, available) =>
         {
-            AnsiConsole.MarkupLine("[blue]ShellUI Components[/]\n");
-            
-            var table = new Table();
-            table.AddColumn("Component");
-            table.AddColumn("Version");
-            table.AddColumn("Category");
-            table.AddColumn("Description");
-            
-            // Get components from registry
-            foreach (var component in ComponentRegistry.Components.Values)
+            try
             {
-                if (component.IsAvailable)
-                {
-                    table.AddRow(
-                        component.Name,
-                        $"[dim]{component.Version}[/]",
-                        component.Category.ToString(),
-                        component.Description
-                    );
-                }
+                ComponentManager.ListComponents(installed, available);
             }
-            
-            AnsiConsole.Write(table);
-            
-            var totalCount = ComponentRegistry.Components.Count;
-            AnsiConsole.MarkupLine($"\n[green]{totalCount} component(s) available[/]");
-            AnsiConsole.MarkupLine("[yellow]More coming soon: Target 40+ components![/]");
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
+            }
         }, installedOption, availableOption);
 
         return command;
@@ -150,12 +131,14 @@ class Program
 
         command.SetHandler((components) =>
         {
-            AnsiConsole.MarkupLine("[red]Removing components:[/]");
-            foreach (var component in components)
+            try
             {
-                AnsiConsole.MarkupLine($"  - {component}");
+                ComponentManager.RemoveComponents(components);
             }
-            AnsiConsole.MarkupLine("\n[yellow]Coming soon in Milestone 1![/]");
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
+            }
         }, componentsArg);
 
         return command;
@@ -180,19 +163,14 @@ class Program
 
         command.SetHandler((components, all) =>
         {
-            if (all || components.Length == 0)
+            try
             {
-                AnsiConsole.MarkupLine("[blue]Updating all components...[/]");
+                ComponentManager.UpdateComponents(components, all);
             }
-            else
+            catch (Exception ex)
             {
-                AnsiConsole.MarkupLine("[blue]Updating specific components:[/]");
-                foreach (var component in components)
-                {
-                    AnsiConsole.MarkupLine($"  - {component}");
-                }
+                AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message}");
             }
-            AnsiConsole.MarkupLine("\n[yellow]Coming soon in Milestone 1![/]");
         }, componentsArg, allOption);
 
         return command;
