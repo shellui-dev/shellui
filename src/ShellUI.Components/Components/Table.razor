@@ -1,0 +1,19 @@
+@namespace ShellUI.Components
+
+<div class="relative w-full overflow-auto @ClassName" @attributes="AdditionalAttributes">
+    <table class="w-full caption-bottom text-sm">
+        @ChildContent
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+

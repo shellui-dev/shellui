@@ -1,0 +1,39 @@
+@namespace ShellUI.Components
+
+<button
+    type="button"
+    role="switch"
+    aria-checked="@Checked"
+    @onclick="HandleClick"
+    disabled="@Disabled"
+    class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 @(Checked ? "bg-primary" : "bg-input") @ClassName"
+    @attributes="AdditionalAttributes">
+    <span class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform @(Checked ? "translate-x-5" : "translate-x-0")"></span>
+</button>
+
+@code {
+    [Parameter]
+    public bool Checked { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> CheckedChanged { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public string ClassName { get; set; } = "";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private async Task HandleClick()
+    {
+        if (!Disabled)
+        {
+            Checked = !Checked;
+            await CheckedChanged.InvokeAsync(Checked);
+        }
+    }
+}
+

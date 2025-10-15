@@ -1,0 +1,41 @@
+@namespace ShellUI.Components
+
+<div class="relative @ClassName" @attributes="AdditionalAttributes">
+    <button type="button"
+            @onclick="Toggle"
+            class="flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+        @Title
+    </button>
+    
+    @if (IsOpen)
+    {
+        <div class="absolute left-0 top-full z-50 mt-1 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover p-1 shadow-md animate-in fade-in-0 zoom-in-95">
+            @ChildContent
+        </div>
+    }
+</div>
+
+@if (IsOpen)
+{
+    <div class="fixed inset-0 z-40" @onclick="Close"></div>
+}
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = "";
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    
+    private bool IsOpen { get; set; }
+    
+    private void Toggle() => IsOpen = !IsOpen;
+    private void Close() => IsOpen = false;
+}
+

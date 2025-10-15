@@ -1,0 +1,25 @@
+@namespace ShellUI.Components
+
+<div class="@ClassName" @attributes="AdditionalAttributes">
+    <div class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+        @TabHeaders
+    </div>
+    <div class="mt-2">
+        @TabContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? TabHeaders { get; set; }
+
+    [Parameter]
+    public RenderFragment? TabContent { get; set; }
+
+    [Parameter]
+    public string ClassName { get; set; } = "";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+

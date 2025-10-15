@@ -1,0 +1,19 @@
+@namespace ShellUI.Components
+
+<nav class="@("relative z-10 flex max-w-max flex-1 items-center justify-center " + ClassName)" @attributes="AdditionalAttributes">
+    <div class="group flex flex-1 list-none items-center justify-center space-x-1">
+        @ChildContent
+    </div>
+</nav>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+

@@ -1,0 +1,44 @@
+@namespace ShellUI.Components
+
+<div class="relative @ClassName" @attributes="AdditionalAttributes">
+    <button type="button"
+            @onclick="Toggle"
+            class="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+        @Title
+        @if (HasContent)
+        {
+            <svg class="@("relative top-[1px] ml-1 h-3 w-3 transition duration-200 " + (IsOpen ? "rotate-180" : ""))" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        }
+    </button>
+    
+    @if (IsOpen && HasContent)
+    {
+        <div class="absolute left-0 top-full mt-1 w-56 rounded-md border border-border bg-popover p-1 shadow-lg animate-in fade-in-0 zoom-in-95">
+            @ChildContent
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = "";
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public bool HasContent { get; set; } = true;
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    
+    private bool IsOpen { get; set; }
+    
+    private void Toggle() => IsOpen = !IsOpen;
+}
+

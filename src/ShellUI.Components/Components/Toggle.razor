@@ -1,0 +1,55 @@
+@namespace ShellUI.Components
+
+<button type="button"
+        @onclick="HandleClick"
+        disabled="@Disabled"
+        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @GetVariantClass() @GetSizeClass() @ClassName"
+        @attributes="AdditionalAttributes">
+    @ChildContent
+</button>
+
+@code {
+    [Parameter]
+    public bool Pressed { get; set; }
+    
+    [Parameter]
+    public EventCallback<bool> PressedChanged { get; set; }
+    
+    [Parameter]
+    public string Variant { get; set; } = "default";
+    
+    [Parameter]
+    public string Size { get; set; } = "default";
+    
+    [Parameter]
+    public bool Disabled { get; set; }
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    
+    private async Task HandleClick()
+    {
+        Pressed = !Pressed;
+        await PressedChanged.InvokeAsync(Pressed);
+    }
+    
+    private string GetVariantClass() => Variant switch
+    {
+        "outline" => Pressed ? "bg-accent" : "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+        _ => Pressed ? "bg-accent text-accent-foreground" : "bg-transparent hover:bg-muted hover:text-muted-foreground"
+    };
+    
+    private string GetSizeClass() => Size switch
+    {
+        "sm" => "h-9 px-2.5",
+        "lg" => "h-11 px-5",
+        _ => "h-10 px-3"
+    };
+}
+
