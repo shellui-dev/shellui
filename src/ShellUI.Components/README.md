@@ -13,19 +13,29 @@ Beautiful, accessible Blazor components inspired by shadcn/ui. A CLI-first compo
 
 ## Quick Start
 
-### 1. Install the CLI tool
+### Option 1: CLI Tool (Recommended)
+
+The CLI tool provides the best developer experience with automatic setup:
+
+#### 1. Install the CLI tool
 
 ```bash
 dotnet tool install -g ShellUI.CLI
 ```
 
-### 2. Initialize ShellUI in your project
+#### 2. Initialize ShellUI in your project
 
 ```bash
 dotnet shellui init
 ```
 
-### 3. Add components
+This automatically:
+- ✅ Downloads Tailwind CSS CLI (standalone, no Node.js required)
+- ✅ Creates CSS files and configuration
+- ✅ Sets up MSBuild integration for auto-building
+- ✅ Creates component folders
+
+#### 3. Add components
 
 ```bash
 # Add a button component
@@ -36,6 +46,88 @@ dotnet shellui add input card dialog
 
 # List available components
 dotnet shellui list
+```
+
+### Option 2: NuGet Package
+
+For manual setup or existing projects:
+
+#### 1. Install the package
+
+```bash
+dotnet add package ShellUI.Components
+```
+
+#### 2. Set up Tailwind CSS
+
+Choose one of these methods:
+
+**Method A: Tailwind CLI (Recommended)**
+```bash
+# Download Tailwind CLI (standalone)
+curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-windows-x64.exe
+# Or for Linux/Mac: tailwindcss-linux-x64 or tailwindcss-macos-x64
+
+# Create input.css
+echo '@tailwind base;
+@tailwind components;
+@tailwind utilities;' > wwwroot/input.css
+
+# Create tailwind.config.js
+echo 'module.exports = {
+  content: ["./**/*.{razor,html,cs}"],
+  theme: { extend: {} },
+  plugins: []
+}' > tailwind.config.js
+
+# Build CSS
+./tailwindcss -i wwwroot/input.css -o wwwroot/app.css
+```
+
+**Method B: npm (if you prefer Node.js)**
+```bash
+# Install Tailwind CSS
+npm install -D tailwindcss
+npx tailwindcss init
+
+# Update tailwind.config.js
+echo 'module.exports = {
+  content: ["./**/*.{razor,html,cs}"],
+  theme: { extend: {} },
+  plugins: []
+}' > tailwind.config.js
+
+# Create input.css
+echo '@tailwind base;
+@tailwind components;
+@tailwind utilities;' > wwwroot/input.css
+
+# Build CSS
+npx tailwindcss -i wwwroot/input.css -o wwwroot/app.css
+```
+
+#### 3. Add to your layout
+
+```html
+<!-- In your MainLayout.razor or App.razor -->
+<link href="~/app.css" rel="stylesheet" />
+```
+
+#### 4. Use components
+
+```html
+@using ShellUI.Components
+
+<Button Variant="primary">Click me</Button>
+<Input Placeholder="Enter text..." />
+<Card>
+    <CardHeader>
+        <CardTitle>Hello World</CardTitle>
+    </CardHeader>
+    <CardContent>
+        <p>This is a card component!</p>
+    </CardContent>
+</Card>
 ```
 
 ## Available Components
@@ -92,15 +184,13 @@ dotnet shellui list
 - **Toggle** - Toggle button
 - **ThemeToggle** - Dark/light mode toggle
 
-## Styling
+## Bootstrap Compatibility
 
-ShellUI components are styled with Tailwind CSS. Make sure you have Tailwind CSS configured in your project:
+ShellUI components work alongside Bootstrap. You can:
 
-```bash
-# Install Tailwind CSS
-npm install -D tailwindcss
-npx tailwindcss init
-```
+- **Keep both** - ShellUI and Bootstrap can coexist
+- **Remove Bootstrap** - Delete Bootstrap references if you prefer Tailwind-only
+- **Gradual migration** - Use ShellUI for new components, keep Bootstrap for existing ones
 
 ## Customization
 
