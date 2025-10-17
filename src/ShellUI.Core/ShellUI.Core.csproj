@@ -4,6 +4,22 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>ShellUI.Core</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Shell Technologies</Authors>
+    <Company>Shell Technologies</Company>
+    <Product>ShellUI</Product>
+    <Description>Core models and interfaces for ShellUI component library.</Description>
+    <PackageProjectUrl>https://github.com/shelltechlabs/shellui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shelltechlabs/shellui</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>blazor;components;ui;shellui;core</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
 </Project>
