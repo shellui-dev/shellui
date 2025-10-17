@@ -96,7 +96,6 @@
     --container-xs: 20rem;
     --container-md: 28rem;
     --container-lg: 32rem;
-    --container-2xl: 42rem;
     --container-4xl: 56rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
@@ -364,9 +363,6 @@
   .mx-2 {
     margin-inline: calc(var(--spacing) * 2);
   }
-  .mx-4 {
-    margin-inline: calc(var(--spacing) * 4);
-  }
   .mx-auto {
     margin-inline: auto;
   }
@@ -520,9 +516,6 @@
   .max-h-60 {
     max-height: calc(var(--spacing) * 60);
   }
-  .max-h-96 {
-    max-height: calc(var(--spacing) * 96);
-  }
   .max-h-screen {
     max-height: 100vh;
   }
@@ -591,9 +584,6 @@
   }
   .w-full {
     width: 100%;
-  }
-  .max-w-2xl {
-    max-width: var(--container-2xl);
   }
   .max-w-4xl {
     max-width: var(--container-4xl);
@@ -683,9 +673,6 @@
   }
   .items-center {
     align-items: center;
-  }
-  .items-start {
-    align-items: flex-start;
   }
   .justify-between {
     justify-content: space-between;
@@ -909,9 +896,6 @@
   .bg-muted {
     background-color: var(--muted);
   }
-  .bg-muted\/20 {
-    background-color: color-mix(in oklab, var(--muted) 20%, transparent);
-  }
   .bg-muted\/50 {
     background-color: color-mix(in oklab, var(--muted) 50%, transparent);
   }
@@ -920,9 +904,6 @@
   }
   .bg-primary {
     background-color: var(--primary);
-  }
-  .bg-primary\/10 {
-    background-color: color-mix(in oklab, var(--primary) 10%, transparent);
   }
   .bg-primary\/20 {
     background-color: color-mix(in oklab, var(--primary) 20%, transparent);
@@ -972,9 +953,6 @@
   .p-6 {
     padding: calc(var(--spacing) * 6);
   }
-  .px-1 {
-    padding-inline: calc(var(--spacing) * 1);
-  }
   .px-1\.5 {
     padding-inline: calc(var(--spacing) * 1.5);
   }
@@ -1008,23 +986,14 @@
   .py-2 {
     padding-block: calc(var(--spacing) * 2);
   }
-  .py-3 {
-    padding-block: calc(var(--spacing) * 3);
-  }
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
   }
   .py-6 {
     padding-block: calc(var(--spacing) * 6);
   }
-  .py-8 {
-    padding-block: calc(var(--spacing) * 8);
-  }
   .pt-0 {
     padding-top: calc(var(--spacing) * 0);
-  }
-  .pt-\[15vh\] {
-    padding-top: 15vh;
   }
   .pr-8 {
     padding-right: calc(var(--spacing) * 8);
@@ -1281,12 +1250,6 @@
   .placeholder\:text-muted-foreground {
     &::placeholder {
       color: var(--muted-foreground);
-    }
-  }
-  .last\:border-b-0 {
-    &:last-child {
-      border-bottom-style: var(--tw-border-style);
-      border-bottom-width: 0px;
     }
   }
   .hover\:bg-accent {
