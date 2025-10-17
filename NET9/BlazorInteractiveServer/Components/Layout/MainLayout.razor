@@ -21,11 +21,11 @@
                     </div>
 
                     <!-- Navigation Links - Desktop Only -->
-                    <div class="hidden lg:flex items-center gap-6">
-                        <a href="/docs" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Docs</a>
-                        <a href="/blog" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Blog</a>
-                        <a href="/showcase" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Showcase</a>
-                        <a href="/sponsors" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Sponsors</a>
+                    <div class="hidden lg:flex items-center gap-1 h-12">
+                        <a href="/docs" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Docs</a>
+                        <a href="/blog" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Blog</a>
+                        <a href="/showcase" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Showcase</a>
+                        <a href="/sponsors" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Sponsors</a>
                     </div>
 
                     <!-- Utilities -->
@@ -119,11 +119,11 @@
                     <a href="/sponsors" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Sponsors</a>
                 </nav>
             </div>
-        </div>
+    </div>
     }
 
     <main>
-        @Body
+    @Body
     </main>
 
     <footer class="border-t border-border mt-12 bg-card">
@@ -143,7 +143,7 @@
     private bool _isMobileMenuOpen = false;
 
     private void ToggleMobileMenu()
-    {
+{
         _isMobileMenuOpen = !_isMobileMenuOpen;
     }
 
