@@ -4,6 +4,22 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>ShellUI.Components</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Shell Technologies</Authors>
+    <Company>Shell Technologies</Company>
+    <Product>ShellUI</Product>
+    <Description>Beautiful, accessible Blazor components inspired by shadcn/ui. CLI-first component library with Tailwind CSS styling.</Description>
+    <PackageProjectUrl>https://github.com/shelltechlabs/shellui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shelltechlabs/shellui</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>blazor;components;ui;tailwind;shadcn;shellui</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
 
@@ -17,6 +33,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShellUI.Core\ShellUI.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

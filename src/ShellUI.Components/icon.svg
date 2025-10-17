@@ -1,0 +1,13 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#1e293b" stroke="#334155" stroke-width="4"/>
+  
+  <!-- Shell layers -->
+  <path d="M32 32L64 16L96 32L64 48L32 32Z" fill="#3b82f6" opacity="0.8"/>
+  <path d="M32 48L64 32L96 48L64 64L32 48Z" fill="#3b82f6" opacity="0.6"/>
+  <path d="M32 64L64 48L96 64L64 80L32 64Z" fill="#3b82f6" opacity="0.4"/>
+  <path d="M32 80L64 64L96 80L64 96L32 80Z" fill="#3b82f6" opacity="0.2"/>
+  
+  <!-- Center dot -->
+  <circle cx="64" cy="64" r="8" fill="#ffffff"/>
+</svg>
