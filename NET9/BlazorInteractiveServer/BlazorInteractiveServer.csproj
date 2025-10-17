@@ -6,8 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Sysinfocus.AspNetCore.Components" Version="0.0.1" />
-  </ItemGroup>
+  <!-- Removed NuGet/Project reference - using CLI-installed components instead -->
+  <!-- <ItemGroup>
+    <ProjectReference Include="..\..\src\ShellUI.Components\ShellUI.Components.csproj" />
+  </ItemGroup> -->
+
+  <Import Project="Build\ShellUI.targets" />
 
 </Project>

@@ -1,0 +1,74 @@
+@namespace ShellUI.Components
+
+@if (IsOpen)
+{
+    <div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-in fade-in-0" @onclick="Close"></div>
+    
+    <div class="@("fixed z-50 gap-4 bg-card p-6 shadow-lg transition ease-in-out animate-in rounded-t-lg " + GetPositionClass() + " " + ClassName)"
+         @attributes="AdditionalAttributes">
+        <div class="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-muted mb-4"></div>
+        
+        <div class="flex flex-col space-y-2">
+            @if (!string.IsNullOrEmpty(Title))
+            {
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-semibold">@Title</h2>
+                    <button @onclick="Close"
+                            class="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <p class="text-sm text-muted-foreground">@Description</p>
+            }
+        </div>
+        <div class="mt-4">
+            @ChildContent
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+    
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+    
+    [Parameter]
+    public string? Title { get; set; }
+    
+    [Parameter]
+    public string? Description { get; set; }
+    
+    [Parameter]
+    public string Side { get; set; } = "bottom";
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    
+    private async Task Close()
+    {
+        IsOpen = false;
+        await IsOpenChanged.InvokeAsync(IsOpen);
+    }
+    
+    private string GetPositionClass() => Side switch
+    {
+        "left" => "inset-y-0 left-0 h-full w-3/4 sm:max-w-sm slide-in-from-left",
+        "right" => "inset-y-0 right-0 h-full w-3/4 sm:max-w-sm slide-in-from-right",
+        "top" => "inset-x-0 top-0 slide-in-from-top",
+        _ => "inset-x-0 bottom-0 slide-in-from-bottom"
+    };
+}
+

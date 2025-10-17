@@ -1,0 +1,90 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public class PaginationTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "pagination",
+        DisplayName = "Pagination",
+        Description = "Pagination component for navigating pages",
+        Category = ComponentCategory.Navigation,
+        FilePath = "Pagination.razor",
+        Version = "0.1.0",
+        Tags = new List<string> { "navigation", "pagination", "pages" }
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+
+<nav class=""@(""flex items-center justify-center space-x-2 "" + ClassName)"" @attributes=""AdditionalAttributes"">
+    <ul class=""flex items-center space-x-1"">
+        <li>
+            <button type=""button""
+                    @onclick=""Previous""
+                    disabled=""@(CurrentPage <= 1)""
+                    class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 "" + (CurrentPage <= 1 ? ""opacity-50 cursor-not-allowed"" : ""hover:bg-accent hover:text-accent-foreground""))"">
+                <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                    <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M15 19l-7-7 7-7"" />
+                </svg>
+                <span class=""ml-2"">Previous</span>
+            </button>
+        </li>
+        
+        @for (int i = 1; i <= TotalPages; i++)
+        {
+            var pageNum = i;
+            <li>
+                <button type=""button""
+                        @onclick=""@(() => GoToPage(pageNum))""
+                        class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 w-9 "" + (CurrentPage == pageNum ? ""border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"" : ""hover:bg-accent hover:text-accent-foreground""))"">
+                    @pageNum
+                </button>
+            </li>
+        }
+        
+        <li>
+            <button type=""button""
+                    @onclick=""Next""
+                    disabled=""@(CurrentPage >= TotalPages)""
+                    class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 "" + (CurrentPage >= TotalPages ? ""opacity-50 cursor-not-allowed"" : ""hover:bg-accent hover:text-accent-foreground""))"">
+                <span class=""mr-2"">Next</span>
+                <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                    <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M9 5l7 7-7 7"" />
+                </svg>
+            </button>
+        </li>
+    </ul>
+</nav>
+
+@code {
+    [Parameter]
+    public int CurrentPage { get; set; } = 1;
+    
+    [Parameter]
+    public int TotalPages { get; set; } = 1;
+    
+    [Parameter]
+    public EventCallback<int> OnPageChange { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = """";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    
+    private async Task GoToPage(int page)
+    {
+        if (page >= 1 && page <= TotalPages && page != CurrentPage)
+        {
+            CurrentPage = page;
+            await OnPageChange.InvokeAsync(page);
+        }
+    }
+    
+    private Task Previous() => GoToPage(CurrentPage - 1);
+    private Task Next() => GoToPage(CurrentPage + 1);
+}
+";
+}
+

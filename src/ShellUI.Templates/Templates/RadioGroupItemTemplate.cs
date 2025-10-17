@@ -1,0 +1,71 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public class RadioGroupItemTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "radio-group-item",
+        DisplayName = "Radio Group Item",
+        Description = "Individual radio button within a Radio Group",
+        Category = ComponentCategory.Form,
+        FilePath = "RadioGroupItem.razor",
+        Version = "0.1.0",
+        Tags = new List<string> { "form", "input", "radio", "item" }
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+
+<div class=""flex items-center space-x-2 @ClassName"" @attributes=""AdditionalAttributes"">
+    <button type=""button"" 
+            @onclick=""OnClick""
+            role=""radio""
+            aria-checked=""@IsChecked""
+            class=""aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 @(IsChecked ? ""bg-primary"" : ""bg-background"")"">
+        @if (IsChecked)
+        {
+            <span class=""flex items-center justify-center"">
+                <svg class=""h-2.5 w-2.5 fill-primary-foreground"" viewBox=""0 0 8 8"">
+                    <circle cx=""4"" cy=""4"" r=""3"" />
+                </svg>
+            </span>
+        }
+    </button>
+    @if (ChildContent != null)
+    {
+        <label @onclick=""OnClick"" class=""text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"">
+            @ChildContent
+        </label>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    private RadioGroup? RadioGroup { get; set; }
+    
+    [Parameter]
+    public string Value { get; set; } = """";
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = """";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    
+    private bool IsChecked => RadioGroup?.Value == Value;
+    
+    private async Task OnClick()
+    {
+        if (RadioGroup != null)
+        {
+            await RadioGroup.SetValue(Value);
+        }
+    }
+}
+";
+}
+

@@ -1,0 +1,29 @@
+@namespace ShellUI.Components
+
+<div class="@ClassName" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    
+    private List<AccordionItem> _items = new();
+    
+    public void RegisterItem(AccordionItem item)
+    {
+        _items.Add(item);
+    }
+    
+    public void UnregisterItem(AccordionItem item)
+    {
+        _items.Remove(item);
+    }
+}
+

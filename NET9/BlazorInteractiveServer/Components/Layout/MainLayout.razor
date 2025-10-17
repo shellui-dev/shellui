@@ -1,26 +1,154 @@
 ﻿@inherits LayoutComponentBase
-@inject Initialization init
 
-<div class="container" @onclick="init.HandleMainLayoutClickEvent">
-    <div class="flex jcsb mb1">
-        <h3 class="normal large">Brand Name</h3>
+<div class="min-h-screen bg-background text-foreground">
+    <Navbar ClassName="flex items-center justify-center">
+        <div class="flex items-center justify-center w-full px-5">
+            <!-- Centered Content Group with Side Spacing -->
+            <div class="flex items-center justify-between w-full">
+                <!-- Left Spacer -->
+                <div class="flex-1"></div>
+                
+                <!-- Main Content Group -->
+                <div class="flex items-center gap-6">
+                    <!-- Logo Section -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-white to-gray-400 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <h1 class="text-xl font-semibold text-foreground hidden sm:block">ShellUI</h1>
+                    </div>
 
-        <Icon Name="@(init.CurrentTheme == "light" ? "dark_mode" : "light_mode")"
-              OnClick="init.ToggleTheme" />
+                    <!-- Navigation Links - Desktop Only -->
+                    <div class="hidden lg:flex items-center gap-1 h-12">
+                        <a href="/docs" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Docs</a>
+                        <a href="/blog" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Blog</a>
+                        <a href="/showcase" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Showcase</a>
+                        <a href="/sponsors" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Sponsors</a>
+                    </div>
+
+                    <!-- Utilities -->
+                    <div class="flex items-center gap-3">
+                <!-- Search Bar - Responsive Width -->
+                <div class="relative hidden sm:block">
+                    <div class="flex items-center bg-muted/50 rounded-lg px-3 py-2 border border-border" 
+                         style="width: min(180px, 18vw);">
+                        <svg class="w-4 h-4 text-muted-foreground mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <span class="text-sm text-muted-foreground flex-1">Search</span>
+                        <div class="flex gap-1">
+                            <kbd class="px-1.5 py-0.5 text-xs bg-muted rounded border border-border">Ctrl</kbd>
+                            <kbd class="px-1.5 py-0.5 text-xs bg-muted rounded border border-border">K</kbd>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border">
+                    <ThemeToggle />
+                </button>
+
+                <!-- GitHub Link -->
+                <a href="https://github.com/Shell-Technologies/shellui" target="_blank" 
+                   class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border">
+                    <svg class="w-4 h-4 text-foreground" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+
+                <!-- Mobile Menu Button - Always Last -->
+                <button class="lg:hidden w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border"
+                        @onclick="ToggleMobileMenu">
+                    <svg class="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+                    </div>
+                </div>
+                
+                <!-- Right Spacer -->
+                <div class="flex-1"></div>
+            </div>
+        </div>
+    </Navbar>
+
+    <!-- Mobile Menu Overlay -->
+    @if (_isMobileMenuOpen)
+    {
+        <div class="fixed inset-0 z-50 lg:hidden">
+            <!-- Backdrop -->
+            <div class="fixed inset-0 bg-background/80 backdrop-blur-sm" @onclick="CloseMobileMenu"></div>
+            
+            <!-- Mobile Menu -->
+            <div class="fixed left-0 top-0 h-full w-80 bg-background border-r border-border shadow-lg">
+                <!-- Header -->
+                <div class="flex items-center justify-between p-4 border-b border-border">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-white to-gray-400 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-semibold text-foreground">Menu</h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border">
+                            <ThemeToggle />
+                        </button>
+                        <a href="https://github.com/Shell-Technologies/shellui" target="_blank" 
+                           class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border">
+                            <svg class="w-4 h-4 text-foreground" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                        <button @onclick="CloseMobileMenu" class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border">
+                            <svg class="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Navigation Links -->
+                <nav class="p-4 space-y-2">
+                    <a href="/docs" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Documentation</a>
+                    <a href="/blog" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Blog</a>
+                    <a href="/showcase" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Showcase</a>
+                    <a href="/sponsors" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Sponsors</a>
+                </nav>
+            </div>
     </div>
+    }
+
+    <main>
     @Body
+    </main>
+
+    <footer class="border-t border-border mt-12 bg-card">
+        <div class="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
+            Built with ShellUI - CLI-first Blazor component library
+        </div>
+    </footer>
 </div>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+    <a class="dismiss">x</a>
 </div>
 
-@code
+@code {
+    private bool _isMobileMenuOpen = false;
+
+    private void ToggleMobileMenu()
 {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+        _isMobileMenuOpen = !_isMobileMenuOpen;
+    }
+
+    private void CloseMobileMenu()
     {
-        if (firstRender) await init.InitializeTheme();
+        _isMobileMenuOpen = false;
     }
 }

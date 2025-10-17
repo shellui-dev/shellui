@@ -1,19 +1,863 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>ShellUI - Component Demo</PageTitle>
 
-<div class="flex-col">
-    <h1>Hello, world!</h1>
-    <Button Text="Click Me!" OnClick="() => showAlert = true" />
-    @if (showAlert)
-    {
-        <Alert Title="Sysinfocus simple/ui" Description="Congratulations! you have successfully installed Sysinfocus simple/ui components." />
-        <Separator />
-        <AboutSysinfocus />
+<div class="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-foreground">ShellUI Components</h1>
+        <p class="text-sm sm:text-base text-muted-foreground">Beautiful, accessible components inspired by shadcn/ui</p>
+    </div>
+
+    <!-- Responsive Design Info -->
+    <div class="mb-8 rounded-lg border border-border bg-muted/50 p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-semibold mb-2 text-foreground">Responsive Design</h2>
+        <p class="text-sm text-muted-foreground mb-3">All components support Tailwind's responsive utilities. Resize your browser to see it in action!</p>
+        <div class="flex flex-col sm:flex-row gap-2">
+            <Button class="w-full sm:w-auto" Size="sm">Mobile First</Button>
+            <Button class="hidden sm:inline-flex">Tablet+</Button>
+            <Button class="hidden md:inline-flex">Desktop+</Button>
+        </div>
+    </div>
+
+    <div class="space-y-8">
+        <!-- Variants Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Variants</h2>
+            <div class="flex flex-wrap gap-4">
+                <Button Variant="default" OnClick="HandleClick">Default</Button>
+                <Button Variant="secondary" OnClick="HandleClick">Secondary</Button>
+                <Button Variant="destructive" OnClick="HandleClick">Destructive</Button>
+                <Button Variant="outline" OnClick="HandleClick">Outline</Button>
+                <Button Variant="ghost" OnClick="HandleClick">Ghost</Button>
+                <Button Variant="link" OnClick="HandleClick">Link</Button>
+            </div>
+        </section>
+
+        <!-- Sizes Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Sizes</h2>
+            <div class="flex flex-wrap items-center gap-4">
+                <Button Size="sm" OnClick="HandleClick">Small</Button>
+                <Button Size="md" OnClick="HandleClick">Medium</Button>
+                <Button Size="lg" OnClick="HandleClick">Large</Button>
+                <Button Size="icon" OnClick="HandleClick">+</Button>
+            </div>
+        </section>
+
+        <!-- States Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">States</h2>
+            <div class="flex flex-wrap gap-4">
+                <Button OnClick="HandleClick">Normal</Button>
+                <Button Disabled="true">Disabled</Button>
+                <Button IsLoading="@isLoading" OnClick="HandleLoadingClick">
+                    @(isLoading ? "Loading..." : "Click to Load")
+                </Button>
+            </div>
+        </section>
+
+        <!-- New Components Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Form Components</h2>
+            <div class="space-y-4 max-w-md">
+                <div>
+                    <Label>Name</Label>
+                    <Input @bind-Value="userName" Placeholder="Enter your name" />
+                </div>
+                <div>
+                    <Label>Email</Label>
+                    <Input @bind-Value="userEmail" Type="email" Placeholder="Enter your email" />
+                </div>
+                <div>
+                    <Label>Message</Label>
+                    <Textarea @bind-Value="userMessage" Placeholder="Enter your message" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Cards and Alerts Section -->
+        <div class="grid md:grid-cols-2 gap-6">
+            <section class="border border-border rounded-lg p-6 bg-card">
+                <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Card</h2>
+                <Card>
+                    <Header>
+                        <h3 class="text-lg font-semibold">Card Title</h3>
+                        <p class="text-sm text-muted-foreground">Card description goes here.</p>
+                    </Header>
+                    <ChildContent>
+                        <p>This is the main content of the card. It can contain any content you want.</p>
+                    </ChildContent>
+                    <Footer>
+                        <Button Variant="outline" Size="sm">Action</Button>
+                    </Footer>
+                </Card>
+            </section>
+
+            <section class="border border-border rounded-lg p-6 bg-card">
+                <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Alerts</h2>
+                <div class="space-y-4">
+                    <Alert Variant="default" Title="Info">
+                        This is an informational alert.
+                    </Alert>
+                    <Alert Variant="success" Title="Success">
+                        Operation completed successfully!
+                    </Alert>
+                    <Alert Variant="warning" Title="Warning">
+                        Please check your input.
+                    </Alert>
+                </div>
+            </section>
+        </div>
+
+        <!-- Badges and Dialog Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Badges & Dialog</h2>
+            <div class="flex flex-wrap gap-4 mb-4">
+                <Badge Variant="default">Default</Badge>
+                <Badge Variant="secondary">Secondary</Badge>
+                <Badge Variant="destructive">Destructive</Badge>
+                <Badge Variant="success">Success</Badge>
+                <Badge Variant="warning">Warning</Badge>
+                <Badge Variant="info">Info</Badge>
+            </div>
+            <Button @onclick="OpenDialog">Open Dialog</Button>
+        </section>
+
+        <!-- Click Counter -->
+        @if (clickCount > 0)
+        {
+            <div class="bg-accent border border-border rounded-lg p-4">
+                <p class="text-accent-foreground font-medium">
+                    Button clicked @clickCount time(s)!
+                </p>
+            </div>
     }
 </div>
 
-@code
-{
-    bool showAlert;
+    <div class="mt-12 p-6 bg-muted rounded-lg border border-border">
+        <h3 class="font-semibold mb-2 text-foreground">Installation</h3>
+        <code class="text-sm px-2 py-1 bg-background rounded border border-border">dotnet shellui add button</code>
+        <p class="text-sm text-muted-foreground mt-2">
+            Component will be copied to your Components/UI folder for full customization!
+        </p>
+    </div>
+
+    <!-- NEW COMPONENTS SHOWCASE -->
+    <div class="mt-12 space-y-8">
+        <h2 class="text-3xl font-bold text-foreground">New Components</h2>
+        
+        <!-- Skeleton Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Skeleton</h3>
+            <div class="space-y-4">
+                <div class="space-y-2">
+                    <Skeleton ClassName="h-4 w-full" />
+                    <Skeleton ClassName="h-4 w-3/4" />
+                    <Skeleton ClassName="h-4 w-1/2" />
+                </div>
+                <div class="flex items-center space-x-4">
+                    <Skeleton Variant="circle" ClassName="h-12 w-12" />
+                    <div class="space-y-2 flex-1">
+                        <Skeleton ClassName="h-4 w-full" />
+                        <Skeleton ClassName="h-4 w-2/3" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Progress</h3>
+            <div class="space-y-4">
+                <div>
+                    <Label>25% Complete</Label>
+                    <Progress Value="25" />
+                </div>
+                <div>
+                    <Label>50% Complete</Label>
+                    <Progress Value="50" />
+                </div>
+                <div>
+                    <Label>75% Complete</Label>
+                    <Progress Value="75" Height="0.75rem" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Separator Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Separator</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm">Section 1</p>
+                    <Separator ClassName="my-4" />
+                    <p class="text-sm">Section 2</p>
+                </div>
+                <div class="flex h-20 items-center space-x-4">
+                    <div class="flex-1">Column 1</div>
+                    <Separator Orientation="vertical" />
+                    <div class="flex-1">Column 2</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Select Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Select</h3>
+            <div class="max-w-xs">
+                <Label>Choose a fruit</Label>
+                <Select @bind-Value="selectedFruit">
+                    <option value="">Select...</option>
+                    <option value="apple">Apple</option>
+                    <option value="banana">Banana</option>
+                    <option value="orange">Orange</option>
+                </Select>
+                @if (!string.IsNullOrEmpty(selectedFruit))
+                {
+                    <p class="text-sm text-muted-foreground mt-2">Selected: @selectedFruit</p>
+                }
+            </div>
+        </section>
+
+        <!-- Checkbox & Switch Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Checkbox & Switch</h3>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-2">
+                    <Checkbox @bind-Checked="acceptTerms" />
+                    <Label>Accept terms and conditions</Label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <Switch @bind-Checked="notifications" />
+                    <Label>Enable notifications</Label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dropdown Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Dropdown</h3>
+            <Dropdown @bind-IsOpen="isDropdownOpen">
+                <Trigger>
+                    <span>Open Menu</span>
+                    <svg class="ml-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </Trigger>
+                <ChildContent>
+                    <button class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent">
+                        Profile
+                    </button>
+                    <button class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent">
+                        Settings
+                    </button>
+                </ChildContent>
+            </Dropdown>
+        </section>
+
+        <!-- Navbar Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Navbar</h3>
+            <div class="relative border border-border rounded-lg overflow-hidden h-64 bg-background">
+                <Navbar>
+                    <div class="flex items-center space-x-4 w-full">
+                        <span class="font-bold text-lg">ShellUI</span>
+                        <nav class="flex items-center space-x-6 text-sm font-medium flex-1">
+                            <a href="#" class="transition-colors hover:text-foreground/80 text-foreground">Home</a>
+                            <a href="#" class="transition-colors hover:text-foreground/80 text-muted-foreground">Docs</a>
+                            <a href="#" class="transition-colors hover:text-foreground/80 text-muted-foreground">Components</a>
+                        </nav>
+                        <Button Variant="outline" Size="sm">Sign In</Button>
+                    </div>
+                </Navbar>
+                <div class="p-6 text-sm text-muted-foreground">
+                    <p>This navbar sticks to the top with backdrop blur effect! Perfect for app headers.</p>
+                    <p class="mt-2">Try scrolling the main page to see it in action.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sidebar Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Sidebar</h3>
+            <div class="space-y-4">
+                <Button OnClick="ToggleSidebar">
+                    @(isSidebarOpen ? "Close" : "Open") Sidebar
+                </Button>
+                <div class="relative border border-border rounded-lg overflow-hidden h-96 bg-background">
+                    <Sidebar IsOpen="@isSidebarOpen">
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-lg">Navigation</h4>
+                            <nav class="space-y-2">
+                                <a href="#" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                    <span>Dashboard</span>
+                                </a>
+                                <a href="#" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span>Projects</span>
+                                </a>
+                                <a href="#" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
+                                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <span>Settings</span>
+                                </a>
+                            </nav>
+                        </div>
+                    </Sidebar>
+                    <div class="@(isSidebarOpen ? "ml-64" : "") transition-all p-6">
+                        <h4 class="font-semibold mb-2 text-foreground">Main Content Area</h4>
+                        <p class="text-sm text-muted-foreground">
+                            Toggle the sidebar to see the smooth slide-in animation! Perfect for app navigation menus.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabs Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Tabs</h3>
+            <Tabs>
+                <TabHeaders>
+                    <button @onclick="@(() => activeTab = "account")" class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @(activeTab == "account" ? "bg-background text-foreground shadow-sm" : "")">
+                        Account
+                    </button>
+                    <button @onclick="@(() => activeTab = "password")" class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @(activeTab == "password" ? "bg-background text-foreground shadow-sm" : "")">
+                        Password
+                    </button>
+                    <button @onclick="@(() => activeTab = "notifications")" class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @(activeTab == "notifications" ? "bg-background text-foreground shadow-sm" : "")">
+                        Notifications
+                    </button>
+                </TabHeaders>
+                <TabContent>
+                    @if (activeTab == "account")
+                    {
+                        <div class="space-y-4 py-4">
+                            <p class="text-sm text-muted-foreground">Manage your account settings and preferences.</p>
+                            <div class="space-y-2">
+                                <Label>Username</Label>
+                                <Input Placeholder="johndoe" Value="@tabUsername" />
+                            </div>
+                            <div class="space-y-2">
+                                <Label>Email</Label>
+                                <Input Type="email" Placeholder="john@example.com" Value="@tabEmail" />
+                            </div>
+                            <Button Size="sm">Save Changes</Button>
+                        </div>
+                    }
+                    else if (activeTab == "password")
+                    {
+                        <div class="space-y-4 py-4">
+                            <p class="text-sm text-muted-foreground">Change your password here. After saving, you'll be logged out.</p>
+                            <div class="space-y-2">
+                                <Label>Current Password</Label>
+                                <Input Type="password" Placeholder="••••••••" />
+                            </div>
+                            <div class="space-y-2">
+                                <Label>New Password</Label>
+                                <Input Type="password" Placeholder="••••••••" />
+                            </div>
+                            <div class="space-y-2">
+                                <Label>Confirm Password</Label>
+                                <Input Type="password" Placeholder="••••••••" />
+                            </div>
+                            <Button Size="sm">Update Password</Button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="space-y-4 py-4">
+                            <p class="text-sm text-muted-foreground">Configure how you receive notifications.</p>
+                            <div class="flex items-center space-x-2">
+                                <Switch @bind-Checked="emailNotifications" />
+                                <Label>Email notifications</Label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <Switch @bind-Checked="pushNotifications" />
+                                <Label>Push notifications</Label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <Switch @bind-Checked="smsNotifications" />
+                                <Label>SMS notifications</Label>
+                            </div>
+                            <Button Size="sm">Save Preferences</Button>
+                        </div>
+                    }
+                </TabContent>
+            </Tabs>
+        </section>
+
+        <!-- NEW COMPONENTS SECTION -->
+        <h2 class="text-3xl font-bold text-foreground mt-12 mb-6">New Components</h2>
+
+        <!-- Radio Group Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Radio Group</h3>
+            <CascadingValue Value="@radioGroup">
+                <RadioGroup @ref="radioGroup" @bind-Value="selectedOption" ClassName="space-y-3">
+                    <RadioGroupItem Value="option1">Default</RadioGroupItem>
+                    <RadioGroupItem Value="option2">Comfortable</RadioGroupItem>
+                    <RadioGroupItem Value="option3">Compact</RadioGroupItem>
+                </RadioGroup>
+            </CascadingValue>
+            @if (!string.IsNullOrEmpty(selectedOption))
+            {
+                <p class="text-sm text-muted-foreground mt-4">Selected: @selectedOption</p>
+            }
+        </section>
+
+        <!-- Slider Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Slider</h3>
+            <div class="space-y-4">
+                <div>
+                    <Label>Volume: @sliderValue%</Label>
+                    <Slider @bind-Value="sliderValue" Min="0" Max="100" Step="1" />
+                </div>
+                <div>
+                    <Label>Temperature: @temperature°C</Label>
+                    <Slider @bind-Value="temperature" Min="0" Max="40" Step="0.5" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Toggle Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Toggle</h3>
+            <div class="flex items-center space-x-4">
+                <Toggle @bind-Pressed="togglePressed">
+                    <span class="flex items-center space-x-2">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Toggle Me</span>
+                    </span>
+                </Toggle>
+                <Toggle @bind-Pressed="togglePressed2" Variant="outline">Outline</Toggle>
+                <Toggle @bind-Pressed="togglePressed3" Size="sm">Small</Toggle>
+            </div>
+            <p class="text-sm text-muted-foreground mt-4">Pressed: @(togglePressed ? "Yes" : "No")</p>
+        </section>
+
+        <!-- Accordion Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Accordion</h3>
+            <CascadingValue Value="@accordion">
+                <Accordion @ref="accordion">
+                    <AccordionItem Title="Is it accessible?" IsOpen="true">
+                        <p class="text-sm text-muted-foreground">Yes. It adheres to the WAI-ARIA design pattern.</p>
+                    </AccordionItem>
+                    <AccordionItem Title="Is it styled?">
+                        <p class="text-sm text-muted-foreground">Yes. It comes with default styles that matches the other components aesthetic.</p>
+                    </AccordionItem>
+                    <AccordionItem Title="Is it animated?">
+                        <p class="text-sm text-muted-foreground">Yes. It's animated by default using Tailwind CSS transitions.</p>
+                    </AccordionItem>
+                </Accordion>
+            </CascadingValue>
+        </section>
+
+        <!-- Breadcrumb Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Breadcrumb</h3>
+            <Breadcrumb>
+                <BreadcrumbItem Href="#">Home</BreadcrumbItem>
+                <BreadcrumbItem Href="#">Components</BreadcrumbItem>
+                <BreadcrumbItem Href="#">UI</BreadcrumbItem>
+                <BreadcrumbItem IsLast="true">Breadcrumb</BreadcrumbItem>
+            </Breadcrumb>
+        </section>
+
+        <!-- Toast Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Toast</h3>
+            <div class="flex flex-wrap gap-2">
+                <Button OnClick="() => showToast = true">Show Default Toast</Button>
+                <Button Variant="destructive" OnClick="() => showDestructiveToast = true">Show Error Toast</Button>
+                <Button Variant="outline" OnClick="() => showSuccessToast = true">Show Success Toast</Button>
+            </div>
+        </section>
+
+        <!-- Tooltip Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Tooltip</h3>
+            <div class="flex flex-wrap gap-4">
+                <Tooltip Placement="top">
+                    <Trigger>
+                        <Button Variant="outline">Hover me (Top)</Button>
+                    </Trigger>
+                    <Content>
+                        <p>This is a tooltip on top!</p>
+                    </Content>
+                </Tooltip>
+                <Tooltip Placement="bottom">
+                    <Trigger>
+                        <Button Variant="outline">Hover me (Bottom)</Button>
+                    </Trigger>
+                    <Content>
+                        <p>This is a tooltip on bottom!</p>
+                    </Content>
+                </Tooltip>
+                <Tooltip Placement="left">
+                    <Trigger>
+                        <Button Variant="outline">Hover me (Left)</Button>
+                    </Trigger>
+                    <Content>
+                        <p>Tooltip on the left</p>
+                    </Content>
+                </Tooltip>
+            </div>
+        </section>
+
+        <!-- Popover Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Popover</h3>
+            <Popover @bind-IsOpen="isPopoverOpen">
+                <Trigger>
+                    <Button Variant="outline">Open Popover</Button>
+                </Trigger>
+                <ChildContent>
+                    <div class="space-y-2">
+                        <h4 class="font-semibold">Dimensions</h4>
+                        <div class="space-y-2">
+                            <Label>Width</Label>
+                            <Input Placeholder="100%" />
+                        </div>
+                        <div class="space-y-2">
+                            <Label>Height</Label>
+                            <Input Placeholder="25px" />
+                        </div>
+                    </div>
+                </ChildContent>
+            </Popover>
+        </section>
+
+        <!-- Avatar Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Avatar</h3>
+            <div class="flex flex-wrap items-center gap-4">
+                <Avatar Src="https://github.com/shadcn.png" Alt="User" />
+                <Avatar Fallback="JD" Size="lg" />
+                <Avatar Fallback="AB" Size="sm" />
+                <Avatar Size="xl" />
+            </div>
+        </section>
+
+        <!-- Table Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Table</h3>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Status</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow>
+                        <TableCell>Shewart Shepherd</TableCell>
+                        <TableCell>shep@shell-tech.dev</TableCell>
+                        <TableCell>Founder & CEO</TableCell>
+                        <TableCell><Badge>Active</Badge></TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Shewart Shepherd</TableCell>
+                        <TableCell>+263780000000</TableCell>
+                        <TableCell>Lead Developer</TableCell>
+                        <TableCell><Badge>Active</Badge></TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Shell Technologies</TableCell>
+                        <TableCell>contact@shell-tech.dev</TableCell>
+                        <TableCell>Organization</TableCell>
+                        <TableCell><Badge Variant="secondary">Verified</Badge></TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </section>
+
+        <!-- Input OTP Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Input OTP</h3>
+            <div class="space-y-6">
+                <div>
+                    <Label>Grouped by 3 numbers</Label>
+                    <InputOTP OnComplete="x => otp1 = x" GroupBy="3" />
+                </div>
+                <div>
+                    <Label>Grouped by 2 numbers</Label>
+                    <InputOTP OnComplete="x => otp2 = x" GroupBy="2" />
+                </div>
+                <div>
+                    <Label>No grouping</Label>
+                    <InputOTP OnComplete="x => otp3 = x" GroupBy="0" />
+                </div>
+                @if (!string.IsNullOrEmpty(otp1) || !string.IsNullOrEmpty(otp2) || !string.IsNullOrEmpty(otp3))
+                {
+                    <div class="p-4 border border-border rounded-md bg-background">
+                        <p class="text-sm font-medium">You have entered OTP:</p>
+                        @if (!string.IsNullOrEmpty(otp1))
+                        {
+                            <p class="text-sm text-muted-foreground">Grouped by 3: <span class="font-bold text-foreground">@otp1</span></p>
+                        }
+                        @if (!string.IsNullOrEmpty(otp2))
+                        {
+                            <p class="text-sm text-muted-foreground">Grouped by 2: <span class="font-bold text-foreground">@otp2</span></p>
+                        }
+                        @if (!string.IsNullOrEmpty(otp3))
+                        {
+                            <p class="text-sm text-muted-foreground">No grouping: <span class="font-bold text-foreground">@otp3</span></p>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+
+        <!-- Form Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Form</h3>
+            <Form OnValidSubmit="HandleFormSubmit" ClassName="space-y-4">
+                <div>
+                    <Label>Name</Label>
+                    <Input @bind-Value="formName" Placeholder="Shewart Shepherd" />
+                </div>
+                <div>
+                    <Label>Email</Label>
+                    <Input @bind-Value="formEmail" Type="email" Placeholder="shep@shell-tech.dev" />
+                </div>
+                <div>
+                    <Label>Phone Number</Label>
+                    <Input @bind-Value="formPhone" Type="tel" Placeholder="+263780000000" />
+                </div>
+                <Button Type="submit">Submit Form</Button>
+            </Form>
+            @if (formSubmitted)
+            {
+                <Alert Variant="success" Title="Success" ClassName="mt-4">
+                    Form submitted successfully!
+                </Alert>
+            }
+        </section>
+
+        <!-- Combobox Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Combobox</h3>
+            <div class="space-y-4">
+                <div>
+                    <Label>Select Technology</Label>
+                    <Combobox @bind-SelectedValue="selectedTech" 
+                              Options="techOptions" 
+                              Placeholder="Search technology..." />
+                    @if (!string.IsNullOrEmpty(selectedTech))
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">Selected: @selectedTech</p>
+                    }
+                </div>
+                <div>
+                    <Label>Select Framework</Label>
+                    <Combobox @bind-SelectedValue="selectedFramework" 
+                              Options="frameworkOptions" 
+                              Placeholder="Search framework..." />
+                    @if (!string.IsNullOrEmpty(selectedFramework))
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">Selected: @selectedFramework</p>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <!-- Date Picker Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Date Picker</h3>
+            <div class="space-y-4 max-w-xs">
+                <div>
+                    <Label class="font-bold">With clear</Label>
+                    <DatePicker @bind-SelectedDate="selectedDate" Placeholder="Pick a date" />
+                    @if (selectedDate.HasValue)
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">Selected: @selectedDate.Value.ToString("MMMM dd, yyyy")</p>
+                    }
+                </div>
+                <div>
+                    <Label class="font-bold">Without clear</Label>
+                    <DatePicker @bind-SelectedDate="selectedDate2" Placeholder="Pick a date" AllowClear="false" />
+                    @if (selectedDate2.HasValue)
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">Selected: @selectedDate2.Value.ToString("MMMM dd, yyyy")</p>
+                    }
+                </div>
+                <div>
+                    <Label class="font-bold">Date Range</Label>
+                    <DateRangePicker @bind-StartDate="rangeStartDate" @bind-EndDate="rangeEndDate" Placeholder="Pick a date range" />
+                    @if (rangeStartDate.HasValue || rangeEndDate.HasValue)
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">
+                            Range: @(rangeStartDate?.ToString("MMM dd") ?? "...") - @(rangeEndDate?.ToString("MMM dd, yyyy") ?? "...")
+                        </p>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <!-- Time Picker Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Time Picker</h3>
+            <div class="max-w-xs">
+                <TimePicker @bind-SelectedTime="selectedTime" Placeholder="Pick a time" Step="15" />
+                @if (selectedTime.HasValue)
+                {
+                    <p class="text-sm text-muted-foreground mt-2">Selected: @selectedTime.Value.ToString(@"hh\:mm")</p>
+                }
+            </div>
+        </section>
+
+        <!-- Pagination Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Pagination</h3>
+            <div class="space-y-4">
+                <div class="p-4 border border-border rounded-md bg-background">
+                    <p class="text-center text-muted-foreground">Showing page @currentPage of @totalPages</p>
+                </div>
+                <Pagination CurrentPage="currentPage" 
+                           TotalPages="totalPages" 
+                           OnPageChange="HandlePageChange" />
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notifications -->
+    <Toast @bind-IsVisible="showToast" Title="Notification" Description="Your action was successful!" />
+    <Toast @bind-IsVisible="showDestructiveToast" Title="Error" Description="Something went wrong!" Variant="destructive" />
+    <Toast @bind-IsVisible="showSuccessToast" Title="Success" Description="Changes saved successfully!" Variant="success" Position="top-right" />
+
+    <!-- Demo Dialog -->
+    <Dialog IsOpen="isDialogOpen" Title="ShellUI Dialog" Description="This is a demo of the Dialog component." OnClose="CloseDialog">
+        <ChildContent>
+            <p>This dialog demonstrates the ShellUI Dialog component. You can put any content here!</p>
+        </ChildContent>
+        <Footer>
+            <Button Variant="outline" @onclick="CloseDialog">Cancel</Button>
+            <Button @onclick="CloseDialog">Confirm</Button>
+        </Footer>
+    </Dialog>
+</div>
+
+@code {
+    private int clickCount = 0;
+    private bool isLoading = false;
+    private bool isDialogOpen = false;
+    private bool isDropdownOpen = false;
+    private bool isSidebarOpen = false;
+
+    // Form inputs
+    private string userName = "";
+    private string userEmail = "";
+    private string userMessage = "";
+    private string selectedFruit = "";
+    
+    // Checkbox & Switch states
+    private bool acceptTerms = false;
+    private bool notifications = true;
+    
+    // Tabs demo state
+    private string activeTab = "account";
+    private string tabUsername = "";
+    private string tabEmail = "";
+    
+    // Notification preferences
+    private bool emailNotifications = true;
+    private bool pushNotifications = false;
+    private bool smsNotifications = false;
+    
+    // New component states
+    private RadioGroup? radioGroup;
+    private string selectedOption = "";
+    private double sliderValue = 50;
+    private double temperature = 20;
+    private bool togglePressed = false;
+    private bool togglePressed2 = false;
+    private bool togglePressed3 = false;
+    private Accordion? accordion;
+    private bool showToast = false;
+    private bool showDestructiveToast = false;
+    private bool showSuccessToast = false;
+    private bool isPopoverOpen = false;
+    
+    // New component states
+    private string formName = "";
+    private string formEmail = "";
+    private string formPhone = "";
+    private string otp1 = "";
+    private string otp2 = "";
+    private string otp3 = "";
+    private bool formSubmitted = false;
+    private string selectedTech = "";
+    private string selectedFramework = "";
+    private DateTime? selectedDate;
+    private DateTime? selectedDate2 = DateTime.Now;
+    private DateTime? rangeStartDate;
+    private DateTime? rangeEndDate;
+    private TimeSpan? selectedTime;
+    private int currentPage = 1;
+    private int totalPages = 10;
+    
+    private List<string> techOptions = new() 
+    { 
+        "C#", "JavaScript", "TypeScript", "Python", "Java", "Go", "Rust", "F#"
+    };
+    
+    private List<string> frameworkOptions = new() 
+    { 
+        "Blazor", "ASP.NET Core", "React", "Vue", "Angular", "Next.js", "Svelte", "ShellUI"
+    };
+
+    private void HandleClick(MouseEventArgs args)
+    {
+        clickCount++;
+    }
+
+    private async Task HandleLoadingClick(MouseEventArgs args)
+    {
+        isLoading = true;
+        clickCount++;
+        await Task.Delay(2000);
+        isLoading = false;
+    }
+
+    private void OpenDialog()
+    {
+        isDialogOpen = true;
+    }
+
+    private void CloseDialog()
+    {
+        isDialogOpen = false;
+    }
+    
+    private void ToggleSidebar()
+    {
+        isSidebarOpen = !isSidebarOpen;
+    }
+    
+    private async Task HandleFormSubmit()
+    {
+        formSubmitted = true;
+        await Task.Delay(3000);
+        formSubmitted = false;
+    }
+    
+    private async Task HandlePageChange(int page)
+    {
+        currentPage = page;
+        await Task.CompletedTask;
+    }
 }

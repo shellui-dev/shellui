@@ -1,0 +1,20 @@
+@namespace ShellUI.Components
+
+<div class="@("flex gap-2 " + (Direction == "vertical" ? "flex-col" : "flex-row") + " " + ClassName)" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string Direction { get; set; } = "horizontal";
+    
+    [Parameter]
+    public string ClassName { get; set; } = "h-full w-full";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+

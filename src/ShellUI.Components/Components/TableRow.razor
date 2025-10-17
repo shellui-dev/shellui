@@ -1,0 +1,17 @@
+@namespace ShellUI.Components
+
+<tr class="border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted @ClassName" @attributes="AdditionalAttributes">
+    @ChildContent
+</tr>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+

@@ -1,0 +1,14 @@
+@namespace BlazorInteractiveServer.Components.UI
+
+<div class="animate-pulse rounded-md bg-muted @(Variant == "circle" ? "rounded-full" : "") @(Variant == "text" ? "h-4 w-full" : "") @ClassName" @attributes="AdditionalAttributes"></div>
+
+@code {
+    [Parameter]
+    public string Variant { get; set; } = "default";
+
+    [Parameter]
+    public string ClassName { get; set; } = "";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

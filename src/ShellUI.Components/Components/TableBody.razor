@@ -1,0 +1,17 @@
+@namespace ShellUI.Components
+
+<tbody class="[&_tr:last-child]:border-0 @ClassName" @attributes="AdditionalAttributes">
+    @ChildContent
+</tbody>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = "";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+

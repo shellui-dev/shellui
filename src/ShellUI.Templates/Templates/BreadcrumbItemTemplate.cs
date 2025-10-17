@@ -1,0 +1,60 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public class BreadcrumbItemTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "breadcrumb-item",
+        DisplayName = "Breadcrumb Item",
+        Description = "Individual breadcrumb item",
+        Category = ComponentCategory.Layout,
+        FilePath = "BreadcrumbItem.razor",
+        Version = "0.1.0",
+        Tags = new List<string> { "navigation", "breadcrumb", "item" }
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+
+<li class=""inline-flex items-center gap-1.5 @ClassName"" @attributes=""AdditionalAttributes"">
+    @if (!string.IsNullOrEmpty(Href))
+    {
+        <a href=""@Href"" class=""transition-colors hover:text-foreground"">
+            @ChildContent
+        </a>
+    }
+    else
+    {
+        <span class=""font-normal text-foreground"">
+            @ChildContent
+        </span>
+    }
+    
+    @if (!IsLast)
+    {
+        <svg class=""h-3.5 w-3.5"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+            <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M9 5l7 7-7 7"" />
+        </svg>
+    }
+</li>
+
+@code {
+    [Parameter]
+    public string? Href { get; set; }
+    
+    [Parameter]
+    public bool IsLast { get; set; }
+    
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter]
+    public string ClassName { get; set; } = """";
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+";
+}
+

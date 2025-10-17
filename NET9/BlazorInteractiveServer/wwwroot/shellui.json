@@ -1,0 +1,62 @@
+{
+  "Schema": "https://shellui.dev/schema.json",
+  "Style": "default",
+  "ComponentsPath": "Components/UI",
+  "Tailwind": {
+    "Enabled": true,
+    "Version": "4.1.0",
+    "ConfigPath": "tailwind.config.js",
+    "CssPath": "wwwroot/app.css"
+  },
+  "InstalledComponents": [
+    {
+      "Name": "theme-toggle",
+      "Version": "0.1.0",
+      "InstalledAt": "2025-10-13T22:11:02.8329485Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "input",
+      "Version": "0.1.0",
+      "InstalledAt": "2025-10-13T22:37:49.7819622Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "label",
+      "Version": "0.1.0",
+      "InstalledAt": "2025-10-13T22:40:13.872833Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "card",
+      "Version": "0.1.0",
+      "InstalledAt": "2025-10-13T22:40:14.0379044Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "alert",
+      "Version": "0.1.0",
+      "InstalledAt": "2025-10-13T22:40:14.0701798Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "badge",
+      "Version": "0.1.0",
+      "InstalledAt": "2025-10-13T22:40:14.0964396Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "textarea",
+      "Version": "0.1.0",
+      "InstalledAt": "2025-10-13T22:40:14.1149473Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "dialog",
+      "Version": "0.1.0",
+      "InstalledAt": "2025-10-13T22:40:14.1393921Z",
+      "IsCustomized": false
+    }
+  ],
+  "ProjectType": 1
+}
