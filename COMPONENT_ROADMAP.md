@@ -2,62 +2,68 @@
 
 **Goal:** Build ALL components from shadcn/ui + sysinfocus to create the most comprehensive Blazor UI library
 
-## Current Status: 53/70+ Components Complete! 🎉 (76% Complete)
+## Current Status: 59/70+ Components Complete! 🎉 (84% Complete)
 
-### ✅ Completed (53)
+### ✅ Completed (59)
 1. Accordion
 2. AccordionItem
 3. Alert
-4. Avatar
-5. Badge
-6. Breadcrumb
-7. BreadcrumbItem
-8. Button
-9. Card
-10. Checkbox
-11. Collapsible **NEW**
-12. Combobox **NEW**
-13. DatePicker **NEW**
-14. Dialog
-15. Drawer **NEW**
-16. Dropdown
-17. Form **NEW**
-18. Input
-19. InputOTP **NEW**
-20. Label
-21. Menubar **NEW**
-22. MenubarItem **NEW**
-23. Navbar
-24. NavigationMenu **NEW**
-25. NavigationMenuItem **NEW**
-26. Pagination **NEW**
-27. Popover
-28. Progress
-29. RadioGroup
-30. RadioGroupItem
-31. Resizable **NEW**
-32. ScrollArea **NEW**
-33. Select
-34. Separator
-35. Sheet **NEW**
-36. Sidebar
-37. Skeleton
-38. Slider
-39. Switch
-40. Table
-41. TableBody
-42. TableCell
-43. TableHead
-44. TableHeader
-45. TableRow
-46. Tabs
-47. Textarea
-48. Theme Toggle
-49. TimePicker **NEW**
-50. Toast
-51. Toggle
-52. Tooltip
-53. DateRangePicker **NEW**
+4. AlertDialog **NEW**
+5. Avatar
+6. Badge
+7. Breadcrumb
+8. BreadcrumbItem
+9. Button
+10. Calendar **NEW**
+11. Card
+12. Checkbox
+13. Collapsible **NEW**
+14. Combobox **NEW**
+15. Command **NEW**
+16. DatePicker **NEW**
+17. DataTable **NEW**
+18. Dialog
+19. Drawer **NEW**
+20. Dropdown
+21. Form **NEW**
+22. HoverCard **NEW**
+23. Input
+24. InputOTP **NEW**
+25. Label
+26. Loading **NEW**
+27. Menubar **NEW**
+28. MenubarItem **NEW**
+29. Navbar
+30. NavigationMenu **NEW**
+31. NavigationMenuItem **NEW**
+32. Pagination **NEW**
+33. Popover
+34. Progress
+35. RadioGroup
+36. RadioGroupItem
+37. Resizable **NEW**
+38. ScrollArea **NEW**
+39. Select
+40. Separator
+41. Sheet **NEW**
+42. Sidebar
+43. Skeleton
+44. Slider
+45. Switch
+46. Table
+47. TableBody
+48. TableCell
+49. TableHead
+50. TableHeader
+51. TableRow
+52. Tabs
+53. Textarea
+54. Theme Toggle
+55. TimePicker **NEW**
+56. Toast
+57. Toggle
+58. Tooltip
+59. DateRangePicker **NEW**
 
 ---
 
@@ -167,7 +173,7 @@ Theme Toggle ✅
 - **M3 (Q2 2026):** 60 components (+ Phase 3 & 4)
 - **M4 (Q3 2026):** 70+ components (+ Phase 5 & 6)
 
-**Current Progress: 53/70+ components (76% complete!)** 🎯
+**Current Progress: 59/70+ components (84% complete!)** 🎯
 
 ---
 
@@ -190,17 +196,26 @@ dotnet tool install -g ShellUI.CLI
 # Initialize (choose npm or standalone)
 dotnet shellui init
 
-# Add components
-dotnet shellui add button input card dialog
+# Add components (59 available!)
+dotnet shellui add button input card dialog data-table calendar
 
-# List all 53 available components
+# List all available components
 dotnet shellui list
 ```
 
-## Recent Additions (Latest Session)
+## Recent Additions
 
-### Session 1 (Q4 2025)
-**Added 18 New Components:**
+### Session 2 (Q4 2025) - 6 New Components
+**Added high-impact components:**
+- **DataTable** - Advanced table with sorting, filtering, pagination, selection
+- **AlertDialog** - Confirmation dialogs with customizable actions
+- **Calendar** - Full calendar component for date selection
+- **Loading** - Multiple loading spinner variants (spinner, dots, ring, pulse)
+- **HoverCard** - Rich hover content with positioning
+- **Command** - Command palette (Cmd+K style) for quick actions
+
+### Session 1 (Q4 2025) - 18 New Components
+**Added essential form and layout components:**
 - RadioGroup + RadioGroupItem (Form)
 - Slider (Form)
 - Toggle (Form)

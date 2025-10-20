@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components.Models
 
 <PageTitle>ShellUI - Component Demo</PageTitle>
 
@@ -720,6 +722,104 @@
             </div>
         </section>
 
+        <!-- New Components Demo Section -->
+        <h2 class="text-3xl font-bold text-foreground mt-12 mb-6">New Components</h2>
+
+        <!-- DataTable Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Data Table</h3>
+            <DataTable Items="users" Columns="userColumns" RowActions="userActions" ShowFilters="true" ShowPagination="true" ShowSelection="true" />
+        </section>
+
+        <!-- AlertDialog Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Alert Dialog</h3>
+            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" @onclick="() => showAlertDialog = true">Show Alert Dialog</button>
+            <AlertDialog
+                IsOpen="showAlertDialog"
+                Title="Are you sure?"
+                Description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+                ConfirmText="Delete Account"
+                ConfirmVariant="destructive"
+                CancelText="Cancel"
+                OnConfirm="HandleAlertConfirm"
+                OnCancel="HandleAlertCancel"
+                IsOpenChanged="val => showAlertDialog = val" />
+        </section>
+
+        <!-- Calendar Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Calendar</h3>
+            <div class="flex gap-4">
+                <Calendar SelectedDate="selectedCalendarDate" SelectedDateChanged="date => selectedCalendarDate = date" />
+                <div class="p-4">
+                    <p class="text-sm text-muted-foreground">Selected Date:</p>
+                    <p class="font-medium">@(selectedCalendarDate?.ToString("D") ?? "None")</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Loading Components</h3>
+            <div class="flex gap-8 items-center">
+                <div class="text-center">
+                    <Loading Variant="spinner" Size="sm" />
+                    <p class="text-xs mt-2">Spinner SM</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="spinner" />
+                    <p class="text-xs mt-2">Spinner</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="dots" />
+                    <p class="text-xs mt-2">Dots</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="ring" />
+                    <p class="text-xs mt-2">Ring</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="pulse" />
+                    <p class="text-xs mt-2">Pulse</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- HoverCard Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Hover Card</h3>
+            <HoverCard>
+                <ChildContent>
+                    <Button Variant="outline">@hoverCardText</Button>
+                </ChildContent>
+                <CardContent>
+                    <div class="space-y-2">
+                        <h4 class="text-sm font-semibold">@hoverCardUser</h4>
+                        <p class="text-sm">Software Engineer at Shell Technologies</p>
+                        <div class="flex items-center pt-2">
+                            <svg class="mr-2 h-4 w-4 opacity-70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span class="text-xs text-muted-foreground">shep@shell-tech.dev</span>
+                        </div>
+                    </div>
+                </CardContent>
+            </HoverCard>
+        </section>
+
+        <!-- Command Demo -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Command Palette</h3>
+            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" @onclick="() => showCommand = true">Open Command Palette (Ctrl+K)</button>
+            <Command
+                IsOpen="showCommand"
+                Placeholder="Type a command or search..."
+                Commands="commandItems"
+                CommandSelected="HandleCommandSelected"
+                IsOpenChanged="val => showCommand = val" />
+        </section>
+
         <!-- Pagination Demo -->
         <section class="border border-border rounded-lg p-6 bg-card">
             <h3 class="text-xl font-semibold mb-4 text-card-foreground">Pagination</h3>
@@ -854,10 +954,123 @@
         await Task.Delay(3000);
         formSubmitted = false;
     }
-    
+
     private async Task HandlePageChange(int page)
     {
         currentPage = page;
         await Task.CompletedTask;
+    }
+
+    protected override void OnInitialized()
+    {
+        userActions = new List<DataTableAction<User>>
+        {
+            new DataTableAction<User> { Label = "Edit", Action = item => EditUser(item) },
+            new DataTableAction<User> { Label = "Delete", Action = item => DeleteUser(item) }
+        };
+    }
+
+    // New component variables
+    private bool showAlertDialog = false;
+    private bool showCommand = false;
+    private DateTime? selectedCalendarDate;
+    private string hoverCardText = "Hover me!";
+    private string hoverCardUser = "Shewart Shepherd";
+
+    private List<DataTableColumn<User>> userColumns = new()
+    {
+        new DataTableColumn<User>
+        {
+            Header = "Name",
+            PropertyName = "Name",
+            Sortable = true,
+            CellTemplate = context => builder => builder.AddContent(0, context.Name)
+        },
+        new DataTableColumn<User>
+        {
+            Header = "Email",
+            PropertyName = "Email",
+            Sortable = true,
+            CellTemplate = context => builder => builder.AddContent(0, context.Email)
+        },
+        new DataTableColumn<User>
+        {
+            Header = "Phone",
+            PropertyName = "Phone",
+            Sortable = true,
+            CellTemplate = context => builder => builder.AddContent(0, context.Phone)
+        },
+        new DataTableColumn<User>
+        {
+            Header = "Role",
+            PropertyName = "Role",
+            CellTemplate = context => builder =>
+            {
+                builder.OpenComponent<Badge>(0);
+                builder.AddAttribute(1, "Variant", context.Role == "Admin" ? "destructive" : "default");
+                builder.AddAttribute(2, "ChildContent", (RenderFragment)(childBuilder => childBuilder.AddContent(0, context.Role)));
+                builder.CloseComponent();
+            }
+        }
+    };
+
+    private List<DataTableAction<User>> userActions = new();
+
+    private List<CommandItem> commandItems = new()
+    {
+        new CommandItem { Title = "New File", Description = "Create a new file", Shortcut = "Ctrl+N", Action = () => { /* action */ } },
+        new CommandItem { Title = "Open File", Description = "Open an existing file", Shortcut = "Ctrl+O" },
+        new CommandItem { Title = "Save File", Description = "Save the current file", Shortcut = "Ctrl+S" },
+        new CommandItem { Title = "Settings", Description = "Open application settings", Shortcut = "Ctrl+," },
+        new CommandItem { Title = "Help", Description = "Show help documentation", Shortcut = "F1" }
+    };
+
+    private List<User> users = new()
+    {
+        new User { Name = "Shewart Shepherd", Email = "shep@shell-tech.dev", Phone = "+263780000000", Role = "Admin" },
+        new User { Name = "John Doe", Email = "john@example.com", Phone = "+1234567890", Role = "User" },
+        new User { Name = "Jane Smith", Email = "jane@example.com", Phone = "+0987654321", Role = "Moderator" },
+        new User { Name = "Bob Johnson", Email = "bob@example.com", Phone = "+1122334455", Role = "User" },
+        new User { Name = "Alice Brown", Email = "alice@example.com", Phone = "+5566778899", Role = "User" },
+        new User { Name = "Charlie Wilson", Email = "charlie@example.com", Phone = "+9988776655", Role = "User" },
+        new User { Name = "Diana Prince", Email = "diana@example.com", Phone = "+1122334455", Role = "Moderator" },
+        new User { Name = "Eve Adams", Email = "eve@example.com", Phone = "+5544332211", Role = "User" },
+        new User { Name = "Frank Miller", Email = "frank@example.com", Phone = "+6677889900", Role = "User" },
+        new User { Name = "Grace Lee", Email = "grace@example.com", Phone = "+3344556677", Role = "Admin" },
+        new User { Name = "Henry Ford", Email = "henry@example.com", Phone = "+8899001122", Role = "User" },
+        new User { Name = "Ivy Chen", Email = "ivy@example.com", Phone = "+4455667788", Role = "Moderator" }
+    };
+
+    private async Task HandleAlertConfirm()
+    {
+        await Task.CompletedTask; // Simulate async operation
+    }
+
+    private async Task HandleAlertCancel()
+    {
+        await Task.CompletedTask;
+    }
+
+    private void EditUser(User user)
+    {
+        // Handle edit
+    }
+
+    private void DeleteUser(User user)
+    {
+        // Handle delete
+    }
+
+    private async Task HandleCommandSelected(CommandItem command)
+    {
+        await Task.CompletedTask; // Handle command selection
+    }
+
+    public class User
+    {
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Role { get; set; } = "";
     }
 }
