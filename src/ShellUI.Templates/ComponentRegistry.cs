@@ -59,7 +59,13 @@ public static class ComponentRegistry
         { "resizable", ResizableTemplate.Metadata },
         { "sheet", SheetTemplate.Metadata },
         { "drawer", DrawerTemplate.Metadata },
-        { "collapsible", CollapsibleTemplate.Metadata }
+        { "collapsible", CollapsibleTemplate.Metadata },
+        { "data-table", DataTableTemplate.Metadata },
+        { "alert-dialog", AlertDialogTemplate.Metadata },
+        { "calendar", CalendarTemplate.Metadata },
+        { "loading", LoadingTemplate.Metadata },
+        { "hover-card", HoverCardTemplate.Metadata },
+        { "command", CommandTemplate.Metadata }
     };
 
     public static string? GetComponentContent(string componentName)
@@ -119,6 +125,12 @@ public static class ComponentRegistry
             "sheet" => SheetTemplate.Content,
             "drawer" => DrawerTemplate.Content,
             "collapsible" => CollapsibleTemplate.Content,
+            "data-table" => DataTableTemplate.Content,
+            "alert-dialog" => AlertDialogTemplate.Content,
+            "calendar" => CalendarTemplate.Content,
+            "loading" => LoadingTemplate.Content,
+            "hover-card" => HoverCardTemplate.Content,
+            "command" => CommandTemplate.Content,
             _ => null
         };
     }
