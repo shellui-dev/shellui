@@ -153,15 +153,15 @@
             <h3 class="text-xl font-semibold mb-4 text-card-foreground">Skeleton</h3>
             <div class="space-y-4">
                 <div class="space-y-2">
-                    <Skeleton ClassName="h-4 w-full" />
-                    <Skeleton ClassName="h-4 w-3/4" />
-                    <Skeleton ClassName="h-4 w-1/2" />
+                    <Skeleton Class="h-4 w-full" />
+                    <Skeleton Class="h-4 w-3/4" />
+                    <Skeleton Class="h-4 w-1/2" />
                 </div>
                 <div class="flex items-center space-x-4">
-                    <Skeleton Variant="circle" ClassName="h-12 w-12" />
+                    <Skeleton Variant="circular" Class="h-12 w-12" />
                     <div class="space-y-2 flex-1">
-                        <Skeleton ClassName="h-4 w-full" />
-                        <Skeleton ClassName="h-4 w-2/3" />
+                        <Skeleton Class="h-4 w-full" />
+                        <Skeleton Class="h-4 w-2/3" />
                     </div>
                 </div>
             </div>
@@ -323,78 +323,6 @@
             </div>
         </section>
 
-        <!-- Tabs Demo -->
-        <section class="border border-border rounded-lg p-6 bg-card">
-            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Tabs</h3>
-            <Tabs>
-                <TabHeaders>
-                    <button @onclick="@(() => activeTab = "account")" class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @(activeTab == "account" ? "bg-background text-foreground shadow-sm" : "")">
-                        Account
-                    </button>
-                    <button @onclick="@(() => activeTab = "password")" class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @(activeTab == "password" ? "bg-background text-foreground shadow-sm" : "")">
-                        Password
-                    </button>
-                    <button @onclick="@(() => activeTab = "notifications")" class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 @(activeTab == "notifications" ? "bg-background text-foreground shadow-sm" : "")">
-                        Notifications
-                    </button>
-                </TabHeaders>
-                <TabContent>
-                    @if (activeTab == "account")
-                    {
-                        <div class="space-y-4 py-4">
-                            <p class="text-sm text-muted-foreground">Manage your account settings and preferences.</p>
-                            <div class="space-y-2">
-                                <Label>Username</Label>
-                                <Input Placeholder="johndoe" Value="@tabUsername" />
-                            </div>
-                            <div class="space-y-2">
-                                <Label>Email</Label>
-                                <Input Type="email" Placeholder="john@example.com" Value="@tabEmail" />
-                            </div>
-                            <Button Size="sm">Save Changes</Button>
-                        </div>
-                    }
-                    else if (activeTab == "password")
-                    {
-                        <div class="space-y-4 py-4">
-                            <p class="text-sm text-muted-foreground">Change your password here. After saving, you'll be logged out.</p>
-                            <div class="space-y-2">
-                                <Label>Current Password</Label>
-                                <Input Type="password" Placeholder="••••••••" />
-                            </div>
-                            <div class="space-y-2">
-                                <Label>New Password</Label>
-                                <Input Type="password" Placeholder="••••••••" />
-                            </div>
-                            <div class="space-y-2">
-                                <Label>Confirm Password</Label>
-                                <Input Type="password" Placeholder="••••••••" />
-                            </div>
-                            <Button Size="sm">Update Password</Button>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="space-y-4 py-4">
-                            <p class="text-sm text-muted-foreground">Configure how you receive notifications.</p>
-                            <div class="flex items-center space-x-2">
-                                <Switch @bind-Checked="emailNotifications" />
-                                <Label>Email notifications</Label>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <Switch @bind-Checked="pushNotifications" />
-                                <Label>Push notifications</Label>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <Switch @bind-Checked="smsNotifications" />
-                                <Label>SMS notifications</Label>
-                            </div>
-                            <Button Size="sm">Save Preferences</Button>
-                        </div>
-                    }
-                </TabContent>
-            </Tabs>
-        </section>
 
         <!-- NEW COMPONENTS SECTION -->
         <h2 class="text-3xl font-bold text-foreground mt-12 mb-6">New Components</h2>
@@ -820,6 +748,64 @@
                 IsOpenChanged="val => showCommand = val" />
         </section>
 
+        <!-- New Components Demo Section -->
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Context Menu</h3>
+            <div class="space-y-4">
+                <ContextMenu Items="contextMenuItems" OnItemSelected="HandleContextMenuSelect">
+                    <button class="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+                        Right-click me to see the context menu!
+                    </button>
+                </ContextMenu>
+            </div>
+        </section>
+
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Empty State</h3>
+            <div class="space-y-4">
+                <EmptyState 
+                    Icon="@GetFileIconString()" 
+                    Title="No files found" 
+                    Description="Get started by uploading your first file.">
+                    <Action>
+                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                            Upload File
+                        </button>
+                    </Action>
+                </EmptyState>
+            </div>
+        </section>
+
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Skeleton Loading</h3>
+            <div class="space-y-4">
+                <div class="flex space-x-4">
+                    <Skeleton Variant="circular" Size="lg" />
+                    <div class="space-y-2 flex-1">
+                        <Skeleton Variant="text" />
+                        <Skeleton Variant="text" Size="sm" />
+                    </div>
+                </div>
+                <Skeleton Variant="card" />
+                <Skeleton Variant="table" Rows="3" />
+            </div>
+        </section>
+
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Tabs</h3>
+            <div class="space-y-4">
+                <Tabs TabItems="tabItems" ActiveTab="@activeTab" ActiveTabChanged="HandleTabChange" />
+            </div>
+        </section>
+
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Stepper</h3>
+            <div class="space-y-4">
+                <Stepper StepItems="stepperSteps" CurrentStep="@currentStep" CurrentStepChanged="HandleStepChange" />
+            </div>
+        </section>
+
+
         <!-- Pagination Demo -->
         <section class="border border-border rounded-lg p-6 bg-card">
             <h3 class="text-xl font-semibold mb-4 text-card-foreground">Pagination</h3>
@@ -870,13 +856,6 @@
     
     // Tabs demo state
     private string activeTab = "account";
-    private string tabUsername = "";
-    private string tabEmail = "";
-    
-    // Notification preferences
-    private bool emailNotifications = true;
-    private bool pushNotifications = false;
-    private bool smsNotifications = false;
     
     // New component states
     private RadioGroup? radioGroup;
@@ -968,6 +947,43 @@
             new DataTableAction<User> { Label = "Edit", Action = item => EditUser(item) },
             new DataTableAction<User> { Label = "Delete", Action = item => DeleteUser(item) }
         };
+
+        // Initialize context menu items
+        contextMenuItems = new List<ContextMenuItem>
+        {
+            new ContextMenuItem { Label = "Copy", Icon = GetCopyIconString(), Shortcut = "Ctrl+C" },
+            new ContextMenuItem { Label = "Paste", Icon = GetPasteIconString(), Shortcut = "Ctrl+V" },
+            new ContextMenuItem { IsSeparator = true },
+            new ContextMenuItem { Label = "Cut", Icon = GetCutIconString(), Shortcut = "Ctrl+X" },
+            new ContextMenuItem { Label = "Delete", Icon = GetDeleteIconString(), Shortcut = "Del", Disabled = true }
+        };
+
+
+        // Initialize tab items
+        tabItems = new List<TabItem>
+        {
+            new TabItem 
+            { 
+                Id = "overview", 
+                Label = "Overview", 
+                Icon = GetChartIconString(),
+                Content = builder => builder.AddMarkupContent(0, "<p>This is the overview tab content.</p>")
+            },
+            new TabItem 
+            { 
+                Id = "settings", 
+                Label = "Settings", 
+                Icon = GetGearIconString(),
+                Content = builder => builder.AddMarkupContent(0, "<p>This is the settings tab content.</p>")
+            },
+            new TabItem 
+            { 
+                Id = "analytics", 
+                Label = "Analytics", 
+                Icon = GetTrendingIconString(),
+                Content = builder => builder.AddMarkupContent(0, "<p>This is the analytics tab content.</p>")
+            }
+        };
     }
 
     // New component variables
@@ -1025,6 +1041,42 @@
         new CommandItem { Title = "Help", Description = "Show help documentation", Shortcut = "F1" }
     };
 
+    // New component data
+    private List<ContextMenuItem> contextMenuItems = new();
+
+    private List<TabItem> tabItems = new();
+
+    private List<StepItem> stepperSteps = new()
+    {
+        new StepItem 
+        { 
+            Title = "Account Setup", 
+            Description = "Create your account",
+            Content = builder => builder.AddMarkupContent(0, "<p>Enter your account details here.</p>")
+        },
+        new StepItem 
+        { 
+            Title = "Profile Information", 
+            Description = "Complete your profile",
+            Content = builder => builder.AddMarkupContent(0, "<p>Add your profile information.</p>")
+        },
+        new StepItem 
+        { 
+            Title = "Preferences", 
+            Description = "Set your preferences",
+            Content = builder => builder.AddMarkupContent(0, "<p>Configure your preferences.</p>")
+        },
+        new StepItem 
+        { 
+            Title = "Review", 
+            Description = "Review and confirm",
+            Content = builder => builder.AddMarkupContent(0, "<p>Review your information and confirm.</p>")
+        }
+    };
+
+
+    private int currentStep = 0;
+
     private List<User> users = new()
     {
         new User { Name = "Shewart Shepherd", Email = "shep@shell-tech.dev", Phone = "+263780000000", Role = "Admin" },
@@ -1065,6 +1117,40 @@
     {
         await Task.CompletedTask; // Handle command selection
     }
+
+    private async Task HandleContextMenuSelect(ContextMenuItem item)
+    {
+        await Task.CompletedTask; // Handle context menu selection
+    }
+
+    private async Task HandleTabChange(string tabId)
+    {
+        activeTab = tabId;
+        await Task.CompletedTask;
+    }
+
+    private async Task HandleStepChange(int step)
+    {
+        currentStep = step;
+        await Task.CompletedTask;
+    }
+
+    private string GetCopyIconString() => @"<svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"" /></svg>";
+
+    private string GetPasteIconString() => @"<svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"" /></svg>";
+
+    private string GetCutIconString() => @"<svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"" /></svg>";
+
+    private string GetDeleteIconString() => @"<svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"" /></svg>";
+
+
+    private string GetChartIconString() => @"<svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"" /></svg>";
+
+    private string GetGearIconString() => @"<svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"" /><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M15 12a3 3 0 11-6 0 3 3 0 016 0z"" /></svg>";
+
+    private string GetTrendingIconString() => @"<svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"" /></svg>";
+
+    private string GetFileIconString() => @"<svg class=""h-16 w-16 text-foreground"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""1.5"" d=""M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"" /></svg>";
 
     public class User
     {
