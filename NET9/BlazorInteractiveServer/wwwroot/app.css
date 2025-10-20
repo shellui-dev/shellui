@@ -349,7 +349,7 @@
   .z-50 {
     z-index: 50;
   }
-  .container {
+.container {
     width: 100%;
     @media (width >= 40rem) {
       max-width: 40rem;
