@@ -1,0 +1,35 @@
+@if (Variant == "spinner")
+{
+    <div class="@($"animate-spin rounded-full border-2 border-gray-300 border-t-blue-600 {(Size == "sm" ? "h-4 w-4" : Size == "lg" ? "h-8 w-8" : "h-6 w-6")} {Class}")" style="animation: spin 1s linear infinite;"></div>
+}
+else if (Variant == "dots")
+{
+    <div class="flex space-x-1">
+        <div class="@($"animate-bounce rounded-full bg-blue-600 {(Size == "sm" ? "h-2 w-2" : Size == "lg" ? "h-4 w-4" : "h-3 w-3")} {Class}")" style="animation: bounce 1s infinite; animation-delay: 0ms;"></div>
+        <div class="@($"animate-bounce rounded-full bg-blue-600 {(Size == "sm" ? "h-2 w-2" : Size == "lg" ? "h-4 w-4" : "h-3 w-3")} {Class}")" style="animation: bounce 1s infinite; animation-delay: 150ms;"></div>
+        <div class="@($"animate-bounce rounded-full bg-blue-600 {(Size == "sm" ? "h-2 w-2" : Size == "lg" ? "h-4 w-4" : "h-3 w-3")} {Class}")" style="animation: bounce 1s infinite; animation-delay: 300ms;"></div>
+    </div>
+}
+else if (Variant == "pulse")
+{
+    <div class="@($"animate-pulse rounded-md bg-gray-300 {(Size == "sm" ? "h-4 w-16" : Size == "lg" ? "h-6 w-24" : "h-5 w-20")} {Class}")" style="animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></div>
+}
+else if (Variant == "ring")
+{
+    <div class="relative">
+        <div class="@($"animate-spin rounded-full border-4 border-gray-300 border-t-blue-600 {(Size == "sm" ? "h-6 w-6" : Size == "lg" ? "h-12 w-12" : "h-8 w-8")} {Class}")" style="animation: spin 1s linear infinite;"></div>
+        <div class="@($"absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-gray-300 {(Size == "sm" ? "h-6 w-6" : Size == "lg" ? "h-12 w-12" : "h-8 w-8")}")" style="animation: spin 1.5s linear infinite reverse;"></div>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public string Variant { get; set; } = "spinner"; // spinner, dots, pulse, ring
+
+    [Parameter]
+    public string Size { get; set; } = "default"; // sm, default, lg
+
+    [Parameter]
+    public string Class { get; set; } = "";
+}

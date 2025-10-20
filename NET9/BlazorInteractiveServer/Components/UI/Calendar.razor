@@ -1,0 +1,114 @@
+@using System.Globalization
+
+<div class="p-3">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-4">
+        <button
+            @onclick="PreviousMonth"
+            class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-7 w-7">
+            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+
+        <h2 class="text-sm font-medium">
+            @_currentMonth.ToString("MMMM yyyy", CultureInfo.CurrentCulture)
+        </h2>
+
+        <button
+            @onclick="NextMonth"
+            class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-7 w-7">
+            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Days of week -->
+    <div class="grid grid-cols-7 gap-1 mb-2">
+        @foreach (var day in new[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" })
+        {
+            <div class="p-2 text-center text-sm font-medium text-muted-foreground">@day</div>
+        }
+    </div>
+
+    <!-- Calendar grid -->
+    <div class="grid grid-cols-7 gap-1">
+        @for (int i = 0; i < _leadingDays; i++)
+        {
+            <div class="p-2"></div>
+        }
+
+        @for (int day = 1; day <= _daysInMonth; day++)
+        {
+            var date = new DateTime(_currentMonth.Year, _currentMonth.Month, day);
+            var isSelected = SelectedDate.HasValue && date.Date == SelectedDate.Value.Date;
+            var isToday = date.Date == DateTime.Today;
+            var isDisabled = (MinDate.HasValue && date < MinDate.Value) || (MaxDate.HasValue && date > MaxDate.Value);
+
+            <button
+                @onclick="() => SelectDate(date)"
+                disabled="@isDisabled"
+                class="@($"p-2 text-center text-sm transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 rounded-md {(isSelected ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground" : "")} {(isToday ? "font-semibold" : "")}")">
+                @day
+            </button>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public DateTime? SelectedDate { get; set; }
+
+    [Parameter]
+    public DateTime? MinDate { get; set; }
+
+    [Parameter]
+    public DateTime? MaxDate { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime> SelectedDateChanged { get; set; }
+
+    private DateTime _currentMonth = DateTime.Today;
+    private int _daysInMonth;
+    private int _leadingDays;
+
+    protected override void OnInitialized()
+    {
+        UpdateCalendar();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (SelectedDate.HasValue)
+        {
+            _currentMonth = SelectedDate.Value;
+            UpdateCalendar();
+        }
+    }
+
+    private void UpdateCalendar()
+    {
+        _daysInMonth = DateTime.DaysInMonth(_currentMonth.Year, _currentMonth.Month);
+        var firstDayOfMonth = new DateTime(_currentMonth.Year, _currentMonth.Month, 1);
+        _leadingDays = (int)firstDayOfMonth.DayOfWeek;
+    }
+
+    private void PreviousMonth()
+    {
+        _currentMonth = _currentMonth.AddMonths(-1);
+        UpdateCalendar();
+    }
+
+    private void NextMonth()
+    {
+        _currentMonth = _currentMonth.AddMonths(1);
+        UpdateCalendar();
+    }
+
+    private async Task SelectDate(DateTime date)
+    {
+        SelectedDate = date;
+        await SelectedDateChanged.InvokeAsync(date);
+    }
+}
