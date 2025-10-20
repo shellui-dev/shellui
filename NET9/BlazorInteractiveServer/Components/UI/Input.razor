@@ -24,7 +24,6 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private bool _isFocused = false;
 
     private string CssClass => BuildCssClass();
 
@@ -51,13 +50,11 @@
 
     private async Task HandleFocus(FocusEventArgs e)
     {
-        _isFocused = true;
         await OnFocus.InvokeAsync(e);
     }
 
     private async Task HandleBlur(FocusEventArgs e)
     {
-        _isFocused = false;
         await OnBlur.InvokeAsync(e);
     }
 }
