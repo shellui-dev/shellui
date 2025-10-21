@@ -805,6 +805,60 @@
             </div>
         </section>
 
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Text Carousel</h3>
+            <div class="space-y-4">
+                <Carousel TotalSlides="3" CurrentSlide="@textCarouselSlide" CurrentSlideChanged="HandleTextCarouselSlideChange" AutoPlay="true" AutoPlayInterval="3000" AspectRatio="16/9">
+                    <CarouselItem TotalSlides="3">
+                        <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-8">
+                            <div class="text-center">
+                                <h4 class="text-2xl font-bold mb-2">Slide 1</h4>
+                                <p class="text-blue-100">Welcome to ShellUI Carousel</p>
+                            </div>
+                        </div>
+                    </CarouselItem>
+                    <CarouselItem TotalSlides="3">
+                        <div class="bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-lg p-8">
+                            <div class="text-center">
+                                <h4 class="text-2xl font-bold mb-2">Slide 2</h4>
+                                <p class="text-green-100">Beautiful components for Blazor</p>
+                            </div>
+                        </div>
+                    </CarouselItem>
+                    <CarouselItem TotalSlides="3">
+                        <div class="bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg p-8">
+                            <div class="text-center">
+                                <h4 class="text-2xl font-bold mb-2">Slide 3</h4>
+                                <p class="text-orange-100">Built with Tailwind CSS</p>
+                            </div>
+                        </div>
+                    </CarouselItem>
+                </Carousel>
+            </div>
+        </section>
+
+        <section class="border border-border rounded-lg p-6 bg-card">
+            <h3 class="text-xl font-semibold mb-4 text-card-foreground">Image Carousel</h3>
+            <div class="space-y-4">
+                <Carousel TotalSlides="3" CurrentSlide="@imageCarouselSlide" CurrentSlideChanged="HandleImageCarouselSlideChange" AutoPlay="true" AutoPlayInterval="5000" AspectRatio="21/9" ShowDots="true">
+                    <CarouselItem TotalSlides="3">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop" 
+                             alt="Landscape 1" 
+                             class="w-full h-full object-cover rounded-lg" />
+                    </CarouselItem>
+                    <CarouselItem TotalSlides="3">
+                        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=400&fit=crop" 
+                             alt="Landscape 2" 
+                             class="w-full h-full object-cover rounded-lg" />
+                    </CarouselItem>
+                    <CarouselItem TotalSlides="3">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=400&fit=crop" 
+                             alt="Landscape 3" 
+                             class="w-full h-full object-cover rounded-lg" />
+                    </CarouselItem>
+                </Carousel>
+            </div>
+        </section>
 
         <!-- Pagination Demo -->
         <section class="border border-border rounded-lg p-6 bg-card">
@@ -1076,6 +1130,13 @@
 
 
     private int currentStep = 0;
+    private int carouselSlide = 0;
+    
+    // Text Carousel
+    private int textCarouselSlide = 0;
+    
+    // Image Carousel
+    private int imageCarouselSlide = 0;
 
     private List<User> users = new()
     {
@@ -1134,6 +1195,25 @@
         currentStep = step;
         await Task.CompletedTask;
     }
+
+    private async Task HandleCarouselSlideChange(int slide)
+    {
+        carouselSlide = slide;
+        await Task.CompletedTask;
+    }
+
+    private async Task HandleTextCarouselSlideChange(int slide)
+    {
+        textCarouselSlide = slide;
+        await Task.CompletedTask;
+    }
+
+    private async Task HandleImageCarouselSlideChange(int slide)
+    {
+        imageCarouselSlide = slide;
+        await Task.CompletedTask;
+    }
+
 
     private string GetCopyIconString() => @"<svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor""><path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"" /></svg>";
 
