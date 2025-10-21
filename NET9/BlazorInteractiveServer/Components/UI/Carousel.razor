@@ -1,0 +1,126 @@
+@using Microsoft.JSInterop
+
+<div class="@($"relative w-full {Class}")" @ref="carouselRef">
+    <div class="relative overflow-hidden rounded-lg" style="aspect-ratio: @AspectRatio;">
+        <div class="flex transition-transform duration-300 ease-in-out" 
+             style="transform: translateX(-@(CurrentSlide * (100.0 / TotalSlides))%); width: @(TotalSlides * 100)%">
+            @ChildContent
+        </div>
+    </div>
+    
+    @if (ShowArrows)
+    {
+        <button class="@($"absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 shadow-md transition-colors hover:bg-background/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 {ArrowClass}")"
+                disabled="@(CurrentSlide == 0 && !Loop)"
+                @onclick="PreviousSlide">
+            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+        
+        <button class="@($"absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 shadow-md transition-colors hover:bg-background/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 {ArrowClass}")"
+                disabled="@(CurrentSlide >= TotalSlides - 1 && !Loop)"
+                @onclick="NextSlide">
+            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+    }
+    
+    @if (ShowDots)
+    {
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+            @for (int i = 0; i < TotalSlides; i++)
+            {
+                <button class="@($"h-2 w-2 rounded-full transition-colors {(i == CurrentSlide ? "bg-primary" : "bg-muted")}")"
+                        @onclick="() => GoToSlide(i)">
+                </button>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public int CurrentSlide { get; set; } = 0;
+    [Parameter] public EventCallback<int> CurrentSlideChanged { get; set; }
+    [Parameter] public int TotalSlides { get; set; } = 0;
+    [Parameter] public bool ShowArrows { get; set; } = true;
+    [Parameter] public bool ShowDots { get; set; } = true;
+    [Parameter] public bool Loop { get; set; } = true;
+    [Parameter] public bool AutoPlay { get; set; } = false;
+    [Parameter] public int AutoPlayInterval { get; set; } = 3000;
+    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public string ArrowClass { get; set; } = string.Empty;
+    [Parameter] public string AspectRatio { get; set; } = "16/9";
+    [Parameter] public EventCallback<int> OnSlideChanged { get; set; }
+
+    private ElementReference carouselRef;
+    private Timer? autoPlayTimer;
+
+    protected override void OnInitialized()
+    {
+        if (AutoPlay)
+        {
+            autoPlayTimer = new Timer(async _ => await InvokeAsync(NextSlide), null, AutoPlayInterval, AutoPlayInterval);
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (AutoPlay && autoPlayTimer == null)
+        {
+            autoPlayTimer = new Timer(async _ => await InvokeAsync(NextSlide), null, AutoPlayInterval, AutoPlayInterval);
+        }
+        else if (!AutoPlay && autoPlayTimer != null)
+        {
+            autoPlayTimer.Dispose();
+            autoPlayTimer = null;
+        }
+    }
+
+    private async Task NextSlide()
+    {
+        if (CurrentSlide < TotalSlides - 1)
+        {
+            CurrentSlide++;
+        }
+        else if (Loop)
+        {
+            CurrentSlide = 0;
+        }
+        
+        await CurrentSlideChanged.InvokeAsync(CurrentSlide);
+        await OnSlideChanged.InvokeAsync(CurrentSlide);
+        StateHasChanged();
+    }
+
+    private async Task PreviousSlide()
+    {
+        if (CurrentSlide > 0)
+        {
+            CurrentSlide--;
+        }
+        else if (Loop)
+        {
+            CurrentSlide = TotalSlides - 1;
+        }
+        
+        await CurrentSlideChanged.InvokeAsync(CurrentSlide);
+        await OnSlideChanged.InvokeAsync(CurrentSlide);
+        StateHasChanged();
+    }
+
+    private async Task GoToSlide(int slide)
+    {
+        CurrentSlide = slide;
+        await CurrentSlideChanged.InvokeAsync(CurrentSlide);
+        await OnSlideChanged.InvokeAsync(CurrentSlide);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        autoPlayTimer?.Dispose();
+    }
+}

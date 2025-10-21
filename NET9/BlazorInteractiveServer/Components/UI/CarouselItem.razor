@@ -1,0 +1,11 @@
+<div class="@($"w-full flex-shrink-0 {Class}")" style="width: @(100.0 / TotalSlides)%">
+    <div class="w-full h-full">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public int TotalSlides { get; set; } = 1;
+}
