@@ -1,0 +1,121 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public static class StepperTemplate
+{
+    public static readonly ComponentMetadata Metadata = new()
+    {
+        Name = "Stepper",
+        Description = "A stepper component for multi-step processes",
+        Category = ComponentCategory.Navigation,
+        Tags = new[] { "stepper", "steps", "progress", "wizard", "multi-step" },
+        Dependencies = new[] { "StepItem" }
+    };
+
+    public const string Content = """
+@using BlazorInteractiveServer.Components.Models
+
+<div class="@($"w-full {Class}")">
+    <div class="flex items-start justify-between">
+        @for (int i = 0; i < StepItems.Count; i++)
+        {
+            var step = StepItems[i];
+            var isActive = i == CurrentStep;
+            var isCompleted = i < CurrentStep;
+            var isClickable = i <= CurrentStep || AllowClickToPrevious;
+            
+            <div class="flex flex-col items-center">
+                <!-- Step Circle -->
+                <button class="@($"flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-medium transition-colors {(isCompleted ? "border-primary bg-primary text-primary-foreground" : isActive ? "border-primary bg-background text-primary" : "border-muted bg-background text-muted-foreground")} {(isClickable ? "cursor-pointer hover:border-primary/50" : "cursor-not-allowed")}")"
+                        disabled="@(!isClickable)"
+                        @onclick="async () => { if (isClickable) await GoToStep(i); }">
+                    @if (isCompleted)
+                    {
+                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    }
+                    else
+                    {
+                        @(i + 1)
+                    }
+                </button>
+                
+                <!-- Step Label -->
+                <div class="mt-4 text-center">
+                    <p class="@($"text-sm font-medium mb-2 {(isActive || isCompleted ? "text-foreground" : "text-muted-foreground")}")">@step.Title</p>
+                    @if (!string.IsNullOrEmpty(step.Description))
+                    {
+                        <p class="text-xs text-muted-foreground mb-1">@step.Description</p>
+                    }
+                </div>
+                
+                <!-- Connector Line -->
+                @if (i < StepItems.Count - 1)
+                {
+                    <div class="@($"absolute top-5 left-1/2 h-px w-24 -translate-y-1/2 {(isCompleted ? "bg-primary" : "bg-muted")}")" style="transform: translateX(50%);"></div>
+                }
+            </div>
+        }
+    </div>
+    
+    <!-- Step Content -->
+    @if (StepItems.Any() && CurrentStep < StepItems.Count)
+    {
+        <div class="mt-8">
+            @StepItems[CurrentStep].Content
+        </div>
+    }
+    
+    <!-- Navigation Buttons -->
+    @if (ShowNavigation)
+    {
+        <div class="mt-6 flex justify-between">
+            <button class="@($"inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 {(CurrentStep > 0 ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-muted text-muted-foreground")}")"
+                    disabled="@(CurrentStep == 0)"
+                    @onclick="PreviousStep">
+                Previous
+            </button>
+            
+            <button class="@($"inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 {(CurrentStep < StepItems.Count - 1 ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-muted text-muted-foreground")}")"
+                    disabled="@(CurrentStep >= StepItems.Count - 1)"
+                    @onclick="NextStep">
+                @(CurrentStep >= StepItems.Count - 1 ? "Finish" : "Next")
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<StepItem> StepItems { get; set; } = new();
+    [Parameter] public int CurrentStep { get; set; } = 0;
+    [Parameter] public EventCallback<int> CurrentStepChanged { get; set; }
+    [Parameter] public bool ShowNavigation { get; set; } = true;
+    [Parameter] public bool AllowClickToPrevious { get; set; } = true;
+    [Parameter] public string Class { get; set; } = string.Empty;
+
+    private async Task GoToStep(int step)
+    {
+        CurrentStep = step;
+        await CurrentStepChanged.InvokeAsync(step);
+    }
+
+    private async Task PreviousStep()
+    {
+        if (CurrentStep > 0)
+        {
+            await GoToStep(CurrentStep - 1);
+        }
+    }
+
+    private async Task NextStep()
+    {
+        if (CurrentStep < StepItems.Count - 1)
+        {
+            await GoToStep(CurrentStep + 1);
+        }
+    }
+}
+""";
+}

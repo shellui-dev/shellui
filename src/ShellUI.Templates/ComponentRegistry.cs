@@ -65,7 +65,16 @@ public static class ComponentRegistry
         { "calendar", CalendarTemplate.Metadata },
         { "loading", LoadingTemplate.Metadata },
         { "hover-card", HoverCardTemplate.Metadata },
-        { "command", CommandTemplate.Metadata }
+        { "command", CommandTemplate.Metadata },
+        { "context-menu", ContextMenuTemplate.Metadata },
+        { "empty-state", EmptyStateTemplate.Metadata },
+        { "stepper", StepperTemplate.Metadata },
+        { "carousel", CarouselTemplate.Metadata },
+        { "carousel-item", CarouselItemTemplate.Metadata },
+        { "carousel-content", CarouselContentTemplate.Metadata },
+        { "carousel-previous", CarouselPreviousTemplate.Metadata },
+        { "carousel-next", CarouselNextTemplate.Metadata },
+        { "carousel-dots", CarouselDotsTemplate.Metadata }
     };
 
     public static string? GetComponentContent(string componentName)
@@ -131,6 +140,15 @@ public static class ComponentRegistry
             "loading" => LoadingTemplate.Content,
             "hover-card" => HoverCardTemplate.Content,
             "command" => CommandTemplate.Content,
+            "context-menu" => ContextMenuTemplate.Content,
+            "empty-state" => EmptyStateTemplate.Content,
+            "stepper" => StepperTemplate.Content,
+            "carousel" => CarouselTemplate.Content,
+            "carousel-item" => CarouselItemTemplate.Content,
+            "carousel-content" => CarouselContentTemplate.Content,
+            "carousel-previous" => CarouselPreviousTemplate.Content,
+            "carousel-next" => CarouselNextTemplate.Content,
+            "carousel-dots" => CarouselDotsTemplate.Content,
             _ => null
         };
     }
