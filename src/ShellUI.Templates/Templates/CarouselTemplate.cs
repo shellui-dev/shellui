@@ -18,7 +18,7 @@ public static class CarouselTemplate
 
 <div class="@($"relative w-full {Class}")" @ref="carouselRef">
     <div class="relative overflow-hidden rounded-lg" style="aspect-ratio: @AspectRatio;">
-        <div class="flex transition-transform duration-300 ease-in-out" 
+        <div class="flex transition-transform duration-300 ease-in-out h-full" 
              style="transform: translateX(-@(CurrentSlide * (100.0 / TotalSlides))%); width: @(TotalSlides * 100)%">
             @ChildContent
         </div>

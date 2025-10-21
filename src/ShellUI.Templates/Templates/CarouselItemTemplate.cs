@@ -14,7 +14,7 @@ public static class CarouselItemTemplate
 
     public const string Content = """
 <div class="@($"w-full flex-shrink-0 {Class}")" style="width: @(100.0 / TotalSlides)%">
-    <div class="w-full h-full">
+    <div class="w-full h-full flex items-center justify-center">
         @ChildContent
     </div>
 </div>
