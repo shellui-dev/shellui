@@ -1,3 +1,5 @@
+using ShellUI.Core.Models;
+
 namespace ShellUI.Templates.Templates;
 
 public static class AlertDialogTemplate
@@ -5,9 +7,11 @@ public static class AlertDialogTemplate
     public static ComponentMetadata Metadata => new()
     {
         Name = "alert-dialog",
+        DisplayName = "Alert Dialog",
         Description = "Modal dialog for confirmations and alerts",
         Category = ComponentCategory.Overlay,
-        Dependencies = new[] { "dialog", "button" }
+        FilePath = "AlertDialog.razor",
+        Dependencies = new List<string> { "dialog", "button" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

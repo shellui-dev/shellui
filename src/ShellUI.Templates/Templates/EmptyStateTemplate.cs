@@ -6,11 +6,13 @@ public static class EmptyStateTemplate
 {
     public static readonly ComponentMetadata Metadata = new()
     {
-        Name = "EmptyState",
+        Name = "empty-state",
+        DisplayName = "Empty State",
         Description = "An empty state component for when there's no data to display",
         Category = ComponentCategory.Feedback,
-        Tags = new[] { "empty", "state", "placeholder", "no-data" },
-        Dependencies = new[] { "button" }
+        FilePath = "EmptyState.razor",
+        Tags = new List<string> { "empty", "state", "placeholder", "no-data" },
+        Dependencies = new List<string> { "button" }
     };
 
     public const string Content = """

@@ -6,11 +6,13 @@ public static class StepperTemplate
 {
     public static readonly ComponentMetadata Metadata = new()
     {
-        Name = "Stepper",
+        Name = "stepper",
+        DisplayName = "Stepper",
         Description = "A stepper component for multi-step processes",
         Category = ComponentCategory.Navigation,
-        Tags = new[] { "stepper", "steps", "progress", "wizard", "multi-step" },
-        Dependencies = new[] { "button" }
+        FilePath = "Stepper.razor",
+        Tags = new List<string> { "stepper", "steps", "progress", "wizard", "multi-step" },
+        Dependencies = new List<string> { "button" }
     };
 
     public const string Content = """

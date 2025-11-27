@@ -6,10 +6,12 @@ public static class CarouselNextTemplate
 {
     public static readonly ComponentMetadata Metadata = new()
     {
-        Name = "CarouselNext",
+        Name = "carousel-next",
+        DisplayName = "Carousel Next",
         Description = "Next button for carousel navigation",
         Category = ComponentCategory.Navigation,
-        Tags = new[] { "carousel", "button", "next", "navigation" }
+        FilePath = "CarouselNext.razor",
+        Tags = new List<string> { "carousel", "button", "next", "navigation" }
     };
 
     public const string Content = """

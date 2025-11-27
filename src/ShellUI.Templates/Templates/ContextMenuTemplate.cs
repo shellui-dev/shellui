@@ -6,11 +6,13 @@ public static class ContextMenuTemplate
 {
     public static readonly ComponentMetadata Metadata = new()
     {
-        Name = "ContextMenu",
+        Name = "context-menu",
+        DisplayName = "Context Menu",
         Description = "A context menu component that appears on right-click",
         Category = ComponentCategory.Navigation,
-        Tags = new[] { "menu", "context", "right-click", "dropdown" },
-        Dependencies = new string[] { }
+        FilePath = "ContextMenu.razor",
+        Tags = new List<string> { "menu", "context", "right-click", "dropdown" },
+        Dependencies = new List<string>()
     };
 
     public const string Content = """
