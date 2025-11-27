@@ -12,7 +12,8 @@ public class RadioGroupTemplate
         Category = ComponentCategory.Form,
         FilePath = "RadioGroup.razor",
         Version = "0.1.0",
-        Tags = new List<string> { "form", "input", "radio", "selection" }
+        Tags = new List<string> { "form", "input", "radio", "selection" },
+        Dependencies = new List<string> { "radio-group-item" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

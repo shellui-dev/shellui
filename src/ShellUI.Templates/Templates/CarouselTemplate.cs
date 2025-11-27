@@ -10,7 +10,7 @@ public static class CarouselTemplate
         Description = "A carousel component for displaying content in a slideshow format",
         Category = ComponentCategory.Display,
         Tags = new[] { "carousel", "slideshow", "slider", "images", "content" },
-        Dependencies = new[] { "CarouselItem", "CarouselContent", "CarouselPrevious", "CarouselNext", "CarouselDots" }
+        Dependencies = new[] { "carousel-item", "carousel-content", "carousel-previous", "carousel-next", "carousel-dots" }
     };
 
     public const string Content = """

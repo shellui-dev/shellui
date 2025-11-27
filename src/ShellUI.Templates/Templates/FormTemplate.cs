@@ -12,7 +12,8 @@ public class FormTemplate
         Category = ComponentCategory.Form,
         FilePath = "Form.razor",
         Version = "0.1.0",
-        Tags = new List<string> { "form", "validation", "input", "wrapper" }
+        Tags = new List<string> { "form", "validation", "input", "wrapper" },
+        Dependencies = new List<string> { "label", "input", "button" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

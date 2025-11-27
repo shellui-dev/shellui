@@ -10,7 +10,7 @@ public static class StepperTemplate
         Description = "A stepper component for multi-step processes",
         Category = ComponentCategory.Navigation,
         Tags = new[] { "stepper", "steps", "progress", "wizard", "multi-step" },
-        Dependencies = new[] { "StepItem" }
+        Dependencies = new[] { "button" }
     };
 
     public const string Content = """

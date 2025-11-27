@@ -7,7 +7,7 @@ public static class AlertDialogTemplate
         Name = "alert-dialog",
         Description = "Modal dialog for confirmations and alerts",
         Category = ComponentCategory.Overlay,
-        Dependencies = new[] { "button" }
+        Dependencies = new[] { "dialog", "button" }
     };
 
     public static string Content => @"

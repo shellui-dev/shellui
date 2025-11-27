@@ -7,7 +7,7 @@ public static class CommandTemplate
         Name = "command",
         Description = "Command palette component for quick actions",
         Category = ComponentCategory.Overlay,
-        Dependencies = new string[] { }
+        Dependencies = new[] { "dialog" }
     };
 
     public static string Content => @"

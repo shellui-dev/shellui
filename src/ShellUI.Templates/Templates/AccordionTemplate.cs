@@ -12,7 +12,8 @@ public class AccordionTemplate
         Category = ComponentCategory.Layout,
         FilePath = "Accordion.razor",
         Version = "0.1.0",
-        Tags = new List<string> { "layout", "collapsible", "accordion" }
+        Tags = new List<string> { "layout", "collapsible", "accordion" },
+        Dependencies = new List<string> { "accordion-item" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

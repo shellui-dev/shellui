@@ -28,8 +28,8 @@ public static class DataTableTemplate
     }
 
     <!-- Table -->
-    <div class=""rounded-md border"">
-        <Table>
+    <div class=""rounded-md border overflow-x-auto"">
+        <Table Class=""min-w-[640px]"">
             <TableHeader>
                 <TableRow>
                     @if (ShowSelection)
@@ -123,7 +123,7 @@ public static class DataTableTemplate
     <!-- Pagination -->
     @if (ShowPagination && _filteredItems.Any())
     {
-        <div class=""flex items-center justify-between px-2 py-4"">
+        <div class=""flex flex-col gap-4 px-2 py-4 sm:flex-row sm:items-center sm:justify-between"">
             <div class=""flex-1 text-sm text-muted-foreground"">
                 @if (_selectedItems.Any())
                 {
@@ -134,9 +134,9 @@ public static class DataTableTemplate
                     Showing @_startIndex - @_endIndex of @_filteredItems.Count results
                 }
             </div>
-            <div class=""flex items-center space-x-6 lg:space-x-8"">
+            <div class=""flex flex-col gap-4 sm:flex-row sm:items-center sm:space-x-6 lg:space-x-8"">
                 <div class=""flex items-center space-x-2"">
-                    <p class=""text-sm font-medium"">Rows per page</p>
+                    <p class=""text-sm font-medium whitespace-nowrap"">Rows per page</p>
                     <Select Value=""@PageSize.ToString()"" ValueChanged=""OnPageSizeChanged"">
                         <SelectTrigger Class=""h-8 w-[70px]"">
                             <SelectValue />
@@ -149,7 +149,7 @@ public static class DataTableTemplate
                         </SelectContent>
                     </Select>
                 </div>
-                <div class=""flex w-[100px] items-center justify-center text-sm font-medium"">
+                <div class=""flex w-[100px] items-center justify-center text-sm font-medium whitespace-nowrap"">
                     Page @_currentPage of @_totalPages
                 </div>
                 <div class=""flex items-center space-x-2"">
@@ -157,6 +157,7 @@ public static class DataTableTemplate
                         Variant=""outline""
                         Size=""sm""
                         Disabled=""@(_currentPage <= 1)""
+                        Class=""whitespace-nowrap""
                         @onclick=""OnPreviousPage"">
                         Previous
                     </Button>
@@ -164,6 +165,7 @@ public static class DataTableTemplate
                         Variant=""outline""
                         Size=""sm""
                         Disabled=""@(_currentPage >= _totalPages)""
+                        Class=""whitespace-nowrap""
                         @onclick=""OnNextPage"">
                         Next
                     </Button>

@@ -12,7 +12,8 @@ public class NavigationMenuTemplate
         Category = ComponentCategory.Navigation,
         FilePath = "NavigationMenu.razor",
         Version = "0.1.0",
-        Tags = new List<string> { "navigation", "menu", "nav" }
+        Tags = new List<string> { "navigation", "menu", "nav" },
+        Dependencies = new List<string> { "navigation-menu-item" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

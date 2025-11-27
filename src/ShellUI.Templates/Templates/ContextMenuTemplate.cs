@@ -10,12 +10,11 @@ public static class ContextMenuTemplate
         Description = "A context menu component that appears on right-click",
         Category = ComponentCategory.Navigation,
         Tags = new[] { "menu", "context", "right-click", "dropdown" },
-        Dependencies = new[] { "ContextMenuItem" }
+        Dependencies = new string[] { }
     };
 
     public const string Content = """
-@using Microsoft.JSInterop
-@using BlazorInteractiveServer.Components.Models
+@using YourProjectNamespace.Components.Models
 
 <div class="relative inline-block text-left" @oncontextmenu="OnContextMenu" @oncontextmenu:preventDefault="true">
     @ChildContent
@@ -36,12 +35,12 @@ public static class ContextMenuTemplate
                             @onclick="() => SelectItem(item)">
                         @if (!string.IsNullOrEmpty(item.Icon))
                         {
-                            <span class="mr-2 h-4 w-4">@((MarkupString)item.Icon)</span>
+                            <span class="mr-2 flex shrink-0 items-center justify-center text-muted-foreground" style="width: 0.875rem; height: 0.875rem;">@((MarkupString)item.Icon)</span>
                         }
-                        <span>@item.Label</span>
+                        <span class="flex-1">@item.Label</span>
                         @if (!string.IsNullOrEmpty(item.Shortcut))
                         {
-                            <span class="ml-auto text-xs text-muted-foreground"> @item.Shortcut</span>
+                            <span class="ml-auto text-xs text-muted-foreground">@item.Shortcut</span>
                         }
                     </button>
                 }

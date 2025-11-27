@@ -9,7 +9,8 @@ public static class EmptyStateTemplate
         Name = "EmptyState",
         Description = "An empty state component for when there's no data to display",
         Category = ComponentCategory.Feedback,
-        Tags = new[] { "empty", "state", "placeholder", "no-data" }
+        Tags = new[] { "empty", "state", "placeholder", "no-data" },
+        Dependencies = new[] { "button" }
     };
 
     public const string Content = """

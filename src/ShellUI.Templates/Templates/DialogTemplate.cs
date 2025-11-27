@@ -12,7 +12,7 @@ public static class DialogTemplate
         Category = ComponentCategory.Overlay,
         Version = "0.1.0",
         FilePath = "Dialog.razor",
-        Dependencies = new List<string>()
+        Dependencies = new List<string> { "button" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

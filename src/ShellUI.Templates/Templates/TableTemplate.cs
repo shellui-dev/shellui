@@ -12,7 +12,8 @@ public class TableTemplate
         Category = ComponentCategory.DataDisplay,
         FilePath = "Table.razor",
         Version = "0.1.0",
-        Tags = new List<string> { "table", "data", "grid", "display" }
+        Tags = new List<string> { "table", "data", "grid", "display" },
+        Dependencies = new List<string> { "table-header", "table-body", "table-row", "table-cell", "table-head" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
