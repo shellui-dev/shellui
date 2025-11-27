@@ -42,16 +42,24 @@ public class ComponentInstaller
         var skippedCount = 0;
         var failedComponents = new List<string>();
 
+        // Track installed components to avoid duplicates
+        var installedSet = new HashSet<string>();
+        
+        // Show dependency information before installing
         foreach (var componentName in componentList)
         {
-            var result = InstallComponent(componentName, config, projectInfo, force);
-            
-            if (result == InstallResult.Success)
-                successCount++;
-            else if (result == InstallResult.Skipped)
-                skippedCount++;
-            else
-                failedComponents.Add(componentName);
+            var metadata = ComponentRegistry.GetMetadata(componentName);
+            if (metadata != null && metadata.Dependencies?.Any() == true)
+            {
+                AnsiConsole.MarkupLine($"[cyan]ℹ[/] [bold]{componentName}[/] requires: [yellow]{string.Join(", ", metadata.Dependencies)}[/]");
+            }
+        }
+        
+        AnsiConsole.MarkupLine("");
+        
+        foreach (var componentName in componentList)
+        {
+            InstallComponentWithDependencies(componentName, config, projectInfo, force, installedSet, ref successCount, ref skippedCount, failedComponents);
         }
 
         // Update config
@@ -160,6 +168,58 @@ public class ComponentInstaller
 
         AnsiConsole.MarkupLine($"[green]Installed '{componentName}'[/] [dim]({metadata.FilePath})[/]");
         return InstallResult.Success;
+    }
+
+    private static void InstallComponentWithDependencies(string componentName, ShellUIConfig config, ProjectInfo projectInfo, bool force, HashSet<string> installedSet, ref int successCount, ref int skippedCount, List<string> failedComponents)
+    {
+        if (installedSet.Contains(componentName))
+            return; // Already processed
+        
+        if (!ComponentRegistry.Exists(componentName))
+        {
+            AnsiConsole.MarkupLine($"[red]Component '{componentName}' not found[/]");
+            failedComponents.Add(componentName);
+            return;
+        }
+
+        var metadata = ComponentRegistry.GetMetadata(componentName);
+        if (metadata == null)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to get metadata for '{componentName}'[/]");
+            failedComponents.Add(componentName);
+            return;
+        }
+
+        // Install dependencies first
+        if (metadata.Dependencies?.Any() == true)
+        {
+            AnsiConsole.MarkupLine($"[dim]📦 Installing dependencies for [bold]{componentName}[/]: {string.Join(", ", metadata.Dependencies)}[/]");
+            foreach (var dep in metadata.Dependencies)
+            {
+                if (!installedSet.Contains(dep))
+                {
+                    InstallComponentWithDependencies(dep, config, projectInfo, force, installedSet, ref successCount, ref skippedCount, failedComponents);
+                }
+            }
+        }
+
+        // Install the component itself
+        var result = InstallComponentInternal(componentName, config, projectInfo, force);
+        
+        if (result == InstallResult.Success)
+        {
+            successCount++;
+            installedSet.Add(componentName);
+        }
+        else if (result == InstallResult.Skipped)
+        {
+            skippedCount++;
+            installedSet.Add(componentName);
+        }
+        else
+        {
+            failedComponents.Add(componentName);
+        }
     }
 
     private enum InstallResult

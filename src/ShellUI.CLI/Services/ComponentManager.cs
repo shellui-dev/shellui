@@ -36,7 +36,7 @@ public static class ComponentManager
         AnsiConsole.MarkupLine("[dim]Available Components[/]\n");
         
         var table = new Table();
-        table.Border(TableBorder.Rounded);
+        table.Border(TableBorder.Simple);
         table.AddColumn(new TableColumn("[bold]Component[/]").Centered());
         table.AddColumn(new TableColumn("[bold]Status[/]").Centered());
         table.AddColumn(new TableColumn("[bold]Version[/]").Centered());
