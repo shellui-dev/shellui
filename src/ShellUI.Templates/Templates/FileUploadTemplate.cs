@@ -24,7 +24,9 @@ public class FileUploadTemplate
     <label for=""@_inputId"" class=""@GetDropZoneClasses()"" 
      @ondragover=""HandleDragOver"" 
      @ondragleave=""HandleDragLeave""
-           @ondragover:preventDefault=""true"">
+     @ondrop=""HandleDrop""
+     @ondragover:preventDefault=""true""
+     @ondrop:preventDefault=""true"">
         <div class=""text-center pointer-events-none"">
             <span class=""material-symbols-outlined mx-auto text-5xl text-muted-foreground block"">cloud_upload</span>
             <div class=""mt-4"">
