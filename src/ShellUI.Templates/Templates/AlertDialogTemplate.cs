@@ -10,32 +10,18 @@ public static class AlertDialogTemplate
         Dependencies = new[] { "dialog", "button" }
     };
 
-    public static string Content => @"
-@using Microsoft.JSInterop
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI
 
-<div class=""@($""relative z-50 {(IsOpen ? """" : ""hidden"")}"")"">
-    <div class=""fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"" @onclick=""OnBackdropClick""></div>
-    <div class=""fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg"">
-        @if (!string.IsNullOrEmpty(Title))
+<Dialog IsOpen=""IsOpen"" Title=""@Title"" Description=""@Description"" OnClose=""OnBackdropClick"">
+    <Footer>
+        @if (CancelText != null)
         {
-            <div class=""flex flex-col space-y-1.5 text-center sm:text-left"">
-                <h2 class=""text-lg font-semibold leading-none tracking-tight"">@Title</h2>
-                @if (!string.IsNullOrEmpty(Description))
-                {
-                    <p class=""text-sm text-muted-foreground"">@Description</p>
-                }
-            </div>
+            <button class=""mt-3 inline-flex w-full justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:mt-0 sm:w-auto"" @onclick=""HandleCancel"">@CancelText</button>
         }
-
-        <div class=""flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2"">
-            @if (CancelText != null)
-            {
-                <Button Variant=""outline"" @onclick=""OnCancel"">@CancelText</Button>
-            }
-            <Button Variant=""@ConfirmVariant"" @onclick=""OnConfirm"">@ConfirmText</Button>
-        </div>
-    </div>
-</div>
+        <button class=""@($""inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:w-auto {(ConfirmVariant == ""destructive"" ? ""bg-destructive text-destructive-foreground hover:bg-destructive/90"" : ConfirmVariant == ""outline"" ? ""border border-input bg-background hover:bg-accent hover:text-accent-foreground"" : ConfirmVariant == ""secondary"" ? ""bg-secondary text-secondary-foreground hover:bg-secondary/80"" : ConfirmVariant == ""ghost"" ? ""hover:bg-accent hover:text-accent-foreground"" : ConfirmVariant == ""link"" ? ""text-primary underline-offset-4 hover:underline"" : ""bg-primary text-primary-foreground hover:bg-primary/90"")}"")"" @onclick=""HandleConfirm"">@ConfirmText</button>
+    </Footer>
+</Dialog>
 
 @code {
     [Parameter]
@@ -65,13 +51,13 @@ public static class AlertDialogTemplate
     [Parameter]
     public EventCallback<bool> IsOpenChanged { get; set; }
 
-    private async Task OnConfirm()
+    private async Task HandleConfirm()
     {
         await OnConfirm.InvokeAsync();
         await CloseDialog();
     }
 
-    private async Task OnCancel()
+    private async Task HandleCancel()
     {
         await OnCancel.InvokeAsync();
         await CloseDialog();
