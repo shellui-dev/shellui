@@ -1,0 +1,331 @@
+@namespace BlazorInteractiveServer.Components.Demo
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Complex Components</h2>
+    <div class="space-y-6">
+        <!-- DataTable Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Data Table</h3>
+            <DataTable Items="Users" Columns="UserColumns" RowActions="UserActions" ShowFilters="true" ShowPagination="true" ShowSelection="true" />
+        </div>
+
+        <!-- AlertDialog Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Alert Dialog</h3>
+            <Button @onclick="() => ShowAlertDialog = true">Show Alert Dialog</Button>
+            <AlertDialog
+                IsOpen="ShowAlertDialog"
+                Title="Are you sure?"
+                Description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+                ConfirmText="Delete Account"
+                ConfirmVariant="destructive"
+                CancelText="Cancel"
+                OnConfirm="HandleAlertConfirm"
+                OnCancel="HandleAlertCancel"
+                IsOpenChanged="val => ShowAlertDialog = val" />
+        </div>
+
+        <!-- Calendar Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Calendar</h3>
+            <div class="flex gap-4">
+                <Calendar SelectedDate="SelectedCalendarDate" SelectedDateChanged="date => SelectedCalendarDate = date" />
+                <div class="p-4">
+                    <p class="text-sm text-muted-foreground">Selected Date:</p>
+                    <p class="font-medium">@(SelectedCalendarDate?.ToString("D") ?? "None")</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Loading Components</h3>
+            <div class="flex flex-wrap gap-8 items-center">
+                <div class="text-center">
+                    <Loading Variant="spinner" Size="sm" />
+                    <p class="text-xs mt-2">Spinner SM</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="spinner" />
+                    <p class="text-xs mt-2">Spinner</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="dots" />
+                    <p class="text-xs mt-2">Dots</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="ring" />
+                    <p class="text-xs mt-2">Ring</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="pulse" />
+                    <p class="text-xs mt-2">Pulse</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="bars" />
+                    <p class="text-xs mt-2">Bars</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="bars-vertical" />
+                    <p class="text-xs mt-2">Bars Vertical</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="bars-pulse" />
+                    <p class="text-xs mt-2">Bars Pulse</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="grid" />
+                    <p class="text-xs mt-2">Grid</p>
+                </div>
+                <div class="text-center">
+                    <Loading Variant="orbit" />
+                    <p class="text-xs mt-2">Orbit</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- HoverCard Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Hover Card</h3>
+            <HoverCard>
+                <ChildContent>
+                    <Button Variant="outline">@HoverCardText</Button>
+                </ChildContent>
+                <CardContent>
+                    <div class="space-y-2">
+                        <h4 class="text-sm font-semibold">@HoverCardUser</h4>
+                        <p class="text-sm">Software Engineer at Shell Technologies</p>
+                        <div class="flex items-center pt-2">
+                            <span class="material-symbols-outlined text-sm mr-2 opacity-70">mail</span>
+                            <span class="text-xs text-muted-foreground">shep@shell-tech.dev</span>
+                        </div>
+                    </div>
+                </CardContent>
+            </HoverCard>
+        </div>
+
+        <!-- Command Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Command Palette</h3>
+            <Button @onclick="HandleOpenCommand">Open Command Palette (Ctrl+K)</Button>
+            <Command
+                IsOpen="_showCommand"
+                Placeholder="Type a command or search..."
+                Commands="CommandItems"
+                CommandSelected="HandleCommandSelected"
+                IsOpenChanged="HandleShowCommandChanged" />
+        </div>
+
+        <!-- ContextMenu Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Context Menu</h3>
+            <ContextMenu Items="ContextMenuItems" OnItemSelected="HandleContextMenuSelect">
+                <Button>Right-click me to see the context menu!</Button>
+            </ContextMenu>
+        </div>
+
+        <!-- EmptyState Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Empty State</h3>
+            <EmptyState 
+                Icon="@GetFileIconString()" 
+                Title="No files found" 
+                Description="Get started by uploading your first file.">
+                <Action>
+                    <Button>Upload File</Button>
+                </Action>
+            </EmptyState>
+        </div>
+
+        <!-- Tabs Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Tabs</h3>
+            <Tabs TabItems="TabItems" ActiveTab="@ActiveTab" ActiveTabChanged="HandleTabChange" />
+        </div>
+
+        <!-- Stepper Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Stepper</h3>
+            <Stepper StepItems="StepperSteps" CurrentStep="@CurrentStep" CurrentStepChanged="HandleStepChange" />
+        </div>
+
+        <!-- Carousel Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Text Carousel</h3>
+            <Carousel TotalSlides="3" CurrentSlide="@TextCarouselSlide" CurrentSlideChanged="HandleTextCarouselSlideChange" AutoPlay="true" AutoPlayInterval="3000" AspectRatio="16/9">
+                <CarouselItem TotalSlides="3">
+                    <div class="rounded-lg p-8">
+                        <div class="text-center">
+                            <h4 class="text-2xl font-bold mb-2">Slide 1</h4>
+                            <p>Welcome to ShellUI Carousel</p>
+                        </div>
+                    </div>
+                </CarouselItem>
+                <CarouselItem TotalSlides="3">
+                    <div class="rounded-lg p-8">
+                        <div class="text-center">
+                            <h4 class="text-2xl font-bold mb-2">Slide 2</h4>
+                            <p>Beautiful components for Blazor</p>
+                        </div>
+                    </div>
+                </CarouselItem>
+                <CarouselItem TotalSlides="3">
+                    <div class="rounded-lg p-8">
+                        <div class="text-center">
+                            <h4 class="text-2xl font-bold mb-2">Slide 3</h4>
+                            <p>Built with Tailwind CSS</p>
+                        </div>
+                    </div>
+                </CarouselItem>
+            </Carousel>
+        </div>
+
+        <!-- Image Carousel Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Image Carousel</h3>
+            <Carousel TotalSlides="3" CurrentSlide="@ImageCarouselSlide" CurrentSlideChanged="HandleImageCarouselSlideChange" AutoPlay="true" AutoPlayInterval="5000" AspectRatio="21/9" ShowDots="true">
+                <CarouselItem TotalSlides="3">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop" 
+                         alt="Landscape 1" 
+                         class="w-full h-full object-cover rounded-lg" />
+                </CarouselItem>
+                <CarouselItem TotalSlides="3">
+                    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=400&fit=crop" 
+                         alt="Landscape 2" 
+                         class="w-full h-full object-cover rounded-lg" />
+                </CarouselItem>
+                <CarouselItem TotalSlides="3">
+                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=400&fit=crop" 
+                         alt="Landscape 3" 
+                         class="w-full h-full object-cover rounded-lg" />
+                </CarouselItem>
+            </Carousel>
+        </div>
+
+        <!-- Pagination Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Pagination</h3>
+            <div class="space-y-4">
+                <div class="p-4 border border-border rounded-md bg-background">
+                    <p class="text-center text-muted-foreground">Showing page @CurrentPage of @TotalPages</p>
+                </div>
+                <Pagination CurrentPage="CurrentPage" 
+                           TotalPages="TotalPages" 
+                           OnPageChange="HandlePageChange" />
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private bool _showCommand = false;
+
+    [Parameter] public List<User> Users { get; set; } = new();
+    [Parameter] public List<DataTableColumn<User>> UserColumns { get; set; } = new();
+    [Parameter] public List<DataTableAction<User>> UserActions { get; set; } = new();
+    [Parameter] public bool ShowAlertDialog { get; set; } = false;
+    [Parameter] public EventCallback<bool> ShowAlertDialogChanged { get; set; }
+    [Parameter] public DateTime? SelectedCalendarDate { get; set; }
+    [Parameter] public EventCallback<DateTime?> SelectedCalendarDateChanged { get; set; }
+    [Parameter] public string HoverCardText { get; set; } = "Hover me!";
+    [Parameter] public string HoverCardUser { get; set; } = "Shewart Shepherd";
+    [Parameter] public bool ShowCommand { get; set; } = false;
+    [Parameter] public EventCallback<bool> ShowCommandChanged { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (ShowCommand != _showCommand)
+        {
+            _showCommand = ShowCommand;
+        }
+    }
+    [Parameter] public List<CommandItem> CommandItems { get; set; } = new();
+    [Parameter] public EventCallback<CommandItem> OnCommandSelected { get; set; }
+    [Parameter] public List<ContextMenuItem> ContextMenuItems { get; set; } = new();
+    [Parameter] public EventCallback<ContextMenuItem> OnContextMenuSelect { get; set; }
+    [Parameter] public List<TabItem> TabItems { get; set; } = new();
+    [Parameter] public string ActiveTab { get; set; } = "overview";
+    [Parameter] public EventCallback<string> ActiveTabChanged { get; set; }
+    [Parameter] public List<StepItem> StepperSteps { get; set; } = new();
+    [Parameter] public int CurrentStep { get; set; } = 0;
+    [Parameter] public EventCallback<int> CurrentStepChanged { get; set; }
+    [Parameter] public int TextCarouselSlide { get; set; } = 0;
+    [Parameter] public EventCallback<int> TextCarouselSlideChanged { get; set; }
+    [Parameter] public int ImageCarouselSlide { get; set; } = 0;
+    [Parameter] public EventCallback<int> ImageCarouselSlideChanged { get; set; }
+    [Parameter] public int CurrentPage { get; set; } = 1;
+    [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
+    [Parameter] public int TotalPages { get; set; } = 10;
+
+    private async Task HandleAlertConfirm()
+    {
+        // Handle confirm
+        await Task.CompletedTask;
+    }
+
+    private async Task HandleAlertCancel()
+    {
+        // Handle cancel
+        await Task.CompletedTask;
+    }
+
+    private async Task HandleOpenCommand()
+    {
+        _showCommand = true;
+        await ShowCommandChanged.InvokeAsync(_showCommand);
+    }
+
+    private async Task HandleShowCommandChanged(bool value)
+    {
+        _showCommand = value;
+        await ShowCommandChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleCommandSelected(CommandItem command)
+    {
+        await OnCommandSelected.InvokeAsync(command);
+    }
+
+    private async Task HandleContextMenuSelect(ContextMenuItem item)
+    {
+        await OnContextMenuSelect.InvokeAsync(item);
+    }
+
+    private async Task HandleTabChange(string tabId)
+    {
+        ActiveTab = tabId;
+        await ActiveTabChanged.InvokeAsync(tabId);
+    }
+
+    private async Task HandleStepChange(int step)
+    {
+        CurrentStep = step;
+        await CurrentStepChanged.InvokeAsync(step);
+    }
+
+    private async Task HandleTextCarouselSlideChange(int slide)
+    {
+        TextCarouselSlide = slide;
+        await TextCarouselSlideChanged.InvokeAsync(slide);
+    }
+
+    private async Task HandleImageCarouselSlideChange(int slide)
+    {
+        ImageCarouselSlide = slide;
+        await ImageCarouselSlideChanged.InvokeAsync(slide);
+    }
+
+    private async Task HandlePageChange(int page)
+    {
+        CurrentPage = page;
+        await CurrentPageChanged.InvokeAsync(page);
+    }
+
+    private string GetFileIconString()
+    {
+        return @"<svg class=""h-12 w-12 text-muted-foreground"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+            <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"" />
+        </svg>";
+    }
+}
+

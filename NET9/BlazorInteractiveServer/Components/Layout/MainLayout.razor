@@ -1,6 +1,10 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@using BlazorInteractiveServer.Components.Models
+@using BlazorInteractiveServer.Components.UI
 
-<div class="min-h-screen bg-background text-foreground">
+<div class="min-h-screen bg-background text-foreground" @onkeydown="HandleKeyDown" tabindex="0">
     <Navbar ClassName="flex items-center justify-center">
         <div class="flex items-center justify-center w-full px-5">
             <!-- Centered Content Group with Side Spacing -->
@@ -32,8 +36,9 @@
                     <div class="flex items-center gap-3">
                 <!-- Search Bar - Responsive Width -->
                 <div class="relative hidden sm:block">
-                    <div class="flex items-center bg-muted/50 rounded-lg px-3 py-2 border border-border" 
-                         style="width: min(180px, 18vw);">
+                    <div class="flex items-center bg-muted/50 rounded-lg px-3 py-2 border border-border cursor-pointer hover:bg-muted transition-colors" 
+                         style="width: min(180px, 18vw);"
+                         @onclick="OpenCommandPalette">
                         <svg class="w-4 h-4 text-muted-foreground mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
@@ -46,9 +51,7 @@
                 </div>
 
                 <!-- Theme Toggle -->
-                <button class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border">
-                    <ThemeToggle />
-                </button>
+                <ThemeToggle Class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border" />
 
                 <!-- GitHub Link -->
                 <a href="https://github.com/Shell-Technologies/shellui" target="_blank" 
@@ -94,9 +97,7 @@
                         <h2 class="text-lg font-semibold text-foreground">Menu</h2>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border">
-                            <ThemeToggle />
-                        </button>
+                        <ThemeToggle Class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border" />
                         <a href="https://github.com/Shell-Technologies/shellui" target="_blank" 
                            class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border">
                             <svg class="w-4 h-4 text-foreground" fill="currentColor" viewBox="0 0 24 24">
@@ -139,16 +140,105 @@
     <a class="dismiss">x</a>
 </div>
 
+<!-- Command Palette -->
+<Command IsOpen="_isCommandPaletteOpen" 
+         IsOpenChanged="OnCommandPaletteChanged" 
+         Commands="_commandItems"
+         CommandSelected="HandleCommandSelected" />
+
 @code {
     private bool _isMobileMenuOpen = false;
+    private bool _isCommandPaletteOpen = false;
+    
+    private List<CommandItem> _commandItems = new();
+
+    protected override void OnInitialized()
+    {
+        _commandItems = new List<CommandItem>
+        {
+            new CommandItem 
+            { 
+                Title = "Documentation", 
+                Description = "View ShellUI documentation",
+                Shortcut = "Ctrl+D",
+                Action = async () => { NavigationManager.NavigateTo("/docs"); await Task.CompletedTask; }
+            },
+            new CommandItem 
+            { 
+                Title = "Blog", 
+                Description = "Read our latest blog posts",
+                Action = async () => { NavigationManager.NavigateTo("/blog"); await Task.CompletedTask; }
+            },
+            new CommandItem 
+            { 
+                Title = "Showcase", 
+                Description = "See ShellUI in action",
+                Action = async () => { NavigationManager.NavigateTo("/showcase"); await Task.CompletedTask; }
+            },
+            new CommandItem 
+            { 
+                Title = "Sponsors", 
+                Description = "Support ShellUI development",
+                Action = async () => { NavigationManager.NavigateTo("/sponsors"); await Task.CompletedTask; }
+            },
+            new CommandItem 
+            { 
+                Title = "GitHub", 
+                Description = "View source code on GitHub",
+                Action = async () => await JSRuntime.InvokeVoidAsync("ShellUI.openUrl", "https://github.com/Shell-Technologies/shellui", "_blank")
+            },
+            new CommandItem 
+            { 
+                Title = "Home", 
+                Description = "Go to homepage",
+                Shortcut = "Ctrl+H",
+                Action = async () => { NavigationManager.NavigateTo("/"); await Task.CompletedTask; }
+            }
+        };
+    }
 
     private void ToggleMobileMenu()
-{
+    {
         _isMobileMenuOpen = !_isMobileMenuOpen;
     }
 
     private void CloseMobileMenu()
     {
         _isMobileMenuOpen = false;
+    }
+
+    private void OpenCommandPalette()
+    {
+        _isCommandPaletteOpen = true;
+    }
+
+    private void OnCommandPaletteChanged(bool isOpen)
+    {
+        _isCommandPaletteOpen = isOpen;
+    }
+
+    private async Task HandleCommandSelected(CommandItem command)
+    {
+        if (command.Action != null)
+        {
+            await command.Action();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Focus the body to enable keyboard events
+            await JSRuntime.InvokeVoidAsync("ShellUI.focusBody");
+        }
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if ((e.CtrlKey || e.MetaKey) && string.Equals(e.Key, "k", StringComparison.OrdinalIgnoreCase))
+        {
+            OpenCommandPalette();
+        }
     }
 }

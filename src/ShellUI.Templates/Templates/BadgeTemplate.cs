@@ -17,9 +17,9 @@ public static class BadgeTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<span class=""inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 @(Variant == ""secondary"" ? ""border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"" : Variant == ""destructive"" ? ""border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80"" : Variant == ""outline"" ? ""text-foreground"" : ""border-transparent bg-primary text-primary-foreground hover:bg-primary/80"")"">
+<div class=""@($""inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 {(Variant.ToLower() == ""secondary"" ? ""border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"" : Variant.ToLower() == ""destructive"" ? ""border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80"" : Variant.ToLower() == ""outline"" ? ""text-foreground"" : Variant.ToLower() == ""success"" ? ""border-transparent bg-green-500 text-white hover:bg-green-600"" : Variant.ToLower() == ""warning"" ? ""border-transparent bg-yellow-500 text-white hover:bg-yellow-600"" : Variant.ToLower() == ""info"" ? ""border-transparent bg-blue-500 text-white hover:bg-blue-600"" : ""border-transparent bg-primary text-primary-foreground hover:bg-primary/80"")} {Class}"")"" @attributes=""AdditionalAttributes"">
     @ChildContent
-</span>
+</div>
 
 @code {
     [Parameter]
@@ -27,6 +27,12 @@ public static class BadgeTemplate
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
 ";
 }

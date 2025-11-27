@@ -6,6 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.9" />
+  </ItemGroup>
+
   <!-- Removed NuGet/Project reference - using CLI-installed components instead -->
   <!-- <ItemGroup>
     <ProjectReference Include="..\..\src\ShellUI.Components\ShellUI.Components.csproj" />

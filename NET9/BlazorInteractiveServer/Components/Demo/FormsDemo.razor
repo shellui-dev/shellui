@@ -1,0 +1,26 @@
+@using BlazorInteractiveServer.Components.UI
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Form Components</h2>
+    <div class="space-y-4 max-w-md">
+        <div>
+            <Label>Name</Label>
+            <Input @bind-Value="userName" Placeholder="Enter your name" />
+        </div>
+        <div>
+            <Label>Email</Label>
+            <Input @bind-Value="userEmail" Type="email" Placeholder="Enter your email" />
+        </div>
+        <div>
+            <Label>Message</Label>
+            <Textarea @bind-Value="userMessage" Placeholder="Enter your message" />
+        </div>
+    </div>
+</section>
+
+@code {
+    private string userName = "";
+    private string userEmail = "";
+    private string userMessage = "";
+}
+

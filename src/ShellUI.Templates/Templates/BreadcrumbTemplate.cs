@@ -12,7 +12,8 @@ public class BreadcrumbTemplate
         Category = ComponentCategory.Layout,
         FilePath = "Breadcrumb.razor",
         Version = "0.1.0",
-        Tags = new List<string> { "navigation", "breadcrumb", "layout" }
+        Tags = new List<string> { "navigation", "breadcrumb", "layout" },
+        Dependencies = new List<string> { "breadcrumb-item" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

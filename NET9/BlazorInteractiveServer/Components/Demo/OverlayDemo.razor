@@ -1,0 +1,130 @@
+@namespace BlazorInteractiveServer.Components.Demo
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Overlays</h2>
+    <div class="space-y-6">
+        <!-- Dropdown Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Dropdown</h3>
+            <Dropdown @bind-IsOpen="IsDropdownOpen">
+                <Trigger>
+                    <span>Open Menu</span>
+                    <span class="material-symbols-outlined text-sm ml-2">expand_more</span>
+                </Trigger>
+                <ChildContent>
+                    <button class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent">
+                        Profile
+                    </button>
+                    <button class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent">
+                        Settings
+                    </button>
+                </ChildContent>
+            </Dropdown>
+        </div>
+
+        <!-- Tooltip Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Tooltip</h3>
+            <div class="flex flex-wrap gap-4">
+                <Tooltip Placement="top">
+                    <Trigger>
+                        <Button Variant="outline">Hover me (Top)</Button>
+                    </Trigger>
+                    <Content>
+                        <p>This is a tooltip on top!</p>
+                    </Content>
+                </Tooltip>
+                <Tooltip Placement="bottom">
+                    <Trigger>
+                        <Button Variant="outline">Hover me (Bottom)</Button>
+                    </Trigger>
+                    <Content>
+                        <p>This is a tooltip on bottom!</p>
+                    </Content>
+                </Tooltip>
+                <Tooltip Placement="left">
+                    <Trigger>
+                        <Button Variant="outline">Hover me (Left)</Button>
+                    </Trigger>
+                    <Content>
+                        <p>Tooltip on the left</p>
+                    </Content>
+                </Tooltip>
+            </div>
+        </div>
+
+        <!-- Popover Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Popover</h3>
+            <Popover @bind-IsOpen="IsPopoverOpen">
+                <Trigger>
+                    <Button Variant="outline">Open Popover</Button>
+                </Trigger>
+                <ChildContent>
+                    <div class="space-y-2">
+                        <h4 class="font-semibold">Dimensions</h4>
+                        <div class="space-y-2">
+                            <Label>Width</Label>
+                            <Input Placeholder="100%" />
+                        </div>
+                        <div class="space-y-2">
+                            <Label>Height</Label>
+                            <Input Placeholder="25px" />
+                        </div>
+                    </div>
+                </ChildContent>
+            </Popover>
+        </div>
+
+        <!-- Toast Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Toast</h3>
+            <div class="flex flex-wrap gap-2">
+                <Button OnClick="HandleShowToast">Show Default Toast</Button>
+                <Button Variant="destructive" OnClick="HandleShowDestructiveToast">Show Error Toast</Button>
+                <Button Variant="outline" OnClick="HandleShowSuccessToast">Show Success Toast</Button>
+                <Button OnClick="HandleShowWarningToast" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2">Show Warning Toast</Button>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter] public bool IsDropdownOpen { get; set; } = false;
+    [Parameter] public EventCallback<bool> IsDropdownOpenChanged { get; set; }
+    [Parameter] public bool IsPopoverOpen { get; set; } = false;
+    [Parameter] public EventCallback<bool> IsPopoverOpenChanged { get; set; }
+    [Parameter] public bool ShowToast { get; set; } = false;
+    [Parameter] public EventCallback<bool> ShowToastChanged { get; set; }
+    [Parameter] public bool ShowDestructiveToast { get; set; } = false;
+    [Parameter] public EventCallback<bool> ShowDestructiveToastChanged { get; set; }
+    [Parameter] public bool ShowSuccessToast { get; set; } = false;
+    [Parameter] public EventCallback<bool> ShowSuccessToastChanged { get; set; }
+    [Parameter] public bool ShowWarningToast { get; set; } = false;
+    [Parameter] public EventCallback<bool> ShowWarningToastChanged { get; set; }
+
+    private async Task HandleShowToast()
+    {
+        ShowToast = true;
+        await ShowToastChanged.InvokeAsync(ShowToast);
+    }
+
+    private async Task HandleShowDestructiveToast()
+    {
+        ShowDestructiveToast = true;
+        await ShowDestructiveToastChanged.InvokeAsync(ShowDestructiveToast);
+    }
+
+    private async Task HandleShowSuccessToast()
+    {
+        ShowSuccessToast = true;
+        await ShowSuccessToastChanged.InvokeAsync(ShowSuccessToast);
+    }
+
+    private async Task HandleShowWarningToast()
+    {
+        ShowWarningToast = true;
+        await ShowWarningToastChanged.InvokeAsync(ShowWarningToast);
+    }
+}
+

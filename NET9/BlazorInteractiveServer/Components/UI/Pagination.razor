@@ -1,16 +1,16 @@
 @namespace BlazorInteractiveServer.Components.UI
 
 <nav class="@("flex items-center justify-center space-x-2 " + ClassName)" @attributes="AdditionalAttributes">
-    <ul class="flex items-center space-x-1">
+    <ul class="flex items-center space-x-1 overflow-x-auto">
         <li>
             <button type="button"
                     @onclick="Previous"
                     disabled="@(CurrentPage <= 1)"
-                    class="@("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 " + (CurrentPage <= 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-accent hover:text-accent-foreground"))">
+                    class="@("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-2 sm:px-4 py-2 " + (CurrentPage <= 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-accent hover:text-accent-foreground"))">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
-                <span class="ml-2">Previous</span>
+                <span class="ml-2 hidden sm:inline">Previous</span>
             </button>
         </li>
         
@@ -30,8 +30,8 @@
             <button type="button"
                     @onclick="Next"
                     disabled="@(CurrentPage >= TotalPages)"
-                    class="@("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 " + (CurrentPage >= TotalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-accent hover:text-accent-foreground"))">
-                <span class="mr-2">Next</span>
+                    class="@("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-2 sm:px-4 py-2 " + (CurrentPage >= TotalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-accent hover:text-accent-foreground"))">
+                <span class="mr-2 hidden sm:inline">Next</span>
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>

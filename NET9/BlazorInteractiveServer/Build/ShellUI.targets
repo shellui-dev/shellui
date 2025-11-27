@@ -6,13 +6,14 @@
     <TailwindExecutable Condition="'$(OS)' != 'Windows_NT'">$(ShellUIBinPath)/tailwindcss</TailwindExecutable>
     <TailwindInputCss Condition="'$(TailwindInputCss)' == ''">$(MSBuildProjectDirectory)\wwwroot\input.css</TailwindInputCss>
     <TailwindOutputCss Condition="'$(TailwindOutputCss)' == ''">$(MSBuildProjectDirectory)\wwwroot\app.css</TailwindOutputCss>
+    <TailwindConfig Condition="'$(TailwindConfig)' == ''">$(MSBuildProjectDirectory)\tailwind.config.js</TailwindConfig>
     <TailwindMinify Condition="'$(Configuration)' == 'Release'">--minify</TailwindMinify>
     <TailwindMinify Condition="'$(Configuration)' != 'Release'"></TailwindMinify>
   </PropertyGroup>
 
   <Target Name="BuildTailwindCSS" BeforeTargets="BeforeBuild" Condition="Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')">
     <Message Importance="high" Text="Building Tailwind CSS..." />
-    <Exec Command="&quot;$(TailwindExecutable)&quot; -i &quot;$(TailwindInputCss)&quot; -o &quot;$(TailwindOutputCss)&quot; $(TailwindMinify)" />
+    <Exec Command="&quot;$(TailwindExecutable)&quot; -i &quot;$(TailwindInputCss)&quot; -o &quot;$(TailwindOutputCss)&quot; --config &quot;$(TailwindConfig)&quot; $(TailwindMinify)" />
     <Message Importance="high" Text="Tailwind CSS built successfully!" />
   </Target>
 

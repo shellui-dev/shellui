@@ -1,0 +1,353 @@
+@typeparam TItem
+@using System.Linq.Dynamic.Core
+@using BlazorInteractiveServer.Components.Models
+
+<div class="w-full" @onclick="CloseActionsDropdown">
+    <!-- Filters -->
+    @if (ShowFilters)
+    {
+        <div class="flex items-center py-4">
+            <input
+                type="text"
+                placeholder="Filter..."
+                value="@_filterText"
+                @oninput="OnFilterInput"
+                class="flex h-10 w-full max-w-sm rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+        </div>
+    }
+
+    <!-- Table -->
+    <div class="rounded-md border border-border overflow-x-auto">
+        <table class="w-full min-w-[640px] caption-bottom text-sm">
+            <thead class="[&_tr]:border-b">
+                <tr class="border-b border-border transition-colors">
+                    @if (ShowSelection)
+                    {
+                        <th class="h-12 w-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
+                            <input type="checkbox" 
+                                   checked="@(_selectedItems.Count == _filteredItems.Count() && _filteredItems.Any())"
+                                   @onchange="@((e) => OnSelectAllChanged(e.Value?.ToString() == "true"))" 
+                                   class="h-4 w-4 rounded border-input bg-background text-primary focus:ring-ring" />
+                        </th>
+                    }
+                    @foreach (var column in Columns)
+                    {
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground @(column.Sortable ? "cursor-pointer hover:bg-accent/50" : "")"
+                            @onclick="() => { if (column.Sortable) OnSortClicked(column); }">
+                            <div class="flex items-center gap-2">
+                                @column.Header
+                                @if (column.Sortable)
+                                {
+                                    <svg class="h-4 w-4 @(column.SortDirection == SortDirection.Ascending ? "text-foreground" : column.SortDirection == SortDirection.Descending ? "text-foreground rotate-180" : "text-muted-foreground")"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                }
+                            </div>
+                        </th>
+                    }
+                    @if (RowActions?.Any() == true)
+                    {
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Actions</th>
+                    }
+                </tr>
+            </thead>
+            <tbody class="[&_tr:last-child]:border-0">
+                @if (_filteredItems.Any())
+                {
+                    @foreach (var item in _paginatedItems)
+                    {
+                        <tr class="border-b border-border transition-colors hover:bg-accent/50 @(IsSelected(item) ? "bg-accent/30" : "")">
+                            @if (ShowSelection)
+                            {
+                                <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                                    <input type="checkbox" 
+                                           checked="@IsSelected(item)"
+                                           @onchange="@((e) => OnItemSelectionChanged(item, e.Value?.ToString() == "true"))" 
+                                           class="h-4 w-4 rounded border-input bg-background text-primary focus:ring-ring" />
+                                </td>
+                            }
+                            @foreach (var column in Columns)
+                            {
+                                <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">@column.CellTemplate(item)</td>
+                            }
+                            @if (RowActions?.Any() == true)
+                            {
+                                <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                                    <div class="relative">
+                                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8"
+                                                @onclick="() => ToggleActionsDropdown(item)"
+                                                @onclick:stopPropagation="true">
+                                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                            </svg>
+                                        </button>
+                                            @if (_openActionsItem?.Equals(item) == true)
+                                            {
+                                                <div class="absolute right-0 top-8 z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-background/95 backdrop-blur-md py-1 text-foreground shadow-xl"
+                                                     @onclick:stopPropagation="true">
+                                                    @foreach (var action in RowActions)
+                                                    {
+                                                        <button class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                                                @onclick="() => { action.Action(item); CloseActionsDropdown(); }">
+                                                            @action.Label
+                                                        </button>
+                                                    }
+                                                </div>
+                                            }
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr class="border-b border-border transition-colors">
+                        <td colspan="@(Columns.Count + (ShowSelection ? 1 : 0) + (RowActions?.Any() == true ? 1 : 0))" class="h-24 text-center text-muted-foreground">
+                            No results found.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (ShowPagination && _filteredItems.Any())
+    {
+        <div class="flex flex-col gap-4 px-2 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex-1 text-sm text-muted-foreground">
+                @if (_selectedItems.Any())
+                {
+                    @($"{_selectedItems.Count} item(s) selected")
+                }
+                else
+                {
+                    @($"Showing {_startIndex} - {_endIndex} of {_filteredItems.Count()} results")
+                }
+            </div>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:space-x-6 lg:space-x-8">
+                <div class="flex items-center space-x-2">
+                    <p class="text-sm font-medium text-foreground whitespace-nowrap">Rows per page</p>
+                    <div class="relative">
+                        <select value="@_pageSize.ToString()" @onchange="@((e) => OnPageSizeChanged(e))" class="flex h-8 w-[70px] appearance-none rounded-md border border-input bg-background px-3 py-2 pr-6 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            @foreach (var size in new[] { 5, 10, 20, 50 })
+                            {
+                                <option value="@size.ToString()">@size</option>
+                            }
+                        </select>
+                        <div class="absolute inset-y-0 right-1 flex items-center pointer-events-none">
+                            <svg class="h-3 w-3 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex w-[100px] items-center justify-center text-sm font-medium text-foreground whitespace-nowrap">
+                    Page @_currentPage of @_totalPages
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 whitespace-nowrap"
+                        disabled="@(_currentPage <= 1)"
+                        @onclick="OnPreviousPage">
+                        Previous
+                    </button>
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 whitespace-nowrap"
+                        disabled="@(_currentPage >= _totalPages)"
+                        @onclick="OnNextPage">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IEnumerable<TItem> Items { get; set; } = new List<TItem>();
+
+    [Parameter]
+    public List<DataTableColumn<TItem>> Columns { get; set; } = new();
+
+    [Parameter]
+    public List<DataTableAction<TItem>>? RowActions { get; set; }
+
+    [Parameter]
+    public bool ShowFilters { get; set; } = true;
+
+    [Parameter]
+    public bool ShowPagination { get; set; } = true;
+
+    [Parameter]
+    public bool ShowSelection { get; set; } = false;
+
+    [Parameter]
+    public int PageSize { get; set; } = 10;
+
+    [Parameter]
+    public EventCallback<HashSet<TItem>> SelectedItemsChanged { get; set; }
+
+    private string _filterText = "";
+    private IEnumerable<TItem> _filteredItems = new List<TItem>();
+    private IEnumerable<TItem> _paginatedItems = new List<TItem>();
+    private HashSet<TItem> _selectedItems = new();
+    private int _currentPage = 1;
+    private int _totalPages = 1;
+    private int _startIndex = 1;
+    private int _endIndex = 1;
+    private int _pageSize = 10;
+    private TItem? _openActionsItem = default(TItem);
+
+    protected override void OnParametersSet()
+    {
+        UpdateFilteredItems();
+    }
+
+    private void UpdateFilteredItems()
+    {
+        // Apply filtering
+        _filteredItems = string.IsNullOrWhiteSpace(_filterText)
+            ? Items
+            : Items.Where(item =>
+                Columns.Any(col => 
+                {
+                    // Simple text search - check if any property contains the filter text
+                    var property = typeof(TItem).GetProperty(col.PropertyName);
+                    if (property != null)
+                    {
+                        var value = property.GetValue(item)?.ToString() ?? "";
+                        return value.Contains(_filterText, StringComparison.OrdinalIgnoreCase);
+                    }
+                    return false;
+                }));
+
+        // Apply sorting
+        var sortColumn = Columns.FirstOrDefault(c => c.SortDirection != SortDirection.None);
+        if (sortColumn != null)
+        {
+            var sortDirection = sortColumn.SortDirection == SortDirection.Ascending ? "ascending" : "descending";
+            _filteredItems = _filteredItems.AsQueryable().OrderBy($"{sortColumn.PropertyName} {sortDirection}");
+        }
+
+        // Update pagination
+        _totalPages = (int)Math.Ceiling(_filteredItems.Count() / (double)_pageSize);
+        _currentPage = Math.Min(_currentPage, Math.Max(1, _totalPages));
+        _startIndex = (_currentPage - 1) * _pageSize + 1;
+        _endIndex = Math.Min(_currentPage * _pageSize, _filteredItems.Count());
+        _paginatedItems = _filteredItems.Skip((_currentPage - 1) * _pageSize).Take(_pageSize);
+
+        StateHasChanged();
+    }
+
+    private void OnFilterInput(ChangeEventArgs e)
+    {
+        _filterText = e.Value?.ToString() ?? "";
+        _currentPage = 1; // Reset to first page
+        UpdateFilteredItems();
+    }
+
+    private void OnFilterChanged(string value)
+    {
+        _filterText = value;
+        _currentPage = 1; // Reset to first page
+        UpdateFilteredItems();
+    }
+
+    private void OnSortClicked(DataTableColumn<TItem> column)
+    {
+        if (!column.Sortable) return;
+
+        // Reset other columns
+        foreach (var col in Columns.Where(c => c != column))
+        {
+            col.SortDirection = SortDirection.None;
+        }
+
+        // Cycle sort direction
+        column.SortDirection = column.SortDirection switch
+        {
+            SortDirection.None => SortDirection.Ascending,
+            SortDirection.Ascending => SortDirection.Descending,
+            SortDirection.Descending => SortDirection.None,
+            _ => SortDirection.Ascending
+        };
+
+        UpdateFilteredItems();
+    }
+
+    private void OnSelectAllChanged(bool selected)
+    {
+        if (selected)
+        {
+            _selectedItems = new HashSet<TItem>(_filteredItems);
+        }
+        else
+        {
+            _selectedItems.Clear();
+        }
+
+        SelectedItemsChanged.InvokeAsync(_selectedItems);
+        StateHasChanged();
+    }
+
+    private void OnItemSelectionChanged(TItem item, bool selected)
+    {
+        if (selected)
+        {
+            _selectedItems.Add(item);
+        }
+        else
+        {
+            _selectedItems.Remove(item);
+        }
+
+        SelectedItemsChanged.InvokeAsync(_selectedItems);
+        StateHasChanged();
+    }
+
+    private bool IsSelected(TItem item) => _selectedItems.Contains(item);
+
+    private void OnPageSizeChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var size))
+        {
+            _pageSize = size;
+            _currentPage = 1;
+            UpdateFilteredItems();
+        }
+    }
+
+    private void OnPreviousPage()
+    {
+        if (_currentPage > 1)
+        {
+            _currentPage--;
+            UpdateFilteredItems();
+        }
+    }
+
+    private void OnNextPage()
+    {
+        if (_currentPage < _totalPages)
+        {
+            _currentPage++;
+            UpdateFilteredItems();
+        }
+    }
+
+    private void ToggleActionsDropdown(TItem item)
+    {
+        _openActionsItem = _openActionsItem?.Equals(item) == true ? default(TItem) : item;
+        StateHasChanged();
+    }
+
+    private void CloseActionsDropdown()
+    {
+        _openActionsItem = default(TItem);
+        StateHasChanged();
+    }
+}

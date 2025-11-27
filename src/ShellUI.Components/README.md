@@ -69,9 +69,7 @@ curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/t
 # Or for Linux/Mac: tailwindcss-linux-x64 or tailwindcss-macos-x64
 
 # Create input.css
-echo '@tailwind base;
-@tailwind components;
-@tailwind utilities;' > wwwroot/input.css
+echo '@import "tailwindcss";' > wwwroot/input.css
 
 # Create tailwind.config.js
 echo 'module.exports = {
@@ -98,9 +96,9 @@ echo 'module.exports = {
 }' > tailwind.config.js
 
 # Create input.css
-echo '@tailwind base;
-@tailwind components;
-@tailwind utilities;' > wwwroot/input.css
+echo '@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";' > wwwroot/input.css
 
 # Build CSS
 npx tailwindcss -i wwwroot/input.css -o wwwroot/app.css
@@ -194,17 +192,32 @@ ShellUI components work alongside Bootstrap. You can:
 
 ## Customization
 
+### 🎨 Theme Customization
+
+**Easily customize themes with [tweakcn](https://tweakcn.com/):**
+
+1. Design your perfect theme on tweakcn
+2. Copy the generated CSS variables
+3. Paste into `wwwroot/input.css`
+4. All ShellUI components update automatically!
+
+**Custom Fonts:** Add Google Fonts links and update `--font-*` variables in your CSS.
+
+### Component Customization
+
 Components are copied to your project, giving you full control:
 
 ```bash
 # Components are installed to Components/UI/
 Components/
   UI/
-    Button.razor
-    Input.razor
-    Card.razor
+    Button.razor      # Edit directly!
+    Input.razor       # Customize as needed
+    Card.razor        # Full ownership
     # ... other components
 ```
+
+Modify any component to match your design system perfectly!
 
 ## Documentation
 

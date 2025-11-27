@@ -12,7 +12,8 @@ public class MenubarTemplate
         Category = ComponentCategory.Navigation,
         FilePath = "Menubar.razor",
         Version = "0.1.0",
-        Tags = new List<string> { "navigation", "menu", "menubar", "app" }
+        Tags = new List<string> { "navigation", "menu", "menubar", "app" },
+        Dependencies = new List<string> { "menubar-item" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

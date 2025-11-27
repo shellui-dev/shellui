@@ -13,9 +13,10 @@ public class ShellUIConfig
 public class TailwindConfig
 {
     public bool Enabled { get; set; } = true;
-    public string Version { get; set; } = "4.0.0";
+    public string Version { get; set; } = "4.1.14";
+    public string Method { get; set; } = "standalone"; // "standalone" or "npm"
     public string ConfigPath { get; set; } = "tailwind.config.js";
-    public string CssPath { get; set; } = "Styles/app.css";
+    public string CssPath { get; set; } = "wwwroot/app.css";
 }
 
 public class InstalledComponent
