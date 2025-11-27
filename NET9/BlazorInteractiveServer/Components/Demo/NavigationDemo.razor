@@ -1,0 +1,106 @@
+@namespace BlazorInteractiveServer.Components.Demo
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Navigation</h2>
+    <div class="space-y-6">
+        <!-- Navbar Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Navbar</h3>
+            <div class="relative border border-border rounded-lg overflow-hidden h-64 bg-background">
+                <Navbar>
+                    <div class="flex items-center space-x-4 w-full">
+                        <span class="font-bold text-lg">ShellUI</span>
+                        <nav class="flex items-center space-x-6 text-sm font-medium flex-1">
+                            <a href="#" class="transition-colors hover:text-foreground/80 text-foreground">Home</a>
+                            <a href="#" class="transition-colors hover:text-foreground/80 text-muted-foreground">Docs</a>
+                            <a href="#" class="transition-colors hover:text-foreground/80 text-muted-foreground">Components</a>
+                        </nav>
+                        <Button Variant="outline" Size="sm">Sign In</Button>
+                    </div>
+                </Navbar>
+                <div class="p-6 text-sm text-muted-foreground">
+                    <p>This navbar sticks to the top with backdrop blur effect!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Sidebar</h3>
+            <div class="space-y-4">
+                <Button OnClick="ToggleSidebar">
+                    @(IsSidebarOpen ? "Close" : "Open") Sidebar
+                </Button>
+                <div class="relative border border-border rounded-lg overflow-hidden h-96 bg-background">
+                    <Sidebar IsOpen="@IsSidebarOpen">
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-lg">Navigation</h4>
+                            <nav class="space-y-2">
+                                <a href="#" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
+                                    <span class="material-symbols-outlined text-sm">home</span>
+                                    <span>Dashboard</span>
+                                </a>
+                                <a href="#" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
+                                    <span class="material-symbols-outlined text-sm">folder</span>
+                                    <span>Projects</span>
+                                </a>
+                                <a href="#" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
+                                    <span class="material-symbols-outlined text-sm">settings</span>
+                                    <span>Settings</span>
+                                </a>
+                            </nav>
+                        </div>
+                    </Sidebar>
+                    <div class="@(IsSidebarOpen ? "ml-64" : "") transition-all p-6">
+                        <h4 class="font-semibold mb-2 text-foreground">Main Content Area</h4>
+                        <p class="text-sm text-muted-foreground">
+                            Toggle the sidebar to see the smooth slide-in animation!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breadcrumb Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Breadcrumb</h3>
+            <Breadcrumb>
+                <BreadcrumbItem Href="#">Home</BreadcrumbItem>
+                <BreadcrumbItem Href="#">Components</BreadcrumbItem>
+                <BreadcrumbItem Href="#">UI</BreadcrumbItem>
+                <BreadcrumbItem IsLast="true">Breadcrumb</BreadcrumbItem>
+            </Breadcrumb>
+        </div>
+
+        <!-- Accordion Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Accordion</h3>
+            <CascadingValue Value="@_accordion">
+                <Accordion @ref="_accordion">
+                    <AccordionItem Title="Is it accessible?" IsOpen="true">
+                        <p class="text-sm text-muted-foreground">Yes. It adheres to the WAI-ARIA design pattern.</p>
+                    </AccordionItem>
+                    <AccordionItem Title="Is it styled?">
+                        <p class="text-sm text-muted-foreground">Yes. It comes with default styles that matches the other components aesthetic.</p>
+                    </AccordionItem>
+                    <AccordionItem Title="Is it animated?">
+                        <p class="text-sm text-muted-foreground">Yes. It's animated by default using Tailwind CSS transitions.</p>
+                    </AccordionItem>
+                </Accordion>
+            </CascadingValue>
+        </div>
+    </div>
+</section>
+
+@code {
+    [Parameter] public bool IsSidebarOpen { get; set; } = false;
+    [Parameter] public EventCallback<bool> IsSidebarOpenChanged { get; set; }
+    private Accordion? _accordion;
+
+    private async Task ToggleSidebar()
+    {
+        IsSidebarOpen = !IsSidebarOpen;
+        await IsSidebarOpenChanged.InvokeAsync(IsSidebarOpen);
+    }
+}
+

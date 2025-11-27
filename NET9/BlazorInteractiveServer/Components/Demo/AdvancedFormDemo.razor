@@ -1,0 +1,290 @@
+@namespace BlazorInteractiveServer.Components.Demo
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Advanced Forms</h2>
+    <div class="space-y-6">
+        <!-- Input OTP Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Input OTP</h3>
+            <div class="space-y-6">
+                <div>
+                    <Label>Grouped by 3 numbers</Label>
+                    <InputOTP OnComplete="@((x) => { _otp1 = x; Otp1Changed.InvokeAsync(x); })" GroupBy="3" />
+                </div>
+                <div>
+                    <Label>Grouped by 2 numbers</Label>
+                    <InputOTP OnComplete="@((x) => { _otp2 = x; Otp2Changed.InvokeAsync(x); })" GroupBy="2" />
+                </div>
+                <div>
+                    <Label>No grouping</Label>
+                    <InputOTP OnComplete="@((x) => { _otp3 = x; Otp3Changed.InvokeAsync(x); })" GroupBy="0" />
+                </div>
+                @if (!string.IsNullOrEmpty(_otp1) || !string.IsNullOrEmpty(_otp2) || !string.IsNullOrEmpty(_otp3))
+                {
+                    <div class="p-4 border border-border rounded-md bg-background">
+                        <p class="text-sm font-medium">You have entered OTP:</p>
+                        @if (!string.IsNullOrEmpty(_otp1))
+                        {
+                            <p class="text-sm text-muted-foreground">Grouped by 3: <span class="font-bold text-foreground">@_otp1</span></p>
+                        }
+                        @if (!string.IsNullOrEmpty(_otp2))
+                        {
+                            <p class="text-sm text-muted-foreground">Grouped by 2: <span class="font-bold text-foreground">@_otp2</span></p>
+                        }
+                        @if (!string.IsNullOrEmpty(_otp3))
+                        {
+                            <p class="text-sm text-muted-foreground">No grouping: <span class="font-bold text-foreground">@_otp3</span></p>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Combobox Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Combobox</h3>
+            <div class="space-y-4">
+                <div>
+                    <Label>Select Technology</Label>
+                    <Combobox SelectedValue="@_selectedTech" SelectedValueChanged="@HandleSelectedTechChanged" 
+                              Options="TechOptions" 
+                              Placeholder="Search technology..." />
+                    @if (!string.IsNullOrEmpty(_selectedTech))
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">Selected: @_selectedTech</p>
+                    }
+                </div>
+                <div>
+                    <Label>Select Framework</Label>
+                    <Combobox SelectedValue="@_selectedFramework" SelectedValueChanged="@HandleSelectedFrameworkChanged" 
+                              Options="FrameworkOptions" 
+                              Placeholder="Search framework..." />
+                    @if (!string.IsNullOrEmpty(_selectedFramework))
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">Selected: @_selectedFramework</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Date Picker Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Date Picker</h3>
+            <div class="space-y-4 max-w-xs">
+                <div>
+                    <Label class="font-bold">With clear</Label>
+                    <DatePicker SelectedDate="@_selectedDate" SelectedDateChanged="@HandleSelectedDateChanged" Placeholder="Pick a date" />
+                    @if (_selectedDate.HasValue)
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">Selected: @_selectedDate.Value.ToString("MMMM dd, yyyy")</p>
+                    }
+                </div>
+                <div>
+                    <Label class="font-bold">Without clear</Label>
+                    <DatePicker SelectedDate="@_selectedDate2" SelectedDateChanged="@HandleSelectedDate2Changed" Placeholder="Pick a date" AllowClear="false" />
+                    @if (_selectedDate2.HasValue)
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">Selected: @_selectedDate2.Value.ToString("MMMM dd, yyyy")</p>
+                    }
+                </div>
+                <div>
+                    <Label class="font-bold">Date Range</Label>
+                    <DateRangePicker StartDate="@_rangeStartDate" StartDateChanged="@HandleRangeStartDateChanged" 
+                                    EndDate="@_rangeEndDate" EndDateChanged="@HandleRangeEndDateChanged" 
+                                    Placeholder="Pick a date range" />
+                    @if (_rangeStartDate.HasValue || _rangeEndDate.HasValue)
+                    {
+                        <p class="text-sm text-muted-foreground mt-2">
+                            Range: @(_rangeStartDate?.ToString("MMM dd") ?? "...") - @(_rangeEndDate?.ToString("MMM dd, yyyy") ?? "...")
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Picker Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Time Picker</h3>
+            <div class="max-w-xs">
+                <TimePicker SelectedTime="@_selectedTime" SelectedTimeChanged="@HandleSelectedTimeChanged" Placeholder="Pick a time" Step="15" />
+                @if (_selectedTime.HasValue)
+                {
+                    <p class="text-sm text-muted-foreground mt-2">Selected: @_selectedTime.Value.ToString(@"hh\:mm")</p>
+                }
+            </div>
+        </div>
+
+        <!-- Form Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Form</h3>
+            <Form OnValidSubmit="HandleFormSubmit" ClassName="space-y-4">
+                <div>
+                    <Label>Name</Label>
+                    <Input Value="@_formName" ValueChanged="@HandleFormNameChanged" Placeholder="Shewart Shepherd" />
+                </div>
+                <div>
+                    <Label>Email</Label>
+                    <Input Value="@_formEmail" ValueChanged="@HandleFormEmailChanged" Type="email" Placeholder="shep@shell-tech.dev" />
+                </div>
+                <div>
+                    <Label>Phone Number</Label>
+                    <Input Value="@_formPhone" ValueChanged="@HandleFormPhoneChanged" Type="tel" Placeholder="+263780000000" />
+                </div>
+                <Button Type="submit">Submit Form</Button>
+            </Form>
+            @if (_formSubmitted)
+            {
+                <Alert Variant="success" Title="Success" ClassName="mt-4">
+                    Form submitted successfully!
+                </Alert>
+            }
+        </div>
+    </div>
+</section>
+
+@code {
+    // Local state
+    private string _otp1 = "";
+    private string _otp2 = "";
+    private string _otp3 = "";
+    private string _selectedTech = "";
+    private string _selectedFramework = "";
+    private DateTime? _selectedDate;
+    private DateTime? _selectedDate2 = DateTime.Now;
+    private DateTime? _rangeStartDate;
+    private DateTime? _rangeEndDate;
+    private TimeSpan? _selectedTime;
+    private string _formName = "";
+    private string _formEmail = "";
+    private string _formPhone = "";
+    private bool _formSubmitted = false;
+
+    // Parameters for parent sync (optional)
+    [Parameter] public string Otp1 { get; set; } = "";
+    [Parameter] public EventCallback<string> Otp1Changed { get; set; }
+    [Parameter] public string Otp2 { get; set; } = "";
+    [Parameter] public EventCallback<string> Otp2Changed { get; set; }
+    [Parameter] public string Otp3 { get; set; } = "";
+    [Parameter] public EventCallback<string> Otp3Changed { get; set; }
+    [Parameter] public string SelectedTech { get; set; } = "";
+    [Parameter] public EventCallback<string> SelectedTechChanged { get; set; }
+    [Parameter] public string SelectedFramework { get; set; } = "";
+    [Parameter] public EventCallback<string> SelectedFrameworkChanged { get; set; }
+    [Parameter] public DateTime? SelectedDate { get; set; }
+    [Parameter] public EventCallback<DateTime?> SelectedDateChanged { get; set; }
+    [Parameter] public DateTime? SelectedDate2 { get; set; } = DateTime.Now;
+    [Parameter] public EventCallback<DateTime?> SelectedDate2Changed { get; set; }
+    [Parameter] public DateTime? RangeStartDate { get; set; }
+    [Parameter] public EventCallback<DateTime?> RangeStartDateChanged { get; set; }
+    [Parameter] public DateTime? RangeEndDate { get; set; }
+    [Parameter] public EventCallback<DateTime?> RangeEndDateChanged { get; set; }
+    [Parameter] public TimeSpan? SelectedTime { get; set; }
+    [Parameter] public EventCallback<TimeSpan?> SelectedTimeChanged { get; set; }
+    [Parameter] public string FormName { get; set; } = "";
+    [Parameter] public EventCallback<string> FormNameChanged { get; set; }
+    [Parameter] public string FormEmail { get; set; } = "";
+    [Parameter] public EventCallback<string> FormEmailChanged { get; set; }
+    [Parameter] public string FormPhone { get; set; } = "";
+    [Parameter] public EventCallback<string> FormPhoneChanged { get; set; }
+    [Parameter] public bool FormSubmitted { get; set; } = false;
+    [Parameter] public EventCallback<bool> FormSubmittedChanged { get; set; }
+
+    public List<string> TechOptions { get; set; } = new() 
+    { 
+        "C#", "JavaScript", "TypeScript", "Python", "Java", "Go", "Rust", "F#"
+    };
+    
+    public List<string> FrameworkOptions { get; set; } = new() 
+    { 
+        "Blazor", "ASP.NET Core", "React", "Vue", "Angular", "Next.js", "Svelte", "ShellUI"
+    };
+
+    protected override void OnParametersSet()
+    {
+        // Sync parameters to local state
+        if (Otp1 != _otp1) _otp1 = Otp1;
+        if (Otp2 != _otp2) _otp2 = Otp2;
+        if (Otp3 != _otp3) _otp3 = Otp3;
+        if (SelectedTech != _selectedTech) _selectedTech = SelectedTech;
+        if (SelectedFramework != _selectedFramework) _selectedFramework = SelectedFramework;
+        if (SelectedDate != _selectedDate) _selectedDate = SelectedDate;
+        if (SelectedDate2 != _selectedDate2) _selectedDate2 = SelectedDate2;
+        if (RangeStartDate != _rangeStartDate) _rangeStartDate = RangeStartDate;
+        if (RangeEndDate != _rangeEndDate) _rangeEndDate = RangeEndDate;
+        if (SelectedTime != _selectedTime) _selectedTime = SelectedTime;
+        if (FormName != _formName) _formName = FormName;
+        if (FormEmail != _formEmail) _formEmail = FormEmail;
+        if (FormPhone != _formPhone) _formPhone = FormPhone;
+        if (FormSubmitted != _formSubmitted) _formSubmitted = FormSubmitted;
+    }
+
+    private async Task HandleSelectedTechChanged(string value)
+    {
+        _selectedTech = value;
+        await SelectedTechChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleSelectedFrameworkChanged(string value)
+    {
+        _selectedFramework = value;
+        await SelectedFrameworkChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleSelectedDateChanged(DateTime? value)
+    {
+        _selectedDate = value;
+        await SelectedDateChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleSelectedDate2Changed(DateTime? value)
+    {
+        _selectedDate2 = value;
+        await SelectedDate2Changed.InvokeAsync(value);
+    }
+
+    private async Task HandleRangeStartDateChanged(DateTime? value)
+    {
+        _rangeStartDate = value;
+        await RangeStartDateChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleRangeEndDateChanged(DateTime? value)
+    {
+        _rangeEndDate = value;
+        await RangeEndDateChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleSelectedTimeChanged(TimeSpan? value)
+    {
+        _selectedTime = value;
+        await SelectedTimeChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleFormNameChanged(string value)
+    {
+        _formName = value;
+        await FormNameChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleFormEmailChanged(string value)
+    {
+        _formEmail = value;
+        await FormEmailChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleFormPhoneChanged(string value)
+    {
+        _formPhone = value;
+        await FormPhoneChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleFormSubmit()
+    {
+        _formSubmitted = true;
+        await FormSubmittedChanged.InvokeAsync(_formSubmitted);
+        await Task.Delay(3000);
+        _formSubmitted = false;
+        await FormSubmittedChanged.InvokeAsync(_formSubmitted);
+    }
+}
+

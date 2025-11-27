@@ -1,0 +1,105 @@
+@namespace BlazorInteractiveServer.Components.Demo
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Data Display</h2>
+    <div class="space-y-6">
+        <!-- Skeleton Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Skeleton</h3>
+            <div class="space-y-4">
+                <div class="space-y-2">
+                    <Skeleton Class="h-4 w-full" />
+                    <Skeleton Class="h-4 w-3/4" />
+                    <Skeleton Class="h-4 w-1/2" />
+                </div>
+                <div class="flex items-center space-x-4">
+                    <Skeleton Variant="circular" Class="h-12 w-12" />
+                    <div class="space-y-2 flex-1">
+                        <Skeleton Class="h-4 w-full" />
+                        <Skeleton Class="h-4 w-2/3" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Progress</h3>
+            <div class="space-y-4">
+                <div>
+                    <Label>25% Complete</Label>
+                    <Progress Value="25" />
+                </div>
+                <div>
+                    <Label>50% Complete</Label>
+                    <Progress Value="50" />
+                </div>
+                <div>
+                    <Label>75% Complete</Label>
+                    <Progress Value="75" Height="0.75rem" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Separator Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Separator</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm">Section 1</p>
+                    <Separator ClassName="my-4" />
+                    <p class="text-sm">Section 2</p>
+                </div>
+                <div class="flex h-20 items-center space-x-4">
+                    <div class="flex-1">Column 1</div>
+                    <Separator Orientation="vertical" />
+                    <div class="flex-1">Column 2</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Avatar Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Avatar</h3>
+            <div class="flex flex-wrap items-center gap-4">
+                <Avatar Src="https://github.com/shadcn.png" Alt="User" />
+                <Avatar Fallback="JD" Size="lg" />
+                <Avatar Fallback="AB" Size="sm" />
+                <Avatar Size="xl" />
+            </div>
+        </div>
+
+        <!-- Table Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Table</h3>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Status</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow>
+                        <TableCell>Shewart Shepherd</TableCell>
+                        <TableCell>shep@shell-tech.dev</TableCell>
+                        <TableCell>Founder & CEO</TableCell>
+                        <TableCell><Badge>Active</Badge></TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Shell Technologies</TableCell>
+                        <TableCell>contact@shell-tech.dev</TableCell>
+                        <TableCell>Organization</TableCell>
+                        <TableCell><Badge Variant="secondary">Verified</Badge></TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </div>
+    </div>
+</section>
+
+@code {
+}
+

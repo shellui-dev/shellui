@@ -1,0 +1,191 @@
+@namespace BlazorInteractiveServer.Components.Demo
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Form Controls</h2>
+    <div class="space-y-6">
+        <!-- Select Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Select</h3>
+            <div class="max-w-xs">
+                <Label>Choose a fruit</Label>
+                <Select Value="@_selectedFruit" ValueChanged="@HandleSelectedFruitChanged">
+                    <option value="">Select...</option>
+                    <option value="apple">Apple</option>
+                    <option value="banana">Banana</option>
+                    <option value="orange">Orange</option>
+                </Select>
+                @if (!string.IsNullOrEmpty(_selectedFruit))
+                {
+                    <p class="text-sm text-muted-foreground mt-2">Selected: @_selectedFruit</p>
+                }
+            </div>
+        </div>
+
+        <!-- Checkbox & Switch Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Checkbox & Switch</h3>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-2">
+                    <Checkbox Checked="@_acceptTerms" CheckedChanged="@HandleAcceptTermsChanged" />
+                    <Label>Accept terms and conditions</Label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <Switch Checked="@_notifications" CheckedChanged="@HandleNotificationsChanged" />
+                    <Label>Enable notifications</Label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Radio Group Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Radio Group</h3>
+            <CascadingValue Value="@_radioGroup">
+                <RadioGroup @ref="_radioGroup" Value="@_selectedOption" ValueChanged="@HandleSelectedOptionChanged" ClassName="space-y-3">
+                    <RadioGroupItem Value="option1">Default</RadioGroupItem>
+                    <RadioGroupItem Value="option2">Comfortable</RadioGroupItem>
+                    <RadioGroupItem Value="option3">Compact</RadioGroupItem>
+                </RadioGroup>
+            </CascadingValue>
+            @if (!string.IsNullOrEmpty(_selectedOption))
+            {
+                <p class="text-sm text-muted-foreground mt-4">Selected: @_selectedOption</p>
+            }
+        </div>
+
+        <!-- Slider Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Slider</h3>
+            <div class="space-y-4">
+                <div>
+                    <Label>Volume: @_sliderValue%</Label>
+                    <Slider Value="@_sliderValue" ValueChanged="@HandleSliderValueChanged" Min="0" Max="100" Step="1" />
+                </div>
+                <div>
+                    <Label>Temperature: @_temperature°C</Label>
+                    <Slider Value="@_temperature" ValueChanged="@HandleTemperatureChanged" Min="0" Max="40" Step="0.5" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Toggle Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Toggle</h3>
+            <div class="flex items-center space-x-4">
+                <Toggle Pressed="@_togglePressed" PressedChanged="@HandleTogglePressedChanged">
+                    <span class="flex items-center space-x-2">
+                        <span class="material-symbols-outlined text-sm">check</span>
+                        <span>Toggle Me</span>
+                    </span>
+                </Toggle>
+                <Toggle Pressed="@_togglePressed2" PressedChanged="@HandleTogglePressed2Changed" Variant="outline">Outline</Toggle>
+                <Toggle Pressed="@_togglePressed3" PressedChanged="@HandleTogglePressed3Changed" Size="sm">Small</Toggle>
+            </div>
+            <p class="text-sm text-muted-foreground mt-4">Pressed: @(_togglePressed ? "Yes" : "No")</p>
+        </div>
+    </div>
+</section>
+
+@code {
+    // Local state
+    private string _selectedFruit = "";
+    private bool _acceptTerms = false;
+    private bool _notifications = true;
+    private RadioGroup? _radioGroup;
+    private string _selectedOption = "";
+    private double _sliderValue = 50;
+    private double _temperature = 20;
+    private bool _togglePressed = false;
+    private bool _togglePressed2 = false;
+    private bool _togglePressed3 = false;
+
+    // Parameters for parent sync (optional)
+    [Parameter] public string SelectedFruit { get; set; } = "";
+    [Parameter] public EventCallback<string> SelectedFruitChanged { get; set; }
+    [Parameter] public bool AcceptTerms { get; set; } = false;
+    [Parameter] public EventCallback<bool> AcceptTermsChanged { get; set; }
+    [Parameter] public bool Notifications { get; set; } = true;
+    [Parameter] public EventCallback<bool> NotificationsChanged { get; set; }
+    [Parameter] public RadioGroup? RadioGroup { get; set; }
+    [Parameter] public string SelectedOption { get; set; } = "";
+    [Parameter] public EventCallback<string> SelectedOptionChanged { get; set; }
+    [Parameter] public double SliderValue { get; set; } = 50;
+    [Parameter] public EventCallback<double> SliderValueChanged { get; set; }
+    [Parameter] public double Temperature { get; set; } = 20;
+    [Parameter] public EventCallback<double> TemperatureChanged { get; set; }
+    [Parameter] public bool TogglePressed { get; set; } = false;
+    [Parameter] public EventCallback<bool> TogglePressedChanged { get; set; }
+    [Parameter] public bool TogglePressed2 { get; set; } = false;
+    [Parameter] public EventCallback<bool> TogglePressed2Changed { get; set; }
+    [Parameter] public bool TogglePressed3 { get; set; } = false;
+    [Parameter] public EventCallback<bool> TogglePressed3Changed { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        // Sync parameters to local state
+        if (SelectedFruit != _selectedFruit) _selectedFruit = SelectedFruit;
+        if (AcceptTerms != _acceptTerms) _acceptTerms = AcceptTerms;
+        if (Notifications != _notifications) _notifications = Notifications;
+        if (SelectedOption != _selectedOption) _selectedOption = SelectedOption;
+        if (SliderValue != _sliderValue) _sliderValue = SliderValue;
+        if (Temperature != _temperature) _temperature = Temperature;
+        if (TogglePressed != _togglePressed) _togglePressed = TogglePressed;
+        if (TogglePressed2 != _togglePressed2) _togglePressed2 = TogglePressed2;
+        if (TogglePressed3 != _togglePressed3) _togglePressed3 = TogglePressed3;
+        if (RadioGroup != null && RadioGroup != _radioGroup) _radioGroup = RadioGroup;
+    }
+
+    private async Task HandleSelectedFruitChanged(string value)
+    {
+        _selectedFruit = value;
+        await SelectedFruitChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleAcceptTermsChanged(bool value)
+    {
+        _acceptTerms = value;
+        await AcceptTermsChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleNotificationsChanged(bool value)
+    {
+        _notifications = value;
+        await NotificationsChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleSelectedOptionChanged(string value)
+    {
+        _selectedOption = value;
+        await SelectedOptionChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleSliderValueChanged(double value)
+    {
+        _sliderValue = value;
+        await SliderValueChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleTemperatureChanged(double value)
+    {
+        _temperature = value;
+        await TemperatureChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleTogglePressedChanged(bool value)
+    {
+        _togglePressed = value;
+        await TogglePressedChanged.InvokeAsync(value);
+    }
+
+    private async Task HandleTogglePressed2Changed(bool value)
+    {
+        _togglePressed2 = value;
+        await TogglePressed2Changed.InvokeAsync(value);
+    }
+
+    private async Task HandleTogglePressed3Changed(bool value)
+    {
+        _togglePressed3 = value;
+        await TogglePressed3Changed.InvokeAsync(value);
+    }
+}
+

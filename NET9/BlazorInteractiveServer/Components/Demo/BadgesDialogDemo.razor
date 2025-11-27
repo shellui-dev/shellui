@@ -1,0 +1,39 @@
+@using BlazorInteractiveServer.Components.UI
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Badges & Dialog</h2>
+    <div class="flex flex-wrap gap-4 mb-4">
+        <Badge Variant="default">Default</Badge>
+        <Badge Variant="secondary">Secondary</Badge>
+        <Badge Variant="destructive">Destructive</Badge>
+        <Badge Variant="success">Success</Badge>
+        <Badge Variant="warning">Warning</Badge>
+        <Badge Variant="info">Info</Badge>
+    </div>
+    <Button @onclick="OpenDialog">Open Dialog</Button>
+</section>
+
+<Dialog IsOpen="isDialogOpen" Title="ShellUI Dialog" Description="This is a demo of the Dialog component." OnClose="CloseDialog">
+    <ChildContent>
+        <p>This dialog demonstrates the ShellUI Dialog component. You can put any content here!</p>
+    </ChildContent>
+    <Footer>
+        <Button Variant="outline" @onclick="CloseDialog">Cancel</Button>
+        <Button @onclick="CloseDialog">Confirm</Button>
+    </Footer>
+</Dialog>
+
+@code {
+    private bool isDialogOpen = false;
+
+    private void OpenDialog()
+    {
+        isDialogOpen = true;
+    }
+
+    private void CloseDialog()
+    {
+        isDialogOpen = false;
+    }
+}
+
