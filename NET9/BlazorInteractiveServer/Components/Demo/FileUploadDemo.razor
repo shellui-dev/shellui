@@ -1,0 +1,174 @@
+@namespace BlazorInteractiveServer.Components.Demo
+@using BlazorInteractiveServer.Components.UI
+@using Microsoft.AspNetCore.Components.Forms
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">File Upload</h2>
+    <div class="space-y-6">
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Single File Upload</h3>
+            <FileUpload Text="Drag and drop a file or click to browse"
+                       OnChange="HandleFileSelection">
+                @if (_selectedFiles.Any())
+                {
+                    <div class="mt-4 space-y-2">
+                        @foreach (var file in _selectedFiles)
+                        {
+                            <div class="flex items-center justify-between p-3 bg-muted rounded-lg">
+                                <div class="flex items-center gap-3 flex-1 min-w-0">
+                                    <span class="material-symbols-outlined text-muted-foreground flex-shrink-0">description</span>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-foreground truncate">@file.Name</p>
+                                        <p class="text-xs text-muted-foreground">@FormatFileSize(file.Size)</p>
+                                    </div>
+                                </div>
+                                <button type="button" 
+                                        @onclick="() => RemoveFile(file)" 
+                                        class="text-muted-foreground hover:text-destructive transition-colors p-1">
+                                    <span class="material-symbols-outlined text-sm">close</span>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            </FileUpload>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Multiple Files Upload</h3>
+            <FileUpload Text="Drag and drop files or click to browse"
+                       Multiple="true"
+                       AllowedFileCount="5"
+                       AcceptedFileTypes="@(new[] { "image/*", "application/pdf", "text/*", "video/*" })"
+                       OnChange="HandleMultipleFileSelection">
+                @if (_multipleFiles.Any())
+                {
+                    <div class="mt-4 space-y-2">
+                        @foreach (var file in _multipleFiles)
+                        {
+                            <div class="flex items-center justify-between p-3 bg-muted rounded-lg">
+                                <div class="flex items-center gap-3 flex-1 min-w-0">
+                                    <span class="material-symbols-outlined text-muted-foreground flex-shrink-0">description</span>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-foreground truncate">@file.Name</p>
+                                        <p class="text-xs text-muted-foreground">@FormatFileSize(file.Size)</p>
+                                    </div>
+                                </div>
+                                <button type="button" 
+                                        @onclick="() => RemoveMultipleFile(file)" 
+                                        class="text-muted-foreground hover:text-destructive transition-colors p-1">
+                                    <span class="material-symbols-outlined text-sm">close</span>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            </FileUpload>
+        </div>
+
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Image Only Upload</h3>
+            <FileUpload Text="Upload images only"
+                       Multiple="true"
+                       AllowedFileCount="3"
+                       AcceptedFileTypes="@(new[] { "image/*" })"
+                       OnChange="HandleImageSelection">
+                @if (_imageFiles.Any())
+                {
+                    <div class="mt-4 grid grid-cols-3 gap-4">
+                        @foreach (var file in _imageFiles)
+                        {
+                            <div class="relative group">
+                                <img src="@GetImageUrl(file)" alt="@file.Name" class="w-full h-32 object-cover rounded-lg" />
+                                <button type="button" 
+                                        @onclick="() => RemoveImageFile(file)" 
+                                        class="absolute top-2 right-2 text-white bg-black/50 hover:bg-black/70 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="material-symbols-outlined text-sm">close</span>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                }
+            </FileUpload>
+        </div>
+    </div>
+</section>
+
+@code {
+    private List<IBrowserFile> _selectedFiles = new();
+    private List<IBrowserFile> _multipleFiles = new();
+    private List<IBrowserFile> _imageFiles = new();
+    private Dictionary<IBrowserFile, string> _imageUrls = new();
+
+    private async Task HandleFileSelection(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        _selectedFiles.Clear();
+        _selectedFiles.Add(file);
+    }
+
+    private async Task HandleMultipleFileSelection(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles(5);
+        _multipleFiles.Clear();
+        _multipleFiles.AddRange(files);
+    }
+
+    private async Task HandleImageSelection(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles(3);
+        _imageFiles.Clear();
+        _imageUrls.Clear();
+        
+        foreach (var file in files)
+        {
+            try
+            {
+                using var stream = file.OpenReadStream(5 * 1024 * 1024);
+                using var memoryStream = new MemoryStream();
+                await stream.CopyToAsync(memoryStream);
+                var base64 = Convert.ToBase64String(memoryStream.ToArray());
+                var url = $"data:{file.ContentType};base64,{base64}";
+                _imageUrls[file] = url;
+            }
+            catch { }
+        }
+        
+        _imageFiles.AddRange(files);
+    }
+
+    private string GetImageUrl(IBrowserFile file)
+    {
+        return _imageUrls.TryGetValue(file, out var url) ? url : "";
+    }
+
+    private void RemoveFile(IBrowserFile file)
+    {
+        _selectedFiles.Remove(file);
+    }
+
+    private void RemoveMultipleFile(IBrowserFile file)
+    {
+        _multipleFiles.Remove(file);
+    }
+
+    private void RemoveImageFile(IBrowserFile file)
+    {
+        _imageFiles.Remove(file);
+        _imageUrls.Remove(file);
+    }
+
+    private string FormatFileSize(long bytes)
+    {
+        string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+        double len = bytes;
+        int order = 0;
+        while (len >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            len = len / 1024;
+        }
+        return $"{len:0.##} {sizes[order]}";
+    }
+}
+
