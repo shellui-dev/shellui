@@ -74,7 +74,8 @@ public static class ComponentRegistry
         { "carousel-content", CarouselContentTemplate.Metadata },
         { "carousel-previous", CarouselPreviousTemplate.Metadata },
         { "carousel-next", CarouselNextTemplate.Metadata },
-        { "carousel-dots", CarouselDotsTemplate.Metadata }
+        { "carousel-dots", CarouselDotsTemplate.Metadata },
+        { "file-upload", FileUploadTemplate.Metadata }
     };
 
     public static string? GetComponentContent(string componentName)
@@ -149,6 +150,7 @@ public static class ComponentRegistry
             "carousel-previous" => CarouselPreviousTemplate.Content,
             "carousel-next" => CarouselNextTemplate.Content,
             "carousel-dots" => CarouselDotsTemplate.Content,
+            "file-upload" => FileUploadTemplate.Content,
             _ => null
         };
     }
