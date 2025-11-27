@@ -135,7 +135,7 @@
         {
             try
             {
-                await JS.InvokeVoidAsync("eval", $"document.getElementById('otp-input-{_id}-{index}')?.focus()");
+                await JS.InvokeVoidAsync("ShellUI.focusElement", $"otp-input-{_id}-{index}");
             }
             catch
             {

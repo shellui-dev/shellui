@@ -66,11 +66,11 @@
             
             if (_isDark)
             {
-                await JSRuntime.InvokeVoidAsync("eval", "document.documentElement.classList.add('dark')");
+                await JSRuntime.InvokeVoidAsync("ShellUI.addClassToDocument", "dark");
             }
             else
             {
-                await JSRuntime.InvokeVoidAsync("eval", "document.documentElement.classList.remove('dark')");
+                await JSRuntime.InvokeVoidAsync("ShellUI.removeClassFromDocument", "dark");
             }
             
             // Update all ThemeToggle instances

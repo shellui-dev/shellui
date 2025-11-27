@@ -1,4 +1,5 @@
 @using Microsoft.JSInterop
+@implements IAsyncDisposable
 
 <div class="relative inline-block">
     <div @onmouseover="ShowCard" @onmouseout="HideCard">
@@ -87,5 +88,16 @@
         }
 
         return string.Join(" ", classes);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_timer != null)
+        {
+            _timer.Stop();
+            _timer.Dispose();
+            _timer = null;
+        }
+        await Task.CompletedTask;
     }
 }

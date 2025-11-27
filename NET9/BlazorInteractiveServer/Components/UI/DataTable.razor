@@ -12,18 +12,18 @@
                 placeholder="Filter..."
                 value="@_filterText"
                 @oninput="OnFilterInput"
-                class="flex h-10 w-full max-w-sm rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                class="flex h-10 w-full max-w-sm rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
         </div>
     }
 
     <!-- Table -->
-    <div class="rounded-md border border-gray-200">
-        <table class="w-full caption-bottom text-sm">
+    <div class="rounded-md border border-border overflow-x-auto">
+        <table class="w-full min-w-[640px] caption-bottom text-sm">
             <thead class="[&_tr]:border-b">
-                <tr class="border-b border-gray-200 transition-colors hover:bg-gray-50/50 data-[state=selected]:bg-gray-50">
+                <tr class="border-b border-border transition-colors">
                     @if (ShowSelection)
                     {
-                        <th class="h-12 w-12 px-4 text-left align-middle font-medium text-gray-500 [&:has([role=checkbox])]:pr-0">
+                        <th class="h-12 w-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0">
                             <input type="checkbox" 
                                    checked="@(_selectedItems.Count == _filteredItems.Count() && _filteredItems.Any())"
                                    @onchange="@((e) => OnSelectAllChanged(e.Value?.ToString() == "true"))" 
@@ -32,13 +32,13 @@
                     }
                     @foreach (var column in Columns)
                     {
-                        <th class="h-12 px-4 text-left align-middle font-medium text-gray-500 @(column.Sortable ? "cursor-pointer hover:bg-gray-50" : "")"
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground @(column.Sortable ? "cursor-pointer hover:bg-accent/50" : "")"
                             @onclick="() => { if (column.Sortable) OnSortClicked(column); }">
                             <div class="flex items-center gap-2">
                                 @column.Header
                                 @if (column.Sortable)
                                 {
-                                    <svg class="h-4 w-4 @(column.SortDirection == SortDirection.Ascending ? "text-gray-900" : column.SortDirection == SortDirection.Descending ? "text-gray-900 rotate-180" : "text-gray-400")"
+                                    <svg class="h-4 w-4 @(column.SortDirection == SortDirection.Ascending ? "text-foreground" : column.SortDirection == SortDirection.Descending ? "text-foreground rotate-180" : "text-muted-foreground")"
                                          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
                                     </svg>
@@ -48,7 +48,7 @@
                     }
                     @if (RowActions?.Any() == true)
                     {
-                        <th class="h-12 px-4 text-left align-middle font-medium text-gray-500">Actions</th>
+                        <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Actions</th>
                     }
                 </tr>
             </thead>
@@ -57,7 +57,7 @@
                 {
                     @foreach (var item in _paginatedItems)
                     {
-                        <tr class="border-b border-gray-200 transition-colors hover:bg-gray-50/50 data-[state=selected]:bg-gray-50 @(IsSelected(item) ? "bg-gray-50" : "")">
+                        <tr class="border-b border-border transition-colors hover:bg-accent/50 @(IsSelected(item) ? "bg-accent/30" : "")">
                             @if (ShowSelection)
                             {
                                 <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">
@@ -75,7 +75,7 @@
                             {
                                 <td class="p-4 align-middle [&:has([role=checkbox])]:pr-0">
                                     <div class="relative">
-                                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-gray-100 hover:text-gray-900 h-8 w-8"
+                                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8"
                                                 @onclick="() => ToggleActionsDropdown(item)"
                                                 @onclick:stopPropagation="true">
                                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -103,8 +103,8 @@
                 }
                 else
                 {
-                    <tr class="border-b border-gray-200 transition-colors hover:bg-gray-50/50 data-[state=selected]:bg-gray-50">
-                        <td colspan="@(Columns.Count + (ShowSelection ? 1 : 0) + (RowActions?.Any() == true ? 1 : 0))" class="h-24 text-center">
+                    <tr class="border-b border-border transition-colors">
+                        <td colspan="@(Columns.Count + (ShowSelection ? 1 : 0) + (RowActions?.Any() == true ? 1 : 0))" class="h-24 text-center text-muted-foreground">
                             No results found.
                         </td>
                     </tr>
@@ -116,8 +116,8 @@
     <!-- Pagination -->
     @if (ShowPagination && _filteredItems.Any())
     {
-        <div class="flex items-center justify-between px-2 py-4">
-            <div class="flex-1 text-sm text-gray-500">
+        <div class="flex flex-col gap-4 px-2 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex-1 text-sm text-muted-foreground">
                 @if (_selectedItems.Any())
                 {
                     @($"{_selectedItems.Count} item(s) selected")
@@ -127,35 +127,35 @@
                     @($"Showing {_startIndex} - {_endIndex} of {_filteredItems.Count()} results")
                 }
             </div>
-            <div class="flex items-center space-x-6 lg:space-x-8">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:space-x-6 lg:space-x-8">
                 <div class="flex items-center space-x-2">
-                    <p class="text-sm font-medium">Rows per page</p>
+                    <p class="text-sm font-medium text-foreground whitespace-nowrap">Rows per page</p>
                     <div class="relative">
-                        <select value="@_pageSize.ToString()" @onchange="@((e) => OnPageSizeChanged(e))" class="flex h-8 w-[70px] appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-6 text-sm ring-offset-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <select value="@_pageSize.ToString()" @onchange="@((e) => OnPageSizeChanged(e))" class="flex h-8 w-[70px] appearance-none rounded-md border border-input bg-background px-3 py-2 pr-6 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                             @foreach (var size in new[] { 5, 10, 20, 50 })
                             {
                                 <option value="@size.ToString()">@size</option>
                             }
                         </select>
                         <div class="absolute inset-y-0 right-1 flex items-center pointer-events-none">
-                            <svg class="h-3 w-3 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-3 w-3 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
                     </div>
                 </div>
-                <div class="flex w-[100px] items-center justify-center text-sm font-medium">
+                <div class="flex w-[100px] items-center justify-center text-sm font-medium text-foreground whitespace-nowrap">
                     Page @_currentPage of @_totalPages
                 </div>
                 <div class="flex items-center space-x-2">
                     <button
-                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-gray-300 bg-white hover:bg-gray-100 hover:text-gray-900 h-8 px-3"
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 whitespace-nowrap"
                         disabled="@(_currentPage <= 1)"
                         @onclick="OnPreviousPage">
                         Previous
                     </button>
                     <button
-                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-gray-300 bg-white hover:bg-gray-100 hover:text-gray-900 h-8 px-3"
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 whitespace-nowrap"
                         disabled="@(_currentPage >= _totalPages)"
                         @onclick="OnNextPage">
                         Next
@@ -229,7 +229,7 @@
         var sortColumn = Columns.FirstOrDefault(c => c.SortDirection != SortDirection.None);
         if (sortColumn != null)
         {
-            var sortDirection = sortColumn.SortDirection == SortDirection.Ascending ? "" : "descending";
+            var sortDirection = sortColumn.SortDirection == SortDirection.Ascending ? "ascending" : "descending";
             _filteredItems = _filteredItems.AsQueryable().OrderBy($"{sortColumn.PropertyName} {sortDirection}");
         }
 
