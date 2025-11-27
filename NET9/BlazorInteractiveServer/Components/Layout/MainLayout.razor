@@ -1,5 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@using BlazorInteractiveServer.Components.Models
+@using BlazorInteractiveServer.Components.UI
 
 <div class="min-h-screen bg-background text-foreground" @onkeydown="HandleKeyDown" tabindex="0">
     <Navbar ClassName="flex items-center justify-center">
@@ -138,11 +141,61 @@
 </div>
 
 <!-- Command Palette -->
-<Command IsOpen="_isCommandPaletteOpen" IsOpenChanged="OnCommandPaletteChanged" />
+<Command IsOpen="_isCommandPaletteOpen" 
+         IsOpenChanged="OnCommandPaletteChanged" 
+         Commands="_commandItems"
+         CommandSelected="HandleCommandSelected" />
 
 @code {
     private bool _isMobileMenuOpen = false;
     private bool _isCommandPaletteOpen = false;
+    
+    private List<CommandItem> _commandItems = new();
+
+    protected override void OnInitialized()
+    {
+        _commandItems = new List<CommandItem>
+        {
+            new CommandItem 
+            { 
+                Title = "Documentation", 
+                Description = "View ShellUI documentation",
+                Shortcut = "Ctrl+D",
+                Action = () => NavigationManager.NavigateTo("/docs")
+            },
+            new CommandItem 
+            { 
+                Title = "Blog", 
+                Description = "Read our latest blog posts",
+                Action = () => NavigationManager.NavigateTo("/blog")
+            },
+            new CommandItem 
+            { 
+                Title = "Showcase", 
+                Description = "See ShellUI in action",
+                Action = () => NavigationManager.NavigateTo("/showcase")
+            },
+            new CommandItem 
+            { 
+                Title = "Sponsors", 
+                Description = "Support ShellUI development",
+                Action = () => NavigationManager.NavigateTo("/sponsors")
+            },
+            new CommandItem 
+            { 
+                Title = "GitHub", 
+                Description = "View source code on GitHub",
+                Action = async () => await JSRuntime.InvokeVoidAsync("open", "https://github.com/Shell-Technologies/shellui", "_blank")
+            },
+            new CommandItem 
+            { 
+                Title = "Home", 
+                Description = "Go to homepage",
+                Shortcut = "Ctrl+H",
+                Action = () => NavigationManager.NavigateTo("/")
+            }
+        };
+    }
 
     private void ToggleMobileMenu()
     {
@@ -164,18 +217,23 @@
         _isCommandPaletteOpen = isOpen;
     }
 
+    private void HandleCommandSelected(CommandItem command)
+    {
+        command.Action?.Invoke();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             // Focus the body to enable keyboard events
-            await JSRuntime.InvokeVoidAsync("eval", "document.body.focus()");
+            await JSRuntime.InvokeVoidAsync("ShellUI.focusBody");
         }
     }
 
     private void HandleKeyDown(KeyboardEventArgs e)
     {
-        if ((e.CtrlKey || e.MetaKey) && e.Key == "k")
+        if ((e.CtrlKey || e.MetaKey) && string.Equals(e.Key, "k", StringComparison.OrdinalIgnoreCase))
         {
             OpenCommandPalette();
         }
