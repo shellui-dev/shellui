@@ -8,6 +8,22 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>ShellUI.Templates</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Shell Technologies</Authors>
+    <Company>Shell Technologies</Company>
+    <Product>ShellUI</Product>
+    <Description>Component templates for ShellUI CLI tool. Internal dependency.</Description>
+    <PackageProjectUrl>https://github.com/shelltechlabs/shellui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shelltechlabs/shellui</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>blazor;components;templates;cli;shellui</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
 </Project>
