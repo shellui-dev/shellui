@@ -199,11 +199,11 @@
 
     private List<CommandItem> commandItems = new()
     {
-        new CommandItem { Title = "New File", Description = "Create a new file", Shortcut = "Ctrl+N", Action = () => { } },
-        new CommandItem { Title = "Open File", Description = "Open an existing file", Shortcut = "Ctrl+O" },
-        new CommandItem { Title = "Save File", Description = "Save the current file", Shortcut = "Ctrl+S" },
-        new CommandItem { Title = "Settings", Description = "Open application settings", Shortcut = "Ctrl+," },
-        new CommandItem { Title = "Help", Description = "Show help documentation", Shortcut = "F1" }
+        new CommandItem { Title = "New File", Description = "Create a new file", Shortcut = "Ctrl+N", Action = async () => await Task.CompletedTask },
+        new CommandItem { Title = "Open File", Description = "Open an existing file", Shortcut = "Ctrl+O", Action = async () => await Task.CompletedTask },
+        new CommandItem { Title = "Save File", Description = "Save the current file", Shortcut = "Ctrl+S", Action = async () => await Task.CompletedTask },
+        new CommandItem { Title = "Settings", Description = "Open application settings", Shortcut = "Ctrl+,", Action = async () => await Task.CompletedTask },
+        new CommandItem { Title = "Help", Description = "Show help documentation", Shortcut = "F1", Action = async () => await Task.CompletedTask }
     };
 
     private List<ContextMenuItem> contextMenuItems = new();
@@ -331,7 +331,13 @@
     private void HandleShowAlertDialogChanged(bool value) => showAlertDialog = value;
     private void HandleSelectedCalendarDateChanged(DateTime? value) => selectedCalendarDate = value;
     private void HandleShowCommandChanged(bool value) => showCommand = value;
-    private void HandleCommandSelected(CommandItem item) { }
+    private async Task HandleCommandSelected(CommandItem item)
+    {
+        if (item.Action != null)
+        {
+            await item.Action();
+        }
+    }
     private void HandleContextMenuSelect(ContextMenuItem item) { }
     private void HandleTabChange(string tabId) => activeTab = tabId;
     private void HandleStepChange(int step) => currentStep = step;

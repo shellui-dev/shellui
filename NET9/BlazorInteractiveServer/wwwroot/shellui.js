@@ -103,6 +103,14 @@ window.ShellUI = {
         dropZone.addEventListener('drop', handleDrop);
         
         return true;
+    },
+    
+    openUrl: function (url, target) {
+        if (window.open) {
+            window.open(url, target || '_blank');
+        } else {
+            console.error('window.open is not available');
+        }
     }
 };
 

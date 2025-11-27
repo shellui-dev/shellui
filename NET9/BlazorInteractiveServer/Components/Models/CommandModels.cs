@@ -6,5 +6,5 @@ public class CommandItem
     public string? Description { get; set; }
     public string? Icon { get; set; }
     public string? Shortcut { get; set; }
-    public Action? Action { get; set; }
+    public Func<Task>? Action { get; set; }
 }

@@ -161,38 +161,38 @@
                 Title = "Documentation", 
                 Description = "View ShellUI documentation",
                 Shortcut = "Ctrl+D",
-                Action = () => NavigationManager.NavigateTo("/docs")
+                Action = async () => { NavigationManager.NavigateTo("/docs"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
                 Title = "Blog", 
                 Description = "Read our latest blog posts",
-                Action = () => NavigationManager.NavigateTo("/blog")
+                Action = async () => { NavigationManager.NavigateTo("/blog"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
                 Title = "Showcase", 
                 Description = "See ShellUI in action",
-                Action = () => NavigationManager.NavigateTo("/showcase")
+                Action = async () => { NavigationManager.NavigateTo("/showcase"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
                 Title = "Sponsors", 
                 Description = "Support ShellUI development",
-                Action = () => NavigationManager.NavigateTo("/sponsors")
+                Action = async () => { NavigationManager.NavigateTo("/sponsors"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
                 Title = "GitHub", 
                 Description = "View source code on GitHub",
-                Action = async () => await JSRuntime.InvokeVoidAsync("open", "https://github.com/Shell-Technologies/shellui", "_blank")
+                Action = async () => await JSRuntime.InvokeVoidAsync("ShellUI.openUrl", "https://github.com/Shell-Technologies/shellui", "_blank")
             },
             new CommandItem 
             { 
                 Title = "Home", 
                 Description = "Go to homepage",
                 Shortcut = "Ctrl+H",
-                Action = () => NavigationManager.NavigateTo("/")
+                Action = async () => { NavigationManager.NavigateTo("/"); await Task.CompletedTask; }
             }
         };
     }
@@ -217,9 +217,12 @@
         _isCommandPaletteOpen = isOpen;
     }
 
-    private void HandleCommandSelected(CommandItem command)
+    private async Task HandleCommandSelected(CommandItem command)
     {
-        command.Action?.Invoke();
+        if (command.Action != null)
+        {
+            await command.Action();
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
