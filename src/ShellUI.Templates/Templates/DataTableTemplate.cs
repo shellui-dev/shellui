@@ -1,3 +1,5 @@
+using ShellUI.Core.Models;
+
 namespace ShellUI.Templates.Templates;
 
 public static class DataTableTemplate
@@ -5,9 +7,11 @@ public static class DataTableTemplate
     public static ComponentMetadata Metadata => new()
     {
         Name = "data-table",
+        DisplayName = "Data Table",
         Description = "Advanced data table with sorting, filtering, pagination, and row selection",
         Category = ComponentCategory.DataDisplay,
-        Dependencies = new[] { "table", "input", "checkbox", "select", "button", "dropdown" }
+        FilePath = "DataTable.razor",
+        Dependencies = new List<string> { "table", "input", "checkbox", "select", "button", "dropdown" }
     };
 
     public static string Content => @"

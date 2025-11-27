@@ -13,7 +13,7 @@ public class FileUploadTemplate
         Version = "0.1.0",
         FilePath = "FileUpload.razor",
         Dependencies = new List<string>(),
-        Tags = new[] { "file", "upload", "drag", "drop", "validation", "storage" }
+        Tags = new List<string> { "file", "upload", "drag", "drop", "validation", "storage" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

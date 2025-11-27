@@ -6,11 +6,13 @@ public static class CarouselTemplate
 {
     public static readonly ComponentMetadata Metadata = new()
     {
-        Name = "Carousel",
+        Name = "carousel",
+        DisplayName = "Carousel",
         Description = "A carousel component for displaying content in a slideshow format",
-        Category = ComponentCategory.Display,
-        Tags = new[] { "carousel", "slideshow", "slider", "images", "content" },
-        Dependencies = new[] { "carousel-item", "carousel-content", "carousel-previous", "carousel-next", "carousel-dots" }
+        Category = ComponentCategory.DataDisplay,
+        FilePath = "Carousel.razor",
+        Tags = new List<string> { "carousel", "slideshow", "slider", "images", "content" },
+        Dependencies = new List<string> { "carousel-item", "carousel-content", "carousel-previous", "carousel-next", "carousel-dots" }
     };
 
     public const string Content = """

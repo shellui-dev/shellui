@@ -6,10 +6,12 @@ public static class CarouselDotsTemplate
 {
     public static readonly ComponentMetadata Metadata = new()
     {
-        Name = "CarouselDots",
+        Name = "carousel-dots",
+        DisplayName = "Carousel Dots",
         Description = "Dot indicators for carousel navigation",
         Category = ComponentCategory.Navigation,
-        Tags = new[] { "carousel", "dots", "indicators", "navigation" }
+        FilePath = "CarouselDots.razor",
+        Tags = new List<string> { "carousel", "dots", "indicators", "navigation" }
     };
 
     public const string Content = """

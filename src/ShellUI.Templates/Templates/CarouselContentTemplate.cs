@@ -6,10 +6,12 @@ public static class CarouselContentTemplate
 {
     public static readonly ComponentMetadata Metadata = new()
     {
-        Name = "CarouselContent",
+        Name = "carousel-content",
+        DisplayName = "Carousel Content",
         Description = "Content wrapper for carousel items",
-        Category = ComponentCategory.Display,
-        Tags = new[] { "carousel", "content", "wrapper" }
+        Category = ComponentCategory.DataDisplay,
+        FilePath = "CarouselContent.razor",
+        Tags = new List<string> { "carousel", "content", "wrapper" }
     };
 
     public const string Content = """

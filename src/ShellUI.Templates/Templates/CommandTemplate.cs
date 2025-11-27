@@ -1,3 +1,5 @@
+using ShellUI.Core.Models;
+
 namespace ShellUI.Templates.Templates;
 
 public static class CommandTemplate
@@ -5,9 +7,11 @@ public static class CommandTemplate
     public static ComponentMetadata Metadata => new()
     {
         Name = "command",
+        DisplayName = "Command",
         Description = "Command palette component for quick actions",
         Category = ComponentCategory.Overlay,
-        Dependencies = new[] { "dialog" }
+        FilePath = "Command.razor",
+        Dependencies = new List<string> { "dialog" }
     };
 
     public static string Content => @"

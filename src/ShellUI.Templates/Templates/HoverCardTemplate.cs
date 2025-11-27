@@ -1,3 +1,5 @@
+using ShellUI.Core.Models;
+
 namespace ShellUI.Templates.Templates;
 
 public static class HoverCardTemplate
@@ -5,9 +7,11 @@ public static class HoverCardTemplate
     public static ComponentMetadata Metadata => new()
     {
         Name = "hover-card",
+        DisplayName = "Hover Card",
         Description = "Rich hover content component",
         Category = ComponentCategory.Overlay,
-        Dependencies = new string[] { }
+        FilePath = "HoverCard.razor",
+        Dependencies = new List<string>()
     };
 
     public static string Content => @"

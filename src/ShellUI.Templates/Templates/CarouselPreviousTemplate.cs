@@ -6,10 +6,12 @@ public static class CarouselPreviousTemplate
 {
     public static readonly ComponentMetadata Metadata = new()
     {
-        Name = "CarouselPrevious",
+        Name = "carousel-previous",
+        DisplayName = "Carousel Previous",
         Description = "Previous button for carousel navigation",
         Category = ComponentCategory.Navigation,
-        Tags = new[] { "carousel", "button", "previous", "navigation" }
+        FilePath = "CarouselPrevious.razor",
+        Tags = new List<string> { "carousel", "button", "previous", "navigation" }
     };
 
     public const string Content = """
