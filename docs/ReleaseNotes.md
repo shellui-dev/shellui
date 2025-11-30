@@ -1,16 +1,16 @@
 # ShellUI Release Notes
 
-## Version 0.0.2 (Current) - November 2025
+## Version 0.0.3 (Current) - November 2025
 
-### 🎉 First Public Release!
+### 🎉 Release v0.0.3 - Fixed v0.0.2 Issues
 
-ShellUI v0.0.2 is now available on NuGet! This is the first public release of ShellUI, a modern CLI-first Blazor component library inspired by shadcn/ui.
+ShellUI v0.0.3 is now available on NuGet! This release fixes issues from v0.0.2 and includes improved documentation and package metadata.
 
 ### What's Included
 
-- ✅ **CLI Tool** (`ShellUI.CLI` v0.0.2) - Install globally: `dotnet tool install -g ShellUI.CLI`
-- ✅ **Components Package** (`ShellUI.Components` v0.0.2) - Install: `dotnet add package ShellUI.Components`
-- ✅ **Templates Package** (`ShellUI.Templates` v0.0.2) - Internal dependency for CLI
+- ✅ **CLI Tool** (`ShellUI.CLI` v0.0.3) - Install globally: `dotnet tool install -g ShellUI.CLI`
+- ✅ **Components Package** (`ShellUI.Components` v0.0.3) - Install: `dotnet add package ShellUI.Components`
+- ✅ **Templates Package** (`ShellUI.Templates` v0.0.3) - Internal dependency for CLI
 
 ### Features
 
@@ -73,7 +73,7 @@ dotnet add package ShellUI.Components
 
 ### Known Limitations
 
-- This is a pre-release version (0.0.2)
+- This is a pre-release version (0.0.3)
 - Some advanced features may be missing
 - Documentation is being actively improved
 - Breaking changes may occur before v1.0.0

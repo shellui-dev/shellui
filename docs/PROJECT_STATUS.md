@@ -1,10 +1,10 @@
 # ShellUI Project Status
 
-## Current Status: v0.0.2 Released! 🎉
+## Current Status: v0.0.3 Released! 🎉
 
 **ShellUI is now available on NuGet!**
 
-- ✅ **Version 0.0.2** - First public release (November 2025)
+- ✅ **Version 0.0.3** - Fixed v0.0.2 issues (November 2025)
 - ✅ **69 Production-Ready Components** - Fully functional and tested
 - ✅ **CLI Tool Published** - `dotnet tool install -g ShellUI.CLI`
 - ✅ **NuGet Packages Published** - `ShellUI.Components`, `ShellUI.CLI`, `ShellUI.Templates`
@@ -15,9 +15,9 @@
 ## What's Complete ✅
 
 ### Core Infrastructure
-- [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet v0.0.2
-- [x] Components Package (`ShellUI.Components`) - Published to NuGet v0.0.2
-- [x] Templates Package (`ShellUI.Templates`) - Published to NuGet v0.0.2
+- [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet v0.0.3
+- [x] Components Package (`ShellUI.Components`) - Published to NuGet v0.0.3
+- [x] Templates Package (`ShellUI.Templates`) - Published to NuGet v0.0.3
 - [x] Component Registry - 53 components registered and available
 - [x] Tailwind CSS Integration - v4.1.14 standalone CLI support
 - [x] MSBuild Integration - Automatic CSS compilation
@@ -72,7 +72,7 @@
 ## Timeline
 
 ```
-✅ Q4 2025 - v0.0.2 Released (November 2025)
+✅ Q4 2025 - v0.0.3 Released (November 2025)
    ├── ✅ CLI Tool Published
    ├── ✅ NuGet Packages Published
    ├── ✅ 53 Components Available
@@ -175,7 +175,7 @@ dotnet shellui add button input card
 
 ## Success Criteria
 
-### v0.0.2 Success ✅
+### v0.0.3 Success ✅
 - [x] CLI tool published to NuGet
 - [x] NuGet packages published (Components, CLI, Templates)
 - [x] Can initialize projects (no Node.js!)
@@ -241,7 +241,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ---
 
 **Last Updated:** November 2025  
-**Current Version:** v0.0.2  
+**Current Version:** v0.0.3  
 **Status:** Pre-release (ready for use!)
 
 ---
