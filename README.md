@@ -97,33 +97,18 @@ dotnet shellui init  # Choose "npm"
 
 ## What's Next
 
-### Phase 1: ShellDocs Documentation Framework 🎯
+### Phase 1: Additional Components
 **Target: Q1 2026**
 
-Create **ShellDocs** - a fumadocs-inspired documentation framework for .NET!
-
-**Why ShellDocs?**
-- .NET ecosystem lacks modern documentation frameworks
-- Fill massive gap: "Fumadocs for .NET"
-- Perfect complement to ShellUI
-- Build with ShellUI components!
-
-**ShellDocs Vision:**
-- [SHELLDOCS_VISION.md](SHELLDOCS_VISION.md) - Complete architecture
-- [SHELLDOCS_STRATEGY.md](SHELLDOCS_STRATEGY.md) - Build strategy
-
-### Phase 2: Remaining Components (17 more)
-**Target: Q2 2026**
-
-- DataTable (sorting/filtering)
-- Calendar, Charts
-- AlertDialog, HoverCard
-- Carousel, FileUpload
-- VirtualScroll, PDFViewer
+- More advanced components
+- Enhanced DataTable features (sorting/filtering)
+- Charts and data visualization
+- VirtualScroll for large lists
+- PDFViewer component
 - And more...
 
-### Phase 3: Documentation & Polish
-**Target: Q3 2026**
+### Phase 2: Documentation & Polish
+**Target: Q2 2026**
 
 - Complete documentation website
 - Video tutorials
@@ -177,7 +162,7 @@ YourProject/
 │       ├── Button.razor
 │       ├── Input.razor
 │       ├── Card.razor
-│       └── ... (53 components)
+│       └── ... (69 components)
 ├── wwwroot/
 │   ├── input.css              # Tailwind input (@import "tailwindcss";)
 │   └── app.css                # Compiled CSS (auto-generated)
@@ -204,7 +189,7 @@ dotnet shellui init
 
 # Add components
 dotnet shellui add button input card dialog
-dotnet shellui list  # See all 53 available components
+dotnet shellui list  # See all 69 available components
 ```
 
 ### Use Components
@@ -245,7 +230,7 @@ Simply edit the component file in `Components/UI/` - it's yours to modify!
 | Hybrid Workflow | ✅ | ❌ | ❌ | ❌ |
 | Free & Open Source | ✅ | ✅ | Partial | ✅ |
 | Customization | Full | Limited | Limited | Limited |
-| Components | 53+ | 70+ | 50+ | 80+ |
+| Components | 69+ | 70+ | 50+ | 80+ |
 | Current Status | Production Ready | Mature | Commercial | Mature |
 
 ## Installation Options
@@ -294,32 +279,12 @@ MIT License - See LICENSE.txt for details
 - [FAQ.md](FAQ.md) - Frequently asked questions
 - [CLI_SYNTAX.md](CLI_SYNTAX.md) - CLI command reference
 
-**Architecture & Vision:**
-- [SHELLDOCS_VISION.md](SHELLDOCS_VISION.md) - ShellDocs documentation framework
-- [SHELLDOCS_STRATEGY.md](SHELLDOCS_STRATEGY.md) - ShellDocs build strategy
-
-## Next: ShellDocs Documentation Framework 🎯
-
-**Target: Q1 2026**
-
-We're building **ShellDocs** - a fumadocs-inspired documentation framework for .NET!
-
-**Why ShellDocs?**
-- .NET ecosystem lacks modern documentation frameworks
-- Fill massive gap: "Fumadocs for .NET"
-- Perfect complement to ShellUI
-- Build with ShellUI components!
-
-**ShellDocs will be:**
-- Modern, beautiful documentation
-- Built with ShellUI components
-- Fumadocs-inspired design
-- Perfect for .NET libraries
+**Architecture:**
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Technical architecture and design decisions
 
 ## Status
 
-**✅ Production Ready:** 53 components, CLI + NuGet, Tailwind v4.1.14 integration
-**🎯 Next Phase:** ShellDocs documentation framework
+**✅ Production Ready:** 69 components, CLI + NuGet, Tailwind v4.1.14 integration
 **🚀 Ready to use today!**
 
 ---
