@@ -13,12 +13,12 @@ ShellUI transforms Blazor component development with a hybrid approach:
 - Powered by Tailwind CSS v4.1.14 (standalone CLI - no Node.js required!)
 - Best of both worlds: flexibility when you need it, convenience when you want it
 
-## Current Status: 53/70+ Components Complete! 🎉
+## Current Status: 69 Components Complete! 🎉
 
 **ShellUI is now fully functional!** We've completed:
 - ✅ **CLI Tool** (`dotnet tool install -g ShellUI.CLI`)
 - ✅ **NuGet Package** (`dotnet add package ShellUI.Components`)
-- ✅ **53 Production-Ready Components** with Tailwind v4.1.14
+- ✅ **69 Production-Ready Components** with Tailwind v4.1.14
 - ✅ **Hybrid Workflow** (CLI + NuGet)
 - ✅ **No Node.js Required** (Standalone Tailwind CLI)
 - ✅ **Comprehensive Documentation**
@@ -44,28 +44,25 @@ dotnet shellui add button input card dialog
 dotnet shellui list  # See all available components
 ```
 
-### ✅ 53 Production-Ready Components
+### ✅ 69 Production-Ready Components
 
-**Form Components (11):**
-Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider
+**Form Components (12):**
+Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider, Form, InputOTP
 
-**Layout Components (12):**
-Card, Tabs, Navbar, Sidebar, Separator, Accordion, AccordionItem, Breadcrumb, BreadcrumbItem
+**Layout Components (13):**
+Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, ScrollArea, Resizable, Collapsible, Accordion, AccordionItem, Breadcrumb, BreadcrumbItem
 
-**Feedback Components (5):**
-Alert, Progress, Skeleton, Toast, Tooltip
+**Navigation Components (9):**
+Navbar, Sidebar, NavigationMenu, NavigationMenuItem, Menubar, MenubarItem, Pagination, Tabs, Stepper
 
-**Overlay Components (3):**
-Dialog, Dropdown, Popover
+**Data Display (12):**
+Table, TableHeader, TableBody, TableRow, TableHead, TableCell, DataTable, Badge, Avatar, Alert, Toast, Skeleton, Progress, Loading
 
-**Data Display (8):**
-Badge, Avatar, Table, TableHeader, TableBody, TableRow, TableHead, TableCell
+**Interactive Components (7):**
+Dropdown, Command, ContextMenu, HoverCard, ThemeToggle, EmptyState, FileUpload
 
-**Navigation (6):**
-NavigationMenu, NavigationMenuItem, Menubar, MenubarItem, Pagination
-
-**Advanced (8):**
-Combobox, DatePicker, DateRangePicker, TimePicker, Form, InputOTP, Sheet, Drawer, Resizable, ScrollArea, Collapsible
+**Advanced Components (16):**
+Calendar, DatePicker, DateRangePicker, TimePicker, Combobox, AlertDialog, Carousel, CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
 
 ### ✅ Tailwind CSS v4.1.14 Integration
 

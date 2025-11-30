@@ -1,26 +1,109 @@
 # ShellUI Release Notes
 
+## Version 0.0.3 (Current) - November 2025
+
+### 🎉 Release v0.0.3 - Fixed v0.0.2 Issues
+
+ShellUI v0.0.3 is now available on NuGet! This release fixes issues from v0.0.2 and includes improved documentation and package metadata.
+
+### What's Included
+
+- ✅ **CLI Tool** (`ShellUI.CLI` v0.0.3) - Install globally: `dotnet tool install -g ShellUI.CLI`
+- ✅ **Components Package** (`ShellUI.Components` v0.0.3) - Install: `dotnet add package ShellUI.Components`
+- ✅ **Templates Package** (`ShellUI.Templates` v0.0.3) - Internal dependency for CLI
+
+### Features
+
+1. **69 Production-Ready Components**
+   - Form: Button, Input, Textarea, Select, Checkbox, Switch, RadioGroup, Slider, etc.
+   - Layout: Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, etc.
+   - Navigation: Navbar, Sidebar, NavigationMenu, Menubar, Breadcrumb, Pagination, Tabs
+   - Data Display: Table, DataTable, Badge, Avatar, Alert, Toast, Skeleton, Progress, Loading
+   - Interactive: Dropdown, Accordion, Toggle, ThemeToggle, Command, ContextMenu, HoverCard
+   - Advanced: Carousel, Stepper, EmptyState, FileUpload, Calendar, DatePicker, etc.
+
+2. **Hybrid Distribution Model**
+   - **CLI-First**: Copy components to your project for full customization
+   - **NuGet Option**: Traditional package install for quick starts
+   - Use both together - NuGet for speed, CLI for customization
+
+3. **Tailwind CSS v4.1.14**
+   - Standalone CLI (no Node.js required!)
+   - Automatic dark mode support
+   - Theme-aware components
+   - Customizable design tokens
+
+4. **Developer Experience**
+   - Simple setup: `dotnet shellui init`
+   - Add components: `dotnet shellui add button card dialog`
+   - Full source code ownership
+   - Easy customization
+
+### Installation
+
+**CLI Tool:**
+```bash
+dotnet tool install -g ShellUI.CLI
+```
+
+**Components Package:**
+```bash
+dotnet add package ShellUI.Components
+```
+
+### Quick Start
+
+```bash
+# Initialize ShellUI in your project
+dotnet shellui init
+
+# Add components
+dotnet shellui add button input card dialog
+
+# Or use NuGet package
+dotnet add package ShellUI.Components
+```
+
+### Documentation
+
+- [Getting Started Guide](../README.md)
+- [Architecture Documentation](ARCHITECTURE.md)
+- [Component Reference](../README.md#available-components)
+- [CLI Usage Guide](CLI_SYNTAX.md)
+
+### Known Limitations
+
+- This is a pre-release version (0.0.3)
+- Some advanced features may be missing
+- Documentation is being actively improved
+- Breaking changes may occur before v1.0.0
+
+### What's Next
+
+- More components (targeting 70+)
+- Enhanced documentation
+- Component examples and demos
+- Performance optimizations
+- Community feedback integration
+
+---
+
+## Version 0.0.1 (November 2025)
+
+### Initial Release
+
+- First NuGet package release
+- Basic CLI functionality
+- Core component set
+- Tailwind CSS integration
+
+---
+
 ## Project Transformation Announcement
 
-ShellUI is a complete transformation of the Sysinfocus simple/ui library into a modern, CLI-first component library for Blazor, inspired by shadcn/ui.
+ShellUI is a complete transformation into a modern, CLI-first component library for Blazor, inspired by shadcn/ui.
 
-### What's New?
-
-ShellUI represents a fundamental shift in how Blazor developers work with UI components:
-
-**From:** Installing NuGet packages with components locked away  
-**To:** CLI-based component installation that copies code directly into your project
-
-**From:** Limited customization within package constraints  
-**To:** Full ownership and customization of every component
-
-**From:** Custom CSS framework  
-**To:** Tailwind CSS v4 for modern, utility-first styling
-
-**From:** Complex setup process  
-**To:** Simple `dotnet shellui init` and you're ready
-
-### Key Features (In Development)
+### Key Features
 
 1. **CLI-First Approach**
    - Install globally: `dotnet tool install -g ShellUI.CLI`
@@ -35,7 +118,7 @@ ShellUI represents a fundamental shift in how Blazor developers work with UI com
    - Optimized for production
 
 3. **Component Library**
-   - 40+ production-ready components
+   - 69 production-ready components
    - Fully accessible (WCAG 2.1 AA compliant)
    - Works with Blazor Server, WASM, and SSR
    - Customizable to your needs
@@ -45,24 +128,6 @@ ShellUI represents a fundamental shift in how Blazor developers work with UI com
    - Full control over code
    - TypeScript-like DX with C#
    - Comprehensive documentation
-
-### Current Status: In Development
-
-This project is currently being developed according to the milestone plan:
-
-- **Milestone 1:** CLI Tool Foundation (In Progress)
-- **Milestone 2:** Tailwind v4 Integration (Planned)
-- **Milestone 3:** Component Architecture (Planned)
-- **Milestone 4:** Component Registry (Planned)
-- **Milestone 5:** Documentation & Polish (Planned)
-
-See [MILESTONES.md](MILESTONES.md) for detailed development roadmap.
-
-### Target Release Timeline
-
-- **Alpha Release:** Q1 2025 - CLI + Core Components
-- **Beta Release:** Q2 2025 - Full Component Library
-- **v1.0 Release:** Q3 2025 - Production Ready
 
 ### Breaking Changes from Sysinfocus simple/ui
 

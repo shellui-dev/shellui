@@ -291,104 +291,54 @@ private string GetVariantClasses(string variant) => variant switch
 ## Tailwind Integration
 
 ### Configuration
-Tailwind v4 is configured with design tokens:
+Tailwind v4.1.14 uses CSS-first configuration with design tokens:
 
 ```javascript
 // tailwind.config.js
-export default {
-  content: ['./Components/**/*.{razor,html}'],
-  theme: {
-    extend: {
-      colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        // ... more colors
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-    },
-  },
+module.exports = {
+  content: ['./**/*.{razor,html,cs}'],
+  // Theme is defined via CSS variables in input.css
 }
 ```
 
 ### CSS Variables
-Design tokens are defined as CSS variables:
+Design tokens are defined as CSS variables in `wwwroot/input.css`:
 
 ```css
 /* input.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-  }
+@theme inline {
+  /* Design tokens via CSS variables */
+  --font-sans: 'Kode Mono', monospace; /* Custom fonts */
+  --default-font-family: var(--font-sans);
+}
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  /* ... more tokens */
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  /* ... dark theme tokens */
 }
 ```
 
 ### Build Process
-Tailwind is built via npm scripts:
-
-```json
-{
-  "scripts": {
-    "css:build": "tailwindcss -i ./wwwroot/styles/input.css -o ./wwwroot/styles/output.css --minify",
-    "css:watch": "tailwindcss -i ./wwwroot/styles/input.css -o ./wwwroot/styles/output.css --watch"
-  }
-}
-```
-
-Integrated into MSBuild:
+Tailwind is built via MSBuild using standalone CLI (no Node.js!):
 
 ```xml
-<Target Name="BuildTailwindCSS" BeforeTargets="Build">
-  <Exec Command="npm run css:build" Condition="'$(Configuration)' == 'Release'" />
+<Target Name="BuildTailwindCSS" BeforeTargets="BeforeBuild">
+  <Exec Command="&quot;$(TailwindExecutable)&quot; -i &quot;$(TailwindInputCss)&quot; -o &quot;$(TailwindOutputCss)&quot; --config &quot;$(TailwindConfig)&quot; $(TailwindMinify)" />
 </Target>
 ```
+
+The standalone CLI is automatically downloaded during `dotnet shellui init`.
 
 ## CLI Implementation
 
@@ -412,29 +362,34 @@ await rootCommand.InvokeAsync(args);
 ```
 
 ### Component Resolution
+Components are resolved from the embedded `ComponentRegistry`:
+
 ```csharp
-public async Task<ComponentMetadata?> GetComponentAsync(string name)
+// ComponentRegistry.cs - Embedded in ShellUI.Templates package
+public static class ComponentRegistry
 {
-    // 1. Fetch registry.json
-    var registry = await FetchRegistryAsync();
-    
-    // 2. Find component
-    var component = registry.Components.FirstOrDefault(c => 
-        c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-    
-    if (component == null) return null;
-    
-    // 3. Resolve dependencies
-    var dependencies = await ResolveDependenciesAsync(component);
-    
-    return new ComponentMetadata
+    public static readonly Dictionary<string, ComponentMetadata> Components = new()
     {
-        Name = component.Name,
-        Files = component.Files,
-        Dependencies = dependencies
+        { "button", ButtonTemplate.Metadata },
+        { "input", InputTemplate.Metadata },
+        { "card", CardTemplate.Metadata },
+        // ... 53 components total
     };
+    
+    public static string? GetComponentContent(string componentName)
+    {
+        return componentName switch
+        {
+            "button" => ButtonTemplate.Content,
+            "input" => InputTemplate.Content,
+            // ... all components
+            _ => null
+        };
+    }
 }
 ```
+
+The CLI tool uses this registry to copy component source code to user projects.
 
 ### Dependency Resolution
 ```csharp
