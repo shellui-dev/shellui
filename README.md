@@ -2,12 +2,12 @@
 
 A modern, CLI-first Blazor component library inspired by shadcn/ui. Copy components directly into your project and customize them to match your needs.
 
-**New here? Start with [START_HERE.md](START_HERE.md) for a complete guided tour!**
+**New here? Check out the [Quick Start](#quick-start) section below!**
 
 ## Vision
 
 ShellUI transforms Blazor component development with a hybrid approach:
-- **CLI-First**: Copy components to YOUR codebase for full control (`dotnet shellui add button`)
+- **CLI-First**: Copy components to YOUR codebase for full control (`shellui add button`)
 - **NuGet Option**: Traditional package install for quick starts (`dotnet add package ShellUI`)
 - **Choose your workflow**: Use CLI for customization, NuGet for speed, or mix both
 - Powered by Tailwind CSS v4.1.14 (standalone CLI - no Node.js required!)
@@ -33,15 +33,16 @@ ShellUI transforms Blazor component development with a hybrid approach:
 # Install CLI globally
 dotnet tool install -g ShellUI.CLI
 
-# Or install locally for testing
-dotnet tool install -g ShellUI.CLI --add-source ./src/ShellUI.CLI/bin/Release
-
 # Initialize in your Blazor project (choose npm or standalone)
-dotnet shellui init
+shellui init
+# Or: dotnet shellui init
 
 # Add components
-dotnet shellui add button input card dialog
-dotnet shellui list  # See all available components
+shellui add button input card dialog
+# Or: dotnet shellui add button input card dialog
+
+shellui list  # See all available components
+# Or: dotnet shellui list
 ```
 
 ### ✅ 69 Production-Ready Components
@@ -70,7 +71,8 @@ Calendar, DatePicker, DateRangePicker, TimePicker, Combobox, AlertDialog, Carous
 
 **Method 1: Standalone CLI (No Node.js!)**
 ```bash
-dotnet shellui init  # Choose "standalone"
+shellui init  # Choose "standalone"
+# Or: dotnet shellui init
 ```
 - Downloads Tailwind CLI binary automatically
 - No Node.js or npm required
@@ -78,7 +80,8 @@ dotnet shellui init  # Choose "standalone"
 
 **Method 2: npm (If you prefer)**
 ```bash
-dotnet shellui init  # Choose "npm"
+shellui init  # Choose "npm"
+# Or: dotnet shellui init
 ```
 - Installs `tailwindcss@^4.1.14` + `@tailwindcss/cli@^4.1.14`
 - Uses `npx @tailwindcss/cli` for builds
@@ -181,15 +184,16 @@ YourProject/
 # Install CLI globally
 dotnet tool install -g ShellUI.CLI
 
-# Or test locally
-dotnet tool install -g ShellUI.CLI --add-source ./src/ShellUI.CLI/bin/Release
-
 # Initialize in your Blazor project (choose npm or standalone)
-dotnet shellui init
+shellui init
+# Or: dotnet shellui init
 
 # Add components
-dotnet shellui add button input card dialog
-dotnet shellui list  # See all 69 available components
+shellui add button input card dialog
+# Or: dotnet shellui add button input card dialog
+
+shellui list  # See all 69 available components
+# Or: dotnet shellui list
 ```
 
 ### Use Components
@@ -238,8 +242,9 @@ Simply edit the component file in `Components/UI/` - it's yours to modify!
 ### Option 1: CLI Tool (Recommended)
 ```bash
 dotnet tool install -g ShellUI.CLI
-dotnet shellui init  # Choose your Tailwind method
-dotnet shellui add button input card dialog
+shellui init  # Choose your Tailwind method
+shellui add button input card dialog
+# Note: You can also use 'dotnet shellui' instead of 'shellui'
 ```
 
 ### Option 2: NuGet Package
@@ -270,14 +275,13 @@ MIT License - See LICENSE.txt for details
 ## Documentation
 
 **Quick Links:**
-- [INDEX.md](INDEX.md) - Complete documentation index
-- [tailwind-setup.md](tailwind-setup.md) - Tailwind CSS setup guide
-- [COMPONENT_ROADMAP.md](COMPONENT_ROADMAP.md) - Component development roadmap
+- [tailwind-setup.md](docs/tailwind-setup.md) - Tailwind CSS setup guide
+- [COMPONENT_ROADMAP.md](docs/COMPONENT_ROADMAP.md) - Component development roadmap
 
 **Installation & Usage:**
-- [START_HERE.md](START_HERE.md) - Complete guided tour
-- [FAQ.md](FAQ.md) - Frequently asked questions
-- [CLI_SYNTAX.md](CLI_SYNTAX.md) - CLI command reference
+- [QUICKSTART.md](docs/QUICKSTART.md) - Quick start guide
+- [FAQ.md](docs/FAQ.md) - Frequently asked questions
+- [CLI_SYNTAX.md](docs/CLI_SYNTAX.md) - CLI command reference
 
 **Architecture:**
 - [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Technical architecture and design decisions
