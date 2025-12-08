@@ -6,7 +6,7 @@ namespace ShellUI.CLI.Services;
 
 public class TailwindDownloader
 {
-    private const string TailwindVersion = "v4.1.14";
+    private const string TailwindVersion = "v4.1.17";
     private const string BaseUrl = "https://github.com/tailwindlabs/tailwindcss/releases/download";
     
     public static async Task<string> EnsureTailwindCliAsync(string projectRoot)

@@ -19,11 +19,22 @@ public class InitService
         }
 
         // Step 1: Detect project
-        AnsiConsole.MarkupLine("[cyan]Initializing ShellUI...[/]");
-        var projectInfo = ProjectDetector.DetectProject();
-        AnsiConsole.MarkupLine($"[green]Detected:[/] {projectInfo.ProjectType}");
-        AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
-        AnsiConsole.MarkupLine($"[dim]Namespace: {projectInfo.RootNamespace}[/]");
+        ProjectInfo projectInfo = null!;
+        
+        await AnsiConsole.Status()
+            .StartAsync("Initializing ShellUI...", async ctx => 
+            {
+                ctx.Status("Detecting project type...");
+                await Task.Delay(300); // Brief delay for UX
+                projectInfo = ProjectDetector.DetectProject();
+                AnsiConsole.MarkupLine($"[green]Detected:[/] {projectInfo.ProjectType}");
+                AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
+                AnsiConsole.MarkupLine($"[dim]Namespace: {projectInfo.RootNamespace}[/]");
+
+                // Clean up bootstrap files
+                ctx.Status("Checking for Bootstrap files...");
+                RemoveBootstrapFiles();
+            });
 
         // Step 2: Ask user for Tailwind method preference
         AnsiConsole.MarkupLine("[cyan]Setting up Tailwind CSS...[/]");
@@ -46,88 +57,93 @@ public class InitService
         }
         AnsiConsole.MarkupLine($"[green]Selected:[/] {method}");
 
-        // Step 3: Create Components/UI folder
-        AnsiConsole.MarkupLine("[cyan]Creating component folders...[/]");
-        var componentsPath = Path.Combine(Directory.GetCurrentDirectory(), "Components", "UI");
-        Directory.CreateDirectory(componentsPath);
-        AnsiConsole.MarkupLine($"[green]Created:[/] Components/UI/");
-
-        // Step 4: Create shellui.json
-        AnsiConsole.MarkupLine("[cyan]Creating configuration...[/]");
-        var config = new ShellUIConfig
-        {
-            Style = style,
-            ComponentsPath = "Components/UI",
-            ProjectType = projectInfo.ProjectType,
-            Tailwind = new TailwindConfig
+        await AnsiConsole.Status()
+            .StartAsync("Installing ShellUI components...", async ctx => 
             {
-                Enabled = true,
-                Version = method == "npm" ? "4.1.14" : "3.4.0",
-                Method = method,
-                CssPath = "wwwroot/app.css"
-            }
-        };
+                // Step 3: Create Components/UI folder
+                ctx.Status("Creating component folders...");
+                var componentsPath = Path.Combine(Directory.GetCurrentDirectory(), "Components", "UI");
+                Directory.CreateDirectory(componentsPath);
+                AnsiConsole.MarkupLine($"[green]Created:[/] Components/UI/");
 
-        var json = JsonSerializer.Serialize(config, new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
-        File.WriteAllText(configPath, json);
-        AnsiConsole.MarkupLine($"[green]Created:[/] shellui.json");
+                // Step 4: Create shellui.json
+                ctx.Status("Creating configuration...");
+                var config = new ShellUIConfig
+                {
+                    Style = style,
+                    ComponentsPath = "Components/UI",
+                    ProjectType = projectInfo.ProjectType,
+                    Tailwind = new TailwindConfig
+                    {
+                        Enabled = true,
+                        Version = method == "npm" ? "4.1.17" : "3.4.0",
+                        Method = method,
+                        CssPath = "wwwroot/app.css"
+                    }
+                };
 
-        // Step 5: Create _Imports.razor if it doesn't exist
-        AnsiConsole.MarkupLine("[cyan]Setting up imports...[/]");
-        var importsPath = Path.Combine(Directory.GetCurrentDirectory(), "Components", "_Imports.razor");
-        if (File.Exists(importsPath))
-        {
-            var importsContent = File.ReadAllText(importsPath);
-            var usingStatement = $"@using {projectInfo.RootNamespace}.Components.UI";
+                var json = JsonSerializer.Serialize(config, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+                File.WriteAllText(configPath, json);
+                AnsiConsole.MarkupLine($"[green]Created:[/] shellui.json");
 
-            if (!importsContent.Contains(usingStatement))
-            {
-                File.AppendAllText(importsPath, $"\n{usingStatement}\n");
-                AnsiConsole.MarkupLine($"[green]Updated:[/] Components/_Imports.razor");
-            }
-        }
+                // Step 5: Create _Imports.razor if it doesn't exist
+                ctx.Status("Setting up imports...");
+                var importsPath = Path.Combine(Directory.GetCurrentDirectory(), "Components", "_Imports.razor");
+                if (File.Exists(importsPath))
+                {
+                    var importsContent = File.ReadAllText(importsPath);
+                    var usingStatement = $"@using {projectInfo.RootNamespace}.Components.UI";
 
-        // Step 6: Set up Tailwind CSS based on method
-        if (method == "npm")
-        {
-            await SetupTailwindNpmAsync();
-        }
-        else
-        {
-            await SetupTailwindStandaloneAsync();
-        }
+                    if (!importsContent.Contains(usingStatement))
+                    {
+                        File.AppendAllText(importsPath, $"\n{usingStatement}\n");
+                        AnsiConsole.MarkupLine($"[green]Updated:[/] Components/_Imports.razor");
+                    }
+                }
 
-        // Step 7: Create MSBuild targets file
-        AnsiConsole.MarkupLine("[cyan]Setting up MSBuild integration...[/]");
-        var buildPath = Path.Combine(Directory.GetCurrentDirectory(), "Build");
-        Directory.CreateDirectory(buildPath);
+                // Step 6: Set up Tailwind CSS based on method
+                ctx.Status("Setting up Tailwind CSS...");
+                if (method == "npm")
+                {
+                    await SetupTailwindNpmAsync();
+                }
+                else
+                {
+                    await SetupTailwindStandaloneAsync();
+                }
 
-        var targetsPath = Path.Combine(buildPath, "ShellUI.targets");
-        var targetsContent = GetTargetsFileContent(method);
-        File.WriteAllText(targetsPath, targetsContent);
-        AnsiConsole.MarkupLine($"[green]Created:[/] Build/ShellUI.targets");
+                // Step 7: Create MSBuild targets file
+                ctx.Status("Setting up MSBuild integration...");
+                var buildPath = Path.Combine(Directory.GetCurrentDirectory(), "Build");
+                Directory.CreateDirectory(buildPath);
 
-        // Update .csproj to import targets
-        await UpdateProjectFileAsync(projectInfo.ProjectPath, targetsPath);
-        AnsiConsole.MarkupLine($"[green]Updated:[/] {Path.GetFileName(projectInfo.ProjectPath)}");
+                var targetsPath = Path.Combine(buildPath, "ShellUI.targets");
+                var targetsContent = GetTargetsFileContent(method);
+                File.WriteAllText(targetsPath, targetsContent);
+                AnsiConsole.MarkupLine($"[green]Created:[/] Build/ShellUI.targets");
 
-        // Step 8: Run initial Tailwind build
-        AnsiConsole.MarkupLine("[cyan]Building Tailwind CSS...[/]");
-        if (method == "npm")
-        {
-            await RunNpmTailwindBuildAsync();
-        }
-        else
-        {
-            var tailwindPath = await TailwindDownloader.EnsureTailwindCliAsync(Directory.GetCurrentDirectory());
-            var inputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "input.css");
-            var appCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "app.css");
-            await RunTailwindBuildAsync(tailwindPath, inputCssPath, appCssPath);
-        }
-        AnsiConsole.MarkupLine($"[green]Built:[/] Tailwind CSS");
+                // Update .csproj to import targets
+                await UpdateProjectFileAsync(projectInfo.ProjectPath, targetsPath);
+                AnsiConsole.MarkupLine($"[green]Updated:[/] {Path.GetFileName(projectInfo.ProjectPath)}");
+
+                // Step 8: Run initial Tailwind build
+                ctx.Status("Building Tailwind CSS...");
+                if (method == "npm")
+                {
+                    await RunNpmTailwindBuildAsync();
+                }
+                else
+                {
+                    var tailwindPath = await TailwindDownloader.EnsureTailwindCliAsync(Directory.GetCurrentDirectory());
+                    var inputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "input.css");
+                    var appCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "app.css");
+                    await RunTailwindBuildAsync(tailwindPath, inputCssPath, appCssPath);
+                }
+                AnsiConsole.MarkupLine($"[green]Built:[/] Tailwind CSS");
+            });
 
         AnsiConsole.MarkupLine("\n[green]ShellUI initialized successfully![/]");
         AnsiConsole.MarkupLine("\n[blue]Next steps:[/]");
@@ -145,8 +161,8 @@ public class InitService
 
         // Install Tailwind CSS packages (v4 with @tailwindcss/cli)
         AnsiConsole.MarkupLine("[cyan]Installing Tailwind CSS packages...[/]");
-        await RunNpmCommandAsync("install", "-D", "tailwindcss@^4.1.14", "@tailwindcss/cli@^4.1.14");
-        AnsiConsole.MarkupLine("[green]Installed:[/] tailwindcss v4.1.14, @tailwindcss/cli");
+        await RunNpmCommandAsync("install", "-D", "tailwindcss@^4.1.17", "@tailwindcss/cli@^4.1.17");
+        AnsiConsole.MarkupLine("[green]Installed:[/] tailwindcss v4.1.17, @tailwindcss/cli");
 
         // Create CSS files
         AnsiConsole.MarkupLine("[cyan]Creating CSS files...[/]");
@@ -383,6 +399,49 @@ public class InitService
         {
             content = content.Insert(insertIndex, targetsImport + Environment.NewLine + Environment.NewLine);
             await File.WriteAllTextAsync(projectFilePath, content);
+        }
+    }
+
+    private static void RemoveBootstrapFiles()
+    {
+        try
+        {
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            if (!Directory.Exists(wwwrootPath)) return;
+
+            AnsiConsole.MarkupLine("[cyan]Checking for Bootstrap files to clean up...[/]");
+            var deletedCount = 0;
+
+            // 1. Delete wwwroot/lib/bootstrap
+            var libBootstrap = Path.Combine(wwwrootPath, "lib", "bootstrap");
+            if (Directory.Exists(libBootstrap))
+            {
+                Directory.Delete(libBootstrap, true);
+                AnsiConsole.MarkupLine($"[dim]Deleted:[/] wwwroot/lib/bootstrap folder");
+                deletedCount++;
+            }
+
+            // 2. Delete bootstrap css files in wwwroot/css
+            var cssPath = Path.Combine(wwwrootPath, "css");
+            if (Directory.Exists(cssPath))
+            {
+                var bootstrapFiles = Directory.GetFiles(cssPath, "bootstrap*.*");
+                foreach (var file in bootstrapFiles)
+                {
+                    File.Delete(file);
+                    AnsiConsole.MarkupLine($"[dim]Deleted:[/] css/{Path.GetFileName(file)}");
+                    deletedCount++;
+                }
+            }
+            
+            if (deletedCount > 0)
+            {
+                AnsiConsole.MarkupLine($"[green]Removed {deletedCount} Bootstrap items.[/]");
+            }
+        }
+        catch (Exception ex)
+        {
+             AnsiConsole.MarkupLine($"[yellow]Warning: Could not remove some Bootstrap files: {ex.Message}[/]");
         }
     }
 }
