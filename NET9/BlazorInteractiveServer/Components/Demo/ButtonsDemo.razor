@@ -1,24 +1,25 @@
 @using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
 
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Variants</h2>
     <div class="flex flex-wrap gap-4">
-        <Button Variant="default" OnClick="HandleClick">Default</Button>
-        <Button Variant="secondary" OnClick="HandleClick">Secondary</Button>
-        <Button Variant="destructive" OnClick="HandleClick">Destructive</Button>
-        <Button Variant="outline" OnClick="HandleClick">Outline</Button>
-        <Button Variant="ghost" OnClick="HandleClick">Ghost</Button>
-        <Button Variant="link" OnClick="HandleClick">Link</Button>
+        <Button Variant="@ButtonVariant.Default" OnClick="HandleClick">Default</Button>
+        <Button Variant="@ButtonVariant.Secondary" OnClick="HandleClick">Secondary</Button>
+        <Button Variant="@ButtonVariant.Destructive" OnClick="HandleClick">Destructive</Button>
+        <Button Variant="@ButtonVariant.Outline" OnClick="HandleClick">Outline</Button>
+        <Button Variant="@ButtonVariant.Ghost" OnClick="HandleClick">Ghost</Button>
+        <Button Variant="@ButtonVariant.Link" OnClick="HandleClick">Link</Button>
     </div>
 </section>
 
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Sizes</h2>
     <div class="flex flex-wrap items-center gap-4">
-        <Button Size="sm" OnClick="HandleClick">Small</Button>
-        <Button Size="md" OnClick="HandleClick">Medium</Button>
-        <Button Size="lg" OnClick="HandleClick">Large</Button>
-        <Button Size="icon" OnClick="HandleClick">+</Button>
+        <Button Size="@ButtonSize.Sm" OnClick="HandleClick">Small</Button>
+        <Button Size="@ButtonSize.Default" OnClick="HandleClick">Medium</Button>
+        <Button Size="@ButtonSize.Lg" OnClick="HandleClick">Large</Button>
+        <Button Size="@ButtonSize.Icon" OnClick="HandleClick">+</Button>
     </div>
 </section>
 
@@ -48,4 +49,3 @@
         isLoading = false;
     }
 }
-

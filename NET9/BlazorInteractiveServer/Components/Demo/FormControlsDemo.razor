@@ -1,4 +1,5 @@
 @namespace BlazorInteractiveServer.Components.Demo
+@using BlazorInteractiveServer.Components
 
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Form Controls</h2>
@@ -77,8 +78,8 @@
                         <span>Toggle Me</span>
                     </span>
                 </Toggle>
-                <Toggle Pressed="@_togglePressed2" PressedChanged="@HandleTogglePressed2Changed" Variant="outline">Outline</Toggle>
-                <Toggle Pressed="@_togglePressed3" PressedChanged="@HandleTogglePressed3Changed" Size="sm">Small</Toggle>
+                <Toggle Pressed="@_togglePressed2" PressedChanged="@HandleTogglePressed2Changed" Variant="@ToggleVariant.Outline">Outline</Toggle>
+                <Toggle Pressed="@_togglePressed3" PressedChanged="@HandleTogglePressed3Changed" Size="@ToggleSize.Sm">Small</Toggle>
             </div>
             <p class="text-sm text-muted-foreground mt-4">Pressed: @(_togglePressed ? "Yes" : "No")</p>
         </div>
@@ -188,4 +189,3 @@
         await TogglePressed3Changed.InvokeAsync(value);
     }
 }
-

@@ -1,26 +1,31 @@
 @using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
 
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Badges & Dialog</h2>
     <div class="flex flex-wrap gap-4 mb-4">
-        <Badge Variant="default">Default</Badge>
-        <Badge Variant="secondary">Secondary</Badge>
-        <Badge Variant="destructive">Destructive</Badge>
-        <Badge Variant="success">Success</Badge>
-        <Badge Variant="warning">Warning</Badge>
-        <Badge Variant="info">Info</Badge>
+        <Badge Variant="@BadgeVariant.Default">Default</Badge>
+        <Badge Variant="@BadgeVariant.Secondary">Secondary</Badge>
+        <Badge Variant="@BadgeVariant.Destructive">Destructive</Badge>
+        <Badge Variant="@BadgeVariant.Success">Success</Badge>
+        <Badge Variant="@BadgeVariant.Warning">Warning</Badge>
+        <Badge Variant="@BadgeVariant.Info">Info</Badge>
     </div>
     <Button @onclick="OpenDialog">Open Dialog</Button>
 </section>
 
-<Dialog IsOpen="isDialogOpen" Title="ShellUI Dialog" Description="This is a demo of the Dialog component." OnClose="CloseDialog">
-    <ChildContent>
+<Dialog Open="isDialogOpen" OpenChanged="@(v => isDialogOpen = v)">
+    <DialogContent>
+        <DialogHeader>
+            <DialogTitle>ShellUI Dialog</DialogTitle>
+            <DialogDescription>This is a demo of the Dialog component.</DialogDescription>
+        </DialogHeader>
         <p>This dialog demonstrates the ShellUI Dialog component. You can put any content here!</p>
-    </ChildContent>
-    <Footer>
-        <Button Variant="outline" @onclick="CloseDialog">Cancel</Button>
-        <Button @onclick="CloseDialog">Confirm</Button>
-    </Footer>
+        <DialogFooter>
+            <Button Variant="@ButtonVariant.Outline" @onclick="CloseDialog">Cancel</Button>
+            <Button @onclick="CloseDialog">Confirm</Button>
+        </DialogFooter>
+    </DialogContent>
 </Dialog>
 
 @code {
@@ -36,4 +41,3 @@
         isDialogOpen = false;
     }
 }
-
