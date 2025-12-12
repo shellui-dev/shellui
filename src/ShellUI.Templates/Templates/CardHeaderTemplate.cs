@@ -2,22 +2,22 @@ using ShellUI.Core.Models;
 
 namespace ShellUI.Templates.Templates;
 
-public static class CardTemplate
+public static class CardHeaderTemplate
 {
     public static ComponentMetadata Metadata => new()
     {
-        Name = "card",
-        DisplayName = "Card",
-        Description = "Container component for grouping related content",
+        Name = "card-header",
+        DisplayName = "Card Header",
+        Description = "Header for the Card component",
         Category = ComponentCategory.Layout,
         Version = "0.1.0",
-        FilePath = "Card.razor",
-        Dependencies = new List<string> { "card-header", "card-title", "card-description", "card-content", "card-footer" }
+        FilePath = "CardHeader.razor",
+        IsAvailable = false // Hidden from list, installed via dependency
     };
 
     public static string Content => @"@namespace ShellUI.Components
 
-<div class=""@Shell.Cn(""rounded-lg border bg-card text-card-foreground shadow-sm"", Class)"" @attributes=""AdditionalAttributes"">
+<div class=""@Shell.Cn(""flex flex-col space-y-1.5 p-6"", Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </div>
 
@@ -29,3 +29,4 @@ public static class CardTemplate
 }
 ";
 }
+
