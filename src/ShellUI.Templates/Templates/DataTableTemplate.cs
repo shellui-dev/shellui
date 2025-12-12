@@ -8,47 +8,51 @@ public static class DataTableTemplate
     {
         Name = "data-table",
         DisplayName = "Data Table",
-        Description = "Advanced data table with sorting, filtering, pagination, and row selection",
+        Description = "Advanced data table with sorting, filtering, and pagination",
         Category = ComponentCategory.DataDisplay,
         FilePath = "DataTable.razor",
-        Dependencies = new List<string> { "table", "input", "checkbox", "select", "button", "dropdown" }
+        Version = "0.1.0",
+        Dependencies = new List<string> { "data-table-models" }
     };
 
-    public static string Content => @"
-@typeparam TItem
+    public static string Content => @"@typeparam TItem
 @using System.Linq.Dynamic.Core
+@using YourProjectNamespace.Components.Models
 
-<div class=""w-full"">
+@namespace YourProjectNamespace.Components.UI
+
+<div class=""w-full"" @onclick=""CloseActionsDropdown"">
     <!-- Filters -->
     @if (ShowFilters)
     {
         <div class=""flex items-center py-4"">
-            <Input
-                Placeholder=""Filter...""
-                Value=""@_filterText""
-                ValueChanged=""OnFilterChanged""
-                Class=""max-w-sm"" />
+            <input
+                type=""text""
+                placeholder=""Filter...""
+                value=""@_filterText""
+                @oninput=""OnFilterInput""
+                class=""flex h-10 w-full max-w-sm rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"" />
         </div>
     }
 
     <!-- Table -->
-    <div class=""rounded-md border overflow-x-auto"">
-        <Table Class=""min-w-[640px]"">
-            <TableHeader>
-                <TableRow>
+    <div class=""rounded-md border border-border overflow-x-auto"">
+        <table class=""w-full min-w-[640px] caption-bottom text-sm"">
+            <thead class=""[&_tr]:border-b"">
+                <tr class=""border-b border-border transition-colors"">
                     @if (ShowSelection)
                     {
-                        <TableHead Class=""w-12"">
-                            <Checkbox
-                                Checked=""@(_selectedItems.Count == _filteredItems.Count && _filteredItems.Any())""
-                                CheckedChanged=""OnSelectAllChanged"" />
-                        </TableHead>
+                        <th class=""h-12 w-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"">
+                            <input type=""checkbox"" 
+                                   checked=""@(_selectedItems.Count == _filteredItems.Count() && _filteredItems.Any())""
+                                   @onchange=""@((e) => OnSelectAllChanged(e.Value?.ToString() == ""true""))"" 
+                                   class=""h-4 w-4 rounded border-input bg-background text-primary focus:ring-ring"" />
+                        </th>
                     }
                     @foreach (var column in Columns)
                     {
-                        <TableHead
-                            Class=""@($""cursor-pointer select-none {(column.Sortable ? ""hover:bg-muted/50"" : """")}"")""
-                            @onclick=""() => column.Sortable ? OnSortClicked(column) : Task.CompletedTask"">
+                        <th class=""h-12 px-4 text-left align-middle font-medium text-muted-foreground @(column.Sortable ? ""cursor-pointer hover:bg-accent/50"" : """")""
+                            @onclick=""() => { if (column.Sortable) OnSortClicked(column); }"">
                             <div class=""flex items-center gap-2"">
                                 @column.Header
                                 @if (column.Sortable)
@@ -59,69 +63,73 @@ public static class DataTableTemplate
                                     </svg>
                                 }
                             </div>
-                        </TableHead>
+                        </th>
                     }
                     @if (RowActions?.Any() == true)
                     {
-                        <TableHead>Actions</TableHead>
+                        <th class=""h-12 px-4 text-left align-middle font-medium text-muted-foreground"">Actions</th>
                     }
-                </TableRow>
-            </TableHeader>
-            <TableBody>
+                </tr>
+            </thead>
+            <tbody class=""[&_tr:last-child]:border-0"">
                 @if (_filteredItems.Any())
                 {
                     @foreach (var item in _paginatedItems)
                     {
-                        <TableRow Class=""@(IsSelected(item) ? ""bg-muted/50"" : """")"">
+                        <tr class=""border-b border-border transition-colors hover:bg-accent/50 @(IsSelected(item) ? ""bg-accent/30"" : """")"">
                             @if (ShowSelection)
                             {
-                                <TableCell>
-                                    <Checkbox
-                                        Checked=""@IsSelected(item)""
-                                        CheckedChanged=""(checked) => OnItemSelectionChanged(item, checked)"" />
-                                </TableCell>
+                                <td class=""p-4 align-middle [&:has([role=checkbox])]:pr-0"">
+                                    <input type=""checkbox"" 
+                                           checked=""@IsSelected(item)""
+                                           @onchange=""@((e) => OnItemSelectionChanged(item, e.Value?.ToString() == ""true""))"" 
+                                           class=""h-4 w-4 rounded border-input bg-background text-primary focus:ring-ring"" />
+                                </td>
                             }
                             @foreach (var column in Columns)
                             {
-                                <TableCell>@column.CellTemplate(item)</TableCell>
+                                <td class=""p-4 align-middle [&:has([role=checkbox])]:pr-0"">@column.CellTemplate(item)</td>
                             }
                             @if (RowActions?.Any() == true)
                             {
-                                <TableCell>
-                                    <Dropdown>
-                                        <DropdownTrigger>
-                                            <Button Variant=""ghost"" Size=""sm"">
-                                                <svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
-                                                    <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"" />
-                                                </svg>
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownContent>
-                                            @foreach (var action in RowActions)
+                                <td class=""p-4 align-middle [&:has([role=checkbox])]:pr-0"">
+                                    <div class=""relative"">
+                                        <button class=""inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8""
+                                                @onclick=""() => ToggleActionsDropdown(item)""
+                                                @onclick:stopPropagation=""true"">
+                                            <svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                                                <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"" />
+                                            </svg>
+                                        </button>
+                                            @if (_openActionsItem?.Equals(item) == true)
                                             {
-                                                <button class=""w-full text-left px-2 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground rounded-sm""
-                                                        @onclick=""() => action.Action(item)"">
-                                                    @action.Label
-                                                </button>
+                                                <div class=""absolute right-0 top-8 z-50 min-w-[8rem] overflow-hidden rounded-md border border-border bg-background/95 backdrop-blur-md py-1 text-foreground shadow-xl""
+                                                     @onclick:stopPropagation=""true"">
+                                                    @foreach (var action in RowActions)
+                                                    {
+                                                        <button class=""relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground""
+                                                                @onclick=""() => { action.Action(item); CloseActionsDropdown(); }"">
+                                                            @action.Label
+                                                        </button>
+                                                    }
+                                                </div>
                                             }
-                                        </DropdownContent>
-                                    </Dropdown>
-                                </TableCell>
+                                    </div>
+                                </td>
                             }
-                        </TableRow>
+                        </tr>
                     }
                 }
                 else
                 {
-                    <TableRow>
-                        <TableCell Colspan=""@(Columns.Count + (ShowSelection ? 1 : 0) + (RowActions?.Any() == true ? 1 : 0))""
-                                   Class=""h-24 text-center"">
+                    <tr class=""border-b border-border transition-colors"">
+                        <td colspan=""@(Columns.Count + (ShowSelection ? 1 : 0) + (RowActions?.Any() == true ? 1 : 0))"" class=""h-24 text-center text-muted-foreground"">
                             No results found.
-                        </TableCell>
-                    </TableRow>
+                        </td>
+                    </tr>
                 }
-            </TableBody>
-        </Table>
+            </tbody>
+        </table>
     </div>
 
     <!-- Pagination -->
@@ -131,48 +139,46 @@ public static class DataTableTemplate
             <div class=""flex-1 text-sm text-muted-foreground"">
                 @if (_selectedItems.Any())
                 {
-                    @_selectedItems.Count item(s) selected
+                    @($""{_selectedItems.Count} item(s) selected"")
                 }
                 else
                 {
-                    Showing @_startIndex - @_endIndex of @_filteredItems.Count results
+                    @($""Showing {_startIndex} - {_endIndex} of {_filteredItems.Count()} results"")
                 }
             </div>
             <div class=""flex flex-col gap-4 sm:flex-row sm:items-center sm:space-x-6 lg:space-x-8"">
                 <div class=""flex items-center space-x-2"">
-                    <p class=""text-sm font-medium whitespace-nowrap"">Rows per page</p>
-                    <Select Value=""@PageSize.ToString()"" ValueChanged=""OnPageSizeChanged"">
-                        <SelectTrigger Class=""h-8 w-[70px]"">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
+                    <p class=""text-sm font-medium text-foreground whitespace-nowrap"">Rows per page</p>
+                    <div class=""relative"">
+                        <select value=""@_pageSize.ToString()"" @onchange=""@((e) => OnPageSizeChanged(e))"" class=""flex h-8 w-[70px] appearance-none rounded-md border border-input bg-background px-3 py-2 pr-6 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"">
                             @foreach (var size in new[] { 5, 10, 20, 50 })
                             {
-                                <SelectItem Value=""@size.ToString()"">@size</SelectItem>
+                                <option value=""@size.ToString()"">@size</option>
                             }
-                        </SelectContent>
-                    </Select>
+                        </select>
+                        <div class=""absolute inset-y-0 right-1 flex items-center pointer-events-none"">
+                            <svg class=""h-3 w-3 text-muted-foreground"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                                <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M19 9l-7 7-7-7"" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class=""flex w-[100px] items-center justify-center text-sm font-medium whitespace-nowrap"">
+                <div class=""flex w-[100px] items-center justify-center text-sm font-medium text-foreground whitespace-nowrap"">
                     Page @_currentPage of @_totalPages
                 </div>
                 <div class=""flex items-center space-x-2"">
-                    <Button
-                        Variant=""outline""
-                        Size=""sm""
-                        Disabled=""@(_currentPage <= 1)""
-                        Class=""whitespace-nowrap""
+                    <button
+                        class=""inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 whitespace-nowrap""
+                        disabled=""@(_currentPage <= 1)""
                         @onclick=""OnPreviousPage"">
                         Previous
-                    </Button>
-                    <Button
-                        Variant=""outline""
-                        Size=""sm""
-                        Disabled=""@(_currentPage >= _totalPages)""
-                        Class=""whitespace-nowrap""
+                    </button>
+                    <button
+                        class=""inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-3 whitespace-nowrap""
+                        disabled=""@(_currentPage >= _totalPages)""
                         @onclick=""OnNextPage"">
                         Next
-                    </Button>
+                    </button>
                 </div>
             </div>
         </div>
@@ -212,6 +218,8 @@ public static class DataTableTemplate
     private int _totalPages = 1;
     private int _startIndex = 1;
     private int _endIndex = 1;
+    private int _pageSize = 10;
+    private TItem? _openActionsItem = default(TItem);
 
     protected override void OnParametersSet()
     {
@@ -224,24 +232,41 @@ public static class DataTableTemplate
         _filteredItems = string.IsNullOrWhiteSpace(_filterText)
             ? Items
             : Items.Where(item =>
-                Columns.Any(col => col.FilterPredicate?.Invoke(item, _filterText) == true));
+                Columns.Any(col => 
+                {
+                    // Simple text search - check if any property contains the filter text
+                    var property = typeof(TItem).GetProperty(col.PropertyName);
+                    if (property != null)
+                    {
+                        var value = property.GetValue(item)?.ToString() ?? """";
+                        return value.Contains(_filterText, StringComparison.OrdinalIgnoreCase);
+                    }
+                    return false;
+                }));
 
         // Apply sorting
         var sortColumn = Columns.FirstOrDefault(c => c.SortDirection != SortDirection.None);
         if (sortColumn != null)
         {
-            var sortDirection = sortColumn.SortDirection == SortDirection.Ascending ? """" : ""descending"";
+            var sortDirection = sortColumn.SortDirection == SortDirection.Ascending ? ""ascending"" : ""descending"";
             _filteredItems = _filteredItems.AsQueryable().OrderBy($""{sortColumn.PropertyName} {sortDirection}"");
         }
 
         // Update pagination
-        _totalPages = (int)Math.Ceiling(_filteredItems.Count() / (double)PageSize);
+        _totalPages = (int)Math.Ceiling(_filteredItems.Count() / (double)_pageSize);
         _currentPage = Math.Min(_currentPage, Math.Max(1, _totalPages));
-        _startIndex = (_currentPage - 1) * PageSize + 1;
-        _endIndex = Math.Min(_currentPage * PageSize, _filteredItems.Count());
-        _paginatedItems = _filteredItems.Skip((_currentPage - 1) * PageSize).Take(PageSize);
+        _startIndex = (_currentPage - 1) * _pageSize + 1;
+        _endIndex = Math.Min(_currentPage * _pageSize, _filteredItems.Count());
+        _paginatedItems = _filteredItems.Skip((_currentPage - 1) * _pageSize).Take(_pageSize);
 
         StateHasChanged();
+    }
+
+    private void OnFilterInput(ChangeEventArgs e)
+    {
+        _filterText = e.Value?.ToString() ?? """";
+        _currentPage = 1; // Reset to first page
+        UpdateFilteredItems();
     }
 
     private void OnFilterChanged(string value)
@@ -305,11 +330,11 @@ public static class DataTableTemplate
 
     private bool IsSelected(TItem item) => _selectedItems.Contains(item);
 
-    private void OnPageSizeChanged(string value)
+    private void OnPageSizeChanged(ChangeEventArgs e)
     {
-        if (int.TryParse(value, out var size))
+        if (int.TryParse(e.Value?.ToString(), out var size))
         {
-            PageSize = size;
+            _pageSize = size;
             _currentPage = 1;
             UpdateFilteredItems();
         }
@@ -332,28 +357,18 @@ public static class DataTableTemplate
             UpdateFilteredItems();
         }
     }
-}
 
-public class DataTableColumn<TItem>
-{
-    public string Header { get; set; } = """";
-    public string PropertyName { get; set; } = """";
-    public bool Sortable { get; set; } = true;
-    public SortDirection SortDirection { get; set; } = SortDirection.None;
-    public RenderFragment<TItem> CellTemplate { get; set; } = null!;
-    public Func<TItem, string, bool>? FilterPredicate { get; set; }
-}
+    private void ToggleActionsDropdown(TItem item)
+    {
+        _openActionsItem = _openActionsItem?.Equals(item) == true ? default(TItem) : item;
+        StateHasChanged();
+    }
 
-public class DataTableAction<TItem>
-{
-    public string Label { get; set; } = """";
-    public Action<TItem> Action { get; set; } = null!;
+    private void CloseActionsDropdown()
+    {
+        _openActionsItem = default(TItem);
+        StateHasChanged();
+    }
 }
-
-public enum SortDirection
-{
-    None,
-    Ascending,
-    Descending
-}";
+";
 }
