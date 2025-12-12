@@ -1,21 +1,34 @@
 @namespace ShellUI.Components
 
-<div class="relative @ClassName" @attributes="AdditionalAttributes">
-    <button type="button"
-            @onclick="Toggle"
-            disabled="@Disabled"
-            class="@("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 " + (Disabled ? "cursor-not-allowed opacity-50" : ""))">
-        <span class="@(Value == null ? "text-muted-foreground" : "")">
-            @(Value?.ToString("MMM dd, yyyy") ?? Placeholder)
-        </span>
-        <svg class="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-    </button>
+<div class="@Shell.Cn("relative", Class)" @attributes="AdditionalAttributes">
+    <div class="relative">
+        <button type="button"
+                @onclick="Toggle"
+                disabled="@Disabled"
+                class="@Shell.Cn("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", Disabled ? "cursor-not-allowed opacity-50" : "")">
+            <span class="@(Value == null ? "text-muted-foreground" : "")">
+                @(Value?.ToString("MMM dd, yyyy") ?? Placeholder)
+            </span>
+            <div class="flex items-center gap-1">
+                @if (AllowClear && Value.HasValue && !Disabled)
+                {
+                    <div role="button" @onclick:stopPropagation @onclick="Clear" class="text-muted-foreground hover:text-foreground">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                }
+                <svg class="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+        </button>
+    </div>
     
     @if (IsOpen)
     {
         <div class="absolute z-50 mt-1 rounded-md border border-border bg-popover p-4 shadow-md animate-in fade-in-0 zoom-in-95">
+            <!-- Calendar UI logic unchanged -->
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
                     <button type="button" @onclick="PreviousMonth" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-7 w-7">
@@ -47,7 +60,7 @@
                         var isSelected = Value?.Date == date;
                         <button type="button"
                                 @onclick="@(() => SelectDate(date))"
-                                class="@("h-9 w-9 rounded-md text-sm transition-colors hover:bg-accent hover:text-accent-foreground " + (isSelected ? "bg-primary text-primary-foreground" : ""))">
+                                class="@Shell.Cn("h-9 w-9 rounded-md text-sm transition-colors hover:bg-accent hover:text-accent-foreground", isSelected ? "bg-primary text-primary-foreground" : "")">
                             @day
                         </button>
                     }
@@ -63,21 +76,12 @@
 }
 
 @code {
-    [Parameter]
-    public DateTime? Value { get; set; }
-    
-    [Parameter]
-    public EventCallback<DateTime?> ValueChanged { get; set; }
-    
-    [Parameter]
-    public string Placeholder { get; set; } = "Pick a date";
-    
-    [Parameter]
-    public bool Disabled { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public DateTime? Value { get; set; }
+    [Parameter] public EventCallback<DateTime?> ValueChanged { get; set; }
+    [Parameter] public string Placeholder { get; set; } = "Pick a date";
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool AllowClear { get; set; } = true;
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -93,9 +97,14 @@
         await ValueChanged.InvokeAsync(date);
         IsOpen = false;
     }
+
+    private async Task Clear()
+    {
+        Value = null;
+        await ValueChanged.InvokeAsync(null);
+    }
     
     private void PreviousMonth() => currentMonth = currentMonth.AddMonths(-1);
     private void NextMonth() => currentMonth = currentMonth.AddMonths(1);
     private int GetDaysInMonth() => DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month);
 }
-

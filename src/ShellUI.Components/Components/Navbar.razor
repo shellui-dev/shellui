@@ -1,19 +1,14 @@
 @namespace ShellUI.Components
 
-<nav class="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 @ClassName" @attributes="AdditionalAttributes">
+<nav class="@Shell.Cn("sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4", ClassName)" @attributes="AdditionalAttributes">
     <div class="container flex h-14 items-center">
         @ChildContent
     </div>
 </nav>
 
 @code {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    [Parameter]
-    public string ClassName { get; set; } = "";
-
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string ClassName { get; set; } = "";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
-

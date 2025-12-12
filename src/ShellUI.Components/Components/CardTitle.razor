@@ -1,0 +1,13 @@
+@namespace ShellUI.Components
+
+<h3 class="@Shell.Cn("text-2xl font-semibold leading-none tracking-tight", Class)" @attributes="AdditionalAttributes">
+    @ChildContent
+</h3>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+

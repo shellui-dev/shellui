@@ -4,18 +4,19 @@
 {
     <div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-in fade-in-0" @onclick="Close"></div>
     
-    <div class="@("fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out animate-in " + GetPositionClass() + " " + ClassName)"
+    <div class="@ComputedClass"
          @attributes="AdditionalAttributes">
         <div class="flex flex-col space-y-2">
             @if (!string.IsNullOrEmpty(Title))
             {
                 <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-semibold">@Title</h2>
+                    <h2 class="text-lg font-semibold text-foreground">@Title</h2>
                     <button @onclick="Close"
-                            class="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                            class="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
+                        <span class="sr-only">Close</span>
                     </button>
                 </div>
             }
@@ -31,42 +32,21 @@
 }
 
 @code {
-    [Parameter]
-    public bool IsOpen { get; set; }
-    
-    [Parameter]
-    public EventCallback<bool> IsOpenChanged { get; set; }
-    
-    [Parameter]
-    public string? Title { get; set; }
-    
-    [Parameter]
-    public string? Description { get; set; }
-    
-    [Parameter]
-    public string Side { get; set; } = "right";
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public SheetSide Side { get; set; } = SheetSide.Right;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
+    private string ComputedClass => SheetVariants.Get(Side, Class);
+
     private async Task Close()
     {
         IsOpen = false;
         await IsOpenChanged.InvokeAsync(IsOpen);
     }
-    
-    private string GetPositionClass() => Side switch
-    {
-        "left" => "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm slide-in-from-left",
-        "top" => "inset-x-0 top-0 border-b slide-in-from-top",
-        "bottom" => "inset-x-0 bottom-0 border-t slide-in-from-bottom",
-        _ => "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm slide-in-from-right"
-    };
 }
-

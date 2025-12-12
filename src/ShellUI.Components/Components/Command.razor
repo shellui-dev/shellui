@@ -1,0 +1,172 @@
+@using Microsoft.JSInterop
+@using ShellUI.Components.Models
+
+<Dialog Open="IsOpen" OpenChanged="HandleOpenChanged">
+    <DialogContent Class="overflow-hidden p-0">
+        <!-- Search Input -->
+        <div class="flex items-center border-b border-border px-3 py-2">
+            <svg class="mr-2 h-4 w-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+                @ref="_searchInput"
+                @bind-value="_searchQuery"
+                @bind-value:event="oninput"
+                @onkeydown="OnKeyDown"
+                type="text"
+                placeholder="@Placeholder"
+                class="flex h-10 w-full rounded-md bg-transparent py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50" />
+        </div>
+
+        <!-- Results -->
+        <div class="max-h-[300px] overflow-y-auto p-2">
+            @if (_filteredCommands.Any())
+            {
+                @foreach (var command in _filteredCommands)
+                {
+                    <button
+                        @onclick="() => SelectCommand(command)"
+                        class="flex w-full items-center rounded-md px-2 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none">
+                        @if (!string.IsNullOrEmpty(command.Icon))
+                        {
+                            <div class="mr-3 flex h-4 w-4 items-center justify-center text-muted-foreground">
+                                @((MarkupString)command.Icon)
+                            </div>
+                        }
+                        <div class="flex-1">
+                            <div class="font-medium text-foreground">@command.Title</div>
+                            @if (!string.IsNullOrEmpty(command.Description))
+                            {
+                                <div class="text-xs text-muted-foreground">@command.Description</div>
+                            }
+                        </div>
+                        @if (!string.IsNullOrEmpty(command.Shortcut))
+                        {
+                            <div class="ml-3 flex items-center gap-0.5">
+                                @foreach (var key in command.Shortcut.Split('+'))
+                                {
+                                    <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+                                        <span class="text-xs">@key</span>
+                                    </kbd>
+                                }
+                            </div>
+                        }
+                    </button>
+                }
+            }
+            else
+            {
+                <div class="p-6 text-center text-sm text-muted-foreground">
+                    No results found.
+                </div>
+            }
+        </div>
+    </DialogContent>
+</Dialog>
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public string Placeholder { get; set; } = "Type a command or search...";
+
+    [Parameter]
+    public List<CommandItem> Commands { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<CommandItem> CommandSelected { get; set; }
+
+    private string _searchQuery = "";
+    private List<CommandItem> _filteredCommands = new();
+    private ElementReference _searchInput;
+    private bool _shouldFocus;
+
+    protected override void OnParametersSet()
+    {
+        UpdateFilteredCommands();
+        if (IsOpen)
+        {
+            _shouldFocus = true;
+        }
+    }
+
+    private void UpdateFilteredCommands()
+    {
+        if (string.IsNullOrWhiteSpace(_searchQuery))
+        {
+            _filteredCommands = Commands.ToList();
+        }
+        else
+        {
+            _filteredCommands = Commands
+                .Where(c =>
+                    c.Title.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                    (c.Description?.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) == true))
+                .ToList();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_shouldFocus)
+        {
+            _shouldFocus = false;
+            try
+            {
+                await _searchInput.FocusAsync();
+            }
+            catch { }
+        }
+    }
+
+    private async Task SelectCommand(CommandItem command)
+    {
+        await CommandSelected.InvokeAsync(command);
+        await CloseCommand();
+    }
+
+    private async Task CloseCommand()
+    {
+        IsOpen = false;
+        _searchQuery = "";
+        await IsOpenChanged.InvokeAsync(IsOpen);
+    }
+    
+    private async Task HandleOpenChanged(bool isOpen)
+    {
+        if (!isOpen)
+        {
+            await CloseCommand();
+        }
+        else 
+        {
+             IsOpen = isOpen;
+             await IsOpenChanged.InvokeAsync(isOpen);
+        }
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape")
+        {
+            await CloseCommand();
+        }
+        else if (e.Key == "Enter" && _filteredCommands.Any())
+        {
+            await SelectCommand(_filteredCommands.First());
+        }
+        else if (e.Key == "ArrowDown" && _filteredCommands.Count > 1)
+        {
+            // Could implement keyboard navigation here
+        }
+        else if (e.Key == "ArrowUp" && _filteredCommands.Count > 1)
+        {
+            // Could implement keyboard navigation here
+        }
+    }
+}
+

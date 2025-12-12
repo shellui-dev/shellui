@@ -1,17 +1,12 @@
 @namespace ShellUI.Components
 
-<div class="@("flex h-10 items-center space-x-1 rounded-md border border-border bg-background p-1 " + ClassName)" @attributes="AdditionalAttributes">
+<div class="@Shell.Cn("flex h-10 items-center space-x-1 rounded-md border border-border bg-background p-1", ClassName)" @attributes="AdditionalAttributes">
     @ChildContent
 </div>
 
 @code {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string ClassName { get; set; } = "";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
-
