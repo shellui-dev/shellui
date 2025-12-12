@@ -22,7 +22,7 @@ public class InitService
         ProjectInfo projectInfo = null!;
         
         await AnsiConsole.Status()
-            .StartAsync("Initializing ShellUI...", async ctx => 
+            .StartAsync("Initializing ShellUI...", async ctx =>
             {
                 ctx.Status("Detecting project type...");
                 await Task.Delay(300); // Brief delay for UX
@@ -35,6 +35,9 @@ public class InitService
                 ctx.Status("Checking for Bootstrap files...");
                 RemoveBootstrapFiles();
             });
+
+        // Clear any lingering status displays
+        AnsiConsole.Clear();
 
         // Step 2: Ask user for Tailwind method preference
         AnsiConsole.MarkupLine("[cyan]Setting up Tailwind CSS...[/]");
