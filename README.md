@@ -10,7 +10,7 @@ ShellUI transforms Blazor component development with a hybrid approach:
 - **CLI-First**: Copy components to YOUR codebase for full control (`shellui add button`)
 - **NuGet Option**: Traditional package install for quick starts (`dotnet add package ShellUI`)
 - **Choose your workflow**: Use CLI for customization, NuGet for speed, or mix both
-- Powered by Tailwind CSS v4.1.14 (standalone CLI - no Node.js required!)
+- Powered by Tailwind CSS v4.1.17 (standalone CLI - no Node.js required!)
 - Best of both worlds: flexibility when you need it, convenience when you want it
 
 ## Current Status: 69 Components Complete! 🎉
@@ -18,7 +18,7 @@ ShellUI transforms Blazor component development with a hybrid approach:
 **ShellUI is now fully functional!** We've completed:
 - ✅ **CLI Tool** (`dotnet tool install -g ShellUI.CLI`)
 - ✅ **NuGet Package** (`dotnet add package ShellUI.Components`)
-- ✅ **69 Production-Ready Components** with Tailwind v4.1.14
+- ✅ **69 Production-Ready Components** with Tailwind v4.1.17
 - ✅ **Hybrid Workflow** (CLI + NuGet)
 - ✅ **No Node.js Required** (Standalone Tailwind CLI)
 - ✅ **Comprehensive Documentation**
@@ -65,7 +65,7 @@ Dropdown, Command, ContextMenu, HoverCard, ThemeToggle, EmptyState, FileUpload
 **Advanced Components (16):**
 Calendar, DatePicker, DateRangePicker, TimePicker, Combobox, AlertDialog, Carousel, CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
 
-### ✅ Tailwind CSS v4.1.14 Integration
+### ✅ Tailwind CSS v4.1.17 Integration
 
 **Two Setup Methods:**
 
@@ -83,7 +83,7 @@ shellui init  # Choose "standalone"
 shellui init  # Choose "npm"
 # Or: dotnet shellui init
 ```
-- Installs `tailwindcss@^4.1.14` + `@tailwindcss/cli@^4.1.14`
+- Installs `tailwindcss@^4.1.17` + `@tailwindcss/cli@^4.1.17`
 - Uses `npx @tailwindcss/cli` for builds
 - Requires Node.js
 
@@ -122,7 +122,7 @@ shellui init  # Choose "npm"
 ## Design Principles
 
 1. **Copy, Don't Install**: Components are copied to your project, not imported from a package
-2. **Tailwind-First**: All styling uses Tailwind CSS v4.1.14 utility classes
+2. **Tailwind-First**: All styling uses Tailwind CSS v4.1.17 utility classes
 3. **Accessible by Default**: WCAG 2.1 AA compliant out of the box
 4. **Composable**: Build complex components from simple ones
 5. **Customizable**: Modify any component to fit your needs
@@ -149,7 +149,7 @@ shellui init  # Choose "npm"
 
 **Use both:** Start with NuGet, migrate to CLI for components you customize heavily!
 
-### Why Tailwind v4.1.14?
+### Why Tailwind v4.1.17?
 - Latest stable version with v4 features
 - Better performance than v3
 - Improved dark mode support
@@ -220,7 +220,7 @@ Simply edit the component file in `Components/UI/` - it's yours to modify!
 - .NET 8.0 or higher
 - **Choice of Tailwind setup:**
   - **Standalone CLI** (recommended): No Node.js required
-  - **npm**: Requires Node.js, uses `tailwindcss@^4.1.14`
+  - **npm**: Requires Node.js, uses `tailwindcss@^4.1.17`
 
 ## Comparison with Existing Solutions
 
@@ -229,7 +229,7 @@ Simply edit the component file in `Components/UI/` - it's yours to modify!
 | CLI Installation | ✅ | ❌ | ❌ | ❌ |
 | NuGet Package | ✅ | ✅ | ✅ | ✅ |
 | Component Ownership (CLI) | ✅ | ❌ | ❌ | ❌ |
-| Tailwind CSS | ✅ (v4.1.14) | ❌ | ❌ | ❌ |
+| Tailwind CSS | ✅ (v4.1.17) | ❌ | ❌ | ❌ |
 | No Node.js Required | ✅ | N/A | N/A | N/A |
 | Hybrid Workflow | ✅ | ❌ | ❌ | ❌ |
 | Free & Open Source | ✅ | ✅ | Partial | ✅ |
@@ -288,7 +288,7 @@ MIT License - See LICENSE.txt for details
 
 ## Status
 
-**✅ Production Ready:** 69 components, CLI + NuGet, Tailwind v4.1.14 integration
+**✅ Production Ready:** 69 components, CLI + NuGet, Tailwind v4.1.17 integration
 **🚀 Ready to use today!**
 
 ---
