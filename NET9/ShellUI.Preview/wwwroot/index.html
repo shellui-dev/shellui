@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShellUI Preview</title>
+    <base href="/" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    
+    <!-- Use the same CSS as the main library -->
+    <link rel="stylesheet" href="css/app.css" />
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Simple Loading State -->
+        <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#09090b;color:#fff">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-spin">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+    
+    <!-- Blazor Boot -->
+    <script src="_framework/blazor.webassembly.js"></script>
+    
+    <!-- Theme Script -->
+    <script>
+        // Force dark mode for now, or read from query param
+        document.documentElement.classList.add('dark');
+    </script>
+</body>
+
+</html>

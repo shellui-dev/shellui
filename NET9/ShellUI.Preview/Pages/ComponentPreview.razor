@@ -1,0 +1,156 @@
+@page "/preview/{ComponentName}"
+@layout Layout.PreviewLayout
+@using ShellUI.Components
+@using ShellUI.Components.Models
+
+@if (RenderComponent != null)
+{
+    <div class="preview-container">
+        @RenderComponent
+    </div>
+}
+else
+{
+    <div class="text-muted-foreground text-sm">
+        Component <span class="font-mono bg-muted px-1 rounded">@ComponentName</span> not found.
+    </div>
+}
+
+@code {
+    [Parameter] public string ComponentName { get; set; } = "";
+    [SupplyParameterFromQuery] public string? Variant { get; set; }
+    [SupplyParameterFromQuery] public string? Size { get; set; }
+    [SupplyParameterFromQuery] public string? Style { get; set; }
+
+    // Helper data for complex components
+    private List<TabItem> _tabItems = new()
+    {
+        new TabItem { Id = "account", Label = "Account", Content = builder => builder.AddMarkupContent(0, "<div class='p-4 border rounded mt-2'>Account settings here.</div>") },
+        new TabItem { Id = "password", Label = "Password", Content = builder => builder.AddMarkupContent(0, "<div class='p-4 border rounded mt-2'>Change password here.</div>") }
+    };
+
+    private List<string> _comboboxOptions = new() { "Next.js", "SvelteKit", "Nuxt.js", "Remix", "Astro" };
+
+    private RenderFragment? RenderComponent => ComponentName.ToLowerInvariant() switch
+    {
+        "button" => builder =>
+        {
+            builder.OpenComponent<Button>(0);
+            if (!string.IsNullOrEmpty(Variant) && Enum.TryParse<ButtonVariant>(Variant, true, out var v))
+                builder.AddAttribute(1, "Variant", v);
+            if (!string.IsNullOrEmpty(Size) && Enum.TryParse<ButtonSize>(Size, true, out var s))
+                builder.AddAttribute(2, "Size", s);
+            builder.AddAttribute(3, "ChildContent", (RenderFragment)(b => b.AddContent(0, "Button")));
+            builder.CloseComponent();
+        },
+        "badge" => builder =>
+        {
+            builder.OpenComponent<Badge>(0);
+            if (!string.IsNullOrEmpty(Variant) && Enum.TryParse<BadgeVariant>(Variant, true, out var v))
+                builder.AddAttribute(1, "Variant", v);
+            builder.AddAttribute(2, "ChildContent", (RenderFragment)(b => b.AddContent(0, "Badge")));
+            builder.CloseComponent();
+        },
+        "switch" => builder =>
+        {
+            builder.OpenComponent<Switch>(0);
+            builder.CloseComponent();
+        },
+        "checkbox" => builder =>
+        {
+            builder.OpenComponent<Checkbox>(0);
+            builder.AddAttribute(1, "Label", "Accept terms");
+            builder.CloseComponent();
+        },
+        "input" => builder =>
+        {
+            builder.OpenComponent<Input>(0);
+            builder.AddAttribute(1, "Placeholder", "Type something...");
+            builder.CloseComponent();
+        },
+        "alert" => builder =>
+        {
+            builder.OpenComponent<Alert>(0);
+            if (!string.IsNullOrEmpty(Variant) && Enum.TryParse<AlertVariant>(Variant, true, out var v))
+                builder.AddAttribute(1, "Variant", v);
+            builder.AddAttribute(2, "Title", "Heads up!");
+            builder.AddAttribute(3, "ChildContent", (RenderFragment)(b => b.AddContent(0, "You can add components to your app using the cli.")));
+            builder.CloseComponent();
+        },
+        "card" => builder =>
+        {
+            builder.OpenComponent<Card>(0);
+            builder.AddAttribute(1, "Class", "w-[350px]");
+            builder.AddAttribute(2, "ChildContent", (RenderFragment)(card =>
+            {
+                card.OpenComponent<CardHeader>(0);
+                card.AddAttribute(1, "ChildContent", (RenderFragment)(header =>
+                {
+                    header.OpenComponent<CardTitle>(0);
+                    header.AddAttribute(1, "ChildContent", (RenderFragment)(t => t.AddContent(0, "Create project")));
+                    header.CloseComponent();
+                    header.OpenComponent<CardDescription>(0);
+                    header.AddAttribute(2, "ChildContent", (RenderFragment)(d => d.AddContent(0, "Deploy your new project in one-click.")));
+                    header.CloseComponent();
+                }));
+                card.CloseComponent();
+                
+                card.OpenComponent<CardContent>(0);
+                card.AddAttribute(2, "ChildContent", (RenderFragment)(content =>
+                {
+                    content.AddMarkupContent(0, "<p class='text-sm text-muted-foreground'>Card Content Area</p>");
+                }));
+                card.CloseComponent();
+                
+                card.OpenComponent<CardFooter>(0);
+                card.AddAttribute(3, "ChildContent", (RenderFragment)(footer =>
+                {
+                    footer.OpenComponent<Button>(0);
+                    footer.AddAttribute(1, "ChildContent", (RenderFragment)(b => b.AddContent(0, "Deploy")));
+                    footer.CloseComponent();
+                }));
+                card.CloseComponent();
+            }));
+            builder.CloseComponent();
+        },
+        "tabs" => builder =>
+        {
+            builder.OpenComponent<Tabs>(0);
+            builder.AddAttribute(1, "Items", _tabItems);
+            builder.AddAttribute(2, "ActiveTab", "account");
+            builder.AddAttribute(3, "Class", "w-[400px]");
+            builder.CloseComponent();
+        },
+        "combobox" => builder =>
+        {
+            builder.OpenComponent<Combobox>(0);
+            builder.AddAttribute(1, "Options", _comboboxOptions);
+            builder.AddAttribute(2, "Placeholder", "Select framework...");
+            builder.CloseComponent();
+        },
+        "datepicker" => builder =>
+        {
+            builder.OpenComponent<DatePicker>(0);
+            builder.CloseComponent();
+        },
+        "skeleton" => builder =>
+        {
+            builder.OpenElement(0, "div");
+            builder.AddAttribute(1, "class", "flex items-center space-x-4");
+            builder.OpenComponent<Skeleton>(2);
+            builder.AddAttribute(3, "Class", "h-12 w-12 rounded-full");
+            builder.CloseComponent();
+            builder.OpenElement(4, "div");
+            builder.AddAttribute(5, "class", "space-y-2");
+            builder.OpenComponent<Skeleton>(6);
+            builder.AddAttribute(7, "Class", "h-4 w-[250px]");
+            builder.CloseComponent();
+            builder.OpenComponent<Skeleton>(8);
+            builder.AddAttribute(9, "Class", "h-4 w-[200px]");
+            builder.CloseComponent();
+            builder.CloseElement();
+            builder.CloseElement();
+        },
+        _ => null
+    };
+}
