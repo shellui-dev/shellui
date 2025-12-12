@@ -7,7 +7,7 @@
     
     <!-- NuGet Package Metadata -->
     <PackageId>ShellUI.Components</PackageId>
-    <Version>0.0.3</Version>
+    <Version>0.1.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>Shell Technologies</Authors>
     <Company>Shell Technologies</Company>
@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.6" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
   </ItemGroup>
 
   <ItemGroup>
