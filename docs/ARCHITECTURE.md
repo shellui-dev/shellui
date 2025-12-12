@@ -291,7 +291,7 @@ private string GetVariantClasses(string variant) => variant switch
 ## Tailwind Integration
 
 ### Configuration
-Tailwind v4.1.14 uses CSS-first configuration with design tokens:
+Tailwind v4.1.17 uses CSS-first configuration with design tokens:
 
 ```javascript
 // tailwind.config.js

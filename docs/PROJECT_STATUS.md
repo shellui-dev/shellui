@@ -1,25 +1,25 @@
 # ShellUI Project Status
 
-## Current Status: v0.0.3 Released! 🎉
+## Current Status: v0.1.0 Released! 🎉
 
 **ShellUI is now available on NuGet!**
 
-- ✅ **Version 0.0.3** - Fixed v0.0.2 issues (November 2025)
+- ✅ **Version 0.1.0** - Major architectural upgrade (Refactored to shadcn/ui patterns)
 - ✅ **69 Production-Ready Components** - Fully functional and tested
 - ✅ **CLI Tool Published** - `dotnet tool install -g ShellUI.CLI`
 - ✅ **NuGet Packages Published** - `ShellUI.Components`, `ShellUI.CLI`, `ShellUI.Templates`
 - ✅ **Hybrid Distribution** - CLI + NuGet packages (best of both worlds!)
 - ✅ **No Node.js Required** - Using Tailwind standalone CLI (zero JavaScript dependencies!)
-- ✅ **Tailwind CSS v4.1.14** - Latest version with standalone CLI support
+- ✅ **Tailwind CSS v4.1.17** - Latest version with standalone CLI support
 
 ## What's Complete ✅
 
 ### Core Infrastructure
-- [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet v0.0.3
-- [x] Components Package (`ShellUI.Components`) - Published to NuGet v0.0.3
-- [x] Templates Package (`ShellUI.Templates`) - Published to NuGet v0.0.3
+- [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet v0.1.0
+- [x] Components Package (`ShellUI.Components`) - Published to NuGet v0.1.0
+- [x] Templates Package (`ShellUI.Templates`) - Published to NuGet v0.1.0
 - [x] Component Registry - 53 components registered and available
-- [x] Tailwind CSS Integration - v4.1.14 standalone CLI support
+- [x] Tailwind CSS Integration - v4.1.17 standalone CLI support
 - [x] MSBuild Integration - Automatic CSS compilation
 
 ### Components (69 Total)
@@ -72,20 +72,22 @@
 ## Timeline
 
 ```
-✅ Q4 2025 - v0.0.3 Released (November 2025)
+## Timeline
+
+✅ Q4 2025 - v0.1.0 Released (December 2025)
    ├── ✅ CLI Tool Published
    ├── ✅ NuGet Packages Published
-   ├── ✅ 53 Components Available
-   └── ✅ Tailwind v4.1.14 Integration
+   ├── ✅ 69 Components Available
+   └── ✅ Tailwind v4.1.17 Integration
 
 🚀 Q1 2026 - v0.1.0+ (Planned)
-   ├── More components (60+)
+   ├── More components (75+)
    ├── Enhanced documentation
    ├── Component examples
    └── Performance improvements
 
 🎯 Q2-Q3 2026 - v1.0.0 (Target)
-   ├── Full component library (70+)
+   ├── Full component library (80+)
    ├── Comprehensive documentation
    ├── Community contributions
    └── Production-ready release
@@ -175,7 +177,7 @@ dotnet shellui add button input card
 
 ## Success Criteria
 
-### v0.0.3 Success ✅
+### v0.1.0 Success ✅
 - [x] CLI tool published to NuGet
 - [x] NuGet packages published (Components, CLI, Templates)
 - [x] Can initialize projects (no Node.js!)
@@ -241,7 +243,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ---
 
 **Last Updated:** November 2025  
-**Current Version:** v0.0.3  
+**Current Version:** v0.1.0  
 **Status:** Pre-release (ready for use!)
 
 ---
