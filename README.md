@@ -13,12 +13,12 @@ ShellUI transforms Blazor component development with a hybrid approach:
 - Powered by Tailwind CSS v4.1.17 (standalone CLI - no Node.js required!)
 - Best of both worlds: flexibility when you need it, convenience when you want it
 
-## Current Status: 69 Components Complete! 🎉
+## Current Status: 73 Components Complete! 🎉
 
 **ShellUI is now fully functional!** We've completed:
 - ✅ **CLI Tool** (`dotnet tool install -g ShellUI.CLI`)
 - ✅ **NuGet Package** (`dotnet add package ShellUI.Components`)
-- ✅ **69 Production-Ready Components** with Tailwind v4.1.17
+- ✅ **73 Production-Ready Components** with Tailwind v4.1.17
 - ✅ **Hybrid Workflow** (CLI + NuGet)
 - ✅ **No Node.js Required** (Standalone Tailwind CLI)
 - ✅ **Comprehensive Documentation**
@@ -37,6 +37,9 @@ dotnet tool install -g ShellUI.CLI
 shellui init
 # Or: dotnet shellui init
 
+# For CI/CD or automated environments:
+shellui init --yes  # Uses standalone Tailwind with default options
+
 # Add components
 shellui add button input card dialog
 # Or: dotnet shellui add button input card dialog
@@ -45,7 +48,7 @@ shellui list  # See all available components
 # Or: dotnet shellui list
 ```
 
-### ✅ 69 Production-Ready Components
+### ✅ 73 Production-Ready Components
 
 **Form Components (12):**
 Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider, Form, InputOTP

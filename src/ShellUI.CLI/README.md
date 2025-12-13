@@ -49,7 +49,9 @@ dotnet shellui init
 
 **Options:**
 - `--force` - Overwrite existing files
-- `--style <style>` - Choose CSS style (default: minimal)
+- `--style <style>` - Choose CSS style (default: default)
+- `--tailwind <method>` - Choose Tailwind method (standalone, npm) (default: standalone)
+- `--yes` - Run in non-interactive mode with default options
 
 ### `add <components>`
 Add one or more components to your project.

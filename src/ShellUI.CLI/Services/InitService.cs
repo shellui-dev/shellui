@@ -7,7 +7,7 @@ namespace ShellUI.CLI.Services;
 
 public class InitService
 {
-    public static async Task InitializeAsync(string style, bool force)
+    public static async Task InitializeAsync(string style, bool force, string tailwindMethod = "standalone", bool nonInteractive = false)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
 
@@ -20,37 +20,61 @@ public class InitService
 
         // Step 1: Detect project
         ProjectInfo projectInfo = null!;
-        
-        await AnsiConsole.Status()
-            .StartAsync("Initializing ShellUI...", async ctx =>
-            {
-                ctx.Status("Detecting project type...");
-                await Task.Delay(300); // Brief delay for UX
-                projectInfo = ProjectDetector.DetectProject();
-                AnsiConsole.MarkupLine($"[green]Detected:[/] {projectInfo.ProjectType}");
-                AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
-                AnsiConsole.MarkupLine($"[dim]Namespace: {projectInfo.RootNamespace}[/]");
 
-                // Clean up bootstrap files
-                ctx.Status("Checking for Bootstrap files...");
-                RemoveBootstrapFiles();
-            });
+        try
+        {
+            await AnsiConsole.Status()
+                .Spinner(Spinner.Known.Dots)
+                .SpinnerStyle(Style.Parse("green"))
+                .StartAsync("Initializing ShellUI...", async ctx =>
+                {
+                    ctx.Status("Detecting project type...");
+                    await Task.Delay(300); // Brief delay for UX
+                    projectInfo = ProjectDetector.DetectProject();
+                    AnsiConsole.MarkupLine($"[green]✅ Detected:[/] {projectInfo.ProjectType}");
+                    AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
+                    AnsiConsole.MarkupLine($"[dim]Namespace: {projectInfo.RootNamespace}[/]");
 
-        // Clear any lingering status displays
-        AnsiConsole.Clear();
+                    // Clean up bootstrap files
+                    ctx.Status("Cleaning up Bootstrap files...");
+                    RemoveBootstrapFiles();
+                });
+        }
+        catch
+        {
+            // Fallback if status display fails
+            projectInfo = ProjectDetector.DetectProject();
+            AnsiConsole.MarkupLine($"[green]✅ Detected:[/] {projectInfo.ProjectType}");
+            AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
+            AnsiConsole.MarkupLine($"[dim]Namespace: {projectInfo.RootNamespace}[/]");
 
-        // Step 2: Ask user for Tailwind method preference
+            // Clean up bootstrap files
+            RemoveBootstrapFiles();
+        }
+
+        // Step 2: Determine Tailwind method preference
         AnsiConsole.MarkupLine("[cyan]Setting up Tailwind CSS...[/]");
-        var tailwindMethod = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("[bold yellow]Which Tailwind CSS method do you prefer?[/]")
-                .PageSize(3)
-                .AddChoices(new[] {
-                    "standalone - Use Tailwind CLI (no Node.js required, automatic builds)",
-                    "npm - Use npm packages (requires Node.js, more flexible)"
-                }));
+        string method;
 
-        var method = tailwindMethod.StartsWith("standalone") ? "standalone" : "npm";
+        if (nonInteractive)
+        {
+            method = tailwindMethod;
+            AnsiConsole.MarkupLine($"[green]✅ Selected:[/] {method} (non-interactive mode)");
+        }
+        else
+        {
+            var tailwindSelection = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[bold yellow]Which Tailwind CSS method do you prefer?[/]")
+                    .PageSize(3)
+                    .AddChoices(new[] {
+                        "standalone - Use Tailwind CLI (no Node.js required, automatic builds)",
+                        "npm - Use npm packages (requires Node.js, more flexible)"
+                    }));
+
+            method = tailwindSelection.StartsWith("standalone") ? "standalone" : "npm";
+            AnsiConsole.MarkupLine($"[green]✅ Selected:[/] {method}");
+        }
 
         // Check npm availability if selected
         if (method == "npm" && !await IsNpmAvailableAsync())
@@ -58,7 +82,6 @@ public class InitService
             AnsiConsole.MarkupLine("[red]Error: npm is not available. Please install Node.js and npm, or choose the 'standalone' Tailwind method.[/]");
             return;
         }
-        AnsiConsole.MarkupLine($"[green]Selected:[/] {method}");
 
         await AnsiConsole.Status()
             .StartAsync("Installing ShellUI components...", async ctx => 
@@ -90,7 +113,7 @@ public class InitService
                     WriteIndented = true
                 });
                 File.WriteAllText(configPath, json);
-                AnsiConsole.MarkupLine($"[green]Created:[/] shellui.json");
+                AnsiConsole.MarkupLine($"[green]✅ Created:[/] shellui.json");
 
                 // Step 5: Create _Imports.razor if it doesn't exist
                 ctx.Status("Setting up imports...");
@@ -148,7 +171,7 @@ public class InitService
                 AnsiConsole.MarkupLine($"[green]Built:[/] Tailwind CSS");
             });
 
-        AnsiConsole.MarkupLine("\n[green]ShellUI initialized successfully![/]");
+        AnsiConsole.MarkupLine("\n[green]✅ ShellUI initialized successfully![/]");
         AnsiConsole.MarkupLine("\n[blue]Next steps:[/]");
         AnsiConsole.MarkupLine("  [dim]1. Add components:[/] dotnet shellui add button");
         AnsiConsole.MarkupLine("  [dim]2. Browse all:[/] dotnet shellui list");

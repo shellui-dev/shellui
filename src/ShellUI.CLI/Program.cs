@@ -36,22 +36,42 @@ class Program
             "--style",
             getDefaultValue: () => "default",
             "Choose component style (default, new-york, minimal)");
-        
+        var tailwindOption = new Option<string>(
+            "--tailwind",
+            getDefaultValue: () => "standalone",
+            "Choose Tailwind method (standalone, npm)");
+        var nonInteractiveOption = new Option<bool>(
+            "--yes",
+            "Run in non-interactive mode with default options");
+
         command.AddOption(forceOption);
         command.AddOption(styleOption);
+        command.AddOption(tailwindOption);
+        command.AddOption(nonInteractiveOption);
 
-        command.SetHandler(async (force, style) =>
+        command.SetHandler(async (force, style, tailwind, nonInteractive) =>
         {
             try
             {
-                AnsiConsole.Write(new FigletText("ShellUI").Color(Color.Blue));
-                await InitService.InitializeAsync(style, force);
+                // Beautiful ASCII art logo for SHELLUI
+                var logo = @"
+ ███████╗██╗  ██╗███████╗██╗     ██╗     ██╗   ██╗██╗
+ ██╔════╝██║  ██║██╔════╝██║     ██║     ██║   ██║██║
+ ███████╗███████║█████╗  ██║     ██║     ██║   ██║██║
+ ╚════██║██╔══██║██╔══╝  ██║     ██║     ██║   ██║██║
+ ███████║██║  ██║███████╗███████╗███████╗╚██████╔╝██║
+ ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝ ╚═╝
+
+";
+
+                AnsiConsole.Markup($"[blue]{logo}[/]");
+                await InitService.InitializeAsync(style, force, tailwind, nonInteractive);
             }
             catch (Exception ex)
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
             }
-        }, forceOption, styleOption);
+        }, forceOption, styleOption, tailwindOption, nonInteractiveOption);
 
         return command;
     }
@@ -73,11 +93,11 @@ class Program
             "Overwrite existing components");
         command.AddOption(forceOption);
 
-        command.SetHandler((components, force) =>
+        command.SetHandler(async (components, force) =>
         {
             try
             {
-                ComponentInstaller.InstallComponents(components, force);
+                await ComponentInstaller.InstallComponents(components, force);
             }
             catch (Exception ex)
             {

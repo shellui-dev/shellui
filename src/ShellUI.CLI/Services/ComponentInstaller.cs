@@ -7,7 +7,7 @@ namespace ShellUI.CLI.Services;
 
 public class ComponentInstaller
 {
-    public static void InstallComponents(string[] components, bool force)
+    public static async Task InstallComponents(string[] components, bool force)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
         
@@ -45,22 +45,29 @@ public class ComponentInstaller
         // Track installed components to avoid duplicates
         var installedSet = new HashSet<string>();
         
-        // Show dependency information before installing
+        // Show dependency information
         foreach (var componentName in componentList)
         {
             var metadata = ComponentRegistry.GetMetadata(componentName);
             if (metadata != null && metadata.Dependencies?.Any() == true)
             {
-                AnsiConsole.MarkupLine($"[cyan]ℹ[/] [bold]{componentName}[/] requires: [yellow]{string.Join(", ", metadata.Dependencies)}[/]");
+                AnsiConsole.MarkupLine($"[green]●[/] [bold]{componentName}[/] requires: [yellow]{string.Join(", ", metadata.Dependencies)}[/]");
             }
         }
         
         AnsiConsole.MarkupLine("");
         
-        foreach (var componentName in componentList)
-        {
-            InstallComponentWithDependencies(componentName, config, projectInfo, force, installedSet, ref successCount, ref skippedCount, failedComponents);
-        }
+        await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Dots)
+            .SpinnerStyle(Style.Parse("green"))
+            .StartAsync("Installing components...", async ctx =>
+            {
+                foreach (var componentName in componentList)
+                {
+                    ctx.Status($"Installing {componentName}...");
+                    InstallComponentWithDependencies(componentName, config, projectInfo, force, installedSet, ref successCount, ref skippedCount, failedComponents);
+                }
+            });
 
         // Update config
         var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions
@@ -193,7 +200,7 @@ public class ComponentInstaller
         // Install dependencies first
         if (metadata.Dependencies?.Any() == true)
         {
-            AnsiConsole.MarkupLine($"[dim]📦 Installing dependencies for [bold]{componentName}[/]: {string.Join(", ", metadata.Dependencies)}[/]");
+            AnsiConsole.MarkupLine($"[dim]Installing dependencies for [bold]{componentName}[/]: {string.Join(", ", metadata.Dependencies)}[/]");
             foreach (var dep in metadata.Dependencies)
             {
                 if (!installedSet.Contains(dep))

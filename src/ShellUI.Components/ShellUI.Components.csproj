@@ -21,6 +21,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- Disable static web assets compression for packaging -->
+    <EnableStaticWebAssetsCompression>false</EnableStaticWebAssetsCompression>
   </PropertyGroup>
 
 
