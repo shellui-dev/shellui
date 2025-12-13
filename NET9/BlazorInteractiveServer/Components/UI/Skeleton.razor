@@ -1,60 +1,14 @@
-@if (Variant == "text")
-{
-    <div class="@($"animate-pulse rounded-md bg-muted {(Size == "sm" ? "h-4" : Size == "lg" ? "h-8" : "h-6")} {Class}")"></div>
-}
-else if (Variant == "circular")
-{
-    <div class="@($"animate-pulse rounded-full bg-muted {(Size == "sm" ? "h-8 w-8" : Size == "lg" ? "h-16 w-16" : "h-12 w-12")} {Class}")"></div>
-}
-else if (Variant == "rectangular")
-{
-    <div class="@($"animate-pulse rounded-md bg-muted {(Size == "sm" ? "h-16 w-24" : Size == "lg" ? "h-32 w-48" : "h-24 w-36")} {Class}")"></div>
-}
-else if (Variant == "card")
-{
-    <div class="@($"animate-pulse rounded-lg border bg-card p-4 {Class}")">
-        <div class="space-y-3">
-            <div class="h-4 w-3/4 rounded bg-muted"></div>
-            <div class="space-y-2">
-                <div class="h-3 w-full rounded bg-muted"></div>
-                <div class="h-3 w-5/6 rounded bg-muted"></div>
-            </div>
-        </div>
-    </div>
-}
-else if (Variant == "table")
-{
-    <div class="@($"animate-pulse space-y-3 {Class}")">
-        @for (int i = 0; i < Rows; i++)
-        {
-            <div class="flex space-x-4">
-                <div class="h-4 w-4 rounded bg-muted"></div>
-                <div class="h-4 flex-1 rounded bg-muted"></div>
-                <div class="h-4 w-20 rounded bg-muted"></div>
-                <div class="h-4 w-16 rounded bg-muted"></div>
-            </div>
-        }
-    </div>
-}
-else if (Variant == "list")
-{
-    <div class="@($"animate-pulse space-y-3 {Class}")">
-        @for (int i = 0; i < Rows; i++)
-        {
-            <div class="flex items-center space-x-3">
-                <div class="h-8 w-8 rounded-full bg-muted"></div>
-                <div class="space-y-2">
-                    <div class="h-4 w-32 rounded bg-muted"></div>
-                    <div class="h-3 w-24 rounded bg-muted"></div>
-                </div>
-            </div>
-        }
-    </div>
-}
+@namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<div class="@Shell.Cn("animate-pulse rounded-md bg-muted", Class)" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
 
 @code {
-    [Parameter] public string Variant { get; set; } = "text"; // text, circular, rectangular, card, table, list
-    [Parameter] public string Size { get; set; } = "default"; // sm, default, lg
-    [Parameter] public int Rows { get; set; } = 3; // For table and list variants
-    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
+

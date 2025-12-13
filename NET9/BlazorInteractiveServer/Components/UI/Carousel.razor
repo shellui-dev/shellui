@@ -1,7 +1,7 @@
 @using Microsoft.JSInterop
 @implements IAsyncDisposable
 
-<div class="@($"relative w-full {Class}")" @ref="carouselRef">
+<div class="@Shell.Cn("relative w-full", Class)" @ref="carouselRef">
     <div class="relative overflow-hidden rounded-lg" style="aspect-ratio: @AspectRatio;">
         <div class="flex transition-transform duration-300 ease-in-out h-full" 
              style="transform: translateX(-@(CurrentSlide * (100.0 / TotalSlides))%); width: @(TotalSlides * 100)%">
@@ -11,7 +11,7 @@
     
     @if (ShowArrows)
     {
-        <button class="@($"absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 shadow-md transition-colors hover:bg-background/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 {ArrowClass}")"
+        <button class="@Shell.Cn("absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 shadow-md transition-colors hover:bg-background/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", ArrowClass)"
                 disabled="@(CurrentSlide == 0 && !Loop)"
                 @onclick="PreviousSlide">
             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -19,7 +19,7 @@
             </svg>
         </button>
         
-        <button class="@($"absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 shadow-md transition-colors hover:bg-background/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 {ArrowClass}")"
+        <button class="@Shell.Cn("absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 shadow-md transition-colors hover:bg-background/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", ArrowClass)"
                 disabled="@(CurrentSlide >= TotalSlides - 1 && !Loop)"
                 @onclick="NextSlide">
             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -33,8 +33,9 @@
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
             @for (int i = 0; i < TotalSlides; i++)
             {
-                <button class="@($"h-2 w-2 rounded-full transition-colors {(i == CurrentSlide ? "bg-primary" : "bg-muted")}")"
-                        @onclick="() => GoToSlide(i)">
+                var index = i;
+                <button class="@Shell.Cn("h-2 w-2 rounded-full transition-colors", index == CurrentSlide ? "bg-primary" : "bg-muted")"
+                        @onclick="() => GoToSlide(index)">
                 </button>
             }
         </div>
@@ -130,3 +131,4 @@
         await Task.CompletedTask;
     }
 }
+

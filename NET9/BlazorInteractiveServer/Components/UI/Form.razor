@@ -1,4 +1,5 @@
 @namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
 @using Microsoft.AspNetCore.Components.Forms
 
 <form @onsubmit="HandleSubmit" @attributes="AdditionalAttributes" class="@ClassName">
@@ -23,6 +24,9 @@
     
     private async Task HandleSubmit()
     {
+        // Basic form submission - users can add EditContext for validation
         await Task.CompletedTask;
     }
 }
+
+

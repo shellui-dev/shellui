@@ -1,21 +1,17 @@
 @namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
 
-<aside class="fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-background transition-transform @(IsOpen ? "translate-x-0" : "-translate-x-full") @ClassName" @attributes="AdditionalAttributes">
+<aside class="@Shell.Cn("fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-background transition-transform", IsOpen ? "translate-x-0" : "-translate-x-full", ClassName)" @attributes="AdditionalAttributes">
     <div class="h-full overflow-y-auto px-3 py-4">
         @ChildContent
     </div>
 </aside>
 
 @code {
-    [Parameter]
-    public bool IsOpen { get; set; } = true;
-
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    [Parameter]
-    public string ClassName { get; set; } = "";
-
+    [Parameter] public bool IsOpen { get; set; } = true;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string ClassName { get; set; } = "";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
+
