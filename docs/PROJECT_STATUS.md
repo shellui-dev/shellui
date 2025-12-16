@@ -5,7 +5,7 @@
 **ShellUI is now available on NuGet!**
 
 - ✅ **Version 0.1.0** - Major architectural upgrade (Refactored to shadcn/ui patterns)
-- ✅ **69 Production-Ready Components** - Fully functional and tested
+- ✅ **73 Production-Ready Components** - Fully functional and tested
 - ✅ **CLI Tool Published** - `dotnet tool install -g ShellUI.CLI`
 - ✅ **NuGet Packages Published** - `ShellUI.Components`, `ShellUI.CLI`, `ShellUI.Templates`
 - ✅ **Hybrid Distribution** - CLI + NuGet packages (best of both worlds!)
@@ -22,7 +22,7 @@
 - [x] Tailwind CSS Integration - v4.1.17 standalone CLI support
 - [x] MSBuild Integration - Automatic CSS compilation
 
-### Components (69 Total)
+### Components (73 Total)
 - [x] **Form Components (12)**: Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider, Form, InputOTP
 - [x] **Layout Components (13)**: Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, ScrollArea, Resizable, Collapsible, Accordion, AccordionItem, Breadcrumb, BreadcrumbItem
 - [x] **Navigation Components (9)**: Navbar, Sidebar, NavigationMenu, NavigationMenuItem, Menubar, MenubarItem, Pagination, Tabs, Stepper
