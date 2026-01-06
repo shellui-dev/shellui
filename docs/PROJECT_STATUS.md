@@ -126,7 +126,7 @@ dotnet shellui add button input card
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/shelltechlabs/shellui.git
+   git clone https://github.com/shellui-dev/shellui.git
    cd shellui
    ```
 
@@ -230,15 +230,15 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Questions?
 
-- GitHub Issues: [Report bugs or ask questions](https://github.com/shelltechlabs/shellui/issues)
+- GitHub Issues: [Report bugs or ask questions](https://github.com/shellui-dev/shellui/issues)
 - NuGet: [ShellUI.Components](https://www.nuget.org/packages/ShellUI.Components/)
 - Documentation: See [docs/](../docs/) folder
 
 ## Contact
 
-- GitHub: [@shelltechlabs/shellui](https://github.com/shelltechlabs/shellui)
+- GitHub: [@shellui-dev/shellui](https://github.com/shellui-dev/shellui)
 - NuGet: [ShellUI Packages](https://www.nuget.org/packages?q=shellui)
-- Issues: [GitHub Issues](https://github.com/shelltechlabs/shellui/issues)
+- Issues: [GitHub Issues](https://github.com/shellui-dev/shellui/issues)
 
 ---
 

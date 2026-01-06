@@ -570,8 +570,8 @@ No attribution required (but appreciated!).
 
 **Resources:**
 - [Documentation](https://shellui.dev/docs) (coming at v1.0)
-- [GitHub Issues](https://github.com/yourorg/shellui/issues)
-- [GitHub Discussions](https://github.com/yourorg/shellui/discussions)
+- [GitHub Issues](https://github.com/shellui-dev/shellui/issues)
+- [GitHub Discussions](https://github.com/shellui-dev/shellui/discussions)
 - [CLI_SYNTAX.md](CLI_SYNTAX.md) - Complete CLI reference
 
 **Commands:**
@@ -629,7 +629,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for future guidelines.
 
 **Still have questions?**
 
-Open a [GitHub Discussion](https://github.com/yourorg/shellui/discussions) or check the [documentation](https://shellui.dev/docs).
+Open a [GitHub Discussion](https://github.com/shellui-dev/shellui/discussions) or check the [documentation](https://shellui.dev/docs).
 
 **Version:** 1.0.0  
 **Last Updated:** October 2025

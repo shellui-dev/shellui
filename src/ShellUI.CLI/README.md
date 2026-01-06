@@ -159,9 +159,9 @@ dotnet tool install -g ShellUI.CLI
 
 - [Full Documentation](https://shellui.dev/docs/cli)
 - [Component Reference](https://shellui.dev/components)
-- [GitHub Repository](https://github.com/shelltechlabs/shellui)
+- [GitHub Repository](https://github.com/shellui-dev/shellui)
 
 ## License
 
-MIT License - see [LICENSE](https://github.com/shelltechlabs/shellui/blob/main/LICENSE) for details.
+MIT License - see [LICENSE](https://github.com/shellui-dev/shellui/blob/main/LICENSE) for details.
 

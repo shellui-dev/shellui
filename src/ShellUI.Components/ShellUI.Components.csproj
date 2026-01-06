@@ -13,8 +13,8 @@
     <Company>Shell Technologies</Company>
     <Product>ShellUI</Product>
     <Description>Beautiful, accessible Blazor components inspired by shadcn/ui. CLI-first component library with Tailwind CSS styling.</Description>
-    <PackageProjectUrl>https://github.com/shelltechlabs/shellui</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/shelltechlabs/shellui</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/shellui-dev/shellui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shellui-dev/shellui</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>blazor;components;ui;tailwind;shadcn;shellui</PackageTags>

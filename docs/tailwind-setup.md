@@ -287,7 +287,7 @@ After setup, verify everything works:
 
 - Check the [Tailwind CSS documentation](https://tailwindcss.com/docs)
 - Review the [ShellUI documentation](https://shellui.dev)
-- Open an issue on [GitHub](https://github.com/shelltechlabs/shellui/issues)
+- Open an issue on [GitHub](https://github.com/shellui-dev/shellui/issues)
 
 ## Custom Themes & Fonts
 

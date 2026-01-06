@@ -12,8 +12,8 @@
     <Company>Shell Technologies</Company>
     <Product>ShellUI</Product>
     <Description>Core models and interfaces for ShellUI component library.</Description>
-    <PackageProjectUrl>https://github.com/shelltechlabs/shellui</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/shelltechlabs/shellui</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/shellui-dev/shellui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shellui-dev/shellui</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>blazor;components;ui;shellui;core</PackageTags>
