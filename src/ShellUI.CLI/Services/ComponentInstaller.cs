@@ -86,6 +86,26 @@ public class ComponentInstaller
             AnsiConsole.MarkupLine($"[red]Failed: {string.Join(", ", failedComponents)}[/]");
     }
 
+    public static async Task InstallComponentForInitAsync(string componentName, ProjectInfo projectInfo)
+    {
+        var metadata = ComponentRegistry.Components.GetValueOrDefault(componentName.ToLower());
+        if (metadata == null) return;
+
+        var config = new ShellUIConfig
+        {
+            ComponentsPath = "Components/UI",
+            ProjectType = projectInfo.ProjectType,
+            Style = "default"
+        };
+
+        var result = InstallComponentInternal(componentName, config, projectInfo, false);
+
+        if (result == InstallResult.Success)
+        {
+            AnsiConsole.MarkupLine($"[green]✅ Installed:[/] {componentName}");
+        }
+    }
+
     public static void InstallComponent(string componentName, ComponentMetadata metadata, bool force, bool skipConfig = false)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");

@@ -92,6 +92,10 @@ public class InitService
                 Directory.CreateDirectory(componentsPath);
                 AnsiConsole.MarkupLine($"[green]Created:[/] Components/UI/");
 
+                // Step 3.5: Install Shell utilities
+                ctx.Status("Installing Shell utilities...");
+                await ComponentInstaller.InstallComponentForInitAsync("shell", projectInfo);
+
                 // Step 4: Create shellui.json
                 ctx.Status("Creating configuration...");
                 var config = new ShellUIConfig
