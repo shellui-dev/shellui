@@ -16,6 +16,7 @@ public static class BadgeTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
 
 <div class=""@ComputedClass"" @attributes=""AdditionalAttributes"">
     @ChildContent

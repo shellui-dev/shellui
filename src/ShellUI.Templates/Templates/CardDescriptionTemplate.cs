@@ -15,7 +15,7 @@ public static class CardDescriptionTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <p class=""@Shell.Cn(""text-sm text-muted-foreground"", Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent

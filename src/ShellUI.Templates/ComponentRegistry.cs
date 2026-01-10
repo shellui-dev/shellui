@@ -7,6 +7,7 @@ public static class ComponentRegistry
 {
     public static readonly Dictionary<string, ComponentMetadata> Components = new()
     {
+        { "shell", ShellTemplate.Metadata },
         { "button", ButtonTemplate.Metadata },
         { "button-variants", ButtonVariantsTemplate.Metadata },
         { "theme-toggle", ThemeToggleTemplate.Metadata },
@@ -100,6 +101,7 @@ public static class ComponentRegistry
     {
         return componentName.ToLower() switch
         {
+            "shell" => ShellTemplate.Content,
             "button" => ButtonTemplate.Content,
             "button-variants" => ButtonVariantsTemplate.Content,
             "theme-toggle" => ThemeToggleTemplate.Content,

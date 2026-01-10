@@ -14,7 +14,7 @@ public static class ComboboxTemplate
         FilePath = "Combobox.razor"
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <div class=""@Shell.Cn(""relative"", Class)"" @attributes=""AdditionalAttributes"">
     <button type=""button""

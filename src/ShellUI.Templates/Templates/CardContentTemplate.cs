@@ -15,7 +15,7 @@ public static class CardContentTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <div class=""@Shell.Cn(""p-6 pt-0"", Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent

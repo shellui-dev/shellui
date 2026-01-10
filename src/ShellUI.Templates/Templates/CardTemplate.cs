@@ -15,7 +15,7 @@ public static class CardTemplate
         Dependencies = new List<string> { "card-header", "card-title", "card-description", "card-content", "card-footer" }
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <div class=""@Shell.Cn(""rounded-lg border bg-card text-card-foreground shadow-sm"", Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent

@@ -15,7 +15,7 @@ public static class CardHeaderTemplate
         IsAvailable = false // Hidden from list, installed via dependency
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <div class=""@Shell.Cn(""flex flex-col space-y-1.5 p-6"", Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent

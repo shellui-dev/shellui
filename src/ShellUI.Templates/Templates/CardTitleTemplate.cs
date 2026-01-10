@@ -15,7 +15,7 @@ public static class CardTitleTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <h3 class=""@Shell.Cn(""text-2xl font-semibold leading-none tracking-tight"", Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent

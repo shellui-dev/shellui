@@ -15,7 +15,7 @@ public static class TabsTemplate
         Dependencies = new List<string> { "tab-models" }
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using ShellUI.Components.Models
 
 <div class=""@Shell.Cn(""w-full"", Class)"" @attributes=""AdditionalAttributes"">

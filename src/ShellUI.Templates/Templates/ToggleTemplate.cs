@@ -17,6 +17,7 @@ public class ToggleTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
 
 <button type=""button""
         @onclick=""HandleClick""

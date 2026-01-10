@@ -15,7 +15,7 @@ public static class DialogTemplate
         Dependencies = new List<string> { "dialog-trigger", "dialog-content", "dialog-header", "dialog-footer", "dialog-title", "dialog-description", "dialog-close" }
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <CascadingValue Value=""this"" IsFixed=""true"">
     @ChildContent

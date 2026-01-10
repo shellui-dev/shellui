@@ -15,7 +15,7 @@ public static class CardFooterTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <div class=""@Shell.Cn(""flex items-center p-6 pt-0"", Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent

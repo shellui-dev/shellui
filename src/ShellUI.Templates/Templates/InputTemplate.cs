@@ -15,7 +15,8 @@ public static class InputTemplate
         Dependencies = new List<string>()
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
 
 <input 
     type=""@Type""

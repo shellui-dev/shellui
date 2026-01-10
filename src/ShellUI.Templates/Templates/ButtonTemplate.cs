@@ -17,7 +17,8 @@ public class ButtonTemplate
         Tags = new List<string> { "form", "input", "interactive", "button", "action" }
     };
 
-    public static string Content => @"@namespace ShellUI.Components
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
 
 <button 
     type=""@Type""
