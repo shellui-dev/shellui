@@ -7,7 +7,6 @@
     
     <!-- NuGet Package Metadata -->
     <PackageId>ShellUI.Core</PackageId>
-    <Version>0.1.0</Version>
     <Authors>Shell Technologies</Authors>
     <Company>Shell Technologies</Company>
     <Product>ShellUI</Product>

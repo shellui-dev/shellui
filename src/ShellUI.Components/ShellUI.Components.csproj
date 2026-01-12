@@ -7,7 +7,6 @@
     
     <!-- NuGet Package Metadata -->
     <PackageId>ShellUI.Components</PackageId>
-    <Version>0.1.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>Shell Technologies</Authors>
     <Company>Shell Technologies</Company>
