@@ -10,7 +10,7 @@ public static class DialogContentTemplate
         DisplayName = "Dialog Content",
         Description = "Content container for Dialog",
         Category = ComponentCategory.Overlay,
-        Version = "0.1.0",
+
         FilePath = "DialogContent.razor",
         IsAvailable = false
     };
@@ -46,4 +46,5 @@ public static class DialogContentTemplate
 }
 ";
 }
+
 

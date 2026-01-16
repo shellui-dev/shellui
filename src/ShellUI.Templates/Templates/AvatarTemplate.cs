@@ -11,7 +11,7 @@ public static class AvatarTemplate
         Description = "User avatar image component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "Avatar.razor",
-        Version = "0.1.0",
+
         Dependencies = new List<string> { "avatar-variants" },
         Tags = new List<string> { "avatar", "image", "user", "profile" }
     };
@@ -52,3 +52,4 @@ public static class AvatarTemplate
 }
 ";
 }
+

@@ -10,7 +10,7 @@ public static class DialogHeaderTemplate
         DisplayName = "Dialog Header",
         Description = "Header for Dialog",
         Category = ComponentCategory.Overlay,
-        Version = "0.1.0",
+
         FilePath = "DialogHeader.razor",
         IsAvailable = false
     };
@@ -29,4 +29,5 @@ public static class DialogHeaderTemplate
 }
 ";
 }
+
 

@@ -11,7 +11,7 @@ public class ResizableTemplate
         Description = "Resizable panel component",
         Category = ComponentCategory.Layout,
         FilePath = "Resizable.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "layout", "resizable", "panel", "split" }
     };
 
@@ -33,4 +33,5 @@ public class ResizableTemplate
 }
 ";
 }
+
 

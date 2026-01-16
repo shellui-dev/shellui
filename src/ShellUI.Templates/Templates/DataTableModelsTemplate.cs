@@ -11,7 +11,7 @@ public static class DataTableModelsTemplate
         Description = "Models for DataTable component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "Models/DataTableModels.cs",
-        Version = "0.1.0",
+
         Dependencies = new List<string>()
     };
 
@@ -43,4 +43,5 @@ public enum SortDirection
 }
 ";
 }
+
 

@@ -10,7 +10,7 @@ public static class CardTemplate
         DisplayName = "Card",
         Description = "Container component for grouping related content",
         Category = ComponentCategory.Layout,
-        Version = "0.1.0",
+
         FilePath = "Card.razor",
         Dependencies = new List<string> { "card-header", "card-title", "card-description", "card-content", "card-footer" }
     };
@@ -29,3 +29,4 @@ public static class CardTemplate
 }
 ";
 }
+

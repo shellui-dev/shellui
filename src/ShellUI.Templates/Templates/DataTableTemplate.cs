@@ -11,7 +11,7 @@ public static class DataTableTemplate
         Description = "Advanced data table with sorting, filtering, and pagination",
         Category = ComponentCategory.DataDisplay,
         FilePath = "DataTable.razor",
-        Version = "0.1.0",
+
         Dependencies = new List<string> { "data-table-models" }
     };
 
@@ -372,3 +372,4 @@ public static class DataTableTemplate
 }
 ";
 }
+

@@ -10,7 +10,7 @@ public static class SelectTemplate
         DisplayName = "Select",
         Description = "Dropdown select input component",
         Category = ComponentCategory.Form,
-        Version = "0.1.0",
+
         FilePath = "Select.razor",
         Dependencies = new List<string>()
     };
@@ -56,4 +56,5 @@ public static class SelectTemplate
 }
 ";
 }
+
 

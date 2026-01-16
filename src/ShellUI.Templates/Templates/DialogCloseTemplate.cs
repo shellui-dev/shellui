@@ -10,7 +10,7 @@ public static class DialogCloseTemplate
         DisplayName = "Dialog Close",
         Description = "Close button for Dialog",
         Category = ComponentCategory.Overlay,
-        Version = "0.1.0",
+
         FilePath = "DialogClose.razor",
         IsAvailable = false
     };
@@ -37,4 +37,5 @@ public static class DialogCloseTemplate
 }
 ";
 }
+
 

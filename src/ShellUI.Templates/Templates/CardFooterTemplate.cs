@@ -10,7 +10,7 @@ public static class CardFooterTemplate
         DisplayName = "Card Footer",
         Description = "Footer for the Card component",
         Category = ComponentCategory.Layout,
-        Version = "0.1.0",
+
         FilePath = "CardFooter.razor",
         IsAvailable = false
     };
@@ -29,4 +29,5 @@ public static class CardFooterTemplate
 }
 ";
 }
+
 

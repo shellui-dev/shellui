@@ -11,7 +11,7 @@ public class SheetTemplate
         Description = "Side panel/drawer component with multiple positions",
         Category = ComponentCategory.Overlay,
         FilePath = "Sheet.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "overlay", "sheet", "drawer", "panel", "side" }
     };
 
@@ -72,4 +72,5 @@ public class SheetTemplate
 }
 ";
 }
+
 

@@ -10,7 +10,7 @@ public static class ThemeToggleTemplate
         DisplayName = "Theme Toggle",
         Description = "Toggle between light and dark mode",
         Category = ComponentCategory.Utility,
-        Version = "0.1.0",
+
         FilePath = "ThemeToggle.razor",
         Dependencies = new List<string>()
     };
@@ -186,4 +186,5 @@ public class ThemeService : IThemeService
 }
 ";
 }
+
 

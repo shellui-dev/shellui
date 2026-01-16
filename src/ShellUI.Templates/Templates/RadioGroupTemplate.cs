@@ -11,7 +11,7 @@ public class RadioGroupTemplate
         Description = "Radio button group with single selection",
         Category = ComponentCategory.Form,
         FilePath = "RadioGroup.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "form", "input", "radio", "selection" },
         Dependencies = new List<string> { "radio-group-item" }
     };
@@ -49,4 +49,5 @@ public class RadioGroupTemplate
 }
 ";
 }
+
 

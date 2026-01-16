@@ -10,7 +10,7 @@ public class FileUploadTemplate
         DisplayName = "File Upload",
         Description = "Simple file upload component with drag & drop support",
         Category = ComponentCategory.Form,
-        Version = "0.1.0",
+
         FilePath = "FileUpload.razor",
         Dependencies = new List<string>(),
         Tags = new List<string> { "file", "upload", "drag", "drop", "validation", "storage" }
@@ -124,3 +124,4 @@ public class FileUploadTemplate
 }
 ";
 }
+

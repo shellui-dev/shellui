@@ -10,7 +10,7 @@ public static class InputTemplate
         DisplayName = "Input",
         Description = "Accessible text input component with focus states",
         Category = ComponentCategory.Form,
-        Version = "0.1.0",
+
         FilePath = "Input.razor",
         Dependencies = new List<string>()
     };
@@ -83,3 +83,4 @@ public static class InputTemplate
 }
 ";
 }
+

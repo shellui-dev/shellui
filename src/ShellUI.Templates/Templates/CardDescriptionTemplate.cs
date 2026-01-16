@@ -10,7 +10,7 @@ public static class CardDescriptionTemplate
         DisplayName = "Card Description",
         Description = "Description for the Card component",
         Category = ComponentCategory.Layout,
-        Version = "0.1.0",
+
         FilePath = "CardDescription.razor",
         IsAvailable = false
     };
@@ -29,4 +29,5 @@ public static class CardDescriptionTemplate
 }
 ";
 }
+
 

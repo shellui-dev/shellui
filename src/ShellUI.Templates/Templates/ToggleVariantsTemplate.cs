@@ -11,7 +11,7 @@ public static class ToggleVariantsTemplate
         Description = "Variant definitions for Toggle component",
         Category = ComponentCategory.Form,
         FilePath = "Variants/ToggleVariants.cs",
-        Version = "0.1.0",
+
         Dependencies = new List<string>()
     };
 
@@ -63,4 +63,5 @@ public static class ToggleVariants
     }
 }";
 }
+
 

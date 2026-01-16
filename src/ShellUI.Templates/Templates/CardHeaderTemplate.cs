@@ -10,7 +10,7 @@ public static class CardHeaderTemplate
         DisplayName = "Card Header",
         Description = "Header for the Card component",
         Category = ComponentCategory.Layout,
-        Version = "0.1.0",
+
         FilePath = "CardHeader.razor",
         IsAvailable = false // Hidden from list, installed via dependency
     };
@@ -29,4 +29,5 @@ public static class CardHeaderTemplate
 }
 ";
 }
+
 

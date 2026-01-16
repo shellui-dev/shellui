@@ -11,7 +11,7 @@ public class ToastTemplate
         Description = "Toast notification component",
         Category = ComponentCategory.Feedback,
         FilePath = "Toast.razor",
-        Version = "0.1.0",
+
         Variants = new List<string> { "default", "destructive", "success", "warning" },
         Tags = new List<string> { "notification", "toast", "feedback", "alert" }
     };
@@ -132,4 +132,5 @@ public class ToastTemplate
 }
 ";
 }
+
 

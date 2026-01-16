@@ -11,7 +11,7 @@ public class ToggleTemplate
         Description = "Toggle button with pressed state",
         Category = ComponentCategory.Form,
         FilePath = "Toggle.razor",
-        Version = "0.1.0",
+
         Dependencies = new List<string> { "toggle-variants" },
         Tags = new List<string> { "form", "toggle", "button" }
     };
@@ -48,3 +48,4 @@ public class ToggleTemplate
 }
 ";
 }
+

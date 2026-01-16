@@ -11,7 +11,7 @@ public class TimePickerTemplate
         Description = "Time picker component with hour and minute selection",
         Category = ComponentCategory.Form,
         FilePath = "TimePicker.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "form", "time", "input", "clock" }
     };
 
@@ -110,4 +110,5 @@ public class TimePickerTemplate
 }
 ";
 }
+
 

@@ -10,7 +10,7 @@ public static class SidebarTemplate
         DisplayName = "Sidebar",
         Description = "Side navigation panel with toggle",
         Category = ComponentCategory.Layout,
-        Version = "0.1.0",
+
         FilePath = "Sidebar.razor",
         Dependencies = new List<string>()
     };
@@ -38,4 +38,5 @@ public static class SidebarTemplate
 }
 ";
 }
+
 

@@ -11,7 +11,7 @@ public class ScrollAreaTemplate
         Description = "Custom scrollable container component",
         Category = ComponentCategory.Layout,
         FilePath = "ScrollArea.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "layout", "scroll", "overflow", "container" }
     };
 
@@ -38,4 +38,5 @@ public class ScrollAreaTemplate
 }
 ";
 }
+
 

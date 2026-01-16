@@ -11,7 +11,6 @@ public class ButtonTemplate
         Description = "Interactive button component with multiple variants and sizes",
         Category = ComponentCategory.Form,
         FilePath = "Button.razor",
-        Version = "0.1.0",
         Dependencies = new List<string> { "button-variants" },
         Variants = new List<string> { "default", "destructive", "outline", "secondary", "ghost", "link" },
         Tags = new List<string> { "form", "input", "interactive", "button", "action" }
@@ -61,3 +60,4 @@ public class ButtonTemplate
 }
 ";
 }
+

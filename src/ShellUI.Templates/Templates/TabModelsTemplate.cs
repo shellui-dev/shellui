@@ -10,7 +10,7 @@ public static class TabModelsTemplate
         DisplayName = "Tab Models",
         Description = "Models for Tabs component",
         Category = ComponentCategory.Navigation,
-        Version = "0.1.0",
+
         FilePath = "Components/Models/TabModels.cs",
         IsAvailable = false
     };
@@ -30,4 +30,5 @@ public class TabItem
 }
 ";
 }
+
 

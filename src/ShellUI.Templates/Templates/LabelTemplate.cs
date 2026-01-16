@@ -10,7 +10,7 @@ public static class LabelTemplate
         DisplayName = "Label",
         Description = "Form label component",
         Category = ComponentCategory.Form,
-        Version = "0.1.0",
+
         FilePath = "Label.razor",
         Dependencies = new List<string>()
     };
@@ -36,4 +36,5 @@ public static class LabelTemplate
 }
 ";
 }
+
 

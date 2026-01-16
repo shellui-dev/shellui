@@ -10,7 +10,7 @@ public static class DialogTitleTemplate
         DisplayName = "Dialog Title",
         Description = "Title for Dialog",
         Category = ComponentCategory.Overlay,
-        Version = "0.1.0",
+
         FilePath = "DialogTitle.razor",
         IsAvailable = false
     };
@@ -29,4 +29,5 @@ public static class DialogTitleTemplate
 }
 ";
 }
+
 

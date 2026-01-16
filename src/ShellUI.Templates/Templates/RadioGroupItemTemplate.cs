@@ -11,7 +11,7 @@ public class RadioGroupItemTemplate
         Description = "Individual radio button within a Radio Group",
         Category = ComponentCategory.Form,
         FilePath = "RadioGroupItem.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "form", "input", "radio", "item" }
     };
 
@@ -68,4 +68,5 @@ public class RadioGroupItemTemplate
 }
 ";
 }
+
 

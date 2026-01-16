@@ -10,7 +10,7 @@ public static class AlertTemplate
         DisplayName = "Alert",
         Description = "Notification and status message component",
         Category = ComponentCategory.Feedback,
-        Version = "0.1.0",
+
         FilePath = "Alert.razor",
         Dependencies = new List<string> { "alert-variants" }
     };
@@ -49,3 +49,4 @@ public static class AlertTemplate
 }
 ";
 }
+

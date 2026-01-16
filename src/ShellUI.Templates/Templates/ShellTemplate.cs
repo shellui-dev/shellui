@@ -11,7 +11,7 @@ public static class ShellTemplate
         Description = "ShellUI utility classes and helpers",
         Category = ComponentCategory.Utility,
         FilePath = "Shell.cs",
-        Version = "0.1.0",
+
         Dependencies = new List<string>(),
         IsAvailable = false
     };

@@ -10,7 +10,7 @@ public static class CardContentTemplate
         DisplayName = "Card Content",
         Description = "Content area for the Card component",
         Category = ComponentCategory.Layout,
-        Version = "0.1.0",
+
         FilePath = "CardContent.razor",
         IsAvailable = false
     };
@@ -29,4 +29,5 @@ public static class CardContentTemplate
 }
 ";
 }
+
 

@@ -10,7 +10,7 @@ public static class DialogTriggerTemplate
         DisplayName = "Dialog Trigger",
         Description = "Trigger button for Dialog",
         Category = ComponentCategory.Overlay,
-        Version = "0.1.0",
+
         FilePath = "DialogTrigger.razor",
         IsAvailable = false
     };
@@ -37,4 +37,5 @@ public static class DialogTriggerTemplate
 }
 ";
 }
+
 

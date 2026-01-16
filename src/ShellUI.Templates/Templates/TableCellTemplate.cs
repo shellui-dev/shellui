@@ -11,7 +11,7 @@ public class TableCellTemplate
         Description = "Table data cell component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "TableCell.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "table", "cell", "td" }
     };
 
@@ -33,4 +33,5 @@ public class TableCellTemplate
 }
 ";
 }
+
 

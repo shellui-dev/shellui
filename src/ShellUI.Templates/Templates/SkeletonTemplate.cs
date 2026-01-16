@@ -10,7 +10,7 @@ public static class SkeletonTemplate
         DisplayName = "Skeleton",
         Description = "Loading placeholder with pulse animation",
         Category = ComponentCategory.Feedback,
-        Version = "0.1.0",
+
         FilePath = "Skeleton.razor",
         Dependencies = new List<string>()
     };
@@ -31,4 +31,5 @@ public static class SkeletonTemplate
 }
 ";
 }
+
 

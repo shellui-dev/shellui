@@ -11,7 +11,7 @@ public class TableBodyTemplate
         Description = "Table body wrapper component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "TableBody.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "table", "body", "tbody" }
     };
 
@@ -33,4 +33,5 @@ public class TableBodyTemplate
 }
 ";
 }
+
 

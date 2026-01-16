@@ -10,7 +10,7 @@ public static class ComboboxTemplate
         DisplayName = "Combobox",
         Description = "Autocomplete input and command palette",
         Category = ComponentCategory.Form,
-        Version = "0.1.0",
+
         FilePath = "Combobox.razor"
     };
 
@@ -119,3 +119,4 @@ public static class ComboboxTemplate
 }
 ";
 }
+

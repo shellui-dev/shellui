@@ -11,7 +11,7 @@ public class TableHeadTemplate
         Description = "Table header cell component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "TableHead.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "table", "header", "th" }
     };
 
@@ -33,4 +33,5 @@ public class TableHeadTemplate
 }
 ";
 }
+
 

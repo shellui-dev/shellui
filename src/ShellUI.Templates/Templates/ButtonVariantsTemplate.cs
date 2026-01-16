@@ -10,7 +10,7 @@ public static class ButtonVariantsTemplate
         DisplayName = "Button Variants",
         Description = "Button variant enums and utility classes",
         Category = ComponentCategory.Utility,
-        Version = "0.1.0",
+
         FilePath = "Variants/ButtonVariants.cs",
         IsAvailable = false
     };
@@ -73,3 +73,4 @@ public static class ButtonVariants
 }
 ";
 }
+

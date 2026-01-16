@@ -10,7 +10,7 @@ public static class TabsTemplate
         DisplayName = "Tabs",
         Description = "Tabbed navigation component",
         Category = ComponentCategory.Navigation,
-        Version = "0.1.0",
+
         FilePath = "Tabs.razor",
         Dependencies = new List<string> { "tab-models" }
     };
@@ -68,3 +68,4 @@ public static class TabsTemplate
 }
 ";
 }
+

@@ -11,7 +11,7 @@ public class DrawerTemplate
         Description = "Sliding drawer component with handle",
         Category = ComponentCategory.Overlay,
         FilePath = "Drawer.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "overlay", "drawer", "modal", "slide" }
     };
 
@@ -77,4 +77,5 @@ public class DrawerTemplate
 }
 ";
 }
+
 

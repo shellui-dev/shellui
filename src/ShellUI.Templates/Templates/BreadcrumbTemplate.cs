@@ -11,7 +11,7 @@ public class BreadcrumbTemplate
         Description = "Navigation breadcrumb trail",
         Category = ComponentCategory.Layout,
         FilePath = "Breadcrumb.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "navigation", "breadcrumb", "layout" },
         Dependencies = new List<string> { "breadcrumb-item" }
     };
@@ -36,4 +36,5 @@ public class BreadcrumbTemplate
 }
 ";
 }
+
 

@@ -166,3 +166,4 @@ public class CommandItem
     public Action? Action { get; set; }
 }";
 }
+

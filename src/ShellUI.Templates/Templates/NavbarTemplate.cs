@@ -10,7 +10,7 @@ public static class NavbarTemplate
         DisplayName = "Navbar",
         Description = "Top navigation bar with backdrop blur",
         Category = ComponentCategory.Layout,
-        Version = "0.1.0",
+
         FilePath = "Navbar.razor",
         Dependencies = new List<string>()
     };
@@ -35,4 +35,5 @@ public static class NavbarTemplate
 }
 ";
 }
+
 

@@ -10,7 +10,7 @@ public static class CheckboxTemplate
         DisplayName = "Checkbox",
         Description = "Checkbox input with checked state",
         Category = ComponentCategory.Form,
-        Version = "0.1.0",
+
         FilePath = "Checkbox.razor",
         Dependencies = new List<string>()
     };
@@ -60,4 +60,5 @@ public static class CheckboxTemplate
 }
 ";
 }
+
 

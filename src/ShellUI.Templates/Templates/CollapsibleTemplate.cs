@@ -11,7 +11,7 @@ public class CollapsibleTemplate
         Description = "Collapsible content component",
         Category = ComponentCategory.Layout,
         FilePath = "Collapsible.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "layout", "collapsible", "toggle", "expand" }
     };
 
@@ -63,4 +63,5 @@ public class CollapsibleTemplate
 }
 ";
 }
+
 

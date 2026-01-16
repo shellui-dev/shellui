@@ -10,7 +10,7 @@ public static class DialogFooterTemplate
         DisplayName = "Dialog Footer",
         Description = "Footer for Dialog",
         Category = ComponentCategory.Overlay,
-        Version = "0.1.0",
+
         FilePath = "DialogFooter.razor",
         IsAvailable = false
     };
@@ -29,4 +29,5 @@ public static class DialogFooterTemplate
 }
 ";
 }
+
 

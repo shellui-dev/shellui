@@ -10,7 +10,7 @@ public static class DialogTemplate
         DisplayName = "Dialog",
         Description = "Modal dialog component with composable parts",
         Category = ComponentCategory.Overlay,
-        Version = "0.1.0",
+
         FilePath = "Dialog.razor",
         Dependencies = new List<string> { "dialog-trigger", "dialog-content", "dialog-header", "dialog-footer", "dialog-title", "dialog-description", "dialog-close" }
     };
@@ -38,3 +38,4 @@ public static class DialogTemplate
 }
 ";
 }
+
