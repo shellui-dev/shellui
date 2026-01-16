@@ -8,8 +8,8 @@
     <!-- NuGet Package Metadata -->
     <PackageId>ShellUI.Components</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Authors>Shell Technologies</Authors>
-    <Company>Shell Technologies</Company>
+    <Authors>ShellUI</Authors>
+    <Company>ShellUI</Company>
     <Product>ShellUI</Product>
     <Description>Beautiful, accessible Blazor components inspired by shadcn/ui. CLI-first component library with Tailwind CSS styling.</Description>
     <PackageProjectUrl>https://github.com/shellui-dev/shellui</PackageProjectUrl>

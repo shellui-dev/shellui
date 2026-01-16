@@ -7,8 +7,8 @@
     
     <!-- NuGet Package Metadata -->
     <PackageId>ShellUI.Core</PackageId>
-    <Authors>Shell Technologies</Authors>
-    <Company>Shell Technologies</Company>
+    <Authors>ShellUI</Authors>
+    <Company>ShellUI</Company>
     <Product>ShellUI</Product>
     <Description>Core models and interfaces for ShellUI component library.</Description>
     <PackageProjectUrl>https://github.com/shellui-dev/shellui</PackageProjectUrl>

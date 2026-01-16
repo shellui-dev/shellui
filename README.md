@@ -48,6 +48,48 @@ shellui list
 
 **⚠️ Note:** The CLI tool must be installed first. Use `shellui` commands (not `dotnet shellui`).
 
+## 📦 Unified Versioning System
+
+ShellUI uses a **centralized versioning system** where all components, CLI tool, and packages share the same version number. This ensures consistency and simplifies dependency management.
+
+### Version Update Process
+
+To update ShellUI version across all components:
+
+1. **Edit `Directory.Build.props`** in the repository root:
+   ```xml
+   <ShellUIVersion>0.1.0</ShellUIVersion>
+   <ShellUIVersionSuffix></ShellUIVersionSuffix>  <!-- Leave empty for stable releases -->
+   ```
+
+2. **Clean and rebuild** all projects:
+   ```bash
+   dotnet clean
+   dotnet build --configuration Release
+   ```
+
+This single file change updates:
+- ✅ All NuGet packages (`ShellUI.CLI`, `ShellUI.Components`, `ShellUI.Core`)
+- ✅ All component templates (73 components)
+- ✅ Build configurations and metadata
+
+**Example for pre-release:**
+```xml
+<ShellUIVersion>0.1.0</ShellUIVersion>
+<ShellUIVersionSuffix>beta.1</ShellUIVersionSuffix>
+```
+Results in version: `0.1.0-beta.1`
+
+### Component Versioning Strategy
+
+**By Design:** All components share the same version because they:
+- Work together as a cohesive system
+- Depend on shared utilities and theming
+- Follow consistent design patterns
+- Are tested together
+
+**For Advanced Users:** Future versions may support component-specific versioning for power users who need granular control.
+
 ### ✅ 73 Production-Ready Components
 
 **Form Components (12):**
