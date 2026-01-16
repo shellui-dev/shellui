@@ -21,8 +21,9 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-    <!-- Disable static web assets compression for packaging -->
+    <!-- Disable static web assets compression for packaging (.NET 10 SDK bug workaround) -->
     <EnableStaticWebAssetsCompression>false</EnableStaticWebAssetsCompression>
+    <StaticWebAssetsBuildMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">Default</StaticWebAssetsBuildMode>
   </PropertyGroup>
 
 
