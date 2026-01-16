@@ -36,17 +36,18 @@ public class TemplateTests
     }
 
     [Fact]
-    public void TemplateContent_ContainsCorrectNamespace()
+    public void TemplateContent_ContainsNamespacePlaceholder()
     {
+        // Templates use a placeholder namespace that gets replaced during installation
         var content = ComponentRegistry.GetComponentContent("button");
-        Assert.Contains("@namespace ShellUI.Components", content);
+        Assert.Contains("@namespace YourProjectNamespace.Components.UI", content);
     }
 
     [Fact]
-    public void TemplateContent_UsesShellUI_Namespace()
+    public void TemplateContent_UsesReplacableNamespace()
     {
-        // Button template uses ShellUI.Components namespace in source
+        // Button template uses placeholder namespace that CLI replaces with user's namespace
         var content = ComponentRegistry.GetComponentContent("button");
-        Assert.Contains("@namespace ShellUI.Components", content);
+        Assert.Contains("YourProjectNamespace", content);
     }
 }
