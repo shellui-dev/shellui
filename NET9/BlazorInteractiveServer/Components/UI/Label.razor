@@ -1,4 +1,5 @@
 @namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
 
 <label class="@CssClass" @attributes="AdditionalAttributes">
     @ChildContent
@@ -22,3 +23,5 @@
         return string.Join(" ", classes);
     }
 }
+
+

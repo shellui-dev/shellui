@@ -1,6 +1,7 @@
 @namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
 
-<li class="inline-flex items-center gap-1.5 @ClassName" @attributes="AdditionalAttributes">
+<li class="@Shell.Cn("inline-flex items-center gap-1.5", Class)" @attributes="AdditionalAttributes">
     @if (!string.IsNullOrEmpty(Href))
     {
         <a href="@Href" class="transition-colors hover:text-foreground">
@@ -23,18 +24,11 @@
 </li>
 
 @code {
-    [Parameter]
-    public string? Href { get; set; }
-    
-    [Parameter]
-    public bool IsLast { get; set; }
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public string? Href { get; set; }
+    [Parameter] public bool IsLast { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
+

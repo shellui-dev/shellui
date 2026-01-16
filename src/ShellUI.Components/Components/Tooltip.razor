@@ -1,6 +1,6 @@
 @namespace ShellUI.Components
 
-<div class="relative inline-block @ClassName" 
+<div class="@Shell.Cn("relative inline-block", Class)" 
      @onmouseenter="Show" 
      @onmouseleave="Hide"
      @attributes="AdditionalAttributes">
@@ -8,25 +8,17 @@
     
     @if (_isVisible)
     {
-        <div class="absolute z-50 overflow-hidden rounded-md border border-border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 @GetPlacementClass()">
+        <div class="@Shell.Cn("absolute z-50 overflow-hidden rounded-md border border-border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95", GetPlacementClass())">
             @Content
         </div>
     }
 </div>
 
 @code {
-    [Parameter]
-    public RenderFragment? Trigger { get; set; }
-    
-    [Parameter]
-    public RenderFragment? Content { get; set; }
-    
-    [Parameter]
-    public string Placement { get; set; } = "top";
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public RenderFragment? Trigger { get; set; }
+    [Parameter] public RenderFragment? Content { get; set; }
+    [Parameter] public string Placement { get; set; } = "top";
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -43,4 +35,3 @@
         _ => "bottom-full left-1/2 -translate-x-1/2 mb-2"
     };
 }
-

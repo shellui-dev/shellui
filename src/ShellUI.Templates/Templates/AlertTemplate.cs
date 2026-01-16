@@ -10,53 +10,42 @@ public static class AlertTemplate
         DisplayName = "Alert",
         Description = "Notification and status message component",
         Category = ComponentCategory.Feedback,
-        Version = "0.1.0",
+
         FilePath = "Alert.razor",
-        Dependencies = new List<string>()
+        Dependencies = new List<string> { "alert-variants" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
 
-<div class=""relative w-full rounded-lg border border-border p-4 @(Variant == ""destructive"" ? ""border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive"" : """")"">
-    @if (!string.IsNullOrEmpty(Icon))
+<div role=""alert"" class=""@ComputedClass"" @attributes=""AdditionalAttributes"">
+    @if (Icon != null)
     {
-        <div class=""flex items-start gap-4"">
-            <div class=""[&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground"">
-                @((MarkupString)Icon)
-            </div>
-            <div class=""flex-1 [&_p]:leading-relaxed"">
-                @if (!string.IsNullOrEmpty(Title))
-                {
-                    <h5 class=""mb-1 font-medium leading-none tracking-tight"">@Title</h5>
-                }
-                @ChildContent
-            </div>
+        <div class=""flex-shrink-0"">
+            @Icon
         </div>
     }
-    else
-    {
+    <div class=""flex-1"">
         @if (!string.IsNullOrEmpty(Title))
         {
             <h5 class=""mb-1 font-medium leading-none tracking-tight"">@Title</h5>
         }
-        <div class=""text-sm [&_p]:leading-relaxed"">
+        <div class=""text-sm opacity-90"">
             @ChildContent
         </div>
-    }
+    </div>
 </div>
 
 @code {
-    [Parameter]
-    public string? Title { get; set; }
+    [Parameter] public AlertVariant Variant { get; set; } = AlertVariant.Default;
+    [Parameter] public string Title { get; set; } = """";
+    [Parameter] public RenderFragment? Icon { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    [Parameter]
-    public string? Icon { get; set; }
-
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    [Parameter]
-    public string Variant { get; set; } = ""default"";
+    private string ComputedClass => AlertVariants.Get(Variant, Class);
 }
 ";
 }

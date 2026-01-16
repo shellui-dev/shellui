@@ -10,7 +10,7 @@ public static class TextareaTemplate
         DisplayName = "Textarea",
         Description = "Multi-line text input component",
         Category = ComponentCategory.Form,
-        Version = "0.1.0",
+
         FilePath = "Textarea.razor",
         Dependencies = new List<string>()
     };
@@ -49,4 +49,5 @@ public static class TextareaTemplate
 }
 ";
 }
+
 

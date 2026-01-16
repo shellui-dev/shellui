@@ -1,0 +1,17 @@
+@namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<div class="@Shell.Cn("relative overflow-hidden", Class)" style="@($"height: {Height};")" @attributes="AdditionalAttributes">
+    <div class="h-full w-full overflow-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Height { get; set; } = "400px";
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+

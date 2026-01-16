@@ -1,4 +1,5 @@
 @namespace BlazorInteractiveServer.Components.Demo
+@using BlazorInteractiveServer.Components
 
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Navigation</h2>
@@ -9,13 +10,16 @@
             <div class="relative border border-border rounded-lg overflow-hidden h-64 bg-background">
                 <Navbar>
                     <div class="flex items-center space-x-4 w-full">
-                        <span class="font-bold text-lg">ShellUI</span>
+                        <div class="flex items-center gap-2">
+                            <ShellUILogo Size="24" />
+                            <span class="font-bold text-lg">ShellUI</span>
+                        </div>
                         <nav class="flex items-center space-x-6 text-sm font-medium flex-1">
                             <a href="#" class="transition-colors hover:text-foreground/80 text-foreground">Home</a>
                             <a href="#" class="transition-colors hover:text-foreground/80 text-muted-foreground">Docs</a>
                             <a href="#" class="transition-colors hover:text-foreground/80 text-muted-foreground">Components</a>
                         </nav>
-                        <Button Variant="outline" Size="sm">Sign In</Button>
+                        <Button Variant="@ButtonVariant.Outline" Size="@ButtonSize.Sm">Sign In</Button>
                     </div>
                 </Navbar>
                 <div class="p-6 text-sm text-muted-foreground">
@@ -78,7 +82,7 @@
             <CascadingValue Value="@_accordion">
                 <Accordion @ref="_accordion">
                     <AccordionItem Title="Is it accessible?" IsOpen="true">
-                        <p class="text-sm text-muted-foreground">Yes. It adheres to the WAI-ARIA design pattern.</p>
+                        <p class="text-sm text-muted-foreground">Yes. It adheres to the <a href="https://www.w3.org/WAI/ARIA/apg/" target="_blank" class="underline hover:text-foreground">WAI-ARIA design pattern</a>.</p>
                     </AccordionItem>
                     <AccordionItem Title="Is it styled?">
                         <p class="text-sm text-muted-foreground">Yes. It comes with default styles that matches the other components aesthetic.</p>
@@ -103,4 +107,3 @@
         await IsSidebarOpenChanged.InvokeAsync(IsSidebarOpen);
     }
 }
-

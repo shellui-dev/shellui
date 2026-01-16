@@ -1,4 +1,5 @@
 @namespace BlazorInteractiveServer.Components.Demo
+@using BlazorInteractiveServer.Components
 
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Complex Components</h2>
@@ -18,7 +19,7 @@
                 Title="Are you sure?"
                 Description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
                 ConfirmText="Delete Account"
-                ConfirmVariant="destructive"
+                ConfirmVariant="@ButtonVariant.Destructive"
                 CancelText="Cancel"
                 OnConfirm="HandleAlertConfirm"
                 OnCancel="HandleAlertCancel"
@@ -89,7 +90,7 @@
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Hover Card</h3>
             <HoverCard>
                 <ChildContent>
-                    <Button Variant="outline">@HoverCardText</Button>
+                    <Button Variant="@ButtonVariant.Outline">@HoverCardText</Button>
                 </ChildContent>
                 <CardContent>
                     <div class="space-y-2">
@@ -328,4 +329,3 @@
         </svg>";
     }
 }
-

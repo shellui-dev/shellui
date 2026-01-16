@@ -1,6 +1,21 @@
 # ShellUI Release Notes
 
-## Version 0.0.3 (Current) - November 2025
+## Version 0.1.0 (Current) - December 2025
+
+### 🎉 Release v0.1.0 - The "shadcn" Refactor
+
+Major architectural overhaul to align with **shadcn/ui** patterns.
+
+**Key Changes:**
+- **Composition over Configuration:** Components broken down into sub-components (e.g., `Card` -> `CardHeader`, `CardContent`, `CardFooter`).
+- **Variant Pattern:** Adopted `cva`-style variants using `Shell.Cn` utility and Enums (e.g., `ButtonVariant.Destructive`).
+- **Tailwind v4.1.17:** Full upgrade to latest Tailwind CSS.
+- **CLI Improvements:** 
+    - Auto-cleanup of Bootstrap files.
+    - Improved loading states.
+    - Standalone Tailwind CLI support.
+
+### Version 0.0.3 - November 2025
 
 ### 🎉 Release v0.0.3 - Fixed v0.0.2 Issues
 
@@ -27,7 +42,7 @@ ShellUI v0.0.3 is now available on NuGet! This release fixes issues from v0.0.2 
    - **NuGet Option**: Traditional package install for quick starts
    - Use both together - NuGet for speed, CLI for customization
 
-3. **Tailwind CSS v4.1.14**
+3. **Tailwind CSS v4.1.17**
    - Standalone CLI (no Node.js required!)
    - Automatic dark mode support
    - Theme-aware components

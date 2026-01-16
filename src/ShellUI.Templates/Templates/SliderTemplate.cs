@@ -11,7 +11,7 @@ public class SliderTemplate
         Description = "Range slider input component",
         Category = ComponentCategory.Form,
         FilePath = "Slider.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "form", "input", "range", "slider" }
     };
 
@@ -64,4 +64,5 @@ public class SliderTemplate
 }
 ";
 }
+
 

@@ -227,14 +227,14 @@ Modify any component to match your design system perfectly!
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](https://github.com/shelltechlabs/shellui/blob/main/CONTRIBUTING.md).
+We welcome contributions! Please see our [Contributing Guide](https://github.com/shellui-dev/shellui/blob/main/CONTRIBUTING.md).
 
 ## License
 
-MIT License - see [LICENSE](https://github.com/shelltechlabs/shellui/blob/main/LICENSE) for details.
+MIT License - see [LICENSE](https://github.com/shellui-dev/shellui/blob/main/LICENSE) for details.
 
 ## Support
 
 - 📖 [Documentation](https://shellui.dev)
-- 🐛 [Issues](https://github.com/shelltechlabs/shellui/issues)
-- 💬 [Discussions](https://github.com/shelltechlabs/shellui/discussions)
+- 🐛 [Issues](https://github.com/shellui-dev/shellui/issues)
+- 💬 [Discussions](https://github.com/shellui-dev/shellui/discussions)

@@ -1,0 +1,39 @@
+@namespace ShellUI.Components
+
+<div class="@Shell.Cn("relative inline-flex", Class)" @attributes="AdditionalAttributes">
+    <svg width="@Size" height="@Size" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Ellipses with currentColor for theme adaptability -->
+        <ellipse cx="11.6327" cy="11.5" rx="11.6327" ry="11.5" transform="matrix(-1 0 0 1 43.2654 123)" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="11.6327" cy="11.5" rx="11.6327" ry="11.5" transform="matrix(-1 0 0 1 77.4491 122)" fill="currentColor"/>
+        <ellipse cx="11.6327" cy="11.5" rx="11.6327" ry="11.5" transform="matrix(-1 0 0 1 111.449 122)" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="11.6327" cy="11.5" rx="11.6327" ry="11.5" transform="matrix(-1 0 0 1 145.449 122)" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="11.6327" cy="11.5" rx="11.6327" ry="11.5" transform="matrix(-1 0 0 1 179.449 122)" fill="currentColor"/>
+        <ellipse cx="11.6327" cy="11.5" rx="11.6327" ry="11.5" transform="matrix(-1 0 0 1 43.2654 157)" fill="currentColor"/>
+        <ellipse cx="11.6327" cy="11.5" rx="11.6327" ry="11.5" transform="matrix(-1 0 0 1 77.449 156)" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="65.3801" cy="31.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="99.3801" cy="31.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="133.38" cy="31.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="167.38" cy="31.5" rx="11.6327" ry="11.5" fill="currentColor"/>
+        <ellipse cx="31.6327" cy="31.5" rx="11.6327" ry="11.5" fill="currentColor"/>
+        <ellipse cx="31.6327" cy="66.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="65.8164" cy="65.5" rx="11.6327" ry="11.5" fill="currentColor"/>
+        <ellipse cx="99.8164" cy="65.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="133.816" cy="65.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="167.816" cy="65.5" rx="11.6327" ry="11.5" fill="currentColor"/>
+        <ellipse cx="31.6327" cy="100.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="65.8164" cy="99.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="99.8164" cy="99.5" rx="11.6327" ry="11.5" fill="currentColor"/>
+        <ellipse cx="133.816" cy="99.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="167.816" cy="99.5" rx="11.6327" ry="11.5" fill="currentColor"/>
+        <ellipse cx="100" cy="168.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+        <ellipse cx="168.367" cy="168.5" rx="11.6327" ry="11.5" fill="currentColor"/>
+        <ellipse cx="134.184" cy="168.5" rx="11.6327" ry="11.5" fill="currentColor" fill-opacity="0.06"/>
+    </svg>
+</div>
+
+@code {
+    [Parameter] public string Size { get; set; } = "40";
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

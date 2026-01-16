@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ShellUI.Core\ShellUI.Core.csproj" />
     <ProjectReference Include="..\ShellUI.Templates\ShellUI.Templates.csproj" />
+    <ProjectReference Include="..\ShellUI.Components\ShellUI.Components.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,13 +21,12 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>shellui</ToolCommandName>
     <PackageId>ShellUI.CLI</PackageId>
-    <Version>0.0.3</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Authors>Shell Technologies</Authors>
+    <Authors>ShellUI</Authors>
     <Description>CLI tool for ShellUI - Blazor component library inspired by shadcn/ui</Description>
     <PackageTags>blazor;components;cli;shadcn;tailwind;dotnet</PackageTags>
-    <PackageProjectUrl>https://github.com/shelltechlabs/shellui</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/shelltechlabs/shellui</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/shellui-dev/shellui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shellui-dev/shellui</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

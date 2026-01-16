@@ -7,20 +7,23 @@
     
     <!-- NuGet Package Metadata -->
     <PackageId>ShellUI.Components</PackageId>
-    <Version>0.0.3</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Authors>Shell Technologies</Authors>
-    <Company>Shell Technologies</Company>
+    <Authors>ShellUI</Authors>
+    <Company>ShellUI</Company>
     <Product>ShellUI</Product>
     <Description>Beautiful, accessible Blazor components inspired by shadcn/ui. CLI-first component library with Tailwind CSS styling.</Description>
-    <PackageProjectUrl>https://github.com/shelltechlabs/shellui</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/shelltechlabs/shellui</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/shellui-dev/shellui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/shellui-dev/shellui</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>blazor;components;ui;tailwind;shadcn;shellui</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- Disable static web assets compression for packaging (.NET 10 SDK bug workaround) -->
+    <EnableStaticWebAssetsCompression>false</EnableStaticWebAssetsCompression>
+    <StaticWebAssetsBuildMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">Default</StaticWebAssetsBuildMode>
   </PropertyGroup>
 
 
@@ -30,6 +33,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.6" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
   </ItemGroup>
 
   <ItemGroup>

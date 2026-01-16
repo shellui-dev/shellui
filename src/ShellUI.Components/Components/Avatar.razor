@@ -1,6 +1,6 @@
 @namespace ShellUI.Components
 
-<span class="relative flex @GetSizeClass() shrink-0 overflow-hidden rounded-full @ClassName" @attributes="AdditionalAttributes">
+<span class="@ComputedClass" @attributes="AdditionalAttributes">
     @if (!string.IsNullOrEmpty(Src))
     {
         <img src="@Src" alt="@Alt" class="aspect-square h-full w-full object-cover" />
@@ -22,30 +22,13 @@
 </span>
 
 @code {
-    [Parameter]
-    public string? Src { get; set; }
-    
-    [Parameter]
-    public string? Alt { get; set; }
-    
-    [Parameter]
-    public string? Fallback { get; set; }
-    
-    [Parameter]
-    public string Size { get; set; } = "default";
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public string? Src { get; set; }
+    [Parameter] public string? Alt { get; set; }
+    [Parameter] public string? Fallback { get; set; }
+    [Parameter] public AvatarSize Size { get; set; } = AvatarSize.Default;
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
-    private string GetSizeClass() => Size switch
-    {
-        "sm" => "h-8 w-8",
-        "lg" => "h-12 w-12",
-        "xl" => "h-16 w-16",
-        _ => "h-10 w-10"
-    };
+    private string ComputedClass => AvatarVariants.Get(Size, Class);
 }
-

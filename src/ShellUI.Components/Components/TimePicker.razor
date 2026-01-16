@@ -1,10 +1,10 @@
 @namespace ShellUI.Components
 
-<div class="relative @ClassName" @attributes="AdditionalAttributes">
+<div class="@Shell.Cn("relative", Class)" @attributes="AdditionalAttributes">
     <button type="button"
             @onclick="Toggle"
             disabled="@Disabled"
-            class="@("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 " + (Disabled ? "cursor-not-allowed opacity-50" : ""))">
+            class="@Shell.Cn("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", Disabled ? "cursor-not-allowed opacity-50" : "")">
         <span class="@(Value == null ? "text-muted-foreground" : "")">
             @(Value?.ToString("HH:mm") ?? Placeholder)
         </span>
@@ -56,21 +56,11 @@
 }
 
 @code {
-    [Parameter]
-    public TimeSpan? Value { get; set; }
-    
-    [Parameter]
-    public EventCallback<TimeSpan?> ValueChanged { get; set; }
-    
-    [Parameter]
-    public string Placeholder { get; set; } = "Pick a time";
-    
-    [Parameter]
-    public bool Disabled { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public TimeSpan? Value { get; set; }
+    [Parameter] public EventCallback<TimeSpan?> ValueChanged { get; set; }
+    [Parameter] public string Placeholder { get; set; } = "Pick a time";
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -97,4 +87,3 @@
         IsOpen = false;
     }
 }
-

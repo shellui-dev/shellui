@@ -11,7 +11,7 @@ public class TableTemplate
         Description = "Data table component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "Table.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "table", "data", "grid", "display" },
         Dependencies = new List<string> { "table-header", "table-body", "table-row", "table-cell", "table-head" }
     };
@@ -36,4 +36,5 @@ public class TableTemplate
 }
 ";
 }
+
 

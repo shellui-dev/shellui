@@ -506,15 +506,15 @@ Make sure `_Imports.razor` includes:
 ## Getting Help
 
 - Documentation: https://shellui.dev/docs (Coming soon)
-- GitHub Issues: https://github.com/yourorg/shellui/issues
-- Discussions: https://github.com/yourorg/shellui/discussions
+- GitHub Issues: https://github.com/shellui-dev/shellui/issues
+- Discussions: https://github.com/shellui-dev/shellui/discussions
 
 ## Next Steps
 
 - Explore all available components: `dotnet shellui list`
 - Check out examples: https://shellui.dev/examples (Coming soon)
 - Join the community: Discord link (Coming soon)
-- Star the repo: https://github.com/yourorg/shellui
+- Star the repo: https://github.com/shellui-dev/shellui
 
 ---
 

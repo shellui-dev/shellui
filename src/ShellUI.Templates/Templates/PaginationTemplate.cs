@@ -11,7 +11,7 @@ public class PaginationTemplate
         Description = "Pagination component for navigating pages",
         Category = ComponentCategory.Navigation,
         FilePath = "Pagination.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "navigation", "pagination", "pages" }
     };
 
@@ -87,4 +87,5 @@ public class PaginationTemplate
 }
 ";
 }
+
 

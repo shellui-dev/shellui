@@ -11,7 +11,7 @@ public class FormTemplate
         Description = "Form wrapper component with validation support",
         Category = ComponentCategory.Form,
         FilePath = "Form.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "form", "validation", "input", "wrapper" },
         Dependencies = new List<string> { "label", "input", "button" }
     };
@@ -46,4 +46,5 @@ public class FormTemplate
 }
 ";
 }
+
 

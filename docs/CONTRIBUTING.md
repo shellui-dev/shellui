@@ -245,7 +245,7 @@ public void Button_HasProperAriaAttributes()
 ### Setup
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/shellui.git
+git clone https://github.com/shellui-dev/shellui.git
 cd shellui
 
 # Restore packages

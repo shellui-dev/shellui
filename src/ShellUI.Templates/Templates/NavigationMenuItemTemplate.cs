@@ -11,7 +11,7 @@ public class NavigationMenuItemTemplate
         Description = "Individual navigation menu item",
         Category = ComponentCategory.Navigation,
         FilePath = "NavigationMenuItem.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "navigation", "menu", "nav", "item" }
     };
 
@@ -60,4 +60,5 @@ else
 }
 ";
 }
+
 

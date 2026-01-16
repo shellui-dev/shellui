@@ -1,12 +1,11 @@
 @using Microsoft.JSInterop
 @using BlazorInteractiveServer.Components.Models
-@using BlazorInteractiveServer.Components.UI
 
-<Dialog IsOpen="IsOpen" OnClose="CloseCommand">
-    <ChildContent>
+<Dialog Open="IsOpen" OpenChanged="HandleOpenChanged">
+    <DialogContent Class="overflow-hidden p-0">
         <!-- Search Input -->
-        <div class="flex items-center border-b border-gray-200 px-3 py-2">
-            <svg class="mr-2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="flex items-center border-b border-border px-3 py-2">
+            <svg class="mr-2 h-4 w-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
@@ -16,7 +15,7 @@
                 @onkeydown="OnKeyDown"
                 type="text"
                 placeholder="@Placeholder"
-                class="flex h-10 w-full rounded-md bg-transparent py-2 text-sm outline-none placeholder:text-gray-500 disabled:cursor-not-allowed disabled:opacity-50" />
+                class="flex h-10 w-full rounded-md bg-transparent py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50" />
         </div>
 
         <!-- Results -->
@@ -27,18 +26,18 @@
                 {
                     <button
                         @onclick="() => SelectCommand(command)"
-                        class="flex w-full items-center rounded-md px-2 py-2 text-sm text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none">
+                        class="flex w-full items-center rounded-md px-2 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none">
                         @if (!string.IsNullOrEmpty(command.Icon))
                         {
-                            <div class="mr-3 flex h-4 w-4 items-center justify-center text-gray-600">
-                                @command.Icon
+                            <div class="mr-3 flex h-4 w-4 items-center justify-center text-muted-foreground">
+                                @((MarkupString)command.Icon)
                             </div>
                         }
                         <div class="flex-1">
-                            <div class="font-medium text-gray-900">@command.Title</div>
+                            <div class="font-medium text-foreground">@command.Title</div>
                             @if (!string.IsNullOrEmpty(command.Description))
                             {
-                                <div class="text-xs text-gray-600">@command.Description</div>
+                                <div class="text-xs text-muted-foreground">@command.Description</div>
                             }
                         </div>
                         @if (!string.IsNullOrEmpty(command.Shortcut))
@@ -46,7 +45,7 @@
                             <div class="ml-3 flex items-center gap-0.5">
                                 @foreach (var key in command.Shortcut.Split('+'))
                                 {
-                                    <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-gray-300 bg-gray-100 px-1.5 font-mono text-[10px] font-medium text-gray-700">
+                                    <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
                                         <span class="text-xs">@key</span>
                                     </kbd>
                                 }
@@ -57,12 +56,12 @@
             }
             else
             {
-                <div class="p-6 text-center text-sm text-gray-600">
+                <div class="p-6 text-center text-sm text-muted-foreground">
                     No results found.
                 </div>
             }
         </div>
-    </ChildContent>
+    </DialogContent>
 </Dialog>
 
 @code {
@@ -136,6 +135,19 @@
         _searchQuery = "";
         await IsOpenChanged.InvokeAsync(IsOpen);
     }
+    
+    private async Task HandleOpenChanged(bool isOpen)
+    {
+        if (!isOpen)
+        {
+            await CloseCommand();
+        }
+        else 
+        {
+             IsOpen = isOpen;
+             await IsOpenChanged.InvokeAsync(isOpen);
+        }
+    }
 
     private async Task OnKeyDown(KeyboardEventArgs e)
     {
@@ -157,3 +169,4 @@
         }
     }
 }
+

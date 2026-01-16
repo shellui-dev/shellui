@@ -435,7 +435,7 @@ Both approaches are valid. Choose based on your project needs, team preferences,
 
 **Want to try ShellUI?**
 
-Follow development: [GitHub Repository](https://github.com/yourorg/shellui)
+Follow development: [GitHub Repository](https://github.com/shellui-dev/shellui)
 
 **Currently using another library?**
 

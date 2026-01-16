@@ -1,82 +1,104 @@
 @namespace BlazorInteractiveServer.Components.UI
 
-<div class="@("relative " + ClassName)" @attributes="AdditionalAttributes">
+<div class="@Shell.Cn("relative", Class)" @attributes="AdditionalAttributes">
     <button type="button"
-            @onclick="ToggleOpen"
+            @onclick="Toggle"
             disabled="@Disabled"
-            class="@("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 " + (Disabled ? "opacity-50 cursor-not-allowed" : ""))">
-        <span class="@(string.IsNullOrEmpty(SelectedValue) ? "text-muted-foreground" : "")">
-            @(string.IsNullOrEmpty(SelectedValue) ? Placeholder : SelectedValue)
-        </span>
-        <svg class="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            class="@Shell.Cn("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50", Disabled ? "cursor-not-allowed opacity-50" : "")">
+        <span>@(string.IsNullOrEmpty(Value) ? Placeholder : Value)</span>
+        <svg class="@Shell.Cn("h-4 w-4 opacity-50 transition-transform", IsOpen ? "rotate-180" : "")" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
         </svg>
     </button>
     
-    @if (_isOpen)
+    @if (IsOpen)
     {
-        <div class="absolute z-50 w-full mt-1 rounded-md border bg-popover text-popover-foreground shadow-md">
-            <div class="p-2">
-                <input type="text"
-                       @bind="_searchQuery"
-                       @bind:event="oninput"
-                       placeholder="Search..."
-                       class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring" />
-            </div>
+        <div class="absolute z-50 mt-1 w-full rounded-md border border-border bg-popover shadow-md animate-in fade-in-0 zoom-in-95">
+            @if (Searchable)
+            {
+                <div class="p-2 border-b border-border">
+                    <input type="text"
+                           @bind="searchQuery"
+                           @bind:event="oninput"
+                           placeholder="Search..."
+                           class="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
+                </div>
+            }
             <div class="max-h-60 overflow-auto p-1">
-                @foreach (var item in FilteredOptions)
+                @if (Options != null && Options.Any())
                 {
-                    <div @onclick="@(() => SelectOption(item))"
-                         class="@("relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground " + (item == SelectedValue ? "bg-accent" : ""))">
-                        @item
-                    </div>
+                    var filtered = Options;
+                    if (Searchable && !string.IsNullOrWhiteSpace(searchQuery))
+                    {
+                        filtered = Options.Where(x => x.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
+                    }
+                    
+                    if (!filtered.Any())
+                    {
+                        <div class="py-6 text-center text-sm text-muted-foreground">No options found.</div>
+                    }
+                    else
+                    {
+                        foreach (var option in filtered)
+                        {
+                            <button type="button" 
+                                    class="@Shell.Cn("relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", Value == option ? "bg-accent text-accent-foreground" : "")"
+                                    @onclick="() => SelectValue(option)">
+                                @option
+                                @if (Value == option)
+                                {
+                                    <span class="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </span>
+                                }
+                            </button>
+                        }
+                    }
                 }
-                @if (!FilteredOptions.Any())
-                {
-                    <div class="py-6 text-center text-sm text-muted-foreground">No results found.</div>
-                }
+                @ChildContent
             </div>
         </div>
     }
 </div>
 
+@if (IsOpen)
+{
+    <div class="fixed inset-0 z-40" @onclick="Close"></div>
+}
+
 @code {
-    [Parameter]
-    public string SelectedValue { get; set; } = "";
-    
-    [Parameter]
-    public EventCallback<string> SelectedValueChanged { get; set; }
-    
-    [Parameter]
-    public List<string> Options { get; set; } = new();
-    
-    [Parameter]
-    public string Placeholder { get; set; } = "Select option...";
-    
-    [Parameter]
-    public bool Disabled { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public string Placeholder { get; set; } = "Select...";
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public IEnumerable<string>? Options { get; set; }
+    [Parameter] public bool Searchable { get; set; } = true;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
-    private bool _isOpen;
-    private string _searchQuery = "";
+    private bool IsOpen { get; set; }
+    private string searchQuery = "";
     
-    private IEnumerable<string> FilteredOptions => 
-        string.IsNullOrWhiteSpace(_searchQuery) 
-            ? Options 
-            : Options.Where(o => o.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase));
-    
-    private void ToggleOpen() => _isOpen = !_isOpen;
-    
-    private async Task SelectOption(string option)
+    private void Toggle() 
     {
-        SelectedValue = option;
-        _isOpen = false;
-        _searchQuery = "";
-        await SelectedValueChanged.InvokeAsync(option);
+        if (!Disabled)
+        {
+            IsOpen = !IsOpen;
+            if (IsOpen) searchQuery = "";
+        }
+    }
+    
+    private void Close() => IsOpen = false;
+    
+    public async Task SelectValue(string value)
+    {
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+        IsOpen = false;
     }
 }
+

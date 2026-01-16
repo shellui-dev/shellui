@@ -1,15 +1,12 @@
 @namespace ShellUI.Components
 
-<div class="animate-pulse rounded-md bg-muted @(Variant == "circle" ? "rounded-full" : "") @(Variant == "text" ? "h-4 w-full" : "") @ClassName" @attributes="AdditionalAttributes"></div>
+<div class="@Shell.Cn("animate-pulse rounded-md bg-muted", Class)" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
 
 @code {
-    [Parameter]
-    public string Variant { get; set; } = "default";
-
-    [Parameter]
-    public string ClassName { get; set; } = "";
-
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
-

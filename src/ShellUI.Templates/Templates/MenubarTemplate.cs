@@ -11,7 +11,7 @@ public class MenubarTemplate
         Description = "Application menubar component",
         Category = ComponentCategory.Navigation,
         FilePath = "Menubar.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "navigation", "menu", "menubar", "app" },
         Dependencies = new List<string> { "menubar-item" }
     };
@@ -34,4 +34,5 @@ public class MenubarTemplate
 }
 ";
 }
+
 

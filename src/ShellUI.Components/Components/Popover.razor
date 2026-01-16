@@ -1,13 +1,13 @@
 @namespace ShellUI.Components
 
-<div class="relative inline-block @ClassName" @attributes="AdditionalAttributes">
+<div class="@Shell.Cn("relative inline-block", Class)" @attributes="AdditionalAttributes">
     <div @onclick="Toggle">
         @Trigger
     </div>
     
     @if (IsOpen)
     {
-        <div class="absolute z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95 @GetPlacementClass()">
+        <div class="@Shell.Cn("absolute z-50 w-72 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95", GetPlacementClass())">
             @ChildContent
         </div>
     }
@@ -19,24 +19,12 @@
 }
 
 @code {
-    [Parameter]
-    public bool IsOpen { get; set; }
-    
-    [Parameter]
-    public EventCallback<bool> IsOpenChanged { get; set; }
-    
-    [Parameter]
-    public RenderFragment? Trigger { get; set; }
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string Placement { get; set; } = "bottom";
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+    [Parameter] public RenderFragment? Trigger { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Placement { get; set; } = "bottom";
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -60,4 +48,3 @@
         _ => "top-full left-0 mt-2"
     };
 }
-

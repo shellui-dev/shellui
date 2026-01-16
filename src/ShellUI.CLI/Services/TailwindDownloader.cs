@@ -6,7 +6,7 @@ namespace ShellUI.CLI.Services;
 
 public class TailwindDownloader
 {
-    private const string TailwindVersion = "v4.1.14";
+    private const string TailwindVersion = "v4.1.17";
     private const string BaseUrl = "https://github.com/tailwindlabs/tailwindcss/releases/download";
     
     public static async Task<string> EnsureTailwindCliAsync(string projectRoot)
@@ -33,30 +33,26 @@ public class TailwindDownloader
         var downloadUrl = $"{BaseUrl}/{TailwindVersion}/tailwindcss-{platform}";
 
         AnsiConsole.MarkupLine($"[cyan]Downloading Tailwind CLI {TailwindVersion}...[/]");
-        
-        await AnsiConsole.Status()
-            .StartAsync("Downloading...", async ctx =>
-            {
-                using var client = new HttpClient();
-                client.Timeout = TimeSpan.FromMinutes(5);
 
-                var response = await client.GetAsync(downloadUrl);
-                
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"Failed to download Tailwind CLI: {response.StatusCode}");
-                }
+        using var client = new HttpClient();
+        client.Timeout = TimeSpan.FromMinutes(5);
 
-                var bytes = await response.Content.ReadAsByteArrayAsync();
-                await File.WriteAllBytesAsync(destinationPath, bytes);
+        var response = await client.GetAsync(downloadUrl);
 
-                // Make executable on Unix systems
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    var process = System.Diagnostics.Process.Start("chmod", $"+x {destinationPath}");
-                    process?.WaitForExit();
-                }
-            });
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Failed to download Tailwind CLI: {response.StatusCode}");
+        }
+
+        var bytes = await response.Content.ReadAsByteArrayAsync();
+        await File.WriteAllBytesAsync(destinationPath, bytes);
+
+        // Make executable on Unix systems
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            var process = System.Diagnostics.Process.Start("chmod", $"+x {destinationPath}");
+            process?.WaitForExit();
+        }
 
         AnsiConsole.MarkupLine("[green]Tailwind CLI downloaded successfully![/]");
     }

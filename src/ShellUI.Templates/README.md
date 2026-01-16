@@ -64,5 +64,5 @@ var metadata = ButtonTemplate.Metadata;
 
 ## License
 
-MIT License - see [LICENSE](https://github.com/shelltechlabs/shellui/blob/main/LICENSE) for details.
+MIT License - see [LICENSE](https://github.com/shellui-dev/shellui/blob/main/LICENSE) for details.
 

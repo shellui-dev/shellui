@@ -11,7 +11,7 @@ public class DatePickerTemplate
         Description = "Calendar date picker component",
         Category = ComponentCategory.Form,
         FilePath = "DatePicker.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "form", "date", "calendar", "input" }
     };
 
@@ -145,4 +145,5 @@ public class DatePickerTemplate
 }
 ";
 }
+
 

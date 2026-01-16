@@ -1,35 +1,41 @@
 @using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
 
 <div class="grid md:grid-cols-2 gap-6">
     <section class="border border-border rounded-lg p-6 bg-card">
         <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Card</h2>
         <Card>
-            <Header>
-                <h3 class="text-lg font-semibold">Card Title</h3>
-                <p class="text-sm text-muted-foreground">Card description goes here.</p>
-            </Header>
-            <ChildContent>
+            <CardHeader>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription>Card description goes here.</CardDescription>
+            </CardHeader>
+            <CardContent>
                 <p>This is the main content of the card. It can contain any content you want.</p>
-            </ChildContent>
-            <Footer>
-                <Button Variant="outline" Size="sm">Action</Button>
-            </Footer>
+            </CardContent>
+            <CardFooter>
+                <Button Variant="@ButtonVariant.Outline" Size="@ButtonSize.Sm">Action</Button>
+            </CardFooter>
         </Card>
     </section>
 
     <section class="border border-border rounded-lg p-6 bg-card">
         <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Alerts</h2>
         <div class="space-y-4">
-            <Alert Variant="default" Title="Info">
-                This is an informational alert.
+            <Alert Variant="@AlertVariant.Default" Title="Info">
+                <ChildContent>
+                    This is an informational alert.
+                </ChildContent>
             </Alert>
-            <Alert Variant="success" Title="Success">
-                Operation completed successfully!
+            <Alert Variant="@AlertVariant.Success" Title="Success">
+                <ChildContent>
+                    Operation completed successfully!
+                </ChildContent>
             </Alert>
-            <Alert Variant="warning" Title="Warning">
-                Please check your input.
+            <Alert Variant="@AlertVariant.Warning" Title="Warning">
+                <ChildContent>
+                    Please check your input.
+                </ChildContent>
             </Alert>
         </div>
     </section>
 </div>
-

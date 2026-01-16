@@ -10,7 +10,7 @@ public static class SwitchTemplate
         DisplayName = "Switch",
         Description = "Toggle switch for boolean values",
         Category = ComponentCategory.Form,
-        Version = "0.1.0",
+
         FilePath = "Switch.razor",
         Dependencies = new List<string>()
     };
@@ -55,4 +55,5 @@ public static class SwitchTemplate
 }
 ";
 }
+
 

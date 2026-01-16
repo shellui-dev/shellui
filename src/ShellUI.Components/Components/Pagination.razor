@@ -1,12 +1,12 @@
 @namespace ShellUI.Components
 
-<nav class="@("mx-auto flex w-full justify-center " + ClassName)" @attributes="AdditionalAttributes">
+<nav class="@Shell.Cn("mx-auto flex w-full justify-center", ClassName)" @attributes="AdditionalAttributes">
     <ul class="flex flex-row items-center gap-1">
         <li>
             <button type="button"
                     @onclick="PreviousPage"
                     disabled="@(CurrentPage <= 1)"
-                    class="@("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 gap-1 pl-2.5 " + (CurrentPage <= 1 ? "pointer-events-none opacity-50" : "hover:bg-accent hover:text-accent-foreground"))">
+                    class="@Shell.Cn("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 gap-1 pl-2.5", CurrentPage <= 1 ? "pointer-events-none opacity-50" : "hover:bg-accent hover:text-accent-foreground")">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -20,7 +20,7 @@
             <li>
                 <button type="button"
                         @onclick="@(() => GoToPage(pageNum))"
-                        class="@("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 w-9 " + (CurrentPage == pageNum ? "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground" : "hover:bg-accent hover:text-accent-foreground"))">
+                        class="@Shell.Cn("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 w-9", CurrentPage == pageNum ? "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground" : "hover:bg-accent hover:text-accent-foreground")">
                     @pageNum
                 </button>
             </li>
@@ -30,7 +30,7 @@
             <button type="button"
                     @onclick="NextPage"
                     disabled="@(CurrentPage >= TotalPages)"
-                    class="@("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 gap-1 pr-2.5 " + (CurrentPage >= TotalPages ? "pointer-events-none opacity-50" : "hover:bg-accent hover:text-accent-foreground"))">
+                    class="@Shell.Cn("inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 gap-1 pr-2.5", CurrentPage >= TotalPages ? "pointer-events-none opacity-50" : "hover:bg-accent hover:text-accent-foreground")">
                 <span>Next</span>
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -41,18 +41,10 @@
 </nav>
 
 @code {
-    [Parameter]
-    public int CurrentPage { get; set; } = 1;
-    
-    [Parameter]
-    public EventCallback<int> CurrentPageChanged { get; set; }
-    
-    [Parameter]
-    public int TotalPages { get; set; } = 1;
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public int CurrentPage { get; set; } = 1;
+    [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
+    [Parameter] public int TotalPages { get; set; } = 1;
+    [Parameter] public string ClassName { get; set; } = "";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -80,4 +72,3 @@
         }
     }
 }
-

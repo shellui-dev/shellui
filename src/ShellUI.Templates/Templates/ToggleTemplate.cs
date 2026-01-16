@@ -11,46 +11,35 @@ public class ToggleTemplate
         Description = "Toggle button with pressed state",
         Category = ComponentCategory.Form,
         FilePath = "Toggle.razor",
-        Version = "0.1.0",
-        Variants = new List<string> { "default", "outline" },
+
+        Dependencies = new List<string> { "toggle-variants" },
         Tags = new List<string> { "form", "toggle", "button" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
 
 <button type=""button""
         @onclick=""HandleClick""
         disabled=""@Disabled""
-        class=""@(""inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 "" + (Variant == ""outline"" ? (Pressed ? ""bg-accent"" : ""border border-input bg-transparent hover:bg-accent hover:text-accent-foreground"") : (Pressed ? ""bg-accent text-accent-foreground"" : ""bg-transparent hover:bg-muted hover:text-muted-foreground"")) + "" "" + (Size == ""sm"" ? ""h-9 px-2.5"" : Size == ""lg"" ? ""h-11 px-5"" : ""h-10 px-3"") + "" "" + ClassName)""
+        class=""@ComputedClass""
         @attributes=""AdditionalAttributes"">
     @ChildContent
 </button>
 
 @code {
-    [Parameter]
-    public bool Pressed { get; set; }
-    
-    [Parameter]
-    public EventCallback<bool> PressedChanged { get; set; }
-    
-    [Parameter]
-    public string Variant { get; set; } = ""default"";
-    
-    [Parameter]
-    public string Size { get; set; } = ""default"";
-    
-    [Parameter]
-    public bool Disabled { get; set; }
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public bool Pressed { get; set; }
+    [Parameter] public EventCallback<bool> PressedChanged { get; set; }
+    [Parameter] public ToggleVariant Variant { get; set; } = ToggleVariant.Default;
+    [Parameter] public ToggleSize Size { get; set; } = ToggleSize.Default;
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
+    private string ComputedClass => ToggleVariants.Get(Variant, Size, Pressed, Class);
+
     private async Task HandleClick()
     {
         Pressed = !Pressed;

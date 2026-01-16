@@ -3,6 +3,7 @@
 @using BlazorInteractiveServer.Components.Models
 @using BlazorInteractiveServer.Components.Demo
 @using Microsoft.AspNetCore.Components.Forms
+@using BlazorInteractiveServer.Components
 
 <PageTitle>ShellUI - Component Demo</PageTitle>
 
@@ -17,7 +18,7 @@
         <h2 class="text-lg sm:text-xl font-semibold mb-2 text-foreground">Responsive Design</h2>
         <p class="text-sm text-muted-foreground mb-3">All components support Tailwind's responsive utilities. Resize your browser to see it in action!</p>
         <div class="flex flex-col sm:flex-row gap-2">
-            <Button class="w-full sm:w-auto" Size="sm">Mobile First</Button>
+            <Button class="w-full sm:w-auto" Size="@ButtonSize.Sm">Mobile First</Button>
             <Button class="hidden sm:inline-flex">Tablet+</Button>
             <Button class="hidden md:inline-flex">Desktop+</Button>
         </div>
@@ -188,7 +189,7 @@
             CellTemplate = context => builder =>
             {
                 builder.OpenComponent<Badge>(0);
-                builder.AddAttribute(1, "Variant", context.Role == "Admin" ? "destructive" : "default");
+                builder.AddAttribute(1, "Variant", context.Role == "Admin" ? BadgeVariant.Destructive : BadgeVariant.Default);
                 builder.AddAttribute(2, "ChildContent", (RenderFragment)(childBuilder => childBuilder.AddContent(0, context.Role)));
                 builder.CloseComponent();
             }

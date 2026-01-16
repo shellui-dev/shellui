@@ -11,7 +11,7 @@ public class InputOTPTemplate
         Description = "One-time password input component",
         Category = ComponentCategory.Form,
         FilePath = "InputOTP.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "form", "input", "otp", "password", "verification" }
     };
 
@@ -162,4 +162,5 @@ public class InputOTPTemplate
 }
 ";
 }
+
 

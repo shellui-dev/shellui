@@ -10,7 +10,7 @@ public static class ProgressTemplate
         DisplayName = "Progress",
         Description = "Progress bar indicator with customizable height",
         Category = ComponentCategory.Feedback,
-        Version = "0.1.0",
+
         FilePath = "Progress.razor",
         Dependencies = new List<string>()
     };
@@ -36,4 +36,5 @@ public static class ProgressTemplate
 }
 ";
 }
+
 

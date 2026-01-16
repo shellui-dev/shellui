@@ -17,14 +17,20 @@ public static class AlertDialogTemplate
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using YourProjectNamespace.Components.UI
 
-<Dialog IsOpen=""IsOpen"" Title=""@Title"" Description=""@Description"" OnClose=""OnBackdropClick"">
-    <Footer>
-        @if (CancelText != null)
-        {
-            <button class=""mt-3 inline-flex w-full justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:mt-0 sm:w-auto"" @onclick=""HandleCancel"">@CancelText</button>
-        }
-        <button class=""@($""inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 sm:w-auto {(ConfirmVariant == ""destructive"" ? ""bg-destructive text-destructive-foreground hover:bg-destructive/90"" : ConfirmVariant == ""outline"" ? ""border border-input bg-background hover:bg-accent hover:text-accent-foreground"" : ConfirmVariant == ""secondary"" ? ""bg-secondary text-secondary-foreground hover:bg-secondary/80"" : ConfirmVariant == ""ghost"" ? ""hover:bg-accent hover:text-accent-foreground"" : ConfirmVariant == ""link"" ? ""text-primary underline-offset-4 hover:underline"" : ""bg-primary text-primary-foreground hover:bg-primary/90"")}"")"" @onclick=""HandleConfirm"">@ConfirmText</button>
-    </Footer>
+<Dialog Open=""IsOpen"" OpenChanged=""IsOpenChanged"">
+    <DialogContent>
+        <DialogHeader>
+            <DialogTitle>@Title</DialogTitle>
+            <DialogDescription>@Description</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+            @if (CancelText != null)
+            {
+                <Button Variant=""@ButtonVariant.Outline"" @onclick=""HandleCancel"">@CancelText</Button>
+            }
+            <Button Variant=""@ConfirmVariant"" @onclick=""HandleConfirm"">@ConfirmText</Button>
+        </DialogFooter>
+    </DialogContent>
 </Dialog>
 
 @code {
@@ -44,7 +50,7 @@ public static class AlertDialogTemplate
     public string? CancelText { get; set; } = ""Cancel"";
 
     [Parameter]
-    public string ConfirmVariant { get; set; } = ""default"";
+    public ButtonVariant ConfirmVariant { get; set; } = ButtonVariant.Default;
 
     [Parameter]
     public EventCallback OnConfirm { get; set; }
@@ -67,11 +73,6 @@ public static class AlertDialogTemplate
         await CloseDialog();
     }
 
-    private async Task OnBackdropClick()
-    {
-        await CloseDialog();
-    }
-
     private async Task CloseDialog()
     {
         IsOpen = false;
@@ -79,3 +80,4 @@ public static class AlertDialogTemplate
     }
 }";
 }
+

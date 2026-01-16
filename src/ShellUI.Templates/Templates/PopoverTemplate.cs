@@ -11,7 +11,7 @@ public class PopoverTemplate
         Description = "Popover content component",
         Category = ComponentCategory.Overlay,
         FilePath = "Popover.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "popover", "overlay", "popup", "dropdown" }
     };
 
@@ -71,4 +71,5 @@ public class PopoverTemplate
 }
 ";
 }
+
 

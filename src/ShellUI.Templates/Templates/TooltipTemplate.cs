@@ -11,7 +11,7 @@ public class TooltipTemplate
         Description = "Hover tooltip component",
         Category = ComponentCategory.Feedback,
         FilePath = "Tooltip.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "tooltip", "hover", "feedback", "popover" }
     };
 
@@ -54,4 +54,5 @@ public class TooltipTemplate
 }
 ";
 }
+
 

@@ -10,7 +10,7 @@ public static class SeparatorTemplate
         DisplayName = "Separator",
         Description = "Horizontal or vertical divider line",
         Category = ComponentCategory.Layout,
-        Version = "0.1.0",
+
         FilePath = "Separator.razor",
         Dependencies = new List<string>()
     };
@@ -31,4 +31,5 @@ public static class SeparatorTemplate
 }
 ";
 }
+
 

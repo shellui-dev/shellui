@@ -11,7 +11,7 @@ public class DateRangePickerTemplate
         Description = "Date range picker component for selecting start and end dates",
         Category = ComponentCategory.Form,
         FilePath = "DateRangePicker.razor",
-        Version = "0.1.0",
+
         Tags = new List<string> { "form", "date", "range", "calendar", "input" }
     };
 
@@ -212,3 +212,4 @@ public class DateRangePickerTemplate
 }
 ";
 }
+

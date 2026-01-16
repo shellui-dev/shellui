@@ -10,45 +10,22 @@ public static class CardTemplate
         DisplayName = "Card",
         Description = "Container component for grouping related content",
         Category = ComponentCategory.Layout,
-        Version = "0.1.0",
+
         FilePath = "Card.razor",
-        Dependencies = new List<string>()
+        Dependencies = new List<string> { "card-header", "card-title", "card-description", "card-content", "card-footer" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""rounded-lg border border-border bg-card text-card-foreground shadow-sm"">
-    @if (Header != null)
-    {
-        <div class=""flex flex-col space-y-1.5 p-6"">
-            @Header
-        </div>
-    }
-    
-    @if (ChildContent != null)
-    {
-        <div class=""p-6 pt-0"">
-            @ChildContent
-        </div>
-    }
-    
-    @if (Footer != null)
-    {
-        <div class=""flex items-center p-6 pt-0"">
-            @Footer
-        </div>
-    }
+<div class=""@Shell.Cn(""rounded-lg border bg-card text-card-foreground shadow-sm"", Class)"" @attributes=""AdditionalAttributes"">
+    @ChildContent
 </div>
 
 @code {
-    [Parameter]
-    public RenderFragment? Header { get; set; }
-
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    [Parameter]
-    public RenderFragment? Footer { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
 ";
 }

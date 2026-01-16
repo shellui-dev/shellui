@@ -10,7 +10,7 @@ public static class DropdownTemplate
         DisplayName = "Dropdown",
         Description = "Dropdown menu with trigger and content",
         Category = ComponentCategory.Overlay,
-        Version = "0.1.0",
+
         FilePath = "Dropdown.razor",
         Dependencies = new List<string>()
     };
@@ -60,4 +60,5 @@ public static class DropdownTemplate
 }
 ";
 }
+
 

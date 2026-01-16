@@ -117,3 +117,4 @@ else if (Variant == ""orbit"")
     public string Class { get; set; } = """";
 }";
 }
+

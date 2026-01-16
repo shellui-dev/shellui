@@ -1,4 +1,5 @@
 @namespace BlazorInteractiveServer.Components.Demo
+@using BlazorInteractiveServer.Components
 
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Advanced Forms</h2>
@@ -46,7 +47,7 @@
             <div class="space-y-4">
                 <div>
                     <Label>Select Technology</Label>
-                    <Combobox SelectedValue="@_selectedTech" SelectedValueChanged="@HandleSelectedTechChanged" 
+                    <Combobox Value="@_selectedTech" ValueChanged="@HandleSelectedTechChanged" 
                               Options="TechOptions" 
                               Placeholder="Search technology..." />
                     @if (!string.IsNullOrEmpty(_selectedTech))
@@ -56,7 +57,7 @@
                 </div>
                 <div>
                     <Label>Select Framework</Label>
-                    <Combobox SelectedValue="@_selectedFramework" SelectedValueChanged="@HandleSelectedFrameworkChanged" 
+                    <Combobox Value="@_selectedFramework" ValueChanged="@HandleSelectedFrameworkChanged" 
                               Options="FrameworkOptions" 
                               Placeholder="Search framework..." />
                     @if (!string.IsNullOrEmpty(_selectedFramework))
@@ -73,7 +74,7 @@
             <div class="space-y-4 max-w-xs">
                 <div>
                     <Label class="font-bold">With clear</Label>
-                    <DatePicker SelectedDate="@_selectedDate" SelectedDateChanged="@HandleSelectedDateChanged" Placeholder="Pick a date" />
+                    <DatePicker Value="@_selectedDate" ValueChanged="@HandleSelectedDateChanged" Placeholder="Pick a date" />
                     @if (_selectedDate.HasValue)
                     {
                         <p class="text-sm text-muted-foreground mt-2">Selected: @_selectedDate.Value.ToString("MMMM dd, yyyy")</p>
@@ -81,7 +82,7 @@
                 </div>
                 <div>
                     <Label class="font-bold">Without clear</Label>
-                    <DatePicker SelectedDate="@_selectedDate2" SelectedDateChanged="@HandleSelectedDate2Changed" Placeholder="Pick a date" AllowClear="false" />
+                    <DatePicker Value="@_selectedDate2" ValueChanged="@HandleSelectedDate2Changed" Placeholder="Pick a date" AllowClear="false" />
                     @if (_selectedDate2.HasValue)
                     {
                         <p class="text-sm text-muted-foreground mt-2">Selected: @_selectedDate2.Value.ToString("MMMM dd, yyyy")</p>
@@ -106,7 +107,7 @@
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Time Picker</h3>
             <div class="max-w-xs">
-                <TimePicker SelectedTime="@_selectedTime" SelectedTimeChanged="@HandleSelectedTimeChanged" Placeholder="Pick a time" Step="15" />
+                <TimePicker Value="@_selectedTime" ValueChanged="@HandleSelectedTimeChanged" Placeholder="Pick a time" Step="15" />
                 @if (_selectedTime.HasValue)
                 {
                     <p class="text-sm text-muted-foreground mt-2">Selected: @_selectedTime.Value.ToString(@"hh\:mm")</p>
@@ -134,8 +135,10 @@
             </Form>
             @if (_formSubmitted)
             {
-                <Alert Variant="success" Title="Success" ClassName="mt-4">
-                    Form submitted successfully!
+                <Alert Variant="@AlertVariant.Success" Title="Success" Class="mt-4">
+                    <ChildContent>
+                        Form submitted successfully!
+                    </ChildContent>
                 </Alert>
             }
         </div>
@@ -287,4 +290,3 @@
         await FormSubmittedChanged.InvokeAsync(_formSubmitted);
     }
 }
-

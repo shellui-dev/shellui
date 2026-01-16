@@ -1,10 +1,11 @@
 @namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
 
-<div class="@("relative " + ClassName)" @attributes="AdditionalAttributes">
+<div class="@Shell.Cn("relative", Class)" @attributes="AdditionalAttributes">
     <button type="button"
             @onclick="ToggleCalendar"
             disabled="@Disabled"
-            class="@("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 " + (Disabled ? "opacity-50 cursor-not-allowed" : ""))">
+            class="@Shell.Cn("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", Disabled ? "opacity-50 cursor-not-allowed" : "")">
         <span class="@(StartDate == null && EndDate == null ? "text-muted-foreground" : "")">
             @GetDisplayText()
         </span>
@@ -70,31 +71,20 @@
     }
 </div>
 
+@if (_isOpen)
+{
+    <div class="fixed inset-0 z-40" @onclick="() => _isOpen = false"></div>
+}
+
 @code {
-    [Parameter]
-    public DateTime? StartDate { get; set; }
-    
-    [Parameter]
-    public EventCallback<DateTime?> StartDateChanged { get; set; }
-    
-    [Parameter]
-    public DateTime? EndDate { get; set; }
-    
-    [Parameter]
-    public EventCallback<DateTime?> EndDateChanged { get; set; }
-    
-    [Parameter]
-    public string Placeholder { get; set; } = "Pick a date range";
-    
-    [Parameter]
-    public bool AllowClear { get; set; } = true;
-    
-    [Parameter]
-    public bool Disabled { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = "";
-    
+    [Parameter] public DateTime? StartDate { get; set; }
+    [Parameter] public EventCallback<DateTime?> StartDateChanged { get; set; }
+    [Parameter] public DateTime? EndDate { get; set; }
+    [Parameter] public EventCallback<DateTime?> EndDateChanged { get; set; }
+    [Parameter] public string Placeholder { get; set; } = "Pick a date range";
+    [Parameter] public bool AllowClear { get; set; } = true;
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -193,3 +183,4 @@
         return days;
     }
 }
+

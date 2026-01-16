@@ -1,0 +1,13 @@
+@namespace ShellUI.Components
+
+<div class="@Shell.Cn("flex flex-col space-y-1.5 p-6", Class)" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+
