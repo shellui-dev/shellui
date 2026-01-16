@@ -1,6 +1,25 @@
-# ShellUI
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="images/Shellui-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="images/Shellui-light.png">
+    <img alt="ShellUI Logo" src="images/Shellui-light.png" width="120">
+  </picture>
+</p>
 
-A modern, CLI-first Blazor component library inspired by shadcn/ui. Copy components directly into your project and customize them to match your needs.
+<h1 align="center">ShellUI</h1>
+
+<p align="center">
+  A modern, CLI-first Blazor component library inspired by <a href="https://ui.shadcn.com/">shadcn/ui</a>.<br/>
+  Copy components directly into your project and customize them to match your needs.
+</p>
+
+<p align="center">
+  <a href="https://www.nuget.org/packages/ShellUI.Components"><img src="https://img.shields.io/nuget/v/ShellUI.Components?style=flat-square&logo=nuget&color=004880" alt="NuGet"></a>
+  <a href="https://www.nuget.org/packages/ShellUI.CLI"><img src="https://img.shields.io/nuget/v/ShellUI.CLI?style=flat-square&logo=nuget&label=CLI&color=004880" alt="CLI"></a>
+  <a href="https://github.com/shellui-dev/shellui/blob/main/LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
+</p>
+
+---
 
 **New here? Check out the [Quick Start](#quick-start) section below!**
 
