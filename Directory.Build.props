@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- Centralized ShellUI Version - Update this single file to version all components -->
+  <PropertyGroup>
+    <ShellUIVersion>0.1.0</ShellUIVersion>
+    <ShellUIVersionSuffix></ShellUIVersionSuffix>
+  </PropertyGroup>
+
+  <!-- Common properties for all ShellUI projects -->
+  <PropertyGroup>
+    <Version>$(ShellUIVersion)</Version>
+    <Version Condition="'$(ShellUIVersionSuffix)' != ''">$(ShellUIVersion)-$(ShellUIVersionSuffix)</Version>
+    <AssemblyVersion>$(ShellUIVersion)</AssemblyVersion>
+    <FileVersion>$(ShellUIVersion)</FileVersion>
+    <InformationalVersion>$(Version)</InformationalVersion>
+  </PropertyGroup>
+
+  <!-- Common package metadata -->
+  <PropertyGroup>
+    <Authors>ShellUI</Authors>
+    <Company>ShellUI</Company>
+    <Product>ShellUI</Product>
+    <Copyright>© $([System.DateTime]::Now.Year) ShellUI. All rights reserved.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>blazor;ui;components;tailwindcss;shadcn</PackageTags>
+    <RepositoryUrl>https://github.com/shellui-dev/shellui</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+</Project>
