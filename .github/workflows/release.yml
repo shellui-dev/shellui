@@ -47,7 +47,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         name: ShellUI v${{ steps.version.outputs.VERSION }}
-        body_path: RELEASE_NOTES.md
+        body_path: docs/RELEASE_NOTES.md
         draft: false
         prerelease: ${{ contains(github.ref, '-') }}
         files: |
