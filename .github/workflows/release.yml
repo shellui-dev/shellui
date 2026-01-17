@@ -36,8 +36,14 @@ jobs:
 
     - name: Publish to NuGet
       run: |
-        dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-        dotnet nuget push **/*.snupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        dotnet nuget push src/ShellUI.CLI/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        if ls src/ShellUI.CLI/bin/Release/*.snupkg 1> /dev/null 2>&1; then
+          dotnet nuget push src/ShellUI.CLI/bin/Release/*.snupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        fi
+        dotnet nuget push src/ShellUI.Components/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        if ls src/ShellUI.Components/bin/Release/*.snupkg 1> /dev/null 2>&1; then
+          dotnet nuget push src/ShellUI.Components/bin/Release/*.snupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        fi
 
     - name: Extract version from tag
       id: version
@@ -53,6 +59,5 @@ jobs:
         files: |
           src/ShellUI.CLI/bin/Release/*.nupkg
           src/ShellUI.Components/bin/Release/*.nupkg
-          src/ShellUI.Core/bin/Release/*.nupkg
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

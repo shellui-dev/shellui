@@ -2,7 +2,7 @@
 <Project>
   <!-- Centralized ShellUI Version - Update this single file to version all components -->
   <PropertyGroup>
-    <ShellUIVersion>0.1.0</ShellUIVersion>
+    <ShellUIVersion>0.1.1</ShellUIVersion>
     <ShellUIVersionSuffix></ShellUIVersionSuffix>
   </PropertyGroup>
 
