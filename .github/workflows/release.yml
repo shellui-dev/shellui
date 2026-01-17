@@ -53,6 +53,5 @@ jobs:
         files: |
           src/ShellUI.CLI/bin/Release/*.nupkg
           src/ShellUI.Components/bin/Release/*.nupkg
-          src/ShellUI.Core/bin/Release/*.nupkg
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

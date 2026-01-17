@@ -88,7 +88,7 @@ To update ShellUI version across all components:
    ```
 
 This single file change updates:
-- ✅ All NuGet packages (`ShellUI.CLI`, `ShellUI.Components`, `ShellUI.Core`)
+- ✅ All NuGet packages (`ShellUI.CLI`, `ShellUI.Components`)
 - ✅ All component templates (73 components)
 - ✅ Build configurations and metadata
 
