@@ -1,36 +1,26 @@
-# ShellUI v0.1.0 🎉
+# ShellUI v0.1.1 🔧
 
-> Beautiful, accessible Blazor components inspired by shadcn/ui
+> Hotfix release - Package publishing fix
 
-## ✨ Highlights
+## 🐛 Bug Fixes
 
-This is the **first official release** of ShellUI - a CLI-first Blazor component library that brings the shadcn/ui philosophy to .NET developers.
+### Fixed Package Publishing
+- **Prevented `ShellUI.Core` from being published separately** - Set `IsPackable=false` on `ShellUI.Core` project
+- **Updated release workflow** - Now only publishes the 2 intended packages:
+  - ✅ `ShellUI.CLI` - CLI tool for component management
+  - ✅ `ShellUI.Components` - Component library package
+- **Updated documentation** - README now correctly reflects that only 2 packages are published
 
-### 🚀 What's Included
-
-#### CLI Tool (`ShellUI.CLI`)
-- **`shellui init`** - Initialize your Blazor project with Tailwind CSS
-- **`shellui add <component>`** - Add individual components to your project
-- **`shellui list`** - List all available components
-- **`shellui remove <component>`** - Remove installed components
-- **`shellui update`** - Update components to the latest version
-
-#### Components Library (`ShellUI.Components`)
-Pre-built components for NuGet installation:
-- **Button** - Interactive button with variants (default, destructive, outline, secondary, ghost, link)
-- **Badge** - Status indicators with multiple variants
-- **Alert** - Notification banners with icons
-- **Card** - Content containers with header, content, and footer sections
-- **Input** - Form input fields
-- **Label** - Accessible form labels
-- **Separator** - Visual dividers
-- **Shell utilities** - `Shell.Cn()` for Tailwind class merging
+### What Changed
+- `ShellUI.Core` is an internal dependency of `ShellUI.Components` and should not be published as a standalone package
+- Future releases will only publish the 2 intended packages
 
 ## 📦 Installation
 
-### Option 1: CLI (Recommended)
+No changes to installation process:
+
 ```bash
-# Install the CLI globally
+# Install CLI globally
 dotnet tool install -g ShellUI.CLI
 
 # Initialize your project
@@ -40,22 +30,10 @@ shellui init
 shellui add button badge alert card
 ```
 
-### Option 2: NuGet Package
+Or via NuGet:
 ```bash
 dotnet add package ShellUI.Components
 ```
-
-## 🎨 Styling
-
-ShellUI uses **Tailwind CSS v4** with CSS variables for theming. The `shellui init` command automatically sets up:
-- Tailwind CSS standalone CLI (no Node.js required)
-- CSS variables for light/dark themes
-- Component styling aligned with shadcn/ui
-
-## 📋 Requirements
-
-- .NET 9.0 or later
-- Blazor Server, WebAssembly, or Interactive modes
 
 ## 🔗 Links
 
@@ -63,10 +41,6 @@ ShellUI uses **Tailwind CSS v4** with CSS variables for theming. The `shellui in
 - **GitHub**: https://github.com/shellui-dev/shellui
 - **NuGet**: https://www.nuget.org/packages/ShellUI.Components
 
-## 🙏 Acknowledgments
-
-Inspired by [shadcn/ui](https://ui.shadcn.com/) - the beautiful React component library.
-
 ---
 
-**Full Changelog**: https://github.com/shellui-dev/shellui/commits/v0.1.0
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.1.0...v0.1.1
