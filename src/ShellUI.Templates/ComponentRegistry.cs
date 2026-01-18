@@ -94,7 +94,15 @@ public static class ComponentRegistry
         { "carousel-previous", CarouselPreviousTemplate.Metadata },
         { "carousel-next", CarouselNextTemplate.Metadata },
         { "carousel-dots", CarouselDotsTemplate.Metadata },
-        { "file-upload", FileUploadTemplate.Metadata }
+        { "file-upload", FileUploadTemplate.Metadata },
+        { "chart-variants", ChartVariantsTemplate.Metadata },
+        { "chart", ChartTemplate.Metadata },
+        { "bar-chart", BarChartTemplate.Metadata },
+        { "line-chart", LineChartTemplate.Metadata },
+        { "pie-chart", PieChartTemplate.Metadata },
+        { "area-chart", AreaChartTemplate.Metadata },
+        { "multi-series-chart", MultiSeriesChartTemplate.Metadata },
+        { "chart-series", ChartSeriesTemplate.Metadata }
     };
 
     public static string? GetComponentContent(string componentName)
@@ -189,6 +197,14 @@ public static class ComponentRegistry
             "carousel-next" => CarouselNextTemplate.Content,
             "carousel-dots" => CarouselDotsTemplate.Content,
             "file-upload" => FileUploadTemplate.Content,
+            "chart-variants" => ChartVariantsTemplate.Content,
+            "chart" => ChartTemplate.Content,
+            "bar-chart" => BarChartTemplate.Content,
+            "line-chart" => LineChartTemplate.Content,
+            "pie-chart" => PieChartTemplate.Content,
+            "area-chart" => AreaChartTemplate.Content,
+            "multi-series-chart" => MultiSeriesChartTemplate.Content,
+            "chart-series" => ChartSeriesTemplate.Content,
             _ => null
         };
     }
