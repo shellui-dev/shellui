@@ -1,0 +1,18 @@
+@namespace BlazorInteractiveServer.Components.UI
+@using ApexCharts
+@inherits Chart<TItem>
+@typeparam TItem where TItem : class
+
+<div class="@ComputedClass">
+    <ApexChart TItem="TItem"
+               Title="@Title"
+               Options="@ChartOptions"
+               Height="@Height"
+               Width="@Width">
+        @ChildContent
+    </ApexChart>
+</div>
+
+@code {
+    // ChildContent is inherited from Chart<TItem>
+}
