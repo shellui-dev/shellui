@@ -1,0 +1,141 @@
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components.UI.Variants
+@using ApexCharts
+
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Bar Chart</h2>
+    <BarChart TItem="SalesData"
+              Data="SalesData"
+              Title="Monthly Sales"
+              Name="Sales"
+              XValue="e => e.Month"
+              YValue="e => e.Amount"
+              Height="300px" />
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Line Chart</h2>
+    <LineChart TItem="SalesData"
+              Data="SalesData"
+              Title="Monthly Revenue Trend"
+              Name="Revenue"
+              XValue="e => e.Month"
+              YValue="e => e.Amount"
+              Height="300px" />
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Area Chart</h2>
+    <AreaChart TItem="SalesData"
+               Data="SalesData"
+               Title="Monthly Growth"
+               Name="Growth"
+               Theme="ChartTheme.Colorful"
+               XValue="e => e.Month"
+               YValue="e => e.Amount"
+               Height="300px" />
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Pie Chart</h2>
+    <PieChart TItem="CategoryData"
+              Data="CategoryData"
+              Title="Market Share"
+              Name="Share"
+              XValue="e => e.Category"
+              YValue="e => e.Value"
+              Height="300px" />
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Multi-Series Chart</h2>
+    <MultiSeriesChart TItem="SalesData"
+                       Title="Revenue vs Profit"
+                       Height="300px">
+        <ChartSeries TItem="SalesData"
+                     Data="SalesData"
+                     Name="Revenue"
+                     SeriesType="SeriesType.Bar"
+                     XValue="e => e.Month"
+                     YValue="e => e.Amount" />
+        <ChartSeries TItem="SalesData"
+                     Data="ProfitData"
+                     Name="Profit"
+                     SeriesType="SeriesType.Line"
+                     XValue="e => e.Month"
+                     YValue="e => e.Amount" />
+    </MultiSeriesChart>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Chart Themes</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <h3 class="text-lg font-medium mb-2">Default Theme</h3>
+            <BarChart TItem="SalesData"
+                      Data="SalesData.Take(3)"
+                      Title="Default"
+                      Theme="ChartTheme.Default"
+                      XValue="e => e.Month"
+                      YValue="e => e.Amount"
+                      Height="200px" />
+        </div>
+        <div>
+            <h3 class="text-lg font-medium mb-2">Colorful Theme</h3>
+            <BarChart TItem="SalesData"
+                      Data="SalesData.Take(3)"
+                      Title="Colorful"
+                      Theme="ChartTheme.Colorful"
+                      XValue="e => e.Month"
+                      YValue="e => e.Amount"
+                      Height="200px" />
+        </div>
+        <div>
+            <h3 class="text-lg font-medium mb-2">Monochrome Theme</h3>
+            <BarChart TItem="SalesData"
+                      Data="SalesData.Take(3)"
+                      Title="Monochrome"
+                      Theme="ChartTheme.Monochrome"
+                      XValue="e => e.Month"
+                      YValue="e => e.Amount"
+                      Height="200px" />
+        </div>
+    </div>
+</section>
+
+@code {
+    private List<SalesData> SalesData { get; set; } = new();
+    private List<SalesData> ProfitData { get; set; } = new();
+    private List<CategoryData> CategoryData { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        SalesData = new List<SalesData>
+        {
+            new SalesData { Month = "Jan", Amount = 120 },
+            new SalesData { Month = "Feb", Amount = 150 },
+            new SalesData { Month = "Mar", Amount = 180 },
+            new SalesData { Month = "Apr", Amount = 200 },
+            new SalesData { Month = "May", Amount = 170 },
+            new SalesData { Month = "Jun", Amount = 220 }
+        };
+
+        ProfitData = new List<SalesData>
+        {
+            new SalesData { Month = "Jan", Amount = 40 },
+            new SalesData { Month = "Feb", Amount = 50 },
+            new SalesData { Month = "Mar", Amount = 60 },
+            new SalesData { Month = "Apr", Amount = 70 },
+            new SalesData { Month = "May", Amount = 55 },
+            new SalesData { Month = "Jun", Amount = 80 }
+        };
+
+        CategoryData = new List<CategoryData>
+        {
+            new CategoryData { Category = "Desktop", Value = 45 },
+            new CategoryData { Category = "Mobile", Value = 35 },
+            new CategoryData { Category = "Tablet", Value = 20 }
+        };
+    }
+
+}
