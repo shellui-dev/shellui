@@ -1,0 +1,17 @@
+@namespace ShellUI.Components
+@using ApexCharts
+@inherits Chart<TItem>
+@typeparam TItem where TItem : class
+
+<ApexChart TItem="TItem"
+           Title="@Title"
+           Subtitle="@Subtitle"
+           Options="@ChartOptions"
+           Height="@Height"
+           Width="@Width">
+    @ChildContent
+</ApexChart>
+
+@code {
+    [Parameter] public new RenderFragment? ChildContent { get; set; }
+}
