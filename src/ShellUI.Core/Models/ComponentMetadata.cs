@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace ShellUI.Core.Models;
 
@@ -24,11 +25,9 @@ public class ComponentMetadata
 
     private static string GetCurrentVersion()
     {
-        // For templates, return the version from Directory.Build.props
-        // This will be resolved at runtime when templates are used
+        // Try to read version from Directory.Build.props at runtime
         try
         {
-            // Try to read from Directory.Build.props
             var currentDir = AppDomain.CurrentDomain.BaseDirectory;
             var dir = new DirectoryInfo(currentDir);
 
@@ -58,7 +57,13 @@ public class ComponentMetadata
             // Ignore errors
         }
 
-        return "0.1.0"; // fallback
+        // Fallback: read from assembly version (set at build time by Directory.Build.props)
+        var assembly = typeof(ComponentMetadata).Assembly;
+        var assemblyVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+        if (assemblyVersion != null)
+            return assemblyVersion.InformationalVersion.Split('+')[0]; // strip build metadata
+
+        return "0.2.0";
     }
 }
 

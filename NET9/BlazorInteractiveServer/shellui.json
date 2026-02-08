@@ -5,6 +5,7 @@
   "Tailwind": {
     "Enabled": true,
     "Version": "4.1.0",
+    "Method": "standalone",
     "ConfigPath": "tailwind.config.js",
     "CssPath": "wwwroot/app.css"
   },
@@ -265,6 +266,54 @@
       "Name": "date-range-picker",
       "Version": "0.1.0",
       "InstalledAt": "2025-10-15T23:17:17.3769239Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "chart-variants",
+      "Version": "0.1.1",
+      "InstalledAt": "2026-01-17T01:41:18.8862813Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "chart",
+      "Version": "0.1.1",
+      "InstalledAt": "2026-01-17T01:41:18.9171276Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "bar-chart",
+      "Version": "0.1.1",
+      "InstalledAt": "2026-01-17T01:19:53.1893178Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "line-chart",
+      "Version": "0.1.1",
+      "InstalledAt": "2026-01-17T01:19:53.2179832Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "pie-chart",
+      "Version": "0.1.1",
+      "InstalledAt": "2026-01-17T01:19:53.2396791Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "area-chart",
+      "Version": "0.1.1",
+      "InstalledAt": "2026-01-17T01:19:53.2738342Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "chart-series",
+      "Version": "0.1.1",
+      "InstalledAt": "2026-01-17T01:19:53.3363663Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "multi-series-chart",
+      "Version": "0.1.1",
+      "InstalledAt": "2026-01-17T01:19:53.3598418Z",
       "IsCustomized": false
     }
   ],

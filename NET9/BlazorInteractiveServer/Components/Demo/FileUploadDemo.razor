@@ -100,14 +100,14 @@
     private List<IBrowserFile> _imageFiles = new();
     private Dictionary<IBrowserFile, string> _imageUrls = new();
 
-    private async Task HandleFileSelection(InputFileChangeEventArgs e)
+    private void HandleFileSelection(InputFileChangeEventArgs e)
     {
         var file = e.File;
         _selectedFiles.Clear();
         _selectedFiles.Add(file);
     }
 
-    private async Task HandleMultipleFileSelection(InputFileChangeEventArgs e)
+    private void HandleMultipleFileSelection(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles(5);
         _multipleFiles.Clear();

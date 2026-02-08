@@ -29,15 +29,15 @@ ShellUI transforms Blazor component development with a hybrid approach:
 - **CLI-First**: Copy components to YOUR codebase for full control (`shellui add button`)
 - **NuGet Option**: Traditional package install for quick starts (`dotnet add package ShellUI.Components`)
 - **Choose your workflow**: Use CLI for customization, NuGet for speed, or mix both
-- Powered by Tailwind CSS v4.1.17 (standalone CLI - no Node.js required!)
+- Powered by Tailwind CSS v4.1.18 (standalone CLI - no Node.js required!)
 - Best of both worlds: flexibility when you need it, convenience when you want it
 
-## Current Status: 73 Components Complete! 🎉
+## Current Status: 80 Components Complete! 🎉
 
 **ShellUI is now fully functional!** We've completed:
 - ✅ **CLI Tool** (`dotnet tool install -g ShellUI.CLI`)
 - ✅ **NuGet Package** (`dotnet add package ShellUI.Components`)
-- ✅ **73 Production-Ready Components** with Tailwind v4.1.17
+- ✅ **80 Production-Ready Components** with Tailwind v4.1.18
 - ✅ **Hybrid Workflow** (CLI + NuGet)
 - ✅ **No Node.js Required** (Standalone Tailwind CLI)
 - ✅ **Comprehensive Documentation**
@@ -129,7 +129,7 @@ Dropdown, Command, ContextMenu, HoverCard, ThemeToggle, EmptyState, FileUpload
 **Advanced Components (16):**
 Calendar, DatePicker, DateRangePicker, TimePicker, Combobox, AlertDialog, Carousel, CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
 
-### ✅ Tailwind CSS v4.1.17 Integration
+### ✅ Tailwind CSS v4.1.18 Integration
 
 **Two Setup Methods:**
 
@@ -147,7 +147,7 @@ shellui init  # Choose "standalone"
 shellui init  # Choose "npm"
 # Or: dotnet shellui init
 ```
-- Installs `tailwindcss@^4.1.17` + `@tailwindcss/cli@^4.1.17`
+- Installs `tailwindcss@^4.1.18` + `@tailwindcss/cli@^4.1.18`
 - Uses `npx @tailwindcss/cli` for builds
 - Requires Node.js
 
@@ -186,7 +186,7 @@ shellui init  # Choose "npm"
 ## Design Principles
 
 1. **Copy, Don't Install**: Components are copied to your project, not imported from a package
-2. **Tailwind-First**: All styling uses Tailwind CSS v4.1.17 utility classes
+2. **Tailwind-First**: All styling uses Tailwind CSS v4.1.18 utility classes
 3. **Accessible by Default**: WCAG 2.1 AA compliant out of the box
 4. **Composable**: Build complex components from simple ones
 5. **Customizable**: Modify any component to fit your needs
@@ -213,7 +213,7 @@ shellui init  # Choose "npm"
 
 **Use both:** Start with NuGet, migrate to CLI for components you customize heavily!
 
-### Why Tailwind v4.1.17?
+### Why Tailwind v4.1.18?
 - Latest stable version with v4 features
 - Better performance than v3
 - Improved dark mode support
@@ -284,7 +284,7 @@ Simply edit the component file in `Components/UI/` - it's yours to modify!
 - .NET 8.0 or higher
 - **Choice of Tailwind setup:**
   - **Standalone CLI** (recommended): No Node.js required
-  - **npm**: Requires Node.js, uses `tailwindcss@^4.1.17`
+  - **npm**: Requires Node.js, uses `tailwindcss@^4.1.18`
 
 ## Comparison with Existing Solutions
 
@@ -293,7 +293,7 @@ Simply edit the component file in `Components/UI/` - it's yours to modify!
 | CLI Installation | ✅ | ❌ | ❌ | ❌ |
 | NuGet Package | ✅ | ✅ | ✅ | ✅ |
 | Component Ownership (CLI) | ✅ | ❌ | ❌ | ❌ |
-| Tailwind CSS | ✅ (v4.1.17) | ❌ | ❌ | ❌ |
+| Tailwind CSS | ✅ (v4.1.18) | ❌ | ❌ | ❌ |
 | No Node.js Required | ✅ | N/A | N/A | N/A |
 | Hybrid Workflow | ✅ | ❌ | ❌ | ❌ |
 | Free & Open Source | ✅ | ✅ | Partial | ✅ |
@@ -334,10 +334,10 @@ dotnet add package ShellUI.Components
 
 **📋 NuGet Package Setup Guide:**
 
-#### 1. **Install Tailwind CSS v4.1.17**
+#### 1. **Install Tailwind CSS v4.1.18**
 ```bash
 # Download the standalone Tailwind CLI
-curl -L https://github.com/tailwindlabs/tailwindcss/releases/download/v4.1.17/tailwindcss-linux-x64 -o tailwindcss
+curl -L https://github.com/tailwindlabs/tailwindcss/releases/download/v4.1.18/tailwindcss-linux-x64 -o tailwindcss
 chmod +x tailwindcss
 sudo mv tailwindcss /usr/local/bin/
 ```
@@ -566,7 +566,7 @@ Add Tailwind CSS to your layout:
 **📋 NuGet Package Checklist:**
 - ✅ Install package: `dotnet add package ShellUI.Components`
 - ✅ **Remove Bootstrap**: Delete `wwwroot/lib/bootstrap/` folder and `wwwroot/css/bootstrap*.css` files
-- ✅ **Install Tailwind**: Download Tailwind CLI v4.1.17
+- ✅ **Install Tailwind**: Download Tailwind CLI v4.1.18
 - ✅ **Include theme CSS**: Add ShellUI theme CSS link to your main layout
 - ✅ **Add using**: `@using ShellUI.Components` in `_Imports.razor`
 - ✅ **Create config**: `wwwroot/tailwind.config.js`
@@ -610,7 +610,7 @@ MIT License - See LICENSE.txt for details
 
 ## Status
 
-**✅ Production Ready:** 69 components, CLI + NuGet, Tailwind v4.1.17 integration
+**✅ Production Ready:** 69 components, CLI + NuGet, Tailwind v4.1.18 integration
 **🚀 Ready to use today!**
 
 ---
