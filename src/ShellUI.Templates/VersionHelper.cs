@@ -1,4 +1,5 @@
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace ShellUI.Templates;
@@ -17,35 +18,42 @@ public static class VersionHelper
         {
             // Look for Directory.Build.props in the solution root
             var solutionRoot = FindSolutionRoot();
-            if (solutionRoot == null)
-                return "0.1.0"; // fallback
-
-            var propsFile = Path.Combine(solutionRoot, "Directory.Build.props");
-            if (!File.Exists(propsFile))
-                return "0.1.0"; // fallback
-
-            var content = File.ReadAllText(propsFile);
-
-            // Extract version from <ShellUIVersion> tag
-            var match = Regex.Match(content, @"<ShellUIVersion>([^<]+)</ShellUIVersion>");
-            if (match.Success)
+            if (solutionRoot != null)
             {
-                var version = match.Groups[1].Value.Trim();
-                var suffixMatch = Regex.Match(content, @"<ShellUIVersionSuffix>([^<]*)</ShellUIVersionSuffix>");
-                if (suffixMatch.Success && !string.IsNullOrEmpty(suffixMatch.Groups[1].Value.Trim()))
+                var propsFile = Path.Combine(solutionRoot, "Directory.Build.props");
+                if (File.Exists(propsFile))
                 {
-                    version += "-" + suffixMatch.Groups[1].Value.Trim();
+                    var content = File.ReadAllText(propsFile);
+                    var match = Regex.Match(content, @"<ShellUIVersion>([^<]+)</ShellUIVersion>");
+                    if (match.Success)
+                    {
+                        var version = match.Groups[1].Value.Trim();
+                        var suffixMatch = Regex.Match(content, @"<ShellUIVersionSuffix>([^<]*)</ShellUIVersionSuffix>");
+                        if (suffixMatch.Success && !string.IsNullOrEmpty(suffixMatch.Groups[1].Value.Trim()))
+                        {
+                            version += "-" + suffixMatch.Groups[1].Value.Trim();
+                        }
+                        _cachedVersion = version;
+                        return version;
+                    }
                 }
-                _cachedVersion = version;
-                return version;
             }
         }
         catch
         {
-            // Ignore errors and return fallback
+            // Ignore errors
         }
 
-        return "0.1.0"; // fallback version
+        // Fallback: read from assembly version (set at build time by Directory.Build.props)
+        var assembly = typeof(VersionHelper).Assembly;
+        var assemblyVersion = assembly.GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>();
+        if (assemblyVersion != null)
+        {
+            _cachedVersion = assemblyVersion.InformationalVersion.Split('+')[0];
+            return _cachedVersion;
+        }
+
+        return "0.2.0";
     }
 
     private static string? FindSolutionRoot()
