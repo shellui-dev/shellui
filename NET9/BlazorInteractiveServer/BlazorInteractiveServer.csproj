@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.9" />
+    <PackageReference Include="Blazor-ApexCharts" Version="6.0.2" />
   </ItemGroup>
 
   <!-- Removed NuGet/Project reference - using CLI-installed components instead -->
