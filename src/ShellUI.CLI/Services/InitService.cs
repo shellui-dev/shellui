@@ -191,8 +191,8 @@ public class InitService
 
         // Install Tailwind CSS packages (v4 with @tailwindcss/cli)
         AnsiConsole.MarkupLine("[cyan]Installing Tailwind CSS packages...[/]");
-        await RunNpmCommandAsync("install", "-D", "tailwindcss@^4.1.17", "@tailwindcss/cli@^4.1.17");
-        AnsiConsole.MarkupLine("[green]Installed:[/] tailwindcss v4.1.17, @tailwindcss/cli");
+        await RunNpmCommandAsync("install", "-D", "tailwindcss@^4.1.18", "@tailwindcss/cli@^4.1.18");
+        AnsiConsole.MarkupLine("[green]Installed:[/] tailwindcss v4.1.18, @tailwindcss/cli");
 
         // Create CSS files
         AnsiConsole.MarkupLine("[cyan]Creating CSS files...[/]");
