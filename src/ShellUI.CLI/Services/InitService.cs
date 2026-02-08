@@ -106,7 +106,7 @@ public class InitService
                     Tailwind = new TailwindConfig
                     {
                         Enabled = true,
-                        Version = method == "npm" ? "4.1.17" : "3.4.0",
+                        Version = "4.1.18",
                         Method = method,
                         CssPath = "wwwroot/app.css"
                     }

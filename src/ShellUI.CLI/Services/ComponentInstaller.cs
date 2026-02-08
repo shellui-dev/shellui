@@ -60,13 +60,14 @@ public class ComponentInstaller
         await AnsiConsole.Status()
             .Spinner(Spinner.Known.Dots)
             .SpinnerStyle(Style.Parse("green"))
-            .StartAsync("Installing components...", async ctx =>
+            .StartAsync("Installing components...", ctx =>
             {
                 foreach (var componentName in componentList)
                 {
                     ctx.Status($"Installing {componentName}...");
                     InstallComponentWithDependencies(componentName, config, projectInfo, force, installedSet, ref successCount, ref skippedCount, failedComponents);
                 }
+                return Task.CompletedTask;
             });
 
         // Update config
@@ -86,10 +87,10 @@ public class ComponentInstaller
             AnsiConsole.MarkupLine($"[red]Failed: {string.Join(", ", failedComponents)}[/]");
     }
 
-    public static async Task InstallComponentForInitAsync(string componentName, ProjectInfo projectInfo)
+    public static Task InstallComponentForInitAsync(string componentName, ProjectInfo projectInfo)
     {
         var metadata = ComponentRegistry.Components.GetValueOrDefault(componentName.ToLower());
-        if (metadata == null) return;
+        if (metadata == null) return Task.CompletedTask;
 
         var config = new ShellUIConfig
         {
@@ -104,6 +105,8 @@ public class ComponentInstaller
         {
             AnsiConsole.MarkupLine($"[green]✅ Installed:[/] {componentName}");
         }
+
+        return Task.CompletedTask;
     }
 
     public static void InstallComponent(string componentName, ComponentMetadata metadata, bool force, bool skipConfig = false)
