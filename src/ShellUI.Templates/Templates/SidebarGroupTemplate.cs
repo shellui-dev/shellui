@@ -1,0 +1,32 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public static class SidebarGroupTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "sidebar-group",
+        DisplayName = "Sidebar Group",
+        Description = "Group container for sidebar navigation sections",
+        Category = ComponentCategory.Layout,
+        FilePath = "SidebarGroup.razor",
+        IsAvailable = false
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+
+<div data-sidebar=""group""
+     class=""@Shell.Cn(""relative flex w-full min-w-0 flex-col p-2"", Class)""
+     @attributes=""AdditionalAttributes"">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+";
+}

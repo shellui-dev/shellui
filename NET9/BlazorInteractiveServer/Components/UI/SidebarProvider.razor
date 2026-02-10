@@ -1,0 +1,119 @@
+@namespace BlazorInteractiveServer.Components.UI
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+<div class="@WrapperClass"
+     style="@StyleString"
+     @attributes="AdditionalAttributes">
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+    private IJSObjectReference? _module;
+    private IJSObjectReference? _handlers;
+    private DotNetObjectReference<SidebarProvider>? _dotnetRef;
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; } = true;
+    [Parameter] public string Width { get; set; } = "16rem";
+    [Parameter] public string WidthIcon { get; set; } = "3rem";
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public string? Style { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    // Public state
+    public bool IsMobile { get; private set; }
+    public bool IsOpen { get; private set; } = true;
+    public bool MobileOpen { get; private set; }
+    public string State => (IsMobile ? MobileOpen : IsOpen) ? "expanded" : "collapsed";
+
+    private string StyleString
+    {
+        get
+        {
+            var s = $"--sidebar-width: {Width}; --sidebar-width-icon: {WidthIcon};";
+            if (!string.IsNullOrEmpty(Style)) s += " " + Style;
+            return s;
+        }
+    }
+
+    private string WrapperClass => Shell.Cn(
+        "group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar",
+        Class
+    );
+
+    protected override void OnInitialized()
+    {
+        IsOpen = DefaultOpen;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotnetRef = DotNetObjectReference.Create(this);
+            try
+            {
+                _module = await JSRuntime.InvokeAsync<IJSObjectReference>(
+                    "import", "./shellui-sidebar.js");
+                _handlers = await _module.InvokeAsync<IJSObjectReference>(
+                    "initSidebar", _dotnetRef);
+            }
+            catch { /* Pre-render or JS not available */ }
+        }
+    }
+
+    [JSInvokable]
+    public void OnMobileChanged(bool isMobile)
+    {
+        if (IsMobile != isMobile)
+        {
+            IsMobile = isMobile;
+            if (isMobile) MobileOpen = false;
+            StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public Task OnToggle()
+    {
+        Toggle();
+        return Task.CompletedTask;
+    }
+
+    public void Toggle()
+    {
+        if (IsMobile) MobileOpen = !MobileOpen;
+        else IsOpen = !IsOpen;
+        StateHasChanged();
+    }
+
+    public void SetOpen(bool open)
+    {
+        if (IsMobile) MobileOpen = open;
+        else IsOpen = open;
+        StateHasChanged();
+    }
+
+    public void OpenMobileSidebar() { MobileOpen = true; StateHasChanged(); }
+    public void CloseMobileSidebar() { MobileOpen = false; StateHasChanged(); }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_handlers != null)
+            {
+                await _handlers.InvokeVoidAsync("dispose");
+                await _handlers.DisposeAsync();
+            }
+            if (_module != null) await _module.DisposeAsync();
+        }
+        catch { }
+        _dotnetRef?.Dispose();
+    }
+}

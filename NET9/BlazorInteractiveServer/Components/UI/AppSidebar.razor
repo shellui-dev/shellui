@@ -1,0 +1,338 @@
+@namespace BlazorInteractiveServer.Components.UI
+
+@* ──────────────────────────────────────────────────────────
+   AppSidebar — shadcn sidebar-08 (Inset + Secondary Nav)
+   
+   Usage:
+   <SidebarProvider>
+       <AppSidebar />
+       <SidebarInset>
+           <header class="flex h-16 shrink-0 items-center gap-2">
+               <div class="flex items-center gap-2 px-4">
+                   <SidebarTrigger Class="-ml-1" />
+                   <Separator Orientation="vertical" Class="mr-2 h-4" />
+                   <Breadcrumb>...</Breadcrumb>
+               </div>
+           </header>
+           <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+               <!-- Your content here -->
+           </div>
+       </SidebarInset>
+   </SidebarProvider>
+   ────────────────────────────────────────────────────────── *@
+
+<Sidebar Variant="SidebarVariant.Inset" Collapsible="SidebarCollapsible.Icon" Class="@Class">
+    @* ── Header: Logo & Company ── *@
+    <SidebarHeader>
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <SidebarMenuButton Size="lg" Href="#">
+                    <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                        <i class="fa-solid fa-terminal text-sm"></i>
+                    </div>
+                    <div class="grid flex-1 text-left text-sm leading-tight">
+                        <span class="truncate font-semibold">Acme Inc</span>
+                        <span class="truncate text-xs text-sidebar-foreground/70">Enterprise</span>
+                    </div>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+        </SidebarMenu>
+    </SidebarHeader>
+
+    @* ── Content ── *@
+    <SidebarContent>
+
+        @* ─── NavMain: Platform ─── *@
+        <SidebarGroup>
+            <SidebarGroupLabel>Platform</SidebarGroupLabel>
+            <SidebarGroupContent>
+                <SidebarMenu>
+                    @foreach (var item in _navMainItems)
+                    {
+                        <SidebarMenuItem>
+                            <SidebarMenuButton Href="@item.Url" IsActive="@item.IsActive" Tooltip="@item.Title">
+                                <i class="@item.IconClass"></i>
+                                <span>@item.Title</span>
+                            </SidebarMenuButton>
+                            @if (item.SubItems?.Count > 0)
+                            {
+                                <SidebarMenuAction OnClick="() => ToggleExpand(item)"
+                                                   Class="@Shell.Cn("transition-transform duration-200", item.IsExpanded ? "rotate-90" : "")">
+                                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                                </SidebarMenuAction>
+                                @if (item.IsExpanded)
+                                {
+                                    <SidebarMenuSub>
+                                        @foreach (var sub in item.SubItems)
+                                        {
+                                            <SidebarMenuSubItem>
+                                                <SidebarMenuSubButton Href="@sub.Url" IsActive="@sub.IsActive">
+                                                    <span>@sub.Title</span>
+                                                </SidebarMenuSubButton>
+                                            </SidebarMenuSubItem>
+                                        }
+                                    </SidebarMenuSub>
+                                }
+                            }
+                        </SidebarMenuItem>
+                    }
+                </SidebarMenu>
+            </SidebarGroupContent>
+        </SidebarGroup>
+
+        @* ─── NavProjects ─── *@
+        <SidebarGroup>
+            <SidebarGroupLabel>Projects</SidebarGroupLabel>
+            <SidebarGroupContent>
+                <SidebarMenu>
+                    @foreach (var project in _projects)
+                    {
+                        <SidebarMenuItem>
+                            <SidebarMenuButton Href="@project.Url" Tooltip="@project.Name">
+                                <i class="@project.IconClass"></i>
+                                <span>@project.Name</span>
+                            </SidebarMenuButton>
+                            <SidebarMenuAction ShowOnHover="true">
+                                <i class="fa-solid fa-ellipsis"></i>
+                                <span class="sr-only">More</span>
+                            </SidebarMenuAction>
+                        </SidebarMenuItem>
+                    }
+                    <SidebarMenuItem>
+                        <SidebarMenuButton Class="text-sidebar-foreground/70">
+                            <i class="fa-solid fa-circle-plus"></i>
+                            <span>More</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarGroupContent>
+        </SidebarGroup>
+
+        @* ─── NavSecondary (pushed to bottom) ─── *@
+        <SidebarGroup Class="mt-auto">
+            <SidebarGroupContent>
+                <SidebarMenu>
+                    @foreach (var item in _secondaryItems)
+                    {
+                        <SidebarMenuItem>
+                            <SidebarMenuButton Href="@item.Url" Tooltip="@item.Title" Size="sm">
+                                <i class="@item.IconClass"></i>
+                                <span>@item.Title</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    }
+                </SidebarMenu>
+            </SidebarGroupContent>
+        </SidebarGroup>
+
+    </SidebarContent>
+
+    @* ── Footer: User Profile ── *@
+    <SidebarFooter>
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <div class="relative">
+                    <button type="button"
+                            @onclick="ToggleUserMenu"
+                            @onclick:stopPropagation="true"
+                            data-sidebar="menu-button"
+                            data-size="lg"
+                            class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2">
+                        <Avatar Fallback="@_user.Initials" Class="h-8 w-8 rounded-lg" />
+                        <div class="grid flex-1 text-left text-sm leading-tight">
+                            <span class="truncate font-semibold">@_user.Name</span>
+                            <span class="truncate text-xs text-sidebar-foreground/70">@_user.Email</span>
+                        </div>
+                        <i class="fa-solid fa-sort ml-auto text-xs"></i>
+                    </button>
+
+                    @if (_showUserMenu)
+                    {
+                        <!-- Backdrop to close on outside click -->
+                        <div class="fixed inset-0 z-40" @onclick="() => _showUserMenu = false"></div>
+
+                        <!-- Dropdown menu -->
+                        <div class="absolute bottom-full left-0 z-50 mb-2 w-56 rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-lg animate-in fade-in-0 zoom-in-95">
+                            <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                                <Avatar Fallback="@_user.Initials" Class="h-8 w-8 rounded-lg" />
+                                <div class="grid flex-1 text-left text-sm leading-tight">
+                                    <span class="truncate font-semibold">@_user.Name</span>
+                                    <span class="truncate text-xs text-muted-foreground">@_user.Email</span>
+                                </div>
+                            </div>
+                            <hr class="my-1 h-px border-0 bg-border" />
+                            <button class="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+                                <i class="fa-solid fa-wand-magic-sparkles size-4"></i>
+                                Upgrade to Pro
+                            </button>
+                            <hr class="my-1 h-px border-0 bg-border" />
+                            <button class="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+                                <i class="fa-solid fa-circle-check size-4"></i>
+                                Account
+                            </button>
+                            <button class="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+                                <i class="fa-solid fa-credit-card size-4"></i>
+                                Billing
+                            </button>
+                            <button class="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+                                <i class="fa-solid fa-bell size-4"></i>
+                                Notifications
+                            </button>
+                            <hr class="my-1 h-px border-0 bg-border" />
+                            <button class="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground">
+                                <i class="fa-solid fa-right-from-bracket size-4"></i>
+                                Log out
+                            </button>
+                        </div>
+                    }
+                </div>
+            </SidebarMenuItem>
+        </SidebarMenu>
+    </SidebarFooter>
+</Sidebar>
+
+@code {
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _showUserMenu;
+
+    private void ToggleUserMenu() => _showUserMenu = !_showUserMenu;
+    private void ToggleExpand(NavItem item) { item.IsExpanded = !item.IsExpanded; }
+
+    // ── Data Models ──
+    private class NavItem
+    {
+        public string Title { get; set; } = "";
+        public string Url { get; set; } = "#";
+        public string IconClass { get; set; } = "";
+        public bool IsActive { get; set; }
+        public bool IsExpanded { get; set; }
+        public List<SubNavItem>? SubItems { get; set; }
+    }
+
+    private class SubNavItem
+    {
+        public string Title { get; set; } = "";
+        public string Url { get; set; } = "#";
+        public bool IsActive { get; set; }
+    }
+
+    private class ProjectItem
+    {
+        public string Name { get; set; } = "";
+        public string Url { get; set; } = "#";
+        public string IconClass { get; set; } = "";
+    }
+
+    private class UserProfile
+    {
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Initials { get; set; } = "";
+    }
+
+    // ── User ──
+    private readonly UserProfile _user = new()
+    {
+        Name = "shadcn",
+        Email = "m@example.com",
+        Initials = "CN"
+    };
+
+    // ── Navigation Data ──
+    private readonly List<NavItem> _navMainItems = new()
+    {
+        new NavItem
+        {
+            Title = "Playground",
+            Url = "#",
+            IsActive = true,
+            IsExpanded = true,
+            IconClass = "fa-solid fa-code",
+            SubItems = new()
+            {
+                new SubNavItem { Title = "History", Url = "#" },
+                new SubNavItem { Title = "Starred", Url = "#" },
+                new SubNavItem { Title = "Settings", Url = "#" }
+            }
+        },
+        new NavItem
+        {
+            Title = "Models",
+            Url = "#",
+            IconClass = "fa-solid fa-microchip",
+            SubItems = new()
+            {
+                new SubNavItem { Title = "Genesis", Url = "#" },
+                new SubNavItem { Title = "Explorer", Url = "#" },
+                new SubNavItem { Title = "Quantum", Url = "#" }
+            }
+        },
+        new NavItem
+        {
+            Title = "Documentation",
+            Url = "#",
+            IconClass = "fa-solid fa-book",
+            SubItems = new()
+            {
+                new SubNavItem { Title = "Introduction", Url = "#" },
+                new SubNavItem { Title = "Get Started", Url = "#" },
+                new SubNavItem { Title = "Tutorials", Url = "#" },
+                new SubNavItem { Title = "Changelog", Url = "#" }
+            }
+        },
+        new NavItem
+        {
+            Title = "Settings",
+            Url = "#",
+            IconClass = "fa-solid fa-gear",
+            SubItems = new()
+            {
+                new SubNavItem { Title = "General", Url = "#" },
+                new SubNavItem { Title = "Team", Url = "#" },
+                new SubNavItem { Title = "Billing", Url = "#" },
+                new SubNavItem { Title = "Limits", Url = "#" }
+            }
+        }
+    };
+
+    private readonly List<ProjectItem> _projects = new()
+    {
+        new ProjectItem
+        {
+            Name = "Design Engineering",
+            Url = "#",
+            IconClass = "fa-solid fa-pen-ruler"
+        },
+        new ProjectItem
+        {
+            Name = "Sales & Marketing",
+            Url = "#",
+            IconClass = "fa-solid fa-bullhorn"
+        },
+        new ProjectItem
+        {
+            Name = "Travel",
+            Url = "#",
+            IconClass = "fa-solid fa-location-dot"
+        }
+    };
+
+    private readonly List<NavItem> _secondaryItems = new()
+    {
+        new NavItem
+        {
+            Title = "Support",
+            Url = "#",
+            IconClass = "fa-solid fa-life-ring"
+        },
+        new NavItem
+        {
+            Title = "Feedback",
+            Url = "#",
+            IconClass = "fa-solid fa-paper-plane"
+        }
+    };
+}
