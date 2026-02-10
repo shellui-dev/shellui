@@ -24,6 +24,8 @@
 
                     <!-- Navigation Links - Desktop Only -->
                     <div class="hidden lg:flex items-center gap-1 h-12">
+                        <a href="/" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Home</a>
+                        <a href="/dashboard" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Dashboard</a>
                         <a href="/docs" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Docs</a>
                         <a href="/blog" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Blog</a>
                         <a href="/showcase" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Showcase</a>
@@ -108,6 +110,8 @@
                 
                 <!-- Navigation Links -->
                 <nav class="p-4 space-y-2">
+                    <a href="/" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Home</a>
+                    <a href="/dashboard" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Dashboard</a>
                     <a href="/docs" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Documentation</a>
                     <a href="/blog" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Blog</a>
                     <a href="/showcase" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Showcase</a>
@@ -127,6 +131,36 @@
         </div>
     </footer>
 </div>
+
+<style>
+    /* Hide Blazor error UI by default - only shows when there's an actual error */
+    #blazor-error-ui {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: hsl(var(--destructive));
+        color: hsl(var(--destructive-foreground));
+        padding: 1rem;
+        z-index: 9999;
+        text-align: center;
+    }
+
+    #blazor-error-ui.show {
+        display: block;
+    }
+
+    #blazor-error-ui a {
+        color: inherit;
+        text-decoration: underline;
+        margin: 0 0.5rem;
+    }
+
+    #blazor-error-ui a:hover {
+        opacity: 0.8;
+    }
+</style>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
@@ -152,9 +186,22 @@
         {
             new CommandItem 
             { 
+                Title = "Home", 
+                Description = "Go to homepage",
+                Shortcut = "Ctrl+H",
+                Action = async () => { NavigationManager.NavigateTo("/"); await Task.CompletedTask; }
+            },
+            new CommandItem 
+            { 
+                Title = "Dashboard", 
+                Description = "View dashboard",
+                Shortcut = "Ctrl+D",
+                Action = async () => { NavigationManager.NavigateTo("/dashboard"); await Task.CompletedTask; }
+            },
+            new CommandItem 
+            { 
                 Title = "Documentation", 
                 Description = "View ShellUI documentation",
-                Shortcut = "Ctrl+D",
                 Action = async () => { NavigationManager.NavigateTo("/docs"); await Task.CompletedTask; }
             },
             new CommandItem 
@@ -180,13 +227,6 @@
                 Title = "GitHub", 
                 Description = "View source code on GitHub",
                 Action = async () => await JSRuntime.InvokeVoidAsync("ShellUI.openUrl", "https://github.com/shellui-dev/shellui", "_blank")
-            },
-            new CommandItem 
-            { 
-                Title = "Home", 
-                Description = "Go to homepage",
-                Shortcut = "Ctrl+H",
-                Action = async () => { NavigationManager.NavigateTo("/"); await Task.CompletedTask; }
             }
         };
     }
@@ -213,26 +253,20 @@
 
     private async Task HandleCommandSelected(CommandItem command)
     {
+        _isCommandPaletteOpen = false;
         if (command.Action != null)
         {
             await command.Action();
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private async Task HandleKeyDown(KeyboardEventArgs e)
     {
-        if (firstRender)
+        // Ctrl+K to open command palette
+        if (e.CtrlKey && e.Key == "k")
         {
-            // Focus the body to enable keyboard events
-            await JSRuntime.InvokeVoidAsync("ShellUI.focusBody");
-        }
-    }
-
-    private void HandleKeyDown(KeyboardEventArgs e)
-    {
-        if ((e.CtrlKey || e.MetaKey) && string.Equals(e.Key, "k", StringComparison.OrdinalIgnoreCase))
-        {
-            OpenCommandPalette();
+            _isCommandPaletteOpen = !_isCommandPaletteOpen;
+            StateHasChanged();
         }
     }
 }

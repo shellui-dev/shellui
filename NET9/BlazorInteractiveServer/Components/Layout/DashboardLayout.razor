@@ -1,0 +1,39 @@
+@inherits LayoutComponentBase
+@using BlazorInteractiveServer.Components.UI
+
+@* Dashboard layout — sidebar + content, no navbar/footer *@
+<SidebarProvider>
+    <AppSidebar />
+    <SidebarInset>
+        @* ── Shared header: trigger, breadcrumbs, theme toggle ── *@
+        <header class="flex h-16 shrink-0 items-center gap-2">
+            <div class="flex items-center gap-2 px-4">
+                <SidebarTrigger Class="-ml-1" />
+                <Separator Orientation="vertical" Class="mr-2 h-4" />
+                @HeaderContent
+            </div>
+            <div class="ml-auto px-4">
+                <ThemeToggle Size="sm" Variant="outline" />
+            </div>
+        </header>
+
+        @* ── Page content renders here ── *@
+        <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+            @Body
+        </div>
+    </SidebarInset>
+</SidebarProvider>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <a class="dismiss">x</a>
+</div>
+
+@code {
+    /// <summary>
+    /// Optional header content (breadcrumbs, page title, etc.) 
+    /// Pages can set this via a cascading parameter or just leave it empty.
+    /// </summary>
+    [Parameter] public RenderFragment? HeaderContent { get; set; }
+}
