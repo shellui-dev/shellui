@@ -1,0 +1,55 @@
+@page "/dashboard"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+
+<PageTitle>Dashboard</PageTitle>
+
+@* Stat cards row *@
+<div class="grid auto-rows-min gap-4 md:grid-cols-3">
+    <div class="rounded-xl border border-border bg-card p-6">
+        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 class="text-sm font-medium text-muted-foreground">Total Revenue</h3>
+            <i class="fa-solid fa-dollar-sign text-muted-foreground"></i>
+        </div>
+        <div class="text-2xl font-bold">$45,231.89</div>
+        <p class="text-xs text-muted-foreground">+20.1% from last month</p>
+    </div>
+    <div class="rounded-xl border border-border bg-card p-6">
+        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 class="text-sm font-medium text-muted-foreground">Subscriptions</h3>
+            <i class="fa-solid fa-users text-muted-foreground"></i>
+        </div>
+        <div class="text-2xl font-bold">+2,350</div>
+        <p class="text-xs text-muted-foreground">+180.1% from last month</p>
+    </div>
+    <div class="rounded-xl border border-border bg-card p-6">
+        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+            <h3 class="text-sm font-medium text-muted-foreground">Active Now</h3>
+            <i class="fa-solid fa-chart-line text-muted-foreground"></i>
+        </div>
+        <div class="text-2xl font-bold">+573</div>
+        <p class="text-xs text-muted-foreground">+201 since last hour</p>
+    </div>
+</div>
+
+@* Main content area *@
+<div class="min-h-[50vh] flex-1 rounded-xl border border-border bg-card/50 p-6 md:min-h-min">
+    <div class="flex flex-col items-center justify-center h-full gap-4 text-center">
+        <div class="rounded-full bg-muted p-4">
+            <i class="fa-solid fa-table-columns text-2xl text-muted-foreground"></i>
+        </div>
+        <div>
+            <h3 class="text-lg font-semibold">ShellUI Sidebar — sidebar-08</h3>
+            <p class="text-sm text-muted-foreground mt-1">
+                Inset sidebar with secondary navigation, collapsible icon mode,
+                and full responsive mobile support.
+            </p>
+        </div>
+        <div class="flex flex-wrap gap-2 justify-center">
+            <span class="inline-flex items-center rounded-md border border-border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">Ctrl+B to collapse</span>
+            <span class="inline-flex items-center rounded-md border border-border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">Responsive</span>
+            <span class="inline-flex items-center rounded-md border border-border px-2.5 py-0.5 text-xs font-semibold bg-secondary text-secondary-foreground">Theme Aware</span>
+        </div>
+    </div>
+</div>
