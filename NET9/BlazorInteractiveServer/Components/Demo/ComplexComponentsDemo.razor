@@ -105,6 +105,23 @@
             </HoverCard>
         </div>
 
+        <!-- Collapsible Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Collapsible</h3>
+            <Collapsible IsOpen="@_collapsibleOpen" IsOpenChanged="@(v => _collapsibleOpen = v)">
+                <CollapsibleTrigger>
+                    <Button Variant="ButtonVariant.Ghost">
+                        @(_collapsibleOpen ? "Hide" : "Show") Details
+                    </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                    <div class="rounded-md border px-4 py-3 text-sm">
+                        Here is some additional content that can be toggled.
+                    </div>
+                </CollapsibleContent>
+            </Collapsible>
+        </div>
+
         <!-- Command Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Command Palette</h3>
@@ -220,6 +237,7 @@
 
 @code {
     private bool _showCommand = false;
+    private bool _collapsibleOpen = false;
 
     [Parameter] public List<User> Users { get; set; } = new();
     [Parameter] public List<DataTableColumn<User>> UserColumns { get; set; } = new();
