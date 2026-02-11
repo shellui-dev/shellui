@@ -8,54 +8,30 @@ public class CollapsibleTemplate
     {
         Name = "collapsible",
         DisplayName = "Collapsible",
-        Description = "Collapsible content component",
+        Description = "Collapsible content component with Trigger and CollapsibleContent",
         Category = ComponentCategory.Layout,
         FilePath = "Collapsible.razor",
-
+        Dependencies = new List<string> { "collapsible-trigger", "collapsible-content" },
         Tags = new List<string> { "layout", "collapsible", "toggle", "expand" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@(""space-y-2 "" + ClassName)"" @attributes=""AdditionalAttributes"">
-    <button type=""button""
-            @onclick=""Toggle""
-            class=""flex items-center justify-between w-full p-3 rounded-md hover:bg-accent transition-colors"">
-        <span class=""font-medium"">@Title</span>
-        <svg class=""@(""h-4 w-4 transition-transform "" + (IsOpen ? ""rotate-180"" : """"))""
-             fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
-            <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M19 9l-7 7-7-7"" />
-        </svg>
-    </button>
-    
-    @if (IsOpen)
-    {
-        <div class=""p-3 rounded-md border bg-card"">
-            @ChildContent
-        </div>
-    }
-</div>
+<CascadingValue Value=""this"" IsFixed=""true"">
+    <div class=""@Shell.Cn(Class)"" @attributes=""AdditionalAttributes"">
+        @ChildContent
+    </div>
+</CascadingValue>
 
 @code {
-    [Parameter]
-    public bool IsOpen { get; set; }
-    
-    [Parameter]
-    public EventCallback<bool> IsOpenChanged { get; set; }
-    
-    [Parameter]
-    public string Title { get; set; } = ""Collapsible"";
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
-    private async Task Toggle()
+
+    public async Task ToggleAsync()
     {
         IsOpen = !IsOpen;
         await IsOpenChanged.InvokeAsync(IsOpen);
@@ -63,5 +39,3 @@ public class CollapsibleTemplate
 }
 ";
 }
-
-
