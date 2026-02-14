@@ -14,10 +14,10 @@ public static class DrawerVariants
 {
     private static readonly Dictionary<DrawerSide, string> SideClasses = new()
     {
-        { DrawerSide.Top, "inset-x-0 top-0 mb-24 flex h-auto flex-col rounded-b-[10px] border bg-background slide-in-from-top" },
-        { DrawerSide.Bottom, "inset-x-0 bottom-0 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background slide-in-from-bottom" },
-        { DrawerSide.Left, "inset-y-0 left-0 h-full w-3/4 sm:max-w-sm border-r slide-in-from-left bg-background" },
-        { DrawerSide.Right, "inset-y-0 right-0 h-full w-3/4 sm:max-w-sm border-l slide-in-from-right bg-background" }
+        { DrawerSide.Top, "left-1/2 top-0 -translate-x-1/2 mb-24 w-full max-w-md mx-4 flex h-auto flex-col rounded-b-[10px] bg-background shadow-lg slide-in-from-top" },
+        { DrawerSide.Bottom, "left-1/2 bottom-0 -translate-x-1/2 mt-24 w-full max-w-md mx-4 flex h-auto flex-col rounded-t-[10px] bg-background shadow-lg slide-in-from-bottom" },
+        { DrawerSide.Left, "inset-y-0 left-0 h-full w-3/4 sm:max-w-sm slide-in-from-left bg-background shadow-lg" },
+        { DrawerSide.Right, "inset-y-0 right-0 h-full w-3/4 sm:max-w-sm slide-in-from-right bg-background shadow-lg" }
     };
 
     public static string Get(DrawerSide side = DrawerSide.Bottom, string? className = null)
