@@ -1,0 +1,9 @@
+@namespace BlazorInteractiveServer.Components.UI
+
+<div class="flex items-start justify-between w-full">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

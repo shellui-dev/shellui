@@ -1,0 +1,76 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public class SonnerTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "sonner",
+        DisplayName = "Sonner",
+        Description = "Toast notification component with stacking and positional variants",
+        Category = ComponentCategory.Feedback,
+        FilePath = "Components/UI/Sonner.razor",
+        Dependencies = new List<string> { "sonner-variants", "sonner-service" },
+        Variants = new List<string> { "default", "destructive", "success" },
+        Tags = new List<string> { "notification", "toast", "sonner", "feedback", "overlay" }
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components
+@using YourProjectNamespace.Services
+@implements IDisposable
+@inject SonnerService SonnerService
+
+<div class=""@SonnerVariants.GetContainerClasses(Position)"">
+    @{
+        var toasts = SonnerService.Toasts;
+    }
+    @for (var i = 0; i < toasts.Count; i++)
+    {
+        var toast = toasts[i];
+        var stackClass = i > 0 ? (IsTop ? ""-mt-20 group-hover:mt-0"" : ""-mb-20 group-hover:mb-0"") : """";
+        <div @key=""toast.Id""
+             style=""z-index: @(i + 1)""
+             class=""@stackClass @GetToastClasses(toast.Variant) pointer-events-auto relative flex min-w-0 w-full items-center gap-3 overflow-hidden rounded-lg p-4 shadow-lg transition-all duration-300 animate-in fade-in-0 @SonnerVariants.GetToastAnimation(Position) shrink-0"">
+            <div class=""grid flex-1 gap-1"">
+                @if (!string.IsNullOrEmpty(toast.Message))
+                {
+                    <div class=""text-sm font-medium"">@toast.Message</div>
+                }
+                @if (!string.IsNullOrEmpty(toast.Description))
+                {
+                    <div class=""text-sm opacity-90"">@toast.Description</div>
+                }
+            </div>
+            <button type=""button""
+                    @onclick=""() => Dismiss(toast.Id)""
+                    class=""absolute right-2 top-2 rounded-md p-1 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"">
+                <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                    <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M6 18L18 6M6 6l12 12"" />
+                </svg>
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public SonnerPosition Position { get; set; } = SonnerPosition.TopCenter;
+
+    private bool IsTop => Position is SonnerPosition.TopLeft or SonnerPosition.TopCenter or SonnerPosition.TopRight;
+
+    protected override void OnInitialized() => SonnerService.OnChange += StateHasChanged;
+
+    public void Dispose() => SonnerService.OnChange -= StateHasChanged;
+
+    private void Dismiss(string id) => SonnerService.Remove(id);
+
+    private string GetToastClasses(string variant) => variant switch
+    {
+        ""destructive"" => ""bg-destructive text-destructive-foreground"",
+        ""success"" => ""bg-green-500/20 text-green-700 dark:bg-green-900/30 dark:text-green-100"",
+        _ => ""bg-background text-foreground""
+    };
+}
+";
+}
