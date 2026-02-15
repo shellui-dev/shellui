@@ -1,19 +1,22 @@
 @namespace BlazorInteractiveServer.Components.UI
 @using BlazorInteractiveServer.Components
 
-@if (IsOpen)
+@if (UseCompositional)
+{
+    <CascadingValue Value="this" IsFixed="true">
+        @ChildContent
+    </CascadingValue>
+}
+else if (Open)
 {
     <div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-in fade-in-0" @onclick="Close"></div>
-    
-    <div class="@ComputedClass"
-         @attributes="AdditionalAttributes">
+    <div class="@SheetVariants.Get(Side, Class)" @attributes="AdditionalAttributes">
         <div class="flex flex-col space-y-2">
             @if (!string.IsNullOrEmpty(Title))
             {
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-semibold text-foreground">@Title</h2>
-                    <button @onclick="Close"
-                            class="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+                    <button type="button" @onclick="Close" class="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -26,15 +29,13 @@
                 <p class="text-sm text-muted-foreground">@Description</p>
             }
         </div>
-        <div class="mt-4">
-            @ChildContent
-        </div>
+        <div class="mt-4">@ChildContent</div>
     </div>
 }
 
 @code {
-    [Parameter] public bool IsOpen { get; set; }
-    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
     [Parameter] public string? Title { get; set; }
     [Parameter] public string? Description { get; set; }
     [Parameter] public SheetSide Side { get; set; } = SheetSide.Right;
@@ -42,13 +43,18 @@
     [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
-    private string ComputedClass => SheetVariants.Get(Side, Class);
+
+    private bool UseCompositional => string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Description);
 
     private async Task Close()
     {
-        IsOpen = false;
-        await IsOpenChanged.InvokeAsync(IsOpen);
+        Open = false;
+        await OpenChanged.InvokeAsync(Open);
+        StateHasChanged();
+    }
+
+    public async Task SetOpen(bool value)
+    {
+        if (Open != value) { Open = value; await OpenChanged.InvokeAsync(Open); StateHasChanged(); }
     }
 }
-
