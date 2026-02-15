@@ -1,0 +1,22 @@
+@namespace ShellUI.Components
+
+<div @onmouseover="OnMouseOver" @onmouseout="OnMouseOut" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code {
+    [CascadingParameter] public HoverCard? Parent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private void OnMouseOver()
+    {
+        Parent?.Show();
+    }
+
+    private void OnMouseOut()
+    {
+        Parent?.Hide();
+    }
+}
