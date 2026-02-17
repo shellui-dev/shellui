@@ -24,7 +24,7 @@ public static class HoverCardTemplate
 
     @if (_isVisible)
     {
-        <div class=""@($""absolute z-50 w-64 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 {_getPositionClasses()} {Class}"")"">
+        <div class=""@($""absolute z-50 w-64 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 {_getPositionClasses()} {Class}"")"">
             @CardContent
         </div>
     }

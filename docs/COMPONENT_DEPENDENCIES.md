@@ -9,8 +9,12 @@ This document lists all components and their dependencies. When a user installs 
   - Uses Dialog component
   - Uses Button for actions
   
-- **dialog** → `["button"]`
-  - Uses Button in footer/actions
+- **sonner** → `["sonner-variants", "sonner-service"]`
+  - Uses SonnerVariants for positioning
+  - Uses SonnerService for toast state
+
+- **dialog** → `["dialog-trigger", "dialog-content", "dialog-header", "dialog-footer", "dialog-title", "dialog-description", "dialog-close"]`
+  - Compositional overlay component
   
 - **command** → `["dialog"]`
   - Uses Dialog as container
@@ -19,7 +23,7 @@ This document lists all components and their dependencies. When a user installs 
 - **form** → `["label", "input", "button"]`
   - Typically uses Label, Input, and Button
   
-- **data-table** → `["table", "input", "checkbox", "select", "button", "dropdown"]`
+- **data-table** → `["data-table-models"]`
   - Uses Table components
   - Uses Input for filtering
   - Uses Checkbox for selection

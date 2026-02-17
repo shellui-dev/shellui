@@ -1,4 +1,62 @@
-# ShellUI v0.2.0 📊
+# ShellUI v0.3.0-alpha.1 🚧
+
+> First alpha of v0.3.0 — test thoroughly before stable. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
+
+## What's in this release
+
+v0.3.0-alpha.1 includes everything from v0.2.0 (charts, Tailwind 4.x) plus new components and improvements.
+
+### ✨ New Components
+
+**Docs essentials:**
+- **Callout** / **CalloutVariants** — Info, warning, tip, danger admonition boxes
+- **CopyButton** — One-click copy to clipboard
+- **LinkCard** — Card-style links for related pages
+- **PrevNextNav** — Previous/Next page navigation for docs
+
+**Feedback & Data:**
+- **Sonner** / **SonnerService** / **SonnerVariants** — Modern toast notifications (shadcn-style)
+- **Stepper** / **StepperList** / **StepperStep** / **StepperContent** — Step-by-step wizard with value-based API
+- **ChartVariants** — Variant styling support for charts
+
+
+### 🔧 Improvements
+- **Version bump** — 0.2.0 → 0.3.0-alpha.1 across all packages
+- **CI/CD** — NuGet caching, explicit solution paths, concurrency, pre-release tag support
+- **Documentation** — Tailwind setup guide now generic for Blazor, versioning strategy updated for alpha workflow
+- **Release workflow** — Tag pattern updated to match `v0.3.0-alpha.1`-style prereleases
+
+### ⚠️ Known issues
+- **Stepper** — Active-state highlighting may not always reflect current step; documented, shipping as-is
+
+## 📦 Installation
+
+```bash
+# Install CLI (alpha)
+dotnet tool install -g ShellUI.CLI --version 0.3.0-alpha.1
+
+# Or via NuGet
+dotnet add package ShellUI.Components --version 0.3.0-alpha.1
+```
+
+Initialize and add components:
+```bash
+shellui init
+shellui add button card chart
+shellui add sonner stepper callout copy-button file-upload
+```
+
+## 🔗 Links
+
+- **Documentation**: https://shellui.dev
+- **GitHub**: https://github.com/shellui-dev/shellui
+- **NuGet**: https://www.nuget.org/packages/ShellUI.Components
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.2.0...v0.3.0-alpha.1
+
+---
+
+# ShellUI v0.2.0 📊 (Historical)
 
 > Feature release - Charts & Data Visualization
 
@@ -44,7 +102,7 @@ Fully custom HTML tooltips replacing ApexCharts defaults:
 ## 🔧 Improvements
 
 - **Tailwind CSS updated to v4.1.18**
-- **Component count: 80** (73 existing + 7 new chart components)
+- **Component count: 100** installable (dependencies like *-variants auto-installed)
 - **X-axis labels** - Charts use `XAxisType.Category` for proper string label display
 - **Version system** - Fallback version now reads `AssemblyInformationalVersion` baked at build time
 

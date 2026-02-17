@@ -1,15 +1,29 @@
-# Tailwind CSS Setup Guide for ShellDocs
+# Tailwind CSS Setup Guide for Blazor
 
-This guide shows you how to set up Tailwind CSS for ShellDocs using the same approach as our ShellUI CLI tool.
+This guide shows you how to set up Tailwind CSS for a new Blazor project using the same approach as the ShellUI CLI tool.
+
+## Installation Methods Comparison
+
+| Method | Setup Speed | Build Speed | Production Ready | Node.js Required |
+|--------|-------------|-------------|------------------|-------------------|
+| **Play CDN** | ⚡ Fastest (instant) | None | ❌ No | No |
+| **Standalone** | Fast (one-time download) | Fast | ✅ Yes | No |
+| **npm** | Medium (npm install) | Fast | ✅ Yes | Yes |
+
+- **Play CDN** — Add one script tag, zero build step. **Dev/demo only** — serves full Tailwind (~500KB+), not optimized for production.
+- **Standalone** — Downloads a single binary (~10MB) once. No Node.js. **Recommended for Blazor** — fast builds, production-ready.
+- **npm** — Full Node.js workflow. Best if you already use npm or need plugins.
+
+**TL;DR:** Standalone is the fastest *production* option for .NET/Blazor. Use CDN only for quick prototypes.
 
 ## Prerequisites
 
 - .NET 9.0 SDK
-- A Blazor project (ShellDocs)
+- A Blazor project (new or existing)
 
 ## Method 1: Using ShellUI CLI (Recommended)
 
-The easiest way to set up Tailwind CSS is using our ShellUI CLI tool, which handles everything automatically.
+The easiest way to set up Tailwind CSS in a Blazor project is using the ShellUI CLI tool, which handles everything automatically.
 
 ### Step 1: Install ShellUI CLI
 
@@ -21,11 +35,11 @@ dotnet tool install -g ShellUI.CLI
 dotnet tool install -g ShellUI.CLI --add-source ./src/ShellUI.CLI/bin/Release
 ```
 
-### Step 2: Initialize ShellUI in your project
+### Step 2: Initialize in your project
 
 ```bash
-# Navigate to your ShellDocs project
-cd path/to/your/shelldocs
+# Navigate to your Blazor project
+cd path/to/your/blazor-project
 
 # Initialize ShellUI (this sets up Tailwind automatically)
 dotnet shellui init
@@ -200,7 +214,22 @@ In your `MainLayout.razor` or `App.razor`:
 <link href="~/app.css" rel="stylesheet" />
 ```
 
-## Method 3: Using npm (Alternative)
+## Method 3: Play CDN (Prototyping Only)
+
+The **fastest** way to try Tailwind — no build step, no install. Add one script to your HTML:
+
+```html
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+```
+
+**Pros:** Instant setup, zero config.  
+**Cons:** Full Tailwind (~500KB+), no purging, **not for production**. Use for demos, prototypes, or Playground-style apps only.
+
+For Blazor, add this to `App.razor` or your HTML host. Note: Design tokens (CSS variables) still need to be in your CSS for components to look correct.
+
+## Method 4: Using npm (Alternative)
 
 If you prefer using npm and Node.js:
 
@@ -293,7 +322,7 @@ After setup, verify everything works:
 
 ### 🎨 Using Custom Themes from tweakcn
 
-ShellUI makes it easy to customize your theme just like shadcn/ui! Simply copy theme configurations from [tweakcn](https://tweakcn.com/) or similar tools and paste them into your `wwwroot/input.css`.
+You can customize your theme similar to shadcn/ui. Copy theme configurations from [tweakcn](https://tweakcn.com/) or similar tools and paste them into your `wwwroot/input.css`.
 
 **Example - Adding a custom theme:**
 
@@ -302,11 +331,9 @@ ShellUI makes it easy to customize your theme just like shadcn/ui! Simply copy t
 3. Copy the generated CSS
 4. Paste it into your `wwwroot/input.css` (replace the existing `:root` and `.dark` sections)
 
-**Your custom theme will automatically apply to all ShellUI components!** 🎯
-
 ### 🔤 Installing Custom Fonts
 
-To use custom fonts like "Kode Mono" in your theme:
+To use custom fonts in your theme:
 
 #### Method 1: Google Fonts (Recommended)
 ```html
@@ -394,10 +421,10 @@ This ensures your design looks good even if the custom font fails to load.
 
 Once Tailwind CSS is set up:
 
-1. **Add ShellUI components** using the CLI
+1. **Add ShellUI components** (if using ShellUI) using `dotnet shellui add`
 2. **Customize the design system** in `input.css` (use tweakcn for themes!)
 3. **Install custom fonts** for the perfect look
-4. **Build your ShellDocs site** with beautiful components
+4. **Build your Blazor app** with beautiful components
 5. **Deploy** using your preferred hosting solution
 
 Happy coding! 🚀

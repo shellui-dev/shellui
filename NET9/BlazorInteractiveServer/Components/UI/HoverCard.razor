@@ -1,50 +1,52 @@
+@namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
 @using Microsoft.JSInterop
 @implements IAsyncDisposable
 
-<div class="relative inline-block">
-    <div @onmouseover="ShowCard" @onmouseout="HideCard">
-        @ChildContent
+<CascadingValue Value="this" IsFixed="true">
+    <div class="relative inline-block">
+        @if (UseCompositional)
+        {
+            @ChildContent
+        }
+        else
+        {
+            <div @onmouseover="Show" @onmouseout="Hide">
+                @ChildContent
+            </div>
+            @if (_isVisible)
+            {
+                <div class="@Shell.Cn("absolute z-50 w-64 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95", _getPositionClasses(), Class)">
+                    @CardContent
+                </div>
+            }
+        }
     </div>
-
-    @if (_isVisible)
-    {
-        <div class="@($"absolute z-50 w-64 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 {_getPositionClasses()} {Class}")">
-            @CardContent
-        </div>
-    }
-</div>
+</CascadingValue>
 
 @code {
-    [Parameter]
-    public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? CardContent { get; set; }
+    [Parameter] public string Side { get; set; } = "bottom";
+    [Parameter] public string Align { get; set; } = "center";
+    [Parameter] public string Class { get; set; } = "";
 
-    [Parameter]
-    public RenderFragment CardContent { get; set; } = null!;
-
-    [Parameter]
-    public string Side { get; set; } = "bottom"; // top, right, bottom, left
-
-    [Parameter]
-    public string Align { get; set; } = "center"; // start, center, end
-
-    [Parameter]
-    public string Class { get; set; } = "";
-
-    private bool _isVisible = false;
+    private bool UseCompositional => CardContent is null;
+    private bool _isVisible;
     private System.Timers.Timer? _timer;
 
-    private void ShowCard()
+    public void Show()
     {
         _timer?.Stop();
         _isVisible = true;
         StateHasChanged();
     }
 
-    private void HideCard()
+    public void Hide()
     {
         _timer?.Stop();
-        _timer = new System.Timers.Timer(150); // 150ms delay
-        _timer.Elapsed += (sender, e) =>
+        _timer = new System.Timers.Timer(150);
+        _timer.Elapsed += (_, _) =>
         {
             _isVisible = false;
             InvokeAsync(StateHasChanged);
@@ -54,50 +56,33 @@
         _timer.Start();
     }
 
+    internal bool IsVisible => _isVisible;
+    internal string PositionClasses => _getPositionClasses();
+
     private string _getPositionClasses()
     {
         var classes = new List<string>();
-
         switch (Side)
         {
-            case "top":
-                classes.Add("bottom-full mb-2");
-                break;
-            case "right":
-                classes.Add("left-full ml-2");
-                break;
-            case "bottom":
-                classes.Add("top-full mt-2");
-                break;
-            case "left":
-                classes.Add("right-full mr-2");
-                break;
+            case "top": classes.Add("bottom-full mb-2"); break;
+            case "right": classes.Add("left-full ml-2"); break;
+            case "bottom": classes.Add("top-full mt-2"); break;
+            case "left": classes.Add("right-full mr-2"); break;
         }
-
         switch (Align)
         {
-            case "start":
-                classes.Add(Side == "top" || Side == "bottom" ? "left-0" : "top-0");
-                break;
-            case "center":
-                classes.Add(Side == "top" || Side == "bottom" ? "left-1/2 -translate-x-1/2" : "top-1/2 -translate-y-1/2");
-                break;
-            case "end":
-                classes.Add(Side == "top" || Side == "bottom" ? "right-0" : "bottom-0");
-                break;
+            case "start": classes.Add(Side is "top" or "bottom" ? "left-0" : "top-0"); break;
+            case "center": classes.Add(Side is "top" or "bottom" ? "left-1/2 -translate-x-1/2" : "top-1/2 -translate-y-1/2"); break;
+            case "end": classes.Add(Side is "top" or "bottom" ? "right-0" : "bottom-0"); break;
         }
-
         return string.Join(" ", classes);
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (_timer != null)
-        {
-            _timer.Stop();
-            _timer.Dispose();
-            _timer = null;
-        }
+        _timer?.Stop();
+        _timer?.Dispose();
+        _timer = null;
         await Task.CompletedTask;
     }
 }

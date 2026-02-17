@@ -14,9 +14,16 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/shellui-dev/shellui"><img src="https://img.shields.io/github/stars/shellui-dev/shellui?style=flat-square" alt="GitHub stars"></a>
   <a href="https://www.nuget.org/packages/ShellUI.Components"><img src="https://img.shields.io/nuget/v/ShellUI.Components?style=flat-square&logo=nuget&color=004880" alt="NuGet"></a>
   <a href="https://www.nuget.org/packages/ShellUI.CLI"><img src="https://img.shields.io/nuget/v/ShellUI.CLI?style=flat-square&logo=nuget&label=CLI&color=004880" alt="CLI"></a>
   <a href="https://github.com/shellui-dev/shellui/blob/main/LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License"></a>
+</p>
+
+<p align="center">
+  <a href="https://star-history.com/#shellui-dev/shellui&Date">
+    <img height="150" alt="Star History Chart" src="https://api.star-history.com/svg?repos=shellui-dev/shellui&type=Date" />
+  </a>
 </p>
 
 ---
@@ -32,12 +39,12 @@ ShellUI transforms Blazor component development with a hybrid approach:
 - Powered by Tailwind CSS v4.1.18 (standalone CLI - no Node.js required!)
 - Best of both worlds: flexibility when you need it, convenience when you want it
 
-## Current Status: 80 Components Complete! 🎉
+## Current Status: 100 Components (Alpha) 🎉
 
-**ShellUI is now fully functional!** We've completed:
+**ShellUI is in alpha!** Test and provide feedback before we ship stable. We've completed:
 - ✅ **CLI Tool** (`dotnet tool install -g ShellUI.CLI`)
 - ✅ **NuGet Package** (`dotnet add package ShellUI.Components`)
-- ✅ **80 Production-Ready Components** with Tailwind v4.1.18
+- ✅ **100 Components** with Tailwind v4.1.18 *(actual components only; *-variants, *-service auto-installed)*
 - ✅ **Hybrid Workflow** (CLI + NuGet)
 - ✅ **No Node.js Required** (Standalone Tailwind CLI)
 - ✅ **Comprehensive Documentation**
@@ -77,7 +84,7 @@ To update ShellUI version across all components:
 
 1. **Edit `Directory.Build.props`** in the repository root:
    ```xml
-   <ShellUIVersion>0.1.0</ShellUIVersion>
+   <ShellUIVersion>0.3.0</ShellUIVersion>
    <ShellUIVersionSuffix></ShellUIVersionSuffix>  <!-- Leave empty for stable releases -->
    ```
 
@@ -89,15 +96,15 @@ To update ShellUI version across all components:
 
 This single file change updates:
 - ✅ All NuGet packages (`ShellUI.CLI`, `ShellUI.Components`)
-- ✅ All component templates (73 components)
+- ✅ All component templates (~100 installable components)
 - ✅ Build configurations and metadata
 
 **Example for pre-release:**
 ```xml
-<ShellUIVersion>0.1.0</ShellUIVersion>
-<ShellUIVersionSuffix>beta.1</ShellUIVersionSuffix>
+<ShellUIVersion>0.3.0</ShellUIVersion>
+<ShellUIVersionSuffix>alpha.1</ShellUIVersionSuffix>
 ```
-Results in version: `0.1.0-beta.1`
+Results in version: `0.3.0-alpha.1`
 
 ### Component Versioning Strategy
 
@@ -109,25 +116,25 @@ Results in version: `0.1.0-beta.1`
 
 **For Advanced Users:** Future versions may support component-specific versioning for power users who need granular control.
 
-### ✅ 73 Production-Ready Components
+### ✅ 100 Production-Ready Components
 
-**Form Components (12):**
+**Form Components (14):**
 Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider, Form, InputOTP
 
-**Layout Components (13):**
-Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, ScrollArea, Resizable, Collapsible, Accordion, AccordionItem, Breadcrumb, BreadcrumbItem
+**Layout Components (15):**
+Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, ScrollArea, Resizable, Collapsible, Accordion, Breadcrumb, BreadcrumbItem, Sonner, Toast
 
-**Navigation Components (9):**
+**Navigation Components (12):**
 Navbar, Sidebar, NavigationMenu, NavigationMenuItem, Menubar, MenubarItem, Pagination, Tabs, Stepper
 
-**Data Display (12):**
-Table, TableHeader, TableBody, TableRow, TableHead, TableCell, DataTable, Badge, Avatar, Alert, Toast, Skeleton, Progress, Loading
+**Data Display (14):**
+Table, TableHeader, TableBody, TableRow, TableHead, TableCell, DataTable, Badge, Avatar, Alert, Toast, Sonner, Skeleton, Progress, Loading
 
-**Interactive Components (7):**
+**Interactive Components (8):**
 Dropdown, Command, ContextMenu, HoverCard, ThemeToggle, EmptyState, FileUpload
 
-**Advanced Components (16):**
-Calendar, DatePicker, DateRangePicker, TimePicker, Combobox, AlertDialog, Carousel, CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
+**Advanced Components (18):**
+Calendar, DatePicker, DateRangePicker, TimePicker, Combobox, AlertDialog, Carousel, Charts (Chart, BarChart, LineChart, PieChart, AreaChart, MultiSeriesChart), CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
 
 ### ✅ Tailwind CSS v4.1.18 Integration
 
@@ -222,24 +229,13 @@ shellui init  # Choose "npm"
 - Standalone CLI (no Node.js required!)
 
 ### Component Structure
-```
-YourProject/
-├── Components/
-│   └── UI/                    # ShellUI components live here
-│       ├── Button.razor
-│       ├── Input.razor
-│       ├── Card.razor
-│       └── ... (69 components)
-├── wwwroot/
-│   ├── input.css              # Tailwind input (@import "tailwindcss";)
-│   └── app.css                # Compiled CSS (auto-generated)
-├── .shellui/
-│   └── bin/                   # Tailwind CLI binary (standalone method)
-├── tailwind.config.js         # Tailwind configuration
-├── shellui.json              # ShellUI configuration
-└── Build/
-    └── ShellUI.targets       # MSBuild integration
-```
+
+- `Components/UI/` - ShellUI components (Button.razor, Input.razor, Card.razor, ...)
+- `Components/UI/Variants/` - Variant classes (*Variants.cs)
+- `wwwroot/` - input.css, app.css (compiled)
+- `.shellui/bin/` - Tailwind CLI binary (standalone)
+- `tailwind.config.js`, `shellui.json`
+- `Build/ShellUI.targets` - MSBuild integration
 
 ## Developer Experience Today
 
@@ -256,7 +252,7 @@ shellui init
 shellui add button input card dialog
 # Or: dotnet shellui add button input card dialog
 
-shellui list  # See all 69 available components
+shellui list  # See all 100 available components
 # Or: dotnet shellui list
 ```
 
@@ -298,7 +294,7 @@ Simply edit the component file in `Components/UI/` - it's yours to modify!
 | Hybrid Workflow | ✅ | ❌ | ❌ | ❌ |
 | Free & Open Source | ✅ | ✅ | Partial | ✅ |
 | Customization | Full | Limited | Limited | Limited |
-| Components | 69+ | 70+ | 50+ | 80+ |
+| Components | 100+ | 70+ | 50+ | 80+ |
 | Current Status | Production Ready | Mature | Commercial | Mature |
 
 ## 📦 Package Overview
@@ -606,11 +602,11 @@ MIT License - See LICENSE.txt for details
 - [CLI_SYNTAX.md](docs/CLI_SYNTAX.md) - CLI command reference
 
 **Architecture:**
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Technical architecture and design decisions
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - System architecture, diagrams, and design decisions
 
 ## Status
 
-**✅ Production Ready:** 69 components, CLI + NuGet, Tailwind v4.1.18 integration
+**Alpha:** 100 components, CLI + NuGet, Tailwind v4.1.18. Test before stable.
 **🚀 Ready to use today!**
 
 ---

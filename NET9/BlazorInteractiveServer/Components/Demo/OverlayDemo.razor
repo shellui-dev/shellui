@@ -1,10 +1,12 @@
 @namespace BlazorInteractiveServer.Components.Demo
 @using BlazorInteractiveServer.Components
+@using BlazorInteractiveServer.Components.Services
+@inject ISonnerService Sonner
 
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Overlays</h2>
     <div class="space-y-6">
-        <!-- Dropdown Demo -->
+        <!-- Dropdown Demo (legacy: Trigger + ChildContent) -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Dropdown</h3>
             <Dropdown @bind-IsOpen="IsDropdownOpen">
@@ -20,6 +22,22 @@
                         Settings
                     </button>
                 </ChildContent>
+            </Dropdown>
+        </div>
+
+        <!-- Dropdown (Compositional: DropdownTrigger, DropdownContent, DropdownItem) -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Dropdown (Compositional)</h3>
+            <Dropdown>
+                <DropdownTrigger>
+                    <Button Variant="@ButtonVariant.Outline">
+                        Options <span class="material-symbols-outlined text-sm ml-1">expand_more</span>
+                    </Button>
+                </DropdownTrigger>
+                <DropdownContent>
+                    <DropdownItem OnClick="() => { }">Profile</DropdownItem>
+                    <DropdownItem OnClick="() => { }">Settings</DropdownItem>
+                </DropdownContent>
             </Dropdown>
         </div>
 
@@ -54,7 +72,7 @@
             </div>
         </div>
 
-        <!-- Popover Demo -->
+        <!-- Popover Demo (legacy) -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Popover</h3>
             <Popover @bind-IsOpen="IsPopoverOpen">
@@ -77,14 +95,55 @@
             </Popover>
         </div>
 
-        <!-- Toast Demo -->
+        <!-- Popover (Compositional: PopoverTrigger, PopoverContent) -->
         <div>
-            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Toast</h3>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Popover (Compositional)</h3>
+            <Popover Placement="bottom">
+                <PopoverTrigger>
+                    <Button Variant="@ButtonVariant.Outline">Dimensions (Compositional)</Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                    <p class="text-sm text-muted-foreground">Uses PopoverTrigger + PopoverContent.</p>
+                </PopoverContent>
+            </Popover>
+        </div>
+
+        <!-- Sonner Toast Demo -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Sonner Toast</h3>
+            <p class="text-sm text-muted-foreground mb-3">Stacking toasts with smooth animations (bottom-right)</p>
             <div class="flex flex-wrap gap-2">
                 <Button OnClick="HandleShowToast">Show Default Toast</Button>
                 <Button Variant="@ButtonVariant.Destructive" OnClick="HandleShowDestructiveToast">Show Error Toast</Button>
                 <Button Variant="@ButtonVariant.Outline" OnClick="HandleShowSuccessToast">Show Success Toast</Button>
-                <Button OnClick="HandleShowWarningToast" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2">Show Warning Toast</Button>
+                <Button OnClick="HandleShowToast" Variant="@ButtonVariant.Secondary">Show Multiple</Button>
+            </div>
+        </div>
+
+        <!-- Drawer & Sheet (Compositional) -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Drawer & Sheet</h3>
+            <div class="flex flex-wrap gap-2">
+                <Drawer @bind-Open="drawerOpen" Side="@DrawerSide.Bottom">
+                    <DrawerTrigger>
+                        <Button Variant="@ButtonVariant.Outline">Open Drawer</Button>
+                    </DrawerTrigger>
+                    <DrawerContent>
+                        <h4 class="font-semibold">Drawer Title</h4>
+                        <p class="text-sm text-muted-foreground">Drawer content with Trigger/Content pattern.</p>
+                        <Button @onclick="() => drawerOpen = false">Close</Button>
+                    </DrawerContent>
+                </Drawer>
+                <Sheet @bind-Open="sheetOpen" Side="@SheetSide.Right">
+                    <SheetTrigger>
+                        <Button Variant="@ButtonVariant.Outline">Open Sheet</Button>
+                    </SheetTrigger>
+                    <SheetContent>
+                        <h4 class="font-semibold">Sheet Title</h4>
+                        <p class="text-sm text-muted-foreground">Sheet content with Trigger/Content pattern.</p>
+                        <Button @onclick="() => sheetOpen = false">Close</Button>
+                    </SheetContent>
+                </Sheet>
             </div>
         </div>
     </div>
@@ -95,36 +154,22 @@
     [Parameter] public EventCallback<bool> IsDropdownOpenChanged { get; set; }
     [Parameter] public bool IsPopoverOpen { get; set; } = false;
     [Parameter] public EventCallback<bool> IsPopoverOpenChanged { get; set; }
-    [Parameter] public bool ShowToast { get; set; } = false;
-    [Parameter] public EventCallback<bool> ShowToastChanged { get; set; }
-    [Parameter] public bool ShowDestructiveToast { get; set; } = false;
-    [Parameter] public EventCallback<bool> ShowDestructiveToastChanged { get; set; }
-    [Parameter] public bool ShowSuccessToast { get; set; } = false;
-    [Parameter] public EventCallback<bool> ShowSuccessToastChanged { get; set; }
-    [Parameter] public bool ShowWarningToast { get; set; } = false;
-    [Parameter] public EventCallback<bool> ShowWarningToastChanged { get; set; }
 
-    private async Task HandleShowToast()
+    private bool drawerOpen = false;
+    private bool sheetOpen = false;
+
+    private void HandleShowToast()
     {
-        ShowToast = true;
-        await ShowToastChanged.InvokeAsync(ShowToast);
+        Sonner.Show("Notification", "Your action was successful!");
     }
 
-    private async Task HandleShowDestructiveToast()
+    private void HandleShowDestructiveToast()
     {
-        ShowDestructiveToast = true;
-        await ShowDestructiveToastChanged.InvokeAsync(ShowDestructiveToast);
+        Sonner.Show("Error", "Something went wrong!", "destructive");
     }
 
-    private async Task HandleShowSuccessToast()
+    private void HandleShowSuccessToast()
     {
-        ShowSuccessToast = true;
-        await ShowSuccessToastChanged.InvokeAsync(ShowSuccessToast);
-    }
-
-    private async Task HandleShowWarningToast()
-    {
-        ShowWarningToast = true;
-        await ShowWarningToastChanged.InvokeAsync(ShowWarningToast);
+        Sonner.Show("Success", "Changes saved successfully!", "success");
     }
 }

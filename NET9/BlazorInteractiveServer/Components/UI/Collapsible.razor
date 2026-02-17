@@ -1,37 +1,23 @@
 @namespace BlazorInteractiveServer.Components.UI
 @using BlazorInteractiveServer.Components
 
-<div class="@Shell.Cn(Class)" @attributes="AdditionalAttributes">
-    <button type="button"
-            @onclick="Toggle"
-            class="flex w-full items-center justify-between py-4 font-medium transition-all hover:underline">
-        @Trigger
-        <svg class="@Shell.Cn("h-4 w-4 shrink-0 transition-transform duration-200", IsOpen ? "rotate-180" : "")" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
-    </button>
-    
-    @if (IsOpen)
-    {
-        <div class="overflow-hidden transition-all">
-            @ChildContent
-        </div>
-    }
-</div>
+<CascadingValue Value="this" IsFixed="true">
+    <div class="@Shell.Cn(Class)" @attributes="AdditionalAttributes">
+        @ChildContent
+    </div>
+</CascadingValue>
 
 @code {
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
-    [Parameter] public RenderFragment? Trigger { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
-    private async Task Toggle()
+
+    public async Task ToggleAsync()
     {
         IsOpen = !IsOpen;
         await IsOpenChanged.InvokeAsync(IsOpen);
     }
 }
-

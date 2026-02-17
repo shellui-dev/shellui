@@ -59,11 +59,7 @@
         <NavigationDemo IsSidebarOpen="@isSidebarOpen" IsSidebarOpenChanged="HandleSidebarOpenChanged" />
         
         <OverlayDemo IsDropdownOpen="@isDropdownOpen" IsDropdownOpenChanged="HandleDropdownOpenChanged"
-                     IsPopoverOpen="@isPopoverOpen" IsPopoverOpenChanged="HandlePopoverOpenChanged"
-                     ShowToast="@showToast" ShowToastChanged="HandleShowToastChanged"
-                     ShowDestructiveToast="@showDestructiveToast" ShowDestructiveToastChanged="HandleShowDestructiveToastChanged"
-                     ShowSuccessToast="@showSuccessToast" ShowSuccessToastChanged="HandleShowSuccessToastChanged"
-                     ShowWarningToast="@showWarningToast" ShowWarningToastChanged="HandleShowWarningToastChanged" />
+                     IsPopoverOpen="@isPopoverOpen" IsPopoverOpenChanged="HandlePopoverOpenChanged" />
         
         <AdvancedFormDemo Otp1="@otp1" Otp1Changed="HandleOtp1Changed"
                           Otp2="@otp2" Otp2Changed="HandleOtp2Changed"
@@ -87,28 +83,18 @@
                               ShowCommand="@showCommand" ShowCommandChanged="HandleShowCommandChanged"
                               CommandItems="@commandItems" OnCommandSelected="HandleCommandSelected"
                               ContextMenuItems="@contextMenuItems" OnContextMenuSelect="HandleContextMenuSelect"
-                              TabItems="@tabItems" ActiveTab="@activeTab" ActiveTabChanged="HandleTabChange"
-                              StepperSteps="@stepperSteps" CurrentStep="@currentStep" CurrentStepChanged="HandleStepChange"
+                              CurrentStep="@currentStep" CurrentStepChanged="HandleStepChange"
                               TextCarouselSlide="@textCarouselSlide" TextCarouselSlideChanged="HandleTextCarouselSlideChange"
                               ImageCarouselSlide="@imageCarouselSlide" ImageCarouselSlideChanged="HandleImageCarouselSlideChange"
                               CurrentPage="@currentPage" CurrentPageChanged="HandlePageChange" TotalPages="@totalPages" />
     </div>
 
-    <!-- Toast Notifications -->
-    <Toast @bind-IsVisible="showToast" Title="Notification" Description="Your action was successful!" />
-    <Toast @bind-IsVisible="showDestructiveToast" Title="Error" Description="Something went wrong!" Variant="destructive" />
-    <Toast @bind-IsVisible="showSuccessToast" Title="Success" Description="Changes saved successfully!" Variant="success" Position="top-right" />
-    <Toast @bind-IsVisible="showWarningToast" Title="Warning" Description="Please review this action!" Variant="warning" Position="top-right" />
 </div>
 
 @code {
     private bool isDropdownOpen = false;
     private bool isSidebarOpen = false;
     private bool isPopoverOpen = false;
-    private bool showToast = false;
-    private bool showDestructiveToast = false;
-    private bool showSuccessToast = false;
-    private bool showWarningToast = false;
 
     // Form Controls
     private string selectedFruit = "";
@@ -143,7 +129,6 @@
     private DateTime? selectedCalendarDate;
     private string hoverCardText = "Hover me!";
     private string hoverCardUser = "Shewart Shepherd";
-    private string activeTab = "overview";
     private int currentStep = 0;
     private int textCarouselSlide = 0;
     private int imageCarouselSlide = 0;
@@ -210,36 +195,6 @@
 
     private List<ContextMenuItem> contextMenuItems = new();
 
-    private List<TabItem> tabItems = new();
-
-    private List<StepItem> stepperSteps = new()
-    {
-        new StepItem 
-        { 
-            Title = "Account Setup", 
-            Description = "Create your account",
-            Content = builder => builder.AddMarkupContent(0, "<p>Enter your account details here.</p>")
-        },
-        new StepItem 
-        { 
-            Title = "Profile Information", 
-            Description = "Complete your profile",
-            Content = builder => builder.AddMarkupContent(0, "<p>Add your profile information.</p>")
-        },
-        new StepItem 
-        { 
-            Title = "Preferences", 
-            Description = "Set your preferences",
-            Content = builder => builder.AddMarkupContent(0, "<p>Configure your preferences.</p>")
-        },
-        new StepItem 
-        { 
-            Title = "Review", 
-            Description = "Review and confirm",
-            Content = builder => builder.AddMarkupContent(0, "<p>Review your information and confirm.</p>")
-        }
-    };
-
     private List<User> users = new()
     {
         new User { Name = "Shewart Shepherd", Email = "shep@shell-tech.dev", Phone = "+263780000000", Role = "Admin" },
@@ -272,31 +227,6 @@
             new ContextMenuItem { Label = "Cut", Icon = "<span class=\"material-symbols-outlined\" style=\"font-size: 0.875rem; line-height: 1;\">content_cut</span>", Shortcut = "Ctrl+X" },
             new ContextMenuItem { Label = "Delete", Icon = "<span class=\"material-symbols-outlined\" style=\"font-size: 0.875rem; line-height: 1;\">delete</span>", Shortcut = "Del", Disabled = true }
         };
-
-        tabItems = new List<TabItem>
-        {
-            new TabItem 
-            { 
-                Id = "overview", 
-                Label = "Overview", 
-                Icon = "<span class=\"material-symbols-outlined text-sm\">bar_chart</span>",
-                Content = builder => builder.AddMarkupContent(0, "<p>This is the overview tab content.</p>")
-            },
-            new TabItem 
-            { 
-                Id = "settings", 
-                Label = "Settings", 
-                Icon = "<span class=\"material-symbols-outlined text-sm\">settings</span>",
-                Content = builder => builder.AddMarkupContent(0, "<p>This is the settings tab content.</p>")
-            },
-            new TabItem 
-            { 
-                Id = "analytics", 
-                Label = "Analytics", 
-                Icon = "<span class=\"material-symbols-outlined text-sm\">trending_up</span>",
-                Content = builder => builder.AddMarkupContent(0, "<p>This is the analytics tab content.</p>")
-            }
-        };
     }
 
     // Event Handlers
@@ -312,10 +242,6 @@
     private void HandleSidebarOpenChanged(bool value) => isSidebarOpen = value;
     private void HandleDropdownOpenChanged(bool value) => isDropdownOpen = value;
     private void HandlePopoverOpenChanged(bool value) => isPopoverOpen = value;
-    private void HandleShowToastChanged(bool value) => showToast = value;
-    private void HandleShowDestructiveToastChanged(bool value) => showDestructiveToast = value;
-    private void HandleShowSuccessToastChanged(bool value) => showSuccessToast = value;
-    private void HandleShowWarningToastChanged(bool value) => showWarningToast = value;
     private void HandleOtp1Changed(string value) => otp1 = value;
     private void HandleOtp2Changed(string value) => otp2 = value;
     private void HandleOtp3Changed(string value) => otp3 = value;
@@ -341,7 +267,6 @@
         }
     }
     private void HandleContextMenuSelect(ContextMenuItem item) { }
-    private void HandleTabChange(string tabId) => activeTab = tabId;
     private void HandleStepChange(int step) => currentStep = step;
     private void HandleTextCarouselSlideChange(int slide) => textCarouselSlide = slide;
     private void HandleImageCarouselSlideChange(int slide) => imageCarouselSlide = slide;

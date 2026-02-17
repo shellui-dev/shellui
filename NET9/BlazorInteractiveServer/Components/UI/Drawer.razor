@@ -1,14 +1,17 @@
 @namespace BlazorInteractiveServer.Components.UI
 @using BlazorInteractiveServer.Components
 
-@if (IsOpen)
+@if (UseCompositional)
+{
+    <CascadingValue Value="this" IsFixed="true">
+        @ChildContent
+    </CascadingValue>
+}
+else if (Open)
 {
     <div class="fixed inset-0 z-50 bg-black/80 animate-in fade-in-0" @onclick="Close"></div>
-    
-    <div class="@ComputedClass"
-         @attributes="AdditionalAttributes">
+    <div class="@DrawerVariants.Get(Side, Class)" @attributes="AdditionalAttributes">
         <div class="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted"></div>
-        
         <div class="grid gap-1.5 p-4 text-center sm:text-left">
             @if (!string.IsNullOrEmpty(Title))
             {
@@ -19,18 +22,16 @@
                 <p class="text-sm text-muted-foreground">@Description</p>
             }
         </div>
-        <div class="p-4">
-            @ChildContent
-        </div>
+        <div class="p-4">@ChildContent</div>
         <div class="mt-auto flex flex-col gap-2 p-4">
-            <button @onclick="Close" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">Close</button>
+            <button type="button" @onclick="Close" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">Close</button>
         </div>
     </div>
 }
 
 @code {
-    [Parameter] public bool IsOpen { get; set; }
-    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
     [Parameter] public string? Title { get; set; }
     [Parameter] public string? Description { get; set; }
     [Parameter] public DrawerSide Side { get; set; } = DrawerSide.Bottom;
@@ -38,13 +39,18 @@
     [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
-    private string ComputedClass => DrawerVariants.Get(Side, Class);
+
+    private bool UseCompositional => string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Description);
 
     private async Task Close()
     {
-        IsOpen = false;
-        await IsOpenChanged.InvokeAsync(IsOpen);
+        Open = false;
+        await OpenChanged.InvokeAsync(Open);
+        StateHasChanged();
+    }
+
+    public async Task SetOpen(bool value)
+    {
+        if (Open != value) { Open = value; await OpenChanged.InvokeAsync(Open); StateHasChanged(); }
     }
 }
-

@@ -1,34 +1,34 @@
 # ShellUI Project Status
 
-## Current Status: v0.1.0 Released! 🎉
+## Current Status: v0.3.0-alpha.1 (Pre-release) 🎉
 
-**ShellUI is now available on NuGet!**
+**ShellUI alpha is available on NuGet!** Test before upgrading to stable.
 
-- ✅ **Version 0.1.0** - Major architectural upgrade (Refactored to shadcn/ui patterns)
-- ✅ **73 Production-Ready Components** - Fully functional and tested
+- ✅ **Version 0.3.0-alpha.1** - 100 installable components (actual components only; dependencies auto-installed)
+- ✅ **100 Production-Ready Components** - Fully functional and tested
 - ✅ **CLI Tool Published** - `dotnet tool install -g ShellUI.CLI`
 - ✅ **NuGet Packages Published** - `ShellUI.Components`, `ShellUI.CLI`, `ShellUI.Templates`
 - ✅ **Hybrid Distribution** - CLI + NuGet packages (best of both worlds!)
 - ✅ **No Node.js Required** - Using Tailwind standalone CLI (zero JavaScript dependencies!)
-- ✅ **Tailwind CSS v4.1.17** - Latest version with standalone CLI support
+- ✅ **Tailwind CSS v4.1.18** - Latest version with standalone CLI support
 
 ## What's Complete ✅
 
 ### Core Infrastructure
-- [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet v0.1.0
-- [x] Components Package (`ShellUI.Components`) - Published to NuGet v0.1.0
-- [x] Templates Package (`ShellUI.Templates`) - Published to NuGet v0.1.0
-- [x] Component Registry - 53 components registered and available
-- [x] Tailwind CSS Integration - v4.1.17 standalone CLI support
+- [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet
+- [x] Components Package (`ShellUI.Components`) - Published to NuGet
+- [x] Templates Package (`ShellUI.Templates`) - Embedded in CLI
+- [x] Component Registry - 139 templates (~100 installable)
+- [x] Tailwind CSS Integration - v4.1.18 standalone CLI support
 - [x] MSBuild Integration - Automatic CSS compilation
 
-### Components (73 Total)
-- [x] **Form Components (12)**: Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider, Form, InputOTP
-- [x] **Layout Components (13)**: Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, ScrollArea, Resizable, Collapsible, Accordion, AccordionItem, Breadcrumb, BreadcrumbItem
-- [x] **Navigation Components (9)**: Navbar, Sidebar, NavigationMenu, NavigationMenuItem, Menubar, MenubarItem, Pagination, Tabs, Stepper
-- [x] **Data Display (12)**: Table, TableHeader, TableBody, TableRow, TableHead, TableCell, DataTable, Badge, Avatar, Alert, Toast, Skeleton, Progress, Loading
-- [x] **Interactive Components (7)**: Dropdown, Command, ContextMenu, HoverCard, ThemeToggle, EmptyState, FileUpload
-- [x] **Advanced Components (16)**: Calendar, DatePicker, DateRangePicker, TimePicker, Combobox, AlertDialog, Carousel, CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
+### Components (100 Installable)
+- [x] **Form Components (14)**: Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider, Form, InputOTP, Combobox
+- [x] **Layout Components (15)**: Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, ScrollArea, Resizable, Collapsible, Accordion, Sonner, Toast
+- [x] **Navigation Components (12)**: Navbar, Sidebar, NavigationMenu, Menubar, MenubarItem, Pagination, Tabs, Stepper, Breadcrumb, BreadcrumbItem
+- [x] **Data Display (14)**: Table, DataTable, Badge, Avatar, Alert, Toast, Sonner, Skeleton, Progress, Loading
+- [x] **Interactive Components (8)**: Dropdown, Command, ContextMenu, HoverCard, ThemeToggle, EmptyState, FileUpload, CopyButton
+- [x] **Advanced Components (18+)**: Calendar, DatePicker, DateRangePicker, TimePicker, AlertDialog, Carousel, Charts (Chart, BarChart, LineChart, PieChart, AreaChart, MultiSeriesChart)
 
 ### Documentation
 - [x] README.md - Project overview and quick start
@@ -55,15 +55,15 @@
 - [ ] Additional loading animations
 - [ ] More form validation helpers
 
-### Medium Term (v0.1.0+)
+### Medium Term (v0.3.0+)
 - [ ] Component themes/presets
 - [ ] Visual component editor
 - [ ] Storybook-like playground
 - [ ] Advanced composition patterns
-- [ ] More components (targeting 80+)
+- [ ] Additional components
 
 ### Long Term (v1.0.0+)
-- [ ] Full component library (70+ components)
+- [ ] Full component library (100+ components)
 - [ ] Comprehensive documentation website
 - [ ] Video tutorials
 - [ ] Community contributions
@@ -71,27 +71,15 @@
 
 ## Timeline
 
-```
-## Timeline
+| Milestone | Status |
+|-----------|--------|
+| v0.3.0-alpha - 100 components, CLI, NuGet | ✅ Done |
+| Tailwind v4.1.18 standalone | ✅ Done |
+| Alpha testing & validation | 🔄 In progress |
+| v0.3.0 stable (after testing) | 🎯 Next |
+| v1.0 - Full release | 🎯 Target Q2-Q3 2026 |
 
-✅ Q4 2025 - v0.1.0 Released (December 2025)
-   ├── ✅ CLI Tool Published
-   ├── ✅ NuGet Packages Published
-   ├── ✅ 69 Components Available
-   └── ✅ Tailwind v4.1.17 Integration
-
-🚀 Q1 2026 - v0.1.0+ (Planned)
-   ├── More components (75+)
-   ├── Enhanced documentation
-   ├── Component examples
-   └── Performance improvements
-
-🎯 Q2-Q3 2026 - v1.0.0 (Target)
-   ├── Full component library (80+)
-   ├── Comprehensive documentation
-   ├── Community contributions
-   └── Production-ready release
-```
+*Note: Stepper active-state highlighting known issue; shipping as-is for alpha.*
 
 ## How to Get Started with Development
 
@@ -177,16 +165,16 @@ dotnet shellui add button input card
 
 ## Success Criteria
 
-### v0.1.0 Success ✅
+### v0.3.0-alpha Success ✅
 - [x] CLI tool published to NuGet
 - [x] NuGet packages published (Components, CLI, Templates)
 - [x] Can initialize projects (no Node.js!)
-- [x] 69 components working (both CLI and NuGet)
+- [x] 100 components working (both CLI and NuGet)
 - [x] Basic documentation live
 - [ ] 50+ GitHub stars (in progress)
 
 ### Beta Success (Q2 2026)
-- [ ] 40+ components available
+- [x] 100+ components available
 - [ ] Component registry operational
 - [ ] Hybrid workflow proven
 - [ ] 500+ GitHub stars
@@ -242,9 +230,9 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
-**Last Updated:** November 2025  
-**Current Version:** v0.1.0  
-**Status:** Pre-release (ready for use!)
+**Last Updated:** February 2026  
+**Current Version:** v0.3.0-alpha.1  
+**Status:** Alpha (pre-release; test and validate before stable release)
 
 ---
 

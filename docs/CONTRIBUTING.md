@@ -146,18 +146,13 @@ docs(readme): update installation instructions
 When developing components:
 
 ### Component Structure
-```
-ComponentName/
-├── ComponentName.razor          # Main component
-├── ComponentName.razor.cs       # Code-behind (if needed)
-├── ComponentName.tests.cs       # Unit tests
-├── metadata.json                # Component metadata
-├── README.md                    # Component documentation
-└── examples/
-    ├── basic.razor
-    ├── variants.razor
-    └── composition.razor
-```
+
+- `ComponentName.razor` - Main component
+- `ComponentName.razor.cs` - Code-behind (optional)
+- `ComponentName.tests.cs` - Unit tests
+- `metadata.json` - Component metadata
+- `README.md` - Documentation
+- `examples/` - basic.razor, variants.razor, composition.razor
 
 ### Component Checklist
 - [ ] Implements common parameters (Variant, Size, Disabled, etc.)
