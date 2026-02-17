@@ -29,7 +29,7 @@ dotnet shellui add card dialog
 ## What's Included
 
 This package contains:
-- **Component Templates** - Razor component templates for all ShellUI components
+- **~100 Installable Component Templates** - Primary components (dependencies like *-variants auto-installed)
 - **Metadata** - Component metadata including dependencies, categories, and descriptions
 - **Registry** - Component registry for CLI discovery
 

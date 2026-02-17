@@ -11,6 +11,7 @@ public class ChartVariantsTemplate
         Description = "Chart theming and styling utilities for ShellUI charts",
         Category = ComponentCategory.DataDisplay,
         FilePath = "Variants/ChartVariants.cs",
+        IsAvailable = false,
         Dependencies = new List<string>(),
         Variants = new List<string> { "default", "colorful", "monochrome" },
         Tags = new List<string> { "chart", "theme", "styling", "data", "visualization" }

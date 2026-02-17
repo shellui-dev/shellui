@@ -10,7 +10,7 @@ public class SonnerTemplate
         DisplayName = "Sonner",
         Description = "Toast notification component with stacking and positional variants",
         Category = ComponentCategory.Feedback,
-        FilePath = "Components/UI/Sonner.razor",
+        FilePath = "Sonner.razor",
         Dependencies = new List<string> { "sonner-variants", "sonner-service" },
         Variants = new List<string> { "default", "destructive", "success" },
         Tags = new List<string> { "notification", "toast", "sonner", "feedback", "overlay" }

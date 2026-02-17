@@ -99,7 +99,9 @@ dotnet shellui remove button input
 - `navbar`, `sidebar`, `navigation-menu`, `menubar`, `breadcrumb`, `pagination`, `tabs`
 
 ### Data Display
-- `table`, `data-table`, `badge`, `avatar`, `alert`, `toast`, `skeleton`, `progress`, `loading`
+- `table`, `data-table`, `badge`, `avatar`, `alert`, `toast`, `sonner`, `skeleton`, `progress`, `loading`
+
+**~100 components total** (run `dotnet shellui list` for full list; dependencies auto-installed)
 
 ### Interactive Components
 - `dropdown`, `accordion`, `toggle`, `theme-toggle`, `command`, `context-menu`, `hover-card`
@@ -115,19 +117,16 @@ dotnet shellui add dialog
 
 ## Project Structure
 
-After running `init`, your project structure will look like:
+After running `init`, your project structure:
 
-```
-YourProject/
-├── Components/
-│   └── UI/          # Components are installed here
-├── wwwroot/
-│   ├── input.css    # Tailwind input file
-│   └── app.css      # Compiled CSS (auto-generated)
-├── tailwind.config.js
-└── Build/
-    └── ShellUI.targets  # MSBuild integration
-```
+| Path | Purpose |
+|------|---------|
+| `Components/UI/` | Components are installed here |
+| `wwwroot/input.css` | Tailwind input file |
+| `wwwroot/app.css` | Compiled CSS (auto-generated) |
+| `tailwind.config.js` | Tailwind configuration |
+| `shellui.json` | ShellUI configuration |
+| `Build/ShellUI.targets` | MSBuild integration |
 
 ## Updating Components
 
