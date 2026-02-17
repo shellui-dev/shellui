@@ -1,6 +1,6 @@
 # ShellUI Quick Start Guide
 
-**Note:** ShellUI is currently in development. This guide shows what the experience will be like when v1.0 is released.
+**Note:** ShellUI is in alpha with 100 components. Test and provide feedback!
 
 ## What is ShellUI?
 
@@ -8,8 +8,8 @@ ShellUI is a CLI-first Blazor component library inspired by shadcn/ui. Instead o
 
 ## Prerequisites
 
-- .NET 8.0 SDK or higher
-- Node.js 18+ (for Tailwind CSS)
+- .NET 8.0 or 9.0 SDK or higher
+- **No Node.js required** (Tailwind standalone CLI)
 - A Blazor project (Server, WASM, or SSR)
 
 ## Installation
@@ -164,17 +164,7 @@ Then use it:
 dotnet shellui list
 ```
 
-Output:
-```
-Component      Status       Version    Description
-───────────────────────────────────────────────────────────────
-button         installed    1.0.0      Interactive button
-card           installed    1.0.0      Content container
-alert          available    1.0.0      Alert messages
-dialog         available    1.0.0      Modal dialogs
-input          available    1.0.0      Text input field
-...
-```
+Output: A table showing component name, status (installed/available), version, category, and description. Run `dotnet shellui list` to see all ~100 components.
 
 ### List only installed components
 

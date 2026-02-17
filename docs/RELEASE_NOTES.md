@@ -1,4 +1,10 @@
-# ShellUI v0.2.0 📊
+# ShellUI v0.3.0-alpha.1 🚧
+
+> Current alpha release — test thoroughly before stable v0.3.0.
+
+---
+
+# ShellUI v0.2.0 📊 (Historical)
 
 > Feature release - Charts & Data Visualization
 
@@ -44,7 +50,7 @@ Fully custom HTML tooltips replacing ApexCharts defaults:
 ## 🔧 Improvements
 
 - **Tailwind CSS updated to v4.1.18**
-- **Component count: 80** (73 existing + 7 new chart components)
+- **Component count: 100** installable (dependencies like *-variants auto-installed)
 - **X-axis labels** - Charts use `XAxisType.Category` for proper string label display
 - **Version system** - Fallback version now reads `AssemblyInformationalVersion` baked at build time
 

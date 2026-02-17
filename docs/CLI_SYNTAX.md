@@ -179,17 +179,7 @@ Examples:
   dotnet shellui list --json
 ```
 
-**Output Example:**
-```
-Component      Status       Version    Category    Description
-─────────────────────────────────────────────────────────────────────
-button         installed    1.0.0      form        Interactive button
-card           installed    1.0.0      layout      Content container
-alert          available    1.0.0      feedback    Alert messages
-dialog         available    1.0.0      overlay     Modal dialogs
-input          available    1.0.0      form        Text input field
-...
-```
+**Output:** A table with columns: Component, Status (installed/available), Version, Category, Description. Run `dotnet shellui list` to see all ~100 available components.
 
 ## update - Update Components
 
