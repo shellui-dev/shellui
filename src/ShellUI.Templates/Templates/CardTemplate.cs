@@ -17,7 +17,7 @@ public static class CardTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@Shell.Cn(""rounded-lg border bg-card text-card-foreground shadow-sm"", Class)"" @attributes=""AdditionalAttributes"">
+<div class=""@Shell.Cn(""rounded-lg border border-border bg-card text-card-foreground shadow-sm"", Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </div>
 
