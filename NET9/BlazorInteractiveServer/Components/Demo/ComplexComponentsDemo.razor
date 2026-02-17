@@ -122,6 +122,45 @@
             </Collapsible>
         </div>
 
+        <!-- Docs Components: CopyButton, Callout, LinkCard, PrevNextNav -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Docs Components</h3>
+            <div class="space-y-4">
+                <div>
+                    <p class="text-sm text-muted-foreground mb-2">CopyButton — copy code to clipboard:</p>
+                    <div class="flex items-center gap-2 p-3 rounded-md border border-border bg-muted/30">
+                        <code class="flex-1 text-sm">dotnet shellui add button</code>
+                        <CopyButton Text="dotnet shellui add button" />
+                    </div>
+                </div>
+                <div>
+                    <p class="text-sm text-muted-foreground mb-2">Callout — info/warning/tip boxes:</p>
+                    <div class="space-y-3">
+                        <Callout Variant="CalloutVariant.Info" Title="Note">
+                            This is an info callout. Use it for helpful hints.
+                        </Callout>
+                        <Callout Variant="CalloutVariant.Tip" Title="Tip">
+                            Pro tip: Run <code>dotnet shellui init</code> first!
+                        </Callout>
+                        <Callout Variant="CalloutVariant.Warning" Title="Warning">
+                            Be careful when using --force; it overwrites existing files.
+                        </Callout>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-sm text-muted-foreground mb-2">LinkCard — card-style navigation:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <LinkCard Href="/overlay" Title="Overlay Components" />
+                        <LinkCard Href="/forms" Title="Form Controls" />
+                    </div>
+                </div>
+                <div>
+                    <p class="text-sm text-muted-foreground mb-2">PrevNextNav — page navigation:</p>
+                    <PrevNextNav PrevHref="/" PrevLabel="Home" NextHref="/overlay" NextLabel="Overlay Demo" />
+                </div>
+            </div>
+        </div>
+
         <!-- Command Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Command Palette</h3>
@@ -155,16 +194,115 @@
             </EmptyState>
         </div>
 
-        <!-- Tabs Demo -->
+        <!-- Tabs Demo (shadcn-style compositional) -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Tabs</h3>
-            <Tabs TabItems="TabItems" ActiveTab="@ActiveTab" ActiveTabChanged="HandleTabChange" />
+            <Tabs DefaultValue="overview" Class="w-full max-w-[400px]">
+                <TabsList>
+                    <TabsTrigger Value="overview">Overview</TabsTrigger>
+                    <TabsTrigger Value="analytics">Analytics</TabsTrigger>
+                    <TabsTrigger Value="reports">Reports</TabsTrigger>
+                    <TabsTrigger Value="settings">Settings</TabsTrigger>
+                </TabsList>
+                <TabsContent Value="overview">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Overview</CardTitle>
+                            <CardDescription>
+                                View your key metrics and recent project activity. Track progress across all your active projects.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent Class="text-muted-foreground text-sm">
+                            You have 12 active projects and 3 pending tasks.
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                <TabsContent Value="analytics">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Analytics</CardTitle>
+                            <CardDescription>
+                                Track performance and user engagement metrics. Monitor trends and identify growth opportunities.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent Class="text-muted-foreground text-sm">
+                            Page views are up 25% compared to last month.
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                <TabsContent Value="reports">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Reports</CardTitle>
+                            <CardDescription>
+                                Generate and download your detailed reports. Export data in multiple formats for analysis.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent Class="text-muted-foreground text-sm">
+                            You have 5 reports ready and available to export.
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                <TabsContent Value="settings">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Settings</CardTitle>
+                            <CardDescription>
+                                Manage your account preferences and options. Customize your experience to fit your needs.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent Class="text-muted-foreground text-sm">
+                            Configure notifications, security, and themes.
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+            </Tabs>
         </div>
 
-        <!-- Stepper Demo -->
+        <!-- Stepper Demo (compositional with Confirm on last step) -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Stepper</h3>
-            <Stepper StepItems="StepperSteps" CurrentStep="@CurrentStep" CurrentStepChanged="HandleStepChange" />
+            <Stepper TotalSteps="4" CurrentStep="@CurrentStep" CurrentStepChanged="HandleStepChange" OnConfirm="HandleStepperConfirm">
+                <StepperList>
+                    <StepperStep Value="0" Title="Account Setup" Description="Create your account" />
+                    <StepperStep Value="1" Title="Profile Information" Description="Complete your profile" />
+                    <StepperStep Value="2" Title="Preferences" Description="Set your preferences" />
+                    <StepperStep Value="3" Title="Review" Description="Review and confirm" />
+                </StepperList>
+                <StepperContent Value="0"><p>Enter your account details here.</p></StepperContent>
+                <StepperContent Value="1"><p>Add your profile information.</p></StepperContent>
+                <StepperContent Value="2"><p>Configure your preferences.</p></StepperContent>
+                <StepperContent Value="3"><p>Review your information and confirm.</p></StepperContent>
+            </Stepper>
+            @if (_stepperSubmitted)
+            {
+                <p class="mt-2 text-sm text-muted-foreground">Stepper submitted successfully!</p>
+            }
+        </div>
+
+        <!-- Stepper in Dialog -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Stepper in Dialog</h3>
+            <p class="text-sm text-muted-foreground mb-4">Combine Dialog with Stepper for multi-step flows in a modal.</p>
+            <Button @onclick="() => _showStepperDialog = true">Open Setup Wizard</Button>
+            <Dialog Open="@_showStepperDialog" OpenChanged="HandleStepperDialogOpenChanged">
+                <DialogContent Class="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Account Setup Wizard</DialogTitle>
+                        <DialogDescription>Complete these steps to set up your account.</DialogDescription>
+                    </DialogHeader>
+                    <Stepper TotalSteps="3" CurrentStep="@_dialogStepperStep" CurrentStepChanged="HandleDialogStepChange" OnConfirm="HandleDialogStepperConfirm" ShowConfirmOnLast="true">
+                        <StepperList>
+                            <StepperStep Value="0" Title="Details" Description="Basic info" />
+                            <StepperStep Value="1" Title="Preferences" Description="Your choices" />
+                            <StepperStep Value="2" Title="Done" Description="Complete" />
+                        </StepperList>
+                        <StepperContent Value="0"><p class="text-sm text-muted-foreground">Enter your name and email.</p></StepperContent>
+                        <StepperContent Value="1"><p class="text-sm text-muted-foreground">Choose your notification and theme preferences.</p></StepperContent>
+                        <StepperContent Value="2"><p class="text-sm text-muted-foreground">You're all set! Click Confirm to finish.</p></StepperContent>
+                    </Stepper>
+                </DialogContent>
+            </Dialog>
         </div>
 
         <!-- Carousel Demo -->
@@ -238,6 +376,9 @@
 @code {
     private bool _showCommand = false;
     private bool _collapsibleOpen = false;
+    private bool _stepperSubmitted = false;
+    private bool _showStepperDialog = false;
+    private int _dialogStepperStep = 0;
 
     [Parameter] public List<User> Users { get; set; } = new();
     [Parameter] public List<DataTableColumn<User>> UserColumns { get; set; } = new();
@@ -262,10 +403,6 @@
     [Parameter] public EventCallback<CommandItem> OnCommandSelected { get; set; }
     [Parameter] public List<ContextMenuItem> ContextMenuItems { get; set; } = new();
     [Parameter] public EventCallback<ContextMenuItem> OnContextMenuSelect { get; set; }
-    [Parameter] public List<TabItem> TabItems { get; set; } = new();
-    [Parameter] public string ActiveTab { get; set; } = "overview";
-    [Parameter] public EventCallback<string> ActiveTabChanged { get; set; }
-    [Parameter] public List<StepItem> StepperSteps { get; set; } = new();
     [Parameter] public int CurrentStep { get; set; } = 0;
     [Parameter] public EventCallback<int> CurrentStepChanged { get; set; }
     [Parameter] public int TextCarouselSlide { get; set; } = 0;
@@ -310,17 +447,32 @@
         await OnContextMenuSelect.InvokeAsync(item);
     }
 
-    private async Task HandleTabChange(string tabId)
-    {
-        ActiveTab = tabId;
-        await ActiveTabChanged.InvokeAsync(tabId);
-    }
-
     private async Task HandleStepChange(int step)
     {
         CurrentStep = step;
         await CurrentStepChanged.InvokeAsync(step);
     }
+
+    private async Task HandleStepperConfirm()
+    {
+        _stepperSubmitted = true;
+        await Task.CompletedTask;
+    }
+
+    private async Task HandleDialogStepChange(int step)
+    {
+        _dialogStepperStep = step;
+        await Task.CompletedTask;
+    }
+
+    private async Task HandleDialogStepperConfirm()
+    {
+        _showStepperDialog = false;
+        _dialogStepperStep = 0;
+        await Task.CompletedTask;
+    }
+
+    private void HandleStepperDialogOpenChanged(bool value) => _showStepperDialog = value;
 
     private async Task HandleTextCarouselSlideChange(int slide)
     {
