@@ -29,18 +29,22 @@ else if (Open)
     <div class=""fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-in fade-in-0"" @onclick=""Close""></div>
     <div class=""@SheetVariants.Get(Side, Class)"" @onclick:stopPropagation=""true"" @attributes=""AdditionalAttributes"">
         <div class=""flex flex-col space-y-2"">
-            @if (!string.IsNullOrEmpty(Title))
-            {
-                <div class=""flex items-center justify-between"">
+            <div class=""flex items-center justify-between"">
+                @if (!string.IsNullOrEmpty(Title))
+                {
                     <h2 class=""text-lg font-semibold text-foreground"">@Title</h2>
-                    <button type=""button"" @onclick=""Close"" class=""rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"">
-                        <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
-                            <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M6 18L18 6M6 6l12 12"" />
-                        </svg>
-                        <span class=""sr-only"">Close</span>
-                    </button>
-                </div>
-            }
+                }
+                else
+                {
+                    <span></span>
+                }
+                <button type=""button"" @onclick=""Close"" class=""rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"">
+                    <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                        <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M6 18L18 6M6 6l12 12"" />
+                    </svg>
+                    <span class=""sr-only"">Close</span>
+                </button>
+            </div>
             @if (!string.IsNullOrEmpty(Description))
             {
                 <p class=""text-sm text-muted-foreground"">@Description</p>
