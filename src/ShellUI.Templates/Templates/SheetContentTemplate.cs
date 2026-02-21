@@ -22,7 +22,7 @@ public class SheetContentTemplate
 @if (Parent?.Open == true)
 {
     <div class=""fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-in fade-in-0"" @onclick=""Close""></div>
-    <div class=""@SheetVariants.Get(Parent.Side, Class)"" @attributes=""AdditionalAttributes"">
+    <div class=""@SheetVariants.Get(Parent.Side, Class)"" @onclick:stopPropagation=""true"" @attributes=""AdditionalAttributes"">
         <div class=""flex flex-col gap-4 p-6"">
             @ChildContent
         </div>
