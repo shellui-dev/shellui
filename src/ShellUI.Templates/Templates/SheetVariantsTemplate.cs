@@ -10,7 +10,7 @@ public class SheetVariantsTemplate
         DisplayName = "Sheet Variants",
         Description = "SheetSide enum and SheetVariants utility class for Sheet subcomponents",
         Category = ComponentCategory.Utility,
-        FilePath = "SheetVariants.cs",
+        FilePath = "Variants/SheetVariants.cs",
         IsAvailable = false,
         Dependencies = new List<string>(),
         Tags = new List<string> { "overlay", "sheet", "variants" }
