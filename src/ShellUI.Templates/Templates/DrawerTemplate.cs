@@ -17,6 +17,7 @@ public class DrawerTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using YourProjectNamespace.Components
+@using YourProjectNamespace.Components.UI.Variants
 
 @if (UseCompositional)
 {
