@@ -11,7 +11,8 @@ public class SheetContentTemplate
         Description = "Content subcomponent for the compositional Sheet pattern",
         Category = ComponentCategory.Overlay,
         FilePath = "SheetContent.razor",
-        Dependencies = new List<string> { "sheet" },
+        IsAvailable = false,
+        Dependencies = new List<string>(),
         Tags = new List<string> { "overlay", "sheet", "content" }
     };
 

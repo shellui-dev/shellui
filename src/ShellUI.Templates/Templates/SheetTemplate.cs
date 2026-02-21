@@ -11,7 +11,7 @@ public class SheetTemplate
         Description = "Side panel/drawer component with multiple positions — supports compositional subcomponent pattern",
         Category = ComponentCategory.Overlay,
         FilePath = "Sheet.razor",
-        Dependencies = new List<string> { "sheet-variants" },
+        Dependencies = new List<string> { "sheet-variants", "sheet-trigger", "sheet-content" },
         Tags = new List<string> { "overlay", "sheet", "drawer", "panel", "side" }
     };
 

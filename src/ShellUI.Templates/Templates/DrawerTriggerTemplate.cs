@@ -11,7 +11,8 @@ public class DrawerTriggerTemplate
         Description = "Trigger subcomponent for the compositional Drawer pattern",
         Category = ComponentCategory.Overlay,
         FilePath = "DrawerTrigger.razor",
-        Dependencies = new List<string> { "drawer" },
+        IsAvailable = false,
+        Dependencies = new List<string>(),
         Tags = new List<string> { "overlay", "drawer", "trigger" }
     };
 

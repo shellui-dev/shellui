@@ -11,7 +11,8 @@ public class DrawerContentTemplate
         Description = "Content subcomponent for the compositional Drawer pattern",
         Category = ComponentCategory.Overlay,
         FilePath = "DrawerContent.razor",
-        Dependencies = new List<string> { "drawer" },
+        IsAvailable = false,
+        Dependencies = new List<string>(),
         Tags = new List<string> { "overlay", "drawer", "content" }
     };
 

@@ -11,7 +11,8 @@ public class SheetTriggerTemplate
         Description = "Trigger subcomponent for the compositional Sheet pattern",
         Category = ComponentCategory.Overlay,
         FilePath = "SheetTrigger.razor",
-        Dependencies = new List<string> { "sheet" },
+        IsAvailable = false,
+        Dependencies = new List<string>(),
         Tags = new List<string> { "overlay", "sheet", "trigger" }
     };
 
