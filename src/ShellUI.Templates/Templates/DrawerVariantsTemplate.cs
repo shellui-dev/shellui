@@ -17,7 +17,7 @@ public class DrawerVariantsTemplate
 
     public static string Content => @"using System.Collections.Generic;
 
-namespace YourProjectNamespace.Components;
+namespace YourProjectNamespace.Components.UI.Variants;
 
 public enum DrawerSide
 {
