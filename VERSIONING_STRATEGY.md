@@ -4,9 +4,9 @@
 
 ShellUI follows a **unified versioning approach** where all components, CLI, and packages share the same version number. This ensures consistency and simplifies dependency management while providing users with multiple ways to access specific versions.
 
-## Version Number: v0.3.0-alpha.1 ✅
+## Version Number: v0.3.0-alpha.2 ✅
 
-**Current Release:** v0.3.0-alpha.1
+**Current Release:** v0.3.0-alpha.2
 - ✅ 100 production-ready components
 - ✅ CLI tool + NuGet packages
 - ✅ Full Blazor WebAssembly + Server support
