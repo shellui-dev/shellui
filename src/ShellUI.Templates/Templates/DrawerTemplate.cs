@@ -8,71 +8,67 @@ public class DrawerTemplate
     {
         Name = "drawer",
         DisplayName = "Drawer",
-        Description = "Sliding drawer component with handle",
+        Description = "Sliding drawer component with handle — supports compositional subcomponent pattern",
         Category = ComponentCategory.Overlay,
         FilePath = "Drawer.razor",
-
+        Dependencies = new List<string> { "drawer-variants" },
         Tags = new List<string> { "overlay", "drawer", "modal", "slide" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components
 
-@if (IsOpen)
+@if (UseCompositional)
 {
-    <div class=""fixed inset-0 z-50"" @onclick=""Close"">
-        <div class=""fixed inset-0 bg-black/50 backdrop-blur-sm""></div>
-        
-        <div @onclick:stopPropagation=""true""
-             class=""@(""fixed bottom-0 left-0 right-0 z-50 mx-auto max-w-md rounded-t-2xl border bg-card text-card-foreground shadow-lg animate-slide-up "" + ClassName)""
-             @attributes=""AdditionalAttributes"">
-            <div class=""flex flex-col h-auto max-h-[85vh]"">
-                <div class=""flex items-center justify-center p-4 border-b"">
-                    <div class=""w-12 h-1.5 bg-muted rounded-full""></div>
-                </div>
-                @if (!string.IsNullOrEmpty(Title))
-                {
-                    <div class=""px-6 pt-4"">
-                        <h2 class=""text-lg font-semibold"">@Title</h2>
-                        @if (!string.IsNullOrEmpty(Description))
-                        {
-                            <p class=""text-sm text-muted-foreground mt-1"">@Description</p>
-                        }
-                    </div>
-                }
-                <div class=""flex-1 overflow-auto p-6"">
-                    @ChildContent
-                </div>
-            </div>
+    <CascadingValue Value=""this"" IsFixed=""true"">
+        @ChildContent
+    </CascadingValue>
+}
+else if (Open)
+{
+    <div class=""fixed inset-0 z-50 bg-black/80 animate-in fade-in-0"" @onclick=""Close""></div>
+    <div class=""@DrawerVariants.Get(Side, Class)"" @attributes=""AdditionalAttributes"">
+        <div class=""mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted""></div>
+        <div class=""grid gap-1.5 p-4 text-center sm:text-left"">
+            @if (!string.IsNullOrEmpty(Title))
+            {
+                <h2 class=""text-lg font-semibold leading-none tracking-tight"">@Title</h2>
+            }
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <p class=""text-sm text-muted-foreground"">@Description</p>
+            }
+        </div>
+        <div class=""p-4"">@ChildContent</div>
+        <div class=""mt-auto flex flex-col gap-2 p-4"">
+            <button type=""button"" @onclick=""Close"" class=""inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full"">Close</button>
         </div>
     </div>
 }
 
 @code {
-    [Parameter]
-    public bool IsOpen { get; set; }
-    
-    [Parameter]
-    public EventCallback<bool> IsOpenChanged { get; set; }
-    
-    [Parameter]
-    public string? Title { get; set; }
-    
-    [Parameter]
-    public string? Description { get; set; }
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public DrawerSide Side { get; set; } = DrawerSide.Bottom;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
+
+    private bool UseCompositional => string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Description);
+
     private async Task Close()
     {
-        IsOpen = false;
-        await IsOpenChanged.InvokeAsync(false);
+        Open = false;
+        await OpenChanged.InvokeAsync(Open);
+        StateHasChanged();
+    }
+
+    public async Task SetOpen(bool value)
+    {
+        if (Open != value) { Open = value; await OpenChanged.InvokeAsync(Open); StateHasChanged(); }
     }
 }
 ";
