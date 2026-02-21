@@ -8,66 +8,74 @@ public class SheetTemplate
     {
         Name = "sheet",
         DisplayName = "Sheet",
-        Description = "Side panel/drawer component with multiple positions",
+        Description = "Side panel/drawer component with multiple positions — supports compositional subcomponent pattern",
         Category = ComponentCategory.Overlay,
         FilePath = "Sheet.razor",
-
+        Dependencies = new List<string> { "sheet-variants", "sheet-trigger", "sheet-content" },
         Tags = new List<string> { "overlay", "sheet", "drawer", "panel", "side" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
 
-@if (IsOpen)
+@if (Compositional)
 {
-    <div class=""fixed inset-0 z-50 flex"" @onclick=""Close"">
-        <div class=""fixed inset-0 bg-black/50 backdrop-blur-sm""></div>
-        
-        <div @onclick:stopPropagation=""true""
-             class=""@(""fixed z-50 bg-card text-card-foreground shadow-lg border "" + (Side == ""left"" ? ""left-0 top-0 h-full w-80 animate-slide-in-from-left"" : """") + (Side == ""right"" ? ""right-0 top-0 h-full w-80 animate-slide-in-from-right"" : """") + (Side == ""top"" ? ""top-0 left-0 w-full h-80 animate-slide-in-from-top"" : """") + (Side == ""bottom"" ? ""bottom-0 left-0 w-full h-80 animate-slide-in-from-bottom"" : """") + "" "" + ClassName)""
-             @attributes=""AdditionalAttributes"">
-            <div class=""flex flex-col h-full"">
-                <div class=""flex items-center justify-between p-6 border-b"">
-                    <h2 class=""text-lg font-semibold"">@Title</h2>
-                    <button type=""button"" @onclick=""Close"" class=""rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100"">
-                        <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
-                            <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M6 18L18 6M6 6l12 12"" />
-                        </svg>
-                    </button>
-                </div>
-                <div class=""flex-1 overflow-auto p-6"">
-                    @ChildContent
-                </div>
+    <CascadingValue Value=""this"" IsFixed=""true"">
+        @ChildContent
+    </CascadingValue>
+}
+else if (Open)
+{
+    <div class=""fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-in fade-in-0"" @onclick=""Close""></div>
+    <div class=""@SheetVariants.Get(Side, Class)"" @onclick:stopPropagation=""true"" @attributes=""AdditionalAttributes"">
+        <div class=""flex flex-col space-y-2"">
+            <div class=""flex items-center justify-between"">
+                @if (!string.IsNullOrEmpty(Title))
+                {
+                    <h2 class=""text-lg font-semibold text-foreground"">@Title</h2>
+                }
+                else
+                {
+                    <span></span>
+                }
+                <button type=""button"" @onclick=""Close"" class=""rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"">
+                    <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                        <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M6 18L18 6M6 6l12 12"" />
+                    </svg>
+                    <span class=""sr-only"">Close</span>
+                </button>
             </div>
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <p class=""text-sm text-muted-foreground"">@Description</p>
+            }
         </div>
+        <div class=""mt-4"">@ChildContent</div>
     </div>
 }
 
 @code {
-    [Parameter]
-    public bool IsOpen { get; set; }
-    
-    [Parameter]
-    public EventCallback<bool> IsOpenChanged { get; set; }
-    
-    [Parameter]
-    public string Title { get; set; } = ""Sheet"";
-    
-    [Parameter]
-    public string Side { get; set; } = ""right"";
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public SheetSide Side { get; set; } = SheetSide.Right;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Compositional { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
+
     private async Task Close()
     {
-        IsOpen = false;
-        await IsOpenChanged.InvokeAsync(false);
+        Open = false;
+        await OpenChanged.InvokeAsync(Open);
+        StateHasChanged();
+    }
+
+    public async Task SetOpen(bool value)
+    {
+        if (Open != value) { Open = value; await OpenChanged.InvokeAsync(Open); StateHasChanged(); }
     }
 }
 ";

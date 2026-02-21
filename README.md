@@ -102,9 +102,9 @@ This single file change updates:
 **Example for pre-release:**
 ```xml
 <ShellUIVersion>0.3.0</ShellUIVersion>
-<ShellUIVersionSuffix>alpha.1</ShellUIVersionSuffix>
+<ShellUIVersionSuffix>alpha.2</ShellUIVersionSuffix>
 ```
-Results in version: `0.3.0-alpha.1`
+Results in version: `0.3.0-alpha.2`
 
 ### Component Versioning Strategy
 

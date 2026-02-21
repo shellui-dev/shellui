@@ -1,10 +1,10 @@
 # ShellUI Project Status
 
-## Current Status: v0.3.0-alpha.1 (Pre-release) 🎉
+## Current Status: v0.3.0-alpha.2 (Pre-release) 🎉
 
 **ShellUI alpha is available on NuGet!** Test before upgrading to stable.
 
-- ✅ **Version 0.3.0-alpha.1** - 100 installable components (actual components only; dependencies auto-installed)
+- ✅ **Version 0.3.0-alpha.2** - 100 installable components (actual components only; dependencies auto-installed)
 - ✅ **100 Production-Ready Components** - Fully functional and tested
 - ✅ **CLI Tool Published** - `dotnet tool install -g ShellUI.CLI`
 - ✅ **NuGet Packages Published** - `ShellUI.Components`, `ShellUI.CLI`, `ShellUI.Templates`
@@ -231,7 +231,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ---
 
 **Last Updated:** February 2026  
-**Current Version:** v0.3.0-alpha.1  
+**Current Version:** v0.3.0-alpha.2  
 **Status:** Alpha (pre-release; test and validate before stable release)
 
 ---
