@@ -3,7 +3,7 @@
   <!-- Centralized ShellUI Version - Update this single file to version all components -->
   <PropertyGroup>
     <ShellUIVersion>0.3.0</ShellUIVersion>
-    <ShellUIVersionSuffix>alpha.1</ShellUIVersionSuffix>
+    <ShellUIVersionSuffix>alpha.2</ShellUIVersionSuffix>
   </PropertyGroup>
 
   <!-- Common properties for all ShellUI projects -->

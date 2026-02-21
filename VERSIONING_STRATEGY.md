@@ -51,25 +51,25 @@ shellui add button input card
 
 ### 2. NuGet Packages (Versioned) ✅
 ```bash
-# Install specific version via NuGet (current: 0.3.0-alpha.1)
-dotnet add package ShellUI.Components --version 0.3.0-alpha.1
-dotnet add package ShellUI.CLI --version 0.3.0-alpha.1
+# Install specific version via NuGet (current: 0.3.0-alpha.2)
+dotnet add package ShellUI.Components --version 0.3.0-alpha.2
+dotnet add package ShellUI.CLI --version 0.3.0-alpha.2
 ```
 
 ### 3. Git Tags & Releases ✅
 ```bash
-# Clone specific version (current: v0.3.0-alpha.1)
-git clone --branch v0.3.0-alpha.1 https://github.com/shellui-dev/shellui.git
+# Clone specific version (current: v0.3.0-alpha.2)
+git clone --branch v0.3.0-alpha.2 https://github.com/shellui-dev/shellui.git
 
 # Or download release archive
-# https://github.com/shellui-dev/shellui/releases/tag/v0.3.0-alpha.1
+# https://github.com/shellui-dev/shellui/releases/tag/v0.3.0-alpha.2
 ```
 
 ### 4. Versioned Documentation ✅
 ```
 docs/
 ├── v0.2.x/          # v0.2 stable docs
-├── v0.3.0-alpha/    # Current alpha (v0.3.0-alpha.1)
+├── v0.3.0-alpha/    # Current alpha (v0.3.0-alpha.2)
 └── latest/          # Always points to latest (main)
 ```
 
@@ -81,7 +81,7 @@ docs/
   "installedComponents": [
     {
       "name": "button",
-      "version": "0.3.0-alpha.1",
+      "version": "0.3.0-alpha.2",
       "installedAt": "2026-01-11T...",
       "isCustomized": false
     }
@@ -93,18 +93,18 @@ docs/
 
 ## Release Process
 
-### For v0.3.0-alpha.1 (Current Alpha):
+### For v0.3.0-alpha.2 (Current Alpha):
 ```bash
 # 1. Version already set in Directory.Build.props:
 #    <ShellUIVersion>0.3.0</ShellUIVersion>
-#    <ShellUIVersionSuffix>alpha.1</ShellUIVersionSuffix>
+#    <ShellUIVersionSuffix>alpha.2</ShellUIVersionSuffix>
 
 # 2. Build all packages
 dotnet build --configuration Release
 
 # 3. Create git tag
-git tag v0.3.0-alpha.1
-git push origin v0.3.0-alpha.1
+git tag v0.3.0-alpha.2
+git push origin v0.3.0-alpha.2
 
 # 4. GitHub release runs via CI (publishes NuGet, creates release)
 ```
@@ -167,7 +167,7 @@ git push origin v0.3.0
 
 ## Summary
 
-**ShellUI v0.3.0-alpha.1** (current) and **v0.3.0** (future stable) with:
+**ShellUI v0.3.0-alpha.2** (current) and **v0.3.0** (future stable) with:
 - ✅ Unified versioning system
 - ✅ No hardcoded component versions
 - ✅ Multiple user access methods
