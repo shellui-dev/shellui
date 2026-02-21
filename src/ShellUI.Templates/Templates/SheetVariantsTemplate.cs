@@ -11,6 +11,7 @@ public class SheetVariantsTemplate
         Description = "SheetSide enum and SheetVariants utility class for Sheet subcomponents",
         Category = ComponentCategory.Overlay,
         FilePath = "SheetVariants.cs",
+        IsAvailable = false,
         Dependencies = new List<string>(),
         Tags = new List<string> { "overlay", "sheet", "variants" }
     };
