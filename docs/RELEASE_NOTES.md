@@ -1,4 +1,57 @@
-# ShellUI v0.3.0-alpha.1 🚧
+# ShellUI v0.3.0-alpha.2 🚧
+
+> Second alpha of v0.3.0 — fixes CLI registry for Drawer/Sheet compositional subcomponents. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
+
+## What's in this release
+
+v0.3.0-alpha.2 fixes the CLI template registry so that `Drawer` and `Sheet` correctly ship with their compositional subcomponent pattern introduced in alpha.1.
+
+### 🐛 Fixes (from alpha.1)
+
+- **Drawer/Sheet templates upgraded to v0.3.0** — `Open`/`OpenChanged` replaces `IsOpen`/`IsOpenChanged`, `DrawerSide`/`SheetSide` enums replace string-based side props, `UseCompositional` auto-detects subcomponent mode vs legacy mode
+- **Missing subcomponent templates added** — `DrawerTrigger`, `DrawerContent`, `SheetTrigger`, `SheetContent` were missing from the registry entirely
+- **Missing variant templates added** — `DrawerVariants` (with `DrawerSide` enum) and `SheetVariants` (with `SheetSide` enum) now installable
+- **Dependency direction fixed** — `shellui add drawer` now auto-installs all 4 files (Drawer, DrawerVariants, DrawerTrigger, DrawerContent); same for `shellui add sheet`
+
+### ✨ What changed
+
+| Command | alpha.1 | alpha.2 |
+|---|---|---|
+| `shellui add drawer` | Installed old v0.2.x Drawer only | Installs Drawer + DrawerVariants + DrawerTrigger + DrawerContent |
+| `shellui add sheet` | Installed old v0.2.x Sheet only | Installs Sheet + SheetVariants + SheetTrigger + SheetContent |
+
+### 🔧 Improvements
+- **Version bump** — 0.3.0-alpha.1 → 0.3.0-alpha.2
+- **Subcomponent dependency pattern** — Follows parent-owns-children convention (same as Dialog, Collapsible, etc.)
+
+## 📦 Installation
+
+```bash
+# Install CLI (alpha)
+dotnet tool install -g ShellUI.CLI --version 0.3.0-alpha.2
+
+# Or upgrade from alpha.1
+dotnet tool update -g ShellUI.CLI --version 0.3.0-alpha.2
+```
+
+Initialize and add components:
+```bash
+shellui init
+shellui add drawer       # installs Drawer + DrawerVariants + DrawerTrigger + DrawerContent
+shellui add sheet        # installs Sheet + SheetVariants + SheetTrigger + SheetContent
+```
+
+## 🔗 Links
+
+- **Documentation**: https://shellui.dev
+- **GitHub**: https://github.com/shellui-dev/shellui
+- **NuGet**: https://www.nuget.org/packages/ShellUI.Components
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.3.0-alpha.1...v0.3.0-alpha.2
+
+---
+
+# ShellUI v0.3.0-alpha.1 🚧 (Historical)
 
 > First alpha of v0.3.0 — test thoroughly before stable. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
 
@@ -28,31 +81,6 @@ v0.3.0-alpha.1 includes everything from v0.2.0 (charts, Tailwind 4.x) plus new c
 
 ### ⚠️ Known issues
 - **Stepper** — Active-state highlighting may not always reflect current step; documented, shipping as-is
-
-## 📦 Installation
-
-```bash
-# Install CLI (alpha)
-dotnet tool install -g ShellUI.CLI --version 0.3.0-alpha.1
-
-# Or via NuGet
-dotnet add package ShellUI.Components --version 0.3.0-alpha.1
-```
-
-Initialize and add components:
-```bash
-shellui init
-shellui add button card chart
-shellui add sonner stepper callout copy-button file-upload
-```
-
-## 🔗 Links
-
-- **Documentation**: https://shellui.dev
-- **GitHub**: https://github.com/shellui-dev/shellui
-- **NuGet**: https://www.nuget.org/packages/ShellUI.Components
-
-**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.2.0...v0.3.0-alpha.1
 
 ---
 
