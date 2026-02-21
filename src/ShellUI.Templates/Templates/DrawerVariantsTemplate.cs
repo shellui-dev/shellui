@@ -10,7 +10,7 @@ public class DrawerVariantsTemplate
         DisplayName = "Drawer Variants",
         Description = "DrawerSide enum and DrawerVariants utility class for Drawer subcomponents",
         Category = ComponentCategory.Overlay,
-        FilePath = "DrawerVariants.cs",
+        FilePath = "Variants/DrawerVariants.cs",
         Dependencies = new List<string>(),
         Tags = new List<string> { "overlay", "drawer", "variants" }
     };
