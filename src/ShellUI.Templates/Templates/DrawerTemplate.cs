@@ -16,10 +16,9 @@ public class DrawerTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using YourProjectNamespace.Components
 @using YourProjectNamespace.Components.UI.Variants
 
-@if (UseCompositional)
+@if (Compositional)
 {
     <CascadingValue Value=""this"" IsFixed=""true"">
         @ChildContent
@@ -55,10 +54,9 @@ else if (Open)
     [Parameter] public DrawerSide Side { get; set; } = DrawerSide.Bottom;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Compositional { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private bool UseCompositional => string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Description);
 
     private async Task Close()
     {

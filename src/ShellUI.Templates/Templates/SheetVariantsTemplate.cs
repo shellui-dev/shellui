@@ -17,6 +17,7 @@ public class SheetVariantsTemplate
     };
 
     public static string Content => @"using System.Collections.Generic;
+using YourProjectNamespace.Components.UI;
 
 namespace YourProjectNamespace.Components.UI.Variants;
 
