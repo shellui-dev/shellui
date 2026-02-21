@@ -18,6 +18,7 @@ public class DrawerContentTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
+@using YourProjectNamespace.Components.UI.Variants
 @if (Parent?.Open == true)
 {
     <div class=""fixed inset-0 z-50 bg-black/80 animate-in fade-in-0"" @onclick=""Close""></div>
