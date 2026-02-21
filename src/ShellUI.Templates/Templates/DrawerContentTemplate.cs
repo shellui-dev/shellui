@@ -22,7 +22,7 @@ public class DrawerContentTemplate
 @if (Parent?.Open == true)
 {
     <div class=""fixed inset-0 z-50 bg-black/80 animate-in fade-in-0"" @onclick=""Close""></div>
-    <div class=""@DrawerVariants.Get(Parent.Side, Class)"" @attributes=""AdditionalAttributes"">
+    <div class=""@DrawerVariants.Get(Parent.Side, Class)"" @onclick:stopPropagation=""true"" @attributes=""AdditionalAttributes"">
         <div class=""mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted""></div>
         <div class=""flex flex-col gap-4 p-4"">
             @ChildContent
