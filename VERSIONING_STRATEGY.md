@@ -6,11 +6,11 @@ ShellUI follows a **unified versioning approach** where all components, CLI, and
 
 ## Version Number: v0.1.0 ✅
 
-**Current Release:** v0.1.0 (not v0.5.0)
-- ✅ 73 production-ready components
+**Current Release:** v0.2.1
+- ✅ 80 production-ready components
 - ✅ CLI tool + NuGet packages
 - ✅ Full Blazor WebAssembly + Server support
-- ✅ Tailwind CSS v4.1.17 integration
+- ✅ Tailwind CSS v4.1.18 integration
 
 ## Unified Versioning System
 
@@ -32,7 +32,7 @@ ShellUI follows a **unified versioning approach** where all components, CLI, and
 
 ```bash
 # 1. Update version in Directory.Build.props
-<ShellUIVersion>0.2.0</ShellUIVersion>
+<ShellUIVersion>0.2.1</ShellUIVersion>
 
 # 2. Clean and rebuild
 dotnet clean && dotnet build --configuration Release
@@ -112,9 +112,9 @@ git push origin v0.1.0
 
 ### Future Releases:
 ```bash
-# For v0.2.0
+# For v0.2.1
 # 1. Update Directory.Build.props
-<ShellUIVersion>0.2.0</ShellUIVersion>
+<ShellUIVersion>0.2.1</ShellUIVersion>
 
 # 2. Build, test, tag, release
 # 3. Update docs/v0.2.x/

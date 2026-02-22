@@ -1,3 +1,51 @@
+# ShellUI v0.2.1 🛠️
+
+> Hotfix release - Chart fixes & CSS auto-install
+
+## 🐛 Bug Fixes
+
+- **Fixed chart tooltip escaping** - Custom tooltip HTML in `ChartVariantsTemplate.cs` used incorrect verbatim string escaping (`\""` → `""""`) causing broken `@"..."` blocks in installed files
+- **Fixed ChartVariants namespace** - `ShellUI.Components.Variants.ChartVariants` was incorrectly under `ShellUI.Components` namespace
+- **Fixed Chart.razor missing using** - Added `@using ShellUI.Components.Variants` to the Components library `Chart.razor`
+- **Fixed ChartVariantsTemplate FilePath** - Changed from `"ChartVariants.cs"` to `"Variants/ChartVariants.cs"` to install in correct subdirectory
+- **Fixed ChartVariantsTemplate IsAvailable** - Set to `false` since it's a dependency, not a standalone component
+
+## ✨ New Features
+
+### Chart Styles CSS (`chart-styles`)
+- **New `charts.css` file** auto-installs to `wwwroot/css/` as a dependency when you run `shellui add chart`
+- Contains all ApexCharts theme CSS: tooltips, custom tooltips, legends, toolbars, grid/axis styling
+- Uses ShellUI CSS variables with hardcoded fallbacks for portability
+- Replaces the previous approach of requiring manual CSS setup
+
+### CLI: wwwroot File Support
+- Components with `FilePath` starting with `wwwroot/` now correctly install relative to project root instead of inside `Components/UI/`
+
+### CLI: Automatic CSS Link Injection
+- After installing `chart-styles`, the CLI automatically injects `<link rel="stylesheet" href="css/charts.css" />` into your `App.razor` (or `index.html` for WASM)
+- Idempotent — re-running `shellui add chart` won't duplicate the link
+- Falls back to printing manual instructions if no layout file is found
+
+## 📦 What `shellui add chart` now installs
+
+```
+shellui add chart
+→ Installed 'chart-variants' (Variants/ChartVariants.cs)
+→ Installed 'chart-styles' (wwwroot/css/charts.css)
+→ Installed 'chart' (Chart.razor)
+→ Added <link rel="stylesheet" href="css/charts.css" /> to Components\App.razor
+
+Installed 3 component(s) successfully!
+```
+
+## 🔗 Links
+
+- **Documentation**: https://shellui.dev
+- **GitHub**: https://github.com/shellui-dev/shellui
+- **NuGet**: https://www.nuget.org/packages/ShellUI.Components
+
+---
+
 # ShellUI v0.2.0 📊
 
 > Feature release - Charts & Data Visualization

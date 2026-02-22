@@ -77,7 +77,7 @@ To update ShellUI version across all components:
 
 1. **Edit `Directory.Build.props`** in the repository root:
    ```xml
-   <ShellUIVersion>0.1.0</ShellUIVersion>
+   <ShellUIVersion>0.2.1</ShellUIVersion>
    <ShellUIVersionSuffix></ShellUIVersionSuffix>  <!-- Leave empty for stable releases -->
    ```
 
@@ -89,7 +89,7 @@ To update ShellUI version across all components:
 
 This single file change updates:
 - ✅ All NuGet packages (`ShellUI.CLI`, `ShellUI.Components`)
-- ✅ All component templates (73 components)
+- ✅ All component templates (80 components)
 - ✅ Build configurations and metadata
 
 **Example for pre-release:**

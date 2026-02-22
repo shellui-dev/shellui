@@ -110,7 +110,7 @@ dotnet tool install -g ShellUI.CLI --version 0.1.0
 dotnet tool install ShellUI.CLI --version 0.1.0
 
 # Update to specific version
-dotnet tool update -g ShellUI.CLI --version 0.2.0
+dotnet tool update -g ShellUI.CLI --version 0.2.1
 ```
 
 ### Downgrade to Previous Version
