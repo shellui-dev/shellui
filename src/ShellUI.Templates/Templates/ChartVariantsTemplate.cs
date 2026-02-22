@@ -10,7 +10,8 @@ public class ChartVariantsTemplate
         DisplayName = "Chart Variants",
         Description = "Chart theming and styling utilities for ShellUI charts",
         Category = ComponentCategory.DataDisplay,
-        FilePath = "ChartVariants.cs",
+        FilePath = "Variants/ChartVariants.cs",
+        IsAvailable = false,
         Dependencies = new List<string>(),
         Variants = new List<string> { "default", "colorful", "monochrome" },
         Tags = new List<string> { "chart", "theme", "styling", "data", "visualization" }
@@ -139,10 +140,10 @@ public static class ChartVariants
                 },
                 Custom = @""function({ series, seriesIndex, dataPointIndex, w }) {
                     const xLabel = w.globals.labels[dataPointIndex] || '';
-                    let html = '<div class=\""custom-tooltip\"">';
+                    let html = '<div class=""""custom-tooltip"""">';
                     
                     if (xLabel) {
-                        html += '<div class=\""custom-tooltip-title\"">' + xLabel + '</div>';
+                        html += '<div class=""""custom-tooltip-title"""">' + xLabel + '</div>';
                     }
                     
                     w.globals.initialSeries.forEach((s, idx) => {
@@ -152,10 +153,10 @@ public static class ChartVariants
                                      ? series[idx][dataPointIndex] 
                                      : '-';
                         
-                        html += '<div class=\""custom-tooltip-item\"">' +
-                               '<span class=\""custom-tooltip-marker\"" style=\""background-color: ' + color + ';\""' + '></span>' +
-                               '<span class=\""custom-tooltip-label\"">' + name + ':</span>' +
-                               '<span class=\""custom-tooltip-value\"">' + value + '</span>' +
+                        html += '<div class=""""custom-tooltip-item"""">' +
+                               '<span class=""""custom-tooltip-marker"""" style=""""background-color: ' + color + ';""""></span>' +
+                               '<span class=""""custom-tooltip-label"""">' + name + ':</span>' +
+                               '<span class=""""custom-tooltip-value"""">' + value + '</span>' +
                                '</div>';
                     });
                     
