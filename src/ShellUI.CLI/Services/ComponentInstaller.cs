@@ -77,6 +77,12 @@ public class ComponentInstaller
         });
         File.WriteAllText(configPath, updatedJson);
 
+        // Post-install: auto-inject CSS links for wwwroot CSS files
+        if (successCount > 0)
+        {
+            TryInjectCssLinks(installedSet);
+        }
+
         // Summary
         AnsiConsole.MarkupLine("");
         if (successCount > 0)
@@ -147,7 +153,12 @@ public class ComponentInstaller
             return InstallResult.Failed;
         }
 
-        var componentPath = Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath, metadata.FilePath);
+        // Files starting with wwwroot/ install relative to project root, not Components/UI
+        var isProjectRootFile = metadata.FilePath.StartsWith("wwwroot/", StringComparison.OrdinalIgnoreCase)
+            || metadata.FilePath.StartsWith("wwwroot\\", StringComparison.OrdinalIgnoreCase);
+        var componentPath = isProjectRootFile
+            ? Path.Combine(Directory.GetCurrentDirectory(), metadata.FilePath)
+            : Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath, metadata.FilePath);
         
         // Check if already exists
         if (File.Exists(componentPath) && !force)
@@ -257,6 +268,104 @@ public class ComponentInstaller
         Success,
         Skipped,
         Failed
+    }
+
+    /// <summary>
+    /// After installing components, check for CSS files that need a link tag in the layout.
+    /// Automatically injects into App.razor if found, otherwise prints instructions.
+    /// </summary>
+    private static void TryInjectCssLinks(HashSet<string> installedComponents)
+    {
+        // Map of component names to their CSS href values
+        var cssComponents = new Dictionary<string, string>
+        {
+            { "chart-styles", "css/charts.css" }
+        };
+
+        foreach (var (componentName, href) in cssComponents)
+        {
+            if (!installedComponents.Contains(componentName))
+                continue;
+
+            var linkTag = $"<link rel=\"stylesheet\" href=\"{href}\" />";
+
+            // Try to find App.razor in common locations
+            var appRazorPaths = new[]
+            {
+                Path.Combine(Directory.GetCurrentDirectory(), "Components", "App.razor"),
+                Path.Combine(Directory.GetCurrentDirectory(), "App.razor"),
+            };
+
+            var appRazorPath = appRazorPaths.FirstOrDefault(File.Exists);
+
+            if (appRazorPath != null)
+            {
+                var content = File.ReadAllText(appRazorPath);
+
+                // Check if already has this link
+                if (content.Contains(href))
+                {
+                    AnsiConsole.MarkupLine($"[dim]  ↳ CSS link for '{href}' already present in App.razor[/]");
+                    continue;
+                }
+
+                // Find </head> and inject before it
+                var headCloseIndex = content.IndexOf("</head>", StringComparison.OrdinalIgnoreCase);
+                if (headCloseIndex >= 0)
+                {
+                    // Determine indentation by looking at the line before </head>
+                    var indent = "    ";
+                    var lineStart = content.LastIndexOf('\n', headCloseIndex);
+                    if (lineStart >= 0)
+                    {
+                        var headLine = content.Substring(lineStart + 1, headCloseIndex - lineStart - 1);
+                        indent = new string(headLine.TakeWhile(char.IsWhiteSpace).ToArray());
+                        if (string.IsNullOrEmpty(indent)) indent = "    ";
+                    }
+
+                    var injection = $"{indent}{linkTag}\n";
+                    content = content.Insert(headCloseIndex, injection);
+                    File.WriteAllText(appRazorPath, content);
+
+                    var relativePath = Path.GetRelativePath(Directory.GetCurrentDirectory(), appRazorPath);
+                    AnsiConsole.MarkupLine($"[green]  ↳ Added[/] [cyan]{linkTag}[/] [green]to {relativePath}[/]");
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"\n[yellow]⚠ Add this to your App.razor <head>:[/]");
+                    AnsiConsole.MarkupLine($"  [cyan]{linkTag}[/]");
+                }
+            }
+            else
+            {
+                // Also check for wwwroot/index.html (Blazor WASM standalone)
+                var indexHtmlPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
+                if (File.Exists(indexHtmlPath))
+                {
+                    var content = File.ReadAllText(indexHtmlPath);
+                    if (!content.Contains(href))
+                    {
+                        var headCloseIndex = content.IndexOf("</head>", StringComparison.OrdinalIgnoreCase);
+                        if (headCloseIndex >= 0)
+                        {
+                            var injection = $"    {linkTag}\n";
+                            content = content.Insert(headCloseIndex, injection);
+                            File.WriteAllText(indexHtmlPath, content);
+                            AnsiConsole.MarkupLine($"[green]  ↳ Added[/] [cyan]{linkTag}[/] [green]to wwwroot/index.html[/]");
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine($"[dim]  ↳ CSS link for '{href}' already present in index.html[/]");
+                        continue;
+                    }
+                }
+
+                AnsiConsole.MarkupLine($"\n[yellow]⚠ Add this to your layout's <head>:[/]");
+                AnsiConsole.MarkupLine($"  [cyan]{linkTag}[/]");
+            }
+        }
     }
 }
 
