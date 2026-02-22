@@ -1,32 +1,32 @@
 # ShellUI Project Status
 
-## Current Status: v0.1.0 Released! 🎉
+## Current Status: v0.2.1 Released! 🎉
 
 **ShellUI is now available on NuGet!**
 
-- ✅ **Version 0.1.0** - Major architectural upgrade (Refactored to shadcn/ui patterns)
-- ✅ **73 Production-Ready Components** - Fully functional and tested
+- ✅ **Version 0.2.1** - Charts hotfix + CSS auto-install
+- ✅ **80 Production-Ready Components** - Fully functional and tested
 - ✅ **CLI Tool Published** - `dotnet tool install -g ShellUI.CLI`
 - ✅ **NuGet Packages Published** - `ShellUI.Components`, `ShellUI.CLI`, `ShellUI.Templates`
 - ✅ **Hybrid Distribution** - CLI + NuGet packages (best of both worlds!)
 - ✅ **No Node.js Required** - Using Tailwind standalone CLI (zero JavaScript dependencies!)
-- ✅ **Tailwind CSS v4.1.17** - Latest version with standalone CLI support
+- ✅ **Tailwind CSS v4.1.18** - Latest version with standalone CLI support
 
 ## What's Complete ✅
 
 ### Core Infrastructure
-- [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet v0.1.0
-- [x] Components Package (`ShellUI.Components`) - Published to NuGet v0.1.0
-- [x] Templates Package (`ShellUI.Templates`) - Published to NuGet v0.1.0
-- [x] Component Registry - 53 components registered and available
-- [x] Tailwind CSS Integration - v4.1.17 standalone CLI support
+- [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet v0.2.1
+- [x] Components Package (`ShellUI.Components`) - Published to NuGet v0.2.1
+- [x] Templates Package (`ShellUI.Templates`) - Published to NuGet v0.2.1
+- [x] Component Registry - 80 components registered and available
+- [x] Tailwind CSS Integration - v4.1.18 standalone CLI support
 - [x] MSBuild Integration - Automatic CSS compilation
 
-### Components (73 Total)
+### Components (80 Available, 97 Total incl. sub-components)
 - [x] **Form Components (12)**: Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider, Form, InputOTP
 - [x] **Layout Components (13)**: Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, ScrollArea, Resizable, Collapsible, Accordion, AccordionItem, Breadcrumb, BreadcrumbItem
 - [x] **Navigation Components (9)**: Navbar, Sidebar, NavigationMenu, NavigationMenuItem, Menubar, MenubarItem, Pagination, Tabs, Stepper
-- [x] **Data Display (12)**: Table, TableHeader, TableBody, TableRow, TableHead, TableCell, DataTable, Badge, Avatar, Alert, Toast, Skeleton, Progress, Loading
+- [x] **Data Display (19)**: Table, TableHeader, TableBody, TableRow, TableHead, TableCell, DataTable, Badge, Avatar, Alert, Toast, Skeleton, Progress, Loading, Chart, BarChart, LineChart, PieChart, AreaChart, MultiSeriesChart, ChartSeries
 - [x] **Interactive Components (7)**: Dropdown, Command, ContextMenu, HoverCard, ThemeToggle, EmptyState, FileUpload
 - [x] **Advanced Components (16)**: Calendar, DatePicker, DateRangePicker, TimePicker, Combobox, AlertDialog, Carousel, CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
 
@@ -47,27 +47,32 @@
 
 ## What's Next 🚀
 
-### Short Term (v0.0.3+)
-- [ ] More component variants
+### Short Term (v0.3.0)
+- [ ] Cherry-pick v0.2.1 fixes to alpha (Drawer/Sheet compositional subcomponents)
 - [ ] Enhanced documentation with examples
 - [ ] Component playground/demo site
-- [ ] Performance optimizations
-- [ ] Additional loading animations
-- [ ] More form validation helpers
+- [ ] More component variants (Alert, Badge, Toggle already done)
+- [x] Charts & Data Visualization (8 chart components) ✅
+- [x] CSS auto-install for chart styles ✅
+- [x] wwwroot path support in CLI ✅
 
-### Medium Term (v0.1.0+)
+### Medium Term (v0.4.0+)
 - [ ] Component themes/presets
-- [ ] Visual component editor
-- [ ] Storybook-like playground
+- [ ] Visual component editor / Storybook-like playground
 - [ ] Advanced composition patterns
-- [ ] More components (targeting 80+)
+- [ ] Tree View, Timeline components
+- [ ] Code Block / Syntax Highlighting
+- [ ] Rich Text Editor
+- [ ] .NET 10 support
 
-### Long Term (v1.0.0+)
-- [ ] Full component library (70+ components)
+### Long Term (v1.0.0)
+- [ ] 100+ components
 - [ ] Comprehensive documentation website
 - [ ] Video tutorials
 - [ ] Community contributions
 - [ ] Performance monitoring tools
+- [ ] Kanban Board, Virtual Scroll, Grid
+- [ ] Featured on Awesome Blazor
 
 ## Timeline
 
@@ -80,17 +85,23 @@
    ├── ✅ 69 Components Available
    └── ✅ Tailwind v4.1.17 Integration
 
-🚀 Q1 2026 - v0.1.0+ (Planned)
-   ├── More components (75+)
-   ├── Enhanced documentation
-   ├── Component examples
-   └── Performance improvements
+✅ Q1 2026 - v0.2.1 Released (February 2026)
+   ├── ✅ Charts & Data Visualization (8 new components)
+   ├── ✅ 80 Components Available
+   ├── ✅ Tailwind v4.1.18 Integration
+   └── ✅ CSS Auto-Inject for Chart Styles
 
-🎯 Q2-Q3 2026 - v1.0.0 (Target)
-   ├── Full component library (80+)
-   ├── Comprehensive documentation
+🚀 Q2 2026 - v0.3.0 (Planned)
+   ├── Drawer/Sheet compositional subcomponents
+   ├── Cherry-pick v0.2.1 chart fixes
+   ├── Component playground/demo site
+   └── Enhanced documentation with examples
+
+🎯 Q3-Q4 2026 - v1.0.0 (Target)
+   ├── 100+ components
+   ├── Comprehensive documentation website
    ├── Community contributions
-   └── Production-ready release
+   └── Production-ready stable release
 ```
 
 ## How to Get Started with Development
@@ -181,19 +192,26 @@ dotnet shellui add button input card
 - [x] CLI tool published to NuGet
 - [x] NuGet packages published (Components, CLI, Templates)
 - [x] Can initialize projects (no Node.js!)
-- [x] 69 components working (both CLI and NuGet)
+- [x] 73 components working (both CLI and NuGet)
 - [x] Basic documentation live
 - [ ] 50+ GitHub stars (in progress)
 
-### Beta Success (Q2 2026)
-- [ ] 40+ components available
-- [ ] Component registry operational
-- [ ] Hybrid workflow proven
+### v0.2.1 Success ✅
+- [x] 80 components available (incl. 8 chart components)
+- [x] Component registry operational with dependency resolution
+- [x] Charts & Data Visualization with ApexCharts integration
+- [x] CSS auto-install (CLI injects link tags into App.razor)
+- [x] wwwroot path support for non-component assets
+- [x] Hybrid workflow proven (CLI + NuGet)
+
+### v0.3.0 Goals (Q2 2026)
+- [ ] Drawer/Sheet compositional subcomponents merged
+- [ ] Component playground/demo site
 - [ ] 500+ GitHub stars
 - [ ] 50+ projects using ShellUI
 - [ ] Active community feedback
 
-### v1.0 Success (Q3 2026)
+### v1.0 Success (Q3-Q4 2026)
 - [ ] All milestones complete
 - [ ] 1000+ GitHub stars
 - [ ] 500+ projects using ShellUI
@@ -242,8 +260,8 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
-**Last Updated:** November 2025  
-**Current Version:** v0.1.0  
+**Last Updated:** February 2026  
+**Current Version:** v0.2.1  
 **Status:** Pre-release (ready for use!)
 
 ---
