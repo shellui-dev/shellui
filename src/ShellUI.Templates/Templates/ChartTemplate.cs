@@ -11,7 +11,7 @@ public class ChartTemplate
         Description = "Base chart component with ShellUI theming and ApexCharts integration",
         Category = ComponentCategory.DataDisplay,
         FilePath = "Chart.razor",
-        Dependencies = new List<string> { "chart-variants" },
+        Dependencies = new List<string> { "chart-variants", "chart-styles" },
         Variants = new List<string> { "default", "colorful", "monochrome" },
         Tags = new List<string> { "chart", "data", "visualization", "apexcharts" }
     };
