@@ -2,10 +2,13 @@
 @layout BlazorInteractiveServer.Components.Layout.DashboardLayout
 @rendermode InteractiveServer
 @using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components.UI.Variants
+@using BlazorInteractiveServer.Components.Models
+@using ApexCharts
 
 <PageTitle>Dashboard</PageTitle>
 
-@* Stat cards row *@
+@* Stat cards with charts *@
 <div class="grid auto-rows-min gap-4 md:grid-cols-3">
     <div class="rounded-xl border border-border bg-card p-6">
         <div class="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -14,6 +17,11 @@
         </div>
         <div class="text-2xl font-bold">$45,231.89</div>
         <p class="text-xs text-muted-foreground">+20.1% from last month</p>
+        <div class="mt-3 h-[80px] -mx-2">
+            <BarChart TItem="SalesData" Data="RevenueData" Name="Revenue"
+                      Title="" XValue="e => e.Month" YValue="e => e.Amount"
+                      Height="80px" Theme="ChartTheme.Default" />
+        </div>
     </div>
     <div class="rounded-xl border border-border bg-card p-6">
         <div class="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -22,6 +30,11 @@
         </div>
         <div class="text-2xl font-bold">+2,350</div>
         <p class="text-xs text-muted-foreground">+180.1% from last month</p>
+        <div class="mt-3 h-[80px] -mx-2">
+            <LineChart TItem="SalesData" Data="SubscriptionData" Name="Subs"
+                      Title="" XValue="e => e.Month" YValue="e => e.Amount"
+                      Height="80px" Theme="ChartTheme.Default" />
+        </div>
     </div>
     <div class="rounded-xl border border-border bg-card p-6">
         <div class="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -30,6 +43,11 @@
         </div>
         <div class="text-2xl font-bold">+573</div>
         <p class="text-xs text-muted-foreground">+201 since last hour</p>
+        <div class="mt-3 h-[80px] -mx-2">
+            <AreaChart TItem="SalesData" Data="ActiveData" Name="Active"
+                      Title="" XValue="e => e.Month" YValue="e => e.Amount"
+                      Height="80px" Theme="ChartTheme.Colorful" />
+        </div>
     </div>
 </div>
 
@@ -53,3 +71,40 @@
         </div>
     </div>
 </div>
+
+@code {
+    private List<SalesData> RevenueData { get; set; } = new();
+    private List<SalesData> SubscriptionData { get; set; } = new();
+    private List<SalesData> ActiveData { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        RevenueData = new List<SalesData>
+        {
+            new() { Month = "Jan", Amount = 38210 },
+            new() { Month = "Feb", Amount = 40120 },
+            new() { Month = "Mar", Amount = 38900 },
+            new() { Month = "Apr", Amount = 42350 },
+            new() { Month = "May", Amount = 43890 },
+            new() { Month = "Jun", Amount = 45231 }
+        };
+        SubscriptionData = new List<SalesData>
+        {
+            new() { Month = "Jan", Amount = 1850 },
+            new() { Month = "Feb", Amount = 1920 },
+            new() { Month = "Mar", Amount = 2010 },
+            new() { Month = "Apr", Amount = 2150 },
+            new() { Month = "May", Amount = 2240 },
+            new() { Month = "Jun", Amount = 2350 }
+        };
+        ActiveData = new List<SalesData>
+        {
+            new() { Month = "Jan", Amount = 420 },
+            new() { Month = "Feb", Amount = 458 },
+            new() { Month = "Mar", Amount = 491 },
+            new() { Month = "Apr", Amount = 512 },
+            new() { Month = "May", Amount = 538 },
+            new() { Month = "Jun", Amount = 573 }
+        };
+    }
+}
