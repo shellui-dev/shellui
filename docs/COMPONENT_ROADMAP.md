@@ -1,241 +1,130 @@
 # ShellUI Component Roadmap
 
-**Goal:** Build ALL components from shadcn/ui + sysinfocus to create the most comprehensive Blazor UI library
+**Goal:** Build ALL components from shadcn/ui + extras needed for ShellDocs (Blazor fumadocs equivalent)
 
-## Current Status: 73/73 Components Complete! 🎉 (100% Complete)
+## Current Status: 100 Installable Components - v0.3.0-alpha
 
-### ✅ Completed (73)
-1. Accordion
-2. AccordionItem
-3. Alert
-4. AlertDialog **NEW**
-5. Avatar
-6. Badge
-7. Breadcrumb
-8. BreadcrumbItem
-9. Button
-10. Calendar **NEW**
-11. Card
-12. Checkbox
-13. Collapsible **NEW**
-14. Combobox **NEW**
-15. Command **NEW**
-16. DatePicker **NEW**
-17. DataTable **NEW**
-18. Dialog
-19. Drawer **NEW**
-20. Dropdown
-21. Form **NEW**
-22. HoverCard **NEW**
-23. Input
-24. InputOTP **NEW**
-25. Label
-26. Loading **NEW**
-27. Menubar **NEW**
-28. MenubarItem **NEW**
-29. Navbar
-30. NavigationMenu **NEW**
-31. NavigationMenuItem **NEW**
-32. Pagination **NEW**
-33. Popover
-34. Progress
-35. RadioGroup
-36. RadioGroupItem
-37. Resizable **NEW**
-38. ScrollArea **NEW**
-39. Select
-40. Separator
-41. Sheet **NEW**
-42. Sidebar
-43. Skeleton
-44. Slider
-45. Switch
-46. Table
-47. TableBody
-48. TableCell
-49. TableHead
-50. TableHeader
-51. TableRow
-52. Tabs
-53. Textarea
-54. Theme Toggle
-55. TimePicker **NEW**
-56. Toast
-57. Toggle
-58. Tooltip
-73. DateRangePicker **NEW**
+### Completed (~100 install targets, dependencies auto-installed)
+
+**Form (11):** Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider
+
+**Layout (19):** Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Tabs, TabsList, TabsTrigger, TabsContent, TabModels, Navbar, Sidebar, Separator, Accordion, AccordionItem, AccordionTrigger, AccordionContent, Breadcrumb, BreadcrumbItem, Collapsible, CollapsibleTrigger, CollapsibleContent, Resizable
+
+**Navigation (8):** NavigationMenu, NavigationMenuItem, Menubar, MenubarItem, Dropdown, Pagination, ScrollArea, Sheet
+
+**Feedback (7):** Alert, AlertVariants, Progress, Skeleton, Toast, Loading, EmptyState
+
+**Overlay (8):** Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose, AlertDialog, Popover, Tooltip, HoverCard, Drawer, ContextMenu, Command
+
+**Data Display (10):** Badge, BadgeVariants, Avatar, AvatarVariants, Table, TableHeader, TableBody, TableRow, TableHead, TableCell, DataTable
+
+**Data Visualization (7):** Chart, BarChart, LineChart, AreaChart, PieChart, MultiSeriesChart, ChartSeries, ChartVariants
+
+**Advanced (6):** Carousel, CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
+
+**Form Advanced (5):** Form, InputOTP, Combobox, DatePicker, DateRangePicker, TimePicker
+
+**Utility (3):** ThemeToggle, Shell, ButtonVariants, ToggleVariants, FileUpload, Stepper, StepperList, StepperStep, StepperContent, Calendar
 
 ---
 
-## Phase 1: Core Form Components ✅ COMPLETED
-**Target: Q4 2025 - Q1 2026**
+## Compositional Upgrades (shadcn-style)
 
-- [x] **Form** - Form wrapper with validation
-- [x] **Input OTP** - One-time password input
-- [x] **Combobox** - Autocomplete select input
-- [x] **Date Picker** - Calendar date selection
-- [x] **Time Picker** - Time selection input
+Components upgraded to shadcn-style compositional API (explicit sub-components, no heavy ChildContent, explicit Value/Title props):
 
----
+### ✅ Done
+- **Tabs** → TabsList, TabsTrigger, TabsContent (Value-based)
+- **Stepper** → StepperList, StepperStep, StepperContent (Value-based, Confirm on last)
+- **Collapsible** → CollapsibleTrigger, CollapsibleContent
+- **Dialog** → DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose
+- **Card** → CardHeader, CardTitle, CardDescription, CardContent, CardFooter
+- **Accordion** → AccordionTrigger, AccordionContent (Value optional; legacy Title + ChildContent still supported)
 
-## Phase 2: Layout & Navigation ✅ COMPLETED
-**Target: Q1 2026**
+- **Dropdown** → DropdownTrigger, DropdownContent, DropdownItem (legacy Trigger/ChildContent supported)
+- **Popover** → PopoverTrigger, PopoverContent (legacy Trigger/ChildContent supported)
+- **HoverCard** → HoverCardTrigger, HoverCardContent (legacy ChildContent/CardContent supported)
 
-- [x] **Navigation Menu** - Main navigation menu
-- [x] **Menubar** - Application menubar
-- [x] **Pagination** - Page navigation controls
-- [x] **Scroll Area** - Custom scrollable container
-- [x] **Resizable** - Resizable panels
-- [x] **Sheet** - Side panel/drawer
-- [x] **Drawer** - Sliding drawer panel
-- [x] **Collapsible** - Collapsible content
+- **Carousel** → CarouselList, CarouselSlide (Value-based; UseCarouselList=true)
+- **ContextMenu** → ContextMenuTrigger, ContextMenuContent, ContextMenuOption (legacy Items supported)
+- **NavigationMenu** → NavList, NavItem, NavTrigger, NavContent (UseNavList=true)
+- **Select** → SelectTrigger, SelectContent, SelectItem (UseCustomSelect=true; native select default)
 
----
+### 🔲 Candidates for upgrade
 
-## Phase 3: Data Display (Priority: MEDIUM)
-**Target: Q1 2026**
-
-- [ ] **Data Table** - Advanced data table with sorting/filtering
-- [ ] **Calendar** - Full calendar component
-- [ ] **Chart** - Chart/graph components
-- [ ] **Tree View** - Hierarchical tree structure
-- [ ] **Timeline** - Event timeline
-- [ ] **Stepper** - Step-by-step wizard
+### Pattern
+- Root component cascades context (state, callbacks)
+- Sub-components use `Value` for selection, `Title`/`Description` for labels
+- No monolithic `ChildContent` with implicit structure
+- Styling via Tailwind classes matching shadcn defaults
 
 ---
 
-## Phase 4: Feedback & Overlay (Priority: MEDIUM)
-**Target: Q2 2026**
+## Remaining Components
 
-- [ ] **Alert Dialog** - Confirmation dialogs
-- [ ] **Hover Card** - Rich hover content
-- [ ] **Context Menu** - Right-click context menu
-- [ ] **Command** - Command palette (Cmd+K)
-- [ ] **Loading** - Loading spinner
-- [ ] **Empty State** - Empty state placeholder
+### Priority 1: ShellDocs Essentials (Required for documentation site)
+These components are needed to build ShellDocs - the Blazor equivalent of fumadocs.
+
+- [ ] **CodeBlock** - Syntax highlighted code with copy button, line numbers, line highlighting, filename tab
+- [ ] **MDX / MarkdownRenderer** - Render MDX/Markdown content with component support
+- [ ] **Callout** - Info/warning/danger/tip callout boxes (like Docusaurus admonitions)
+- [ ] **Steps** - Numbered step-by-step instructions (vertical)
+- [ ] **FileTree** - Display file/folder structure with icons
+- [ ] **Tabs (Docs variant)** - Code tabs for multi-language examples (npm/yarn/pnpm)
+- [ ] **SearchDialog** - Full-text search overlay (Cmd+K style, extends Command)
+- [ ] **CopyButton** - One-click copy to clipboard
+- [ ] **TableOfContents** - Auto-generated from headings, scroll-spy active state
+- [ ] **DocsSidebar** - Collapsible docs navigation with sections/groups
+- [ ] **DocsHeader** - Top nav with search, theme toggle, github link
+- [ ] **DocsBreadcrumb** - Auto-generated from route hierarchy
+- [ ] **PrevNextNav** - Previous/Next page navigation at bottom of docs
+- [ ] **TypeTable** - API/Props reference table (component name, type, default, description)
+- [ ] **LinkCard** - Card-style links for related pages
+
+### Priority 2: UI Enhancements
+- [ ] **TreeView** - Hierarchical tree with expand/collapse, selection, drag-drop
+- [ ] **Timeline** - Vertical event timeline with icons and content
+- [ ] **AspectRatio** - Constrained aspect ratio container
+- [ ] **ColorPicker** - Color selection with swatches, hex/rgb input
+- [ ] **Toggle Group** - Group of toggles (single/multi select)
+- [ ] **Number Input** - Increment/decrement number input
+
+### Priority 3: Rich Content
+- [ ] **RichTextEditor** - WYSIWYG editor (consider Quill or ProseMirror)
+- [ ] **KanbanBoard** - Drag-and-drop columns and cards
+- [ ] **VirtualScroll** - Virtualized list for large datasets
+- [ ] **InfiniteScroll** - Load more on scroll
+
+### Priority 4: Media & Utilities
+- [ ] **ImageViewer** - Lightbox with zoom/pan
+- [ ] **VideoPlayer** - Video playback controls
+- [ ] **QRCode** - QR code generator
+- [ ] **Barcode** - Barcode display
 
 ---
 
-## Phase 5: Advanced Components (Priority: LOW)
-**Target: Q2-Q3 2026**
+## ShellDocs Architecture Notes
 
-- [ ] **Carousel** - Image/content carousel
-- [ ] **Aspect Ratio** - Aspect ratio container
-- [ ] **Code Block** - Syntax highlighted code
-- [ ] **Markdown** - Markdown renderer
-- [ ] **File Upload** - File upload component
-- [ ] **Color Picker** - Color selection
-- [ ] **Rich Text Editor** - WYSIWYG editor
-- [ ] **Kanban Board** - Drag-and-drop board
+ShellDocs will need:
+1. **MDX Pipeline** - Parse .mdx files, extract frontmatter, render with Blazor components
+2. **File-based routing** - Docs pages from folder structure (like fumadocs/Nextra)
+3. **Search index** - Build-time index generation for full-text search
+4. **Syntax highlighting** - Prism.js or Shiki via JS interop
+5. **Component embedding** - Render ShellUI components inline in docs (live preview)
 
----
-
-## Phase 6: Blazor-Specific Components
-**Target: Q3 2026**
-
-- [ ] **Virtual Scroll** - Virtualized list
-- [ ] **Grid** - Responsive grid layout
-- [ ] **Split View** - Split pane view
-- [ ] **PDF Viewer** - PDF display
-- [ ] **Video Player** - Video playback
-- [ ] **Audio Player** - Audio playback
-- [ ] **QR Code** - QR code generator
-- [ ] **Barcode** - Barcode scanner
-
----
-
-## Summary by Category
-
-### Form (11 components) ✅
-Button ✅, Input ✅, Textarea ✅, Select ✅, Checkbox ✅, RadioGroup ✅, RadioGroupItem ✅, Switch ✅, Toggle ✅, Label ✅, Slider ✅
-
-### Layout (12 components) ✅
-Card ✅, Tabs ✅, Navbar ✅, Sidebar ✅, Separator ✅, Accordion ✅, AccordionItem ✅, Breadcrumb ✅, BreadcrumbItem ✅
-
-### Feedback (5 components) ✅
-Alert ✅, Progress ✅, Skeleton ✅, Toast ✅, Tooltip ✅
-
-### Overlay (3 components) ✅
-Dialog ✅, Dropdown ✅, Popover ✅
-
-### Data Display (8 components) ✅
-Badge ✅, Avatar ✅, Table ✅, TableHeader ✅, TableBody ✅, TableRow ✅, TableHead ✅, TableCell ✅
-
-### Utility (1 component) ✅
-Theme Toggle ✅
+### Key ShellDocs Pages:
+- Landing page (hero, features grid, code example)
+- Component docs (props table, live preview, code examples)
+- Getting started guide (steps, code blocks)
+- API reference (type tables, method signatures)
+- Changelog (timeline)
 
 ---
 
 ## Timeline
 
-✅ Q4 2025 - v0.1.0 Released (December 2025)
-   ├── ✅ CLI Tool Published
-   ├── ✅ NuGet Packages Published
-   ├── ✅ 73 Components Available
-   └── ✅ Tailwind v4.1.17 Integration
-
-🚀 Q1 2026 - v0.1.0+ (Planned)
-   ├── More components (75+)
-   ├── Enhanced documentation
-   ├── Component examples
-   └── Performance improvements
-
-🎯 Q2-Q3 2026 - v1.0.0 (Target)
-   ├── Full component library (80+)
-   ├── Comprehensive documentation
-   ├── Community contributions
-   └── Production-ready release
-
-**Current Progress: 73/73 components (100% complete!)** 🎯
-
----
-
-## Production Ready! 🚀
-
-All 73 components are:
-- ✅ **Fully functional** with Tailwind v4.1.17
-- ✅ **CLI installable** (`dotnet shellui add component`)
-- ✅ **NuGet compatible** (ShellUI.Components package)
-- ✅ **Customizable** (edit in Components/UI/)
-- ✅ **Tested** with working demos
-- ✅ **Accessible** (WCAG 2.1 AA compliant)
-
-## Ready to Use Today!
-
-```bash
-# Install CLI
-dotnet tool install -g ShellUI.CLI
-
-# Initialize (choose npm or standalone)
-shellui init
-
-# Add components (73 available!)
-shellui add button input card dialog data-table calendar
-
-# List all available components
-shellui list
-```
-
-## Recent Additions
-
-### v0.1.0 (Q4 2025) - The shadcn Refactor
-**Major architectural upgrade:**
-- **Full Refactor**: Components aligned with shadcn/ui patterns (Composition over Configuration)
-- **Variant Pattern**: Type-safe enums and `cva` utility for component variants
-- **Tailwind v4.1.17**: Upgraded to latest Tailwind version
-- **New Components**: Tabs (refactored), Dialog (composable), Card (composable)
-
-### Previous Sessions (Q4 2025)
-**Added high-impact components:**
-- **DataTable** - Advanced table with sorting, filtering, pagination
-- **AlertDialog** - Confirmation dialogs
-- **Calendar** - Full calendar component
-- **Command** - Command palette (Cmd+K style)
-- **Form Components** - RadioGroup, Slider, Toggle, InputOTP
-
-All components:
-- ✅ Built with composable architecture
-- ✅ Full Tailwind CSS integration
-- ✅ Dark mode support
-- ✅ CLI installable
-- ✅ Demo page ready
+- v0.1.0 (Dec 2025) - 73 components, CLI + NuGet
+- v0.1.1 (Dec 2025) - Hotfix, package publishing
+- **v0.3.0-alpha (Feb 2026) - Current alpha: Charts, 100 components, Tailwind 4.1.18**
+- v0.3.0 (Q1 2026) - ShellDocs components (CodeBlock, MDX, Callout, Steps, etc.)
+- v0.4.0 (Q2 2026) - ShellDocs site launch
+- v1.0.0 (Q2-Q3 2026) - .NET 10, stable API, comprehensive docs

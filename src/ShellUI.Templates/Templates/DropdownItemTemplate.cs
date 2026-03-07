@@ -1,0 +1,48 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public static class DropdownItemTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "dropdown-item",
+        DisplayName = "Dropdown Item",
+        Description = "Menu item for Dropdown (shadcn-style)",
+        Category = ComponentCategory.Overlay,
+        FilePath = "DropdownItem.razor",
+        Dependencies = new List<string> { "dropdown" },
+        IsAvailable = false,
+        Tags = new List<string> { "overlay", "dropdown", "item", "menu" }
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+
+<button type=""button""
+        class=""relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50""
+        disabled=""@Disabled""
+        @onclick=""HandleClick""
+        @attributes=""AdditionalAttributes"">
+    @ChildContent
+</button>
+
+@code {
+    [CascadingParameter] public Dropdown? Parent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private async Task HandleClick()
+    {
+        if (!Disabled)
+        {
+            await OnClick.InvokeAsync();
+            if (Parent != null)
+                await Parent.CloseAsync();
+        }
+    }
+}
+";
+}

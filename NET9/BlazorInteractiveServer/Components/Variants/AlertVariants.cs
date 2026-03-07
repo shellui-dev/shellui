@@ -15,11 +15,11 @@ public static class AlertVariants
 {
     private static readonly Dictionary<AlertVariant, string> VariantClasses = new()
     {
-        { AlertVariant.Default, "bg-background text-foreground" },
-        { AlertVariant.Destructive, "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive" },
-        { AlertVariant.Success, "border-green-500/50 text-green-700 dark:border-green-500 dark:text-green-400 [&>svg]:text-green-600" },
-        { AlertVariant.Warning, "border-yellow-500/50 text-yellow-700 dark:border-yellow-500 dark:text-yellow-400 [&>svg]:text-yellow-600" },
-        { AlertVariant.Info, "border-blue-500/50 text-blue-700 dark:border-blue-500 dark:text-blue-400 [&>svg]:text-blue-600" }
+        { AlertVariant.Default, "border-border bg-background text-foreground" },
+        { AlertVariant.Destructive, "border-border text-destructive [&>svg]:text-destructive" },
+        { AlertVariant.Success, "border-border text-green-700 dark:text-green-400 [&>svg]:text-green-600" },
+        { AlertVariant.Warning, "border-border text-yellow-700 dark:text-yellow-400 [&>svg]:text-yellow-600" },
+        { AlertVariant.Info, "border-border text-blue-700 dark:text-blue-400 [&>svg]:text-blue-600" }
     };
 
     public static string Get(AlertVariant variant = AlertVariant.Default, string? className = null)

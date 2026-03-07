@@ -9,7 +9,7 @@ A comprehensive comparison of ShellUI with other popular Blazor component librar
 | **Distribution** | CLI (Copy) | NuGet | NuGet | NuGet | NuGet | NuGet |
 | **Customization** | Full Source | Limited | Limited | Limited | Limited | Limited |
 | **CSS Framework** | Tailwind v4 | Custom | Bootstrap | Bootstrap/Custom | Ant Design | Custom |
-| **Component Count** | 40+ | 50+ | 90+ | 80+ | 60+ | 60+ |
+| **Component Count** | 100+ | 50+ | 90+ | 80+ | 60+ | 60+ |
 | **Open Source** | Yes (MIT) | Yes (MIT) | Partial | Yes (MIT) | Yes (MIT) | Yes (MIT) |
 | **Commercial License** | Free | Free | Paid Plans | Free | Free | Free |
 | **Dark Mode** | Built-in | Built-in | Built-in | Built-in | Built-in | Built-in |
@@ -202,17 +202,8 @@ A comprehensive comparison of ShellUI with other popular Blazor component librar
 ## Philosophy Comparison
 
 ### Traditional Libraries (MudBlazor, Radzen, etc.)
-```
-Package Manager (NuGet)
-        ↓
-Install Complete Library
-        ↓
-Import Components
-        ↓
-Limited Customization
-        ↓
-Update via Package Manager
-```
+
+Package Manager (NuGet) → Install Complete Library → Import Components → Limited Customization → Update via Package Manager
 
 **Pros:**
 - Quick setup
@@ -227,17 +218,8 @@ Update via Package Manager
 - Hidden implementation
 
 ### ShellUI Approach
-```
-CLI Tool
-    ↓
-Choose Components
-    ↓
-Copy to Your Project
-    ↓
-Full Customization
-    ↓
-You Control Updates
-```
+
+CLI Tool → Choose Components → Copy to Your Project → Full Customization → You Control Updates
 
 **Pros:**
 - Minimal bundle size

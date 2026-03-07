@@ -111,6 +111,10 @@ window.ShellUI = {
         } else {
             console.error('window.open is not available');
         }
+    },
+
+    copyToClipboard: function (text) {
+        return navigator.clipboard.writeText(text);
     }
 };
 

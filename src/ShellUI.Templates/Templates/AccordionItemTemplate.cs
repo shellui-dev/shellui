@@ -16,57 +16,87 @@ public class AccordionItemTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@implements IDisposable
 
-<div class=""border-b border-border @ClassName"" @attributes=""AdditionalAttributes"">
-    <button type=""button""
-            @onclick=""Toggle""
-            class=""flex w-full flex-1 items-center justify-between py-4 font-medium transition-all hover:underline"">
-        @Title
-        <svg class=""@(""h-4 w-4 shrink-0 transition-transform duration-200 "" + (IsOpen ? ""rotate-180"" : """"))"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
-            <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M19 9l-7 7-7-7"" />
-        </svg>
-    </button>
-    @if (IsOpen)
-    {
-        <div class=""pb-4 pt-0"">
+<CascadingValue Value=""this"" IsFixed=""true"">
+    <div class=""@Shell.Cn(""border-b border-border last:border-b-0"", Class)"" data-state=""@(EffectiveIsOpen ? ""open"" : ""closed"")"" @attributes=""AdditionalAttributes"">
+        @if (UseCompositional)
+        {
             @ChildContent
-        </div>
-    }
-</div>
+        }
+        else
+        {
+            <button type=""button""
+                    @onclick=""Toggle""
+                    disabled=""@Disabled""
+                    class=""flex w-full flex-1 items-center justify-between py-4 font-medium transition-all hover:underline disabled:pointer-events-none disabled:opacity-50"">
+                @Title
+                <svg class=""@Shell.Cn(""h-4 w-4 shrink-0 transition-transform duration-200"", EffectiveIsOpen ? ""rotate-180"" : """")""
+                     fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                    <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M19 9l-7 7-7-7"" />
+                </svg>
+            </button>
+            <div class=""grid grid-rows-[0fr] data-[state=open]:grid-rows-[1fr] transition-[grid-template-rows] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]"" data-state=""@(EffectiveIsOpen ? ""open"" : ""closed"")"">
+                <div class=""overflow-hidden min-h-0"">
+                    @if (EffectiveIsOpen)
+                    {
+                        <div class=""pb-4 pt-0 text-sm"">
+                            @ChildContent
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</CascadingValue>
 
 @code {
-    [CascadingParameter]
-    private Accordion? Accordion { get; set; }
-    
-    [Parameter]
-    public string Title { get; set; } = """";
-    
-    [Parameter]
-    public bool IsOpen { get; set; }
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [CascadingParameter] private Accordion? Accordion { get; set; }
+    [Parameter] public string Title { get; set; } = """";
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
-    protected override void OnInitialized()
+
+    private string? _assignedValue;
+
+    private bool UseCompositional => string.IsNullOrEmpty(Title);
+
+    internal bool EffectiveIsOpen => Accordion != null
+        ? Accordion.IsItemOpen(EffectiveValue)
+        : IsOpen;
+
+    internal string? EffectiveValue => _assignedValue ?? Value;
+
+    public void SetAssignedValue(string value) => _assignedValue = value;
+
+    protected override void OnInitialized() => Accordion?.RegisterItem(this);
+
+    protected override void OnParametersSet()
     {
-        Accordion?.RegisterItem(this);
+        if (Accordion == null && !string.IsNullOrEmpty(Value))
+            _assignedValue = null;
     }
-    
-    public void Dispose()
+
+    public void Dispose() => Accordion?.UnregisterItem(this);
+
+    public async Task ToggleAsync()
     {
-        Accordion?.UnregisterItem(this);
+        if (Disabled) return;
+        if (Accordion != null)
+            await Accordion.ToggleItemAsync(this);
+        else
+        {
+            IsOpen = !IsOpen;
+            await IsOpenChanged.InvokeAsync(IsOpen);
+        }
     }
-    
-    private void Toggle()
-    {
-        IsOpen = !IsOpen;
-    }
+
+    private async Task Toggle() => await ToggleAsync();
 }
 ";
 }

@@ -13,6 +13,14 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -20,16 +28,16 @@ jobs:
           9.0.x
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ShellUI.sln
 
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build ShellUI.sln --no-restore --configuration Release
 
     - name: Run tests
-      run: dotnet test --no-restore --configuration Release --verbosity normal
+      run: dotnet test ShellUI.sln --no-restore --no-build --configuration Release --verbosity normal
 
     - name: Pack NuGet packages
-      run: dotnet pack --no-build --configuration Release -p:ContinuousIntegrationBuild=true
+      run: dotnet pack ShellUI.sln --no-build --configuration Release -p:ContinuousIntegrationBuild=true
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4

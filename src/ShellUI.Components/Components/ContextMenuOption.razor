@@ -1,0 +1,48 @@
+@namespace ShellUI.Components
+
+@* ContextMenuOption - compositional menu item (ContextMenuItem is the model class) *@
+@if (IsSeparator)
+{
+    <div class="my-1 h-px bg-border"></div>
+}
+else
+{
+    <button type="button"
+            class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
+            disabled="@Disabled"
+            @onclick="HandleClick"
+            @attributes="AdditionalAttributes">
+        @if (IconContent != null)
+        {
+            <span class="mr-2 flex shrink-0 items-center justify-center text-muted-foreground" style="width: 0.875rem; height: 0.875rem;">@IconContent</span>
+        }
+        <span class="flex-1">@ChildContent</span>
+        @if (!string.IsNullOrEmpty(Shortcut))
+        {
+            <span class="ml-auto text-xs text-muted-foreground">@Shortcut</span>
+        }
+    </button>
+}
+
+@code {
+    [CascadingParameter] public ContextMenu? Parent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? IconContent { get; set; }
+    [Parameter] public string? Shortcut { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool IsSeparator { get; set; }
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private async Task HandleClick()
+    {
+        if (!Disabled && !IsSeparator)
+        {
+            await OnClick.InvokeAsync();
+            if (Parent != null)
+                await Parent.CloseAsync();
+        }
+    }
+}

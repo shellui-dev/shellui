@@ -63,7 +63,7 @@ public class ComponentMetadata
         if (assemblyVersion != null)
             return assemblyVersion.InformationalVersion.Split('+')[0]; // strip build metadata
 
-        return "0.2.0";
+        return "0.3.0";
     }
 }
 

@@ -76,22 +76,57 @@
             </Breadcrumb>
         </div>
 
-        <!-- Accordion Demo -->
+        <!-- Accordion (Single: one open at a time, shadcn default) -->
         <div>
-            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Accordion</h3>
-            <CascadingValue Value="@_accordion">
-                <Accordion @ref="_accordion">
-                    <AccordionItem Title="Is it accessible?" IsOpen="true">
-                        <p class="text-sm text-muted-foreground">Yes. It adheres to the <a href="https://www.w3.org/WAI/ARIA/apg/" target="_blank" class="underline hover:text-foreground">WAI-ARIA design pattern</a>.</p>
-                    </AccordionItem>
-                    <AccordionItem Title="Is it styled?">
-                        <p class="text-sm text-muted-foreground">Yes. It comes with default styles that matches the other components aesthetic.</p>
-                    </AccordionItem>
-                    <AccordionItem Title="Is it animated?">
-                        <p class="text-sm text-muted-foreground">Yes. It's animated by default using Tailwind CSS transitions.</p>
-                    </AccordionItem>
-                </Accordion>
-            </CascadingValue>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Accordion (Single)</h3>
+            <p class="text-sm text-muted-foreground mb-2">Only one section open at a time. Expanding one closes others.</p>
+            <Accordion Type="@AccordionType.Single" Collapsible="true" DefaultValue="item-0">
+                <AccordionItem Title="Is it accessible?">
+                    <p class="text-sm text-muted-foreground">Yes. It adheres to the <a href="https://www.w3.org/WAI/ARIA/apg/" target="_blank" class="underline hover:text-foreground">WAI-ARIA design pattern</a>.</p>
+                </AccordionItem>
+                <AccordionItem Title="Is it styled?">
+                    <p class="text-sm text-muted-foreground">Yes. It comes with default styles that matches the other components aesthetic.</p>
+                </AccordionItem>
+                <AccordionItem Title="Is it animated?">
+                    <p class="text-sm text-muted-foreground">Yes. It's animated by default using Tailwind CSS transitions.</p>
+                </AccordionItem>
+            </Accordion>
+        </div>
+
+        <!-- Accordion (Compositional: AccordionTrigger + AccordionContent) -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Accordion (Compositional)</h3>
+            <Accordion DefaultValue="faq-1">
+                <AccordionItem Value="faq-1">
+                    <AccordionTrigger>Custom trigger content</AccordionTrigger>
+                    <AccordionContent>
+                        <p class="text-sm text-muted-foreground">Uses AccordionTrigger and AccordionContent for full control over markup.</p>
+                    </AccordionContent>
+                </AccordionItem>
+                <AccordionItem Value="faq-2">
+                    <AccordionTrigger><span class="font-bold">Bold header</span></AccordionTrigger>
+                    <AccordionContent>
+                        <p class="text-sm text-muted-foreground">Trigger and content can contain any markup.</p>
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
+        </div>
+
+        <!-- Accordion (Multiple: allow multiple open) -->
+        <div>
+            <h3 class="text-xl font-semibold mb-2 text-card-foreground">Accordion (Multiple)</h3>
+            <p class="text-sm text-muted-foreground mb-2">Set Type="Multiple" to allow multiple sections open at once.</p>
+            <Accordion Type="@AccordionType.Multiple" DefaultValue="item-0,item-1">
+                <AccordionItem Title="Notification Settings">
+                    <p class="text-sm text-muted-foreground">Manage how you receive notifications.</p>
+                </AccordionItem>
+                <AccordionItem Title="Privacy &amp; Security">
+                    <p class="text-sm text-muted-foreground">Control your privacy and security preferences.</p>
+                </AccordionItem>
+                <AccordionItem Title="Billing" Disabled="true">
+                    <p class="text-sm text-muted-foreground">Disabled item example.</p>
+                </AccordionItem>
+            </Accordion>
         </div>
     </div>
 </section>
@@ -99,7 +134,6 @@
 @code {
     [Parameter] public bool IsSidebarOpen { get; set; } = false;
     [Parameter] public EventCallback<bool> IsSidebarOpenChanged { get; set; }
-    private Accordion? _accordion;
 
     private async Task ToggleSidebar()
     {

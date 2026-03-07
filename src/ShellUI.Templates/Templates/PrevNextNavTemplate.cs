@@ -1,0 +1,55 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public static class PrevNextNavTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "prev-next-nav",
+        DisplayName = "Prev/Next Navigation",
+        Description = "Previous and next page navigation for documentation",
+        Category = ComponentCategory.Navigation,
+        FilePath = "PrevNextNav.razor",
+        Dependencies = new List<string>(),
+        Tags = new List<string> { "docs", "navigation", "prev", "next", "pagination" }
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+
+<nav class=""@Shell.Cn(""flex items-center justify-between border-t border-border pt-6 mt-10 gap-4"", Class)"" aria-label=""Previous and next navigation"" @attributes=""AdditionalAttributes"">
+    @if (PrevHref != null)
+    {
+        <a href=""@PrevHref""
+           class=""flex-1 flex flex-col gap-0.5 rounded-md border border-border p-4 transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2""
+           aria-label=""Previous: @PrevLabel"">
+            <span class=""text-sm text-muted-foreground"">Previous</span>
+            <span class=""font-medium"">@PrevLabel</span>
+        </a>
+    }
+    else
+    {
+        <div class=""flex-1""></div>
+    }
+    @if (NextHref != null)
+    {
+        <a href=""@NextHref""
+           class=""flex-1 flex flex-col gap-0.5 rounded-md border border-border p-4 text-right transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2""
+           aria-label=""Next: @NextLabel"">
+            <span class=""text-sm text-muted-foreground"">Next</span>
+            <span class=""font-medium"">@NextLabel</span>
+        </a>
+    }
+</nav>
+
+@code {
+    [Parameter] public string? PrevHref { get; set; }
+    [Parameter] public string? PrevLabel { get; set; }
+    [Parameter] public string? NextHref { get; set; }
+    [Parameter] public string? NextLabel { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}
+";
+}

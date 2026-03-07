@@ -1,0 +1,70 @@
+@namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+@inject IJSRuntime JSRuntime
+
+<button type="button"
+        class="@Shell.Cn("inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 w-9", Class)"
+        disabled="@(!_canCopy)"
+        @onclick="CopyAsync"
+        title="@(_copied ? "Copied!" : "Copy to clipboard")"
+        @attributes="AdditionalAttributes">
+    @if (_copied)
+    {
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    }
+    else
+    {
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg>
+        }
+    }
+</button>
+
+@code {
+    [Parameter] public string? Text { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public EventCallback OnCopied { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _copied;
+    private bool _canCopy = true;
+
+    protected override void OnParametersSet()
+    {
+        _canCopy = !string.IsNullOrEmpty(Text);
+    }
+
+    private async Task CopyAsync()
+    {
+        if (string.IsNullOrEmpty(Text)) return;
+
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("ShellUI.copyToClipboard", Text);
+            _copied = true;
+            await OnCopied.InvokeAsync();
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(2000);
+                _copied = false;
+                await InvokeAsync(StateHasChanged);
+            });
+        }
+        catch
+        {
+            _canCopy = false;
+        }
+    }
+}

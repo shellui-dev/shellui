@@ -1,20 +1,34 @@
 @namespace ShellUI.Components
 
-<div class="relative w-full">
-    <select 
-        value="@Value"
-        disabled="@Disabled"
-        @onchange="HandleChange"
-        class="@ComputedClass"
-        @attributes="AdditionalAttributes">
-        @ChildContent
-    </select>
-    <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-        <svg class="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-        </svg>
-    </div>
-</div>
+<CascadingValue Value="this" IsFixed="true">
+    @if (UseCustomSelect)
+    {
+        <div class="relative w-full">
+            @ChildContent
+            @if (IsOpen)
+            {
+                <div class="fixed inset-0 z-40" @onclick="HandleBackdropClick"></div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="relative w-full">
+            <select value="@Value"
+                    disabled="@Disabled"
+                    @onchange="HandleChange"
+                    class="@ComputedClass"
+                    @attributes="AdditionalAttributes">
+                @ChildContent
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <svg class="h-4 w-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+        </div>
+    }
+</CascadingValue>
 
 @code {
     [Parameter] public string? Value { get; set; }
@@ -22,6 +36,7 @@
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
+    [Parameter] public bool UseCustomSelect { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
@@ -33,6 +48,28 @@
     private async Task HandleChange(ChangeEventArgs e)
     {
         Value = e.Value?.ToString();
-        await ValueChanged.InvokeAsync(Value);
+        await ValueChanged.InvokeAsync(Value ?? "");
     }
+
+    public async Task SelectValueAsync(string value)
+    {
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    public Task CloseAsync()
+    {
+        IsOpen = false;
+        InvokeStateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    internal void InvokeStateHasChanged() => StateHasChanged();
+
+    private async Task HandleBackdropClick()
+    {
+        await CloseAsync();
+    }
+
+    internal bool IsOpen { get; set; }
 }

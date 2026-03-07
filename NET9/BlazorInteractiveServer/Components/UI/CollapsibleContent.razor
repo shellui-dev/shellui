@@ -1,0 +1,14 @@
+@namespace BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+@if (Parent?.IsOpen == true)
+{
+    <div class="overflow-hidden transition-all">
+        @ChildContent
+    </div>
+}
+
+@code {
+    [CascadingParameter] public Collapsible? Parent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

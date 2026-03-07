@@ -49,7 +49,7 @@ This creates a `.config/dotnet-tools.json` file:
   "isRoot": true,
   "tools": {
     "shellui.cli": {
-      "version": "0.1.0",
+      "version": "0.3.0",
       "commands": ["shellui"]
     }
   }
@@ -104,13 +104,13 @@ dotnet tool update ShellUI.CLI
 
 ```bash
 # Global - specific version
-dotnet tool install -g ShellUI.CLI --version 0.1.0
+dotnet tool install -g ShellUI.CLI --version 0.3.0
 
 # Local - specific version
-dotnet tool install ShellUI.CLI --version 0.1.0
+dotnet tool install ShellUI.CLI --version 0.3.0
 
 # Update to specific version
-dotnet tool update -g ShellUI.CLI --version 0.2.0
+dotnet tool update -g ShellUI.CLI --version 0.3.0
 ```
 
 ### Downgrade to Previous Version
@@ -118,7 +118,7 @@ dotnet tool update -g ShellUI.CLI --version 0.2.0
 ```bash
 # Uninstall current, install specific version
 dotnet tool uninstall -g ShellUI.CLI
-dotnet tool install -g ShellUI.CLI --version 0.1.0
+dotnet tool install -g ShellUI.CLI --version 0.3.0
 ```
 
 ---

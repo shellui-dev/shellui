@@ -1,8 +1,11 @@
 using BlazorInteractiveServer.Components;
+using BlazorInteractiveServer.Components.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<SonnerService>();
+builder.Services.AddScoped<ISonnerService>(sp => sp.GetRequiredService<SonnerService>());
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 

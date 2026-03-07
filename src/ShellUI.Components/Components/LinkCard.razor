@@ -1,0 +1,28 @@
+@namespace ShellUI.Components
+
+<a href="@Href"
+   target="@(OpenInNewTab ? "_blank" : null)"
+   rel="@(OpenInNewTab ? "noopener noreferrer" : null)"
+   class="@Shell.Cn("block rounded-lg border border-border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent/50 hover:border-border focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", Class)"
+   @attributes="AdditionalAttributes">
+    <div class="p-4">
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            <h3 class="font-semibold leading-none tracking-tight mb-1">@Title</h3>
+        }
+        @if (ChildContent != null)
+        {
+            <p class="text-sm text-muted-foreground">@ChildContent</p>
+        }
+    </div>
+</a>
+
+@code {
+    [Parameter] public string? Href { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public bool OpenInNewTab { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

@@ -1,18 +1,27 @@
+@namespace ShellUI.Components
 @using Microsoft.JSInterop
 @implements IAsyncDisposable
 
+<CascadingValue Value="this" IsFixed="true">
 <div class="@Shell.Cn("relative w-full", Class)" @ref="carouselRef">
-    <div class="relative overflow-hidden rounded-lg" style="aspect-ratio: @AspectRatio;">
-        <div class="flex transition-transform duration-300 ease-in-out h-full" 
-             style="transform: translateX(-@(CurrentSlide * (100.0 / TotalSlides))%); width: @(TotalSlides * 100)%">
-            @ChildContent
+    @if (UseCarouselList)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <div class="relative overflow-hidden rounded-lg" style="aspect-ratio: @AspectRatio;">
+            <div class="flex transition-transform duration-300 ease-in-out h-full"
+                 style="transform: translateX(-@(CurrentIndex * (100.0 / Math.Max(1, EffectiveSlideCount)))%); width: @(Math.Max(1, EffectiveSlideCount) * 100)%">
+                @ChildContent
+            </div>
         </div>
-    </div>
+    }
     
     @if (ShowArrows)
     {
         <button class="@Shell.Cn("absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 shadow-md transition-colors hover:bg-background/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", ArrowClass)"
-                disabled="@(CurrentSlide == 0 && !Loop)"
+                disabled="@(CurrentIndex == 0 && !Loop)"
                 @onclick="PreviousSlide">
             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -20,7 +29,7 @@
         </button>
         
         <button class="@Shell.Cn("absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 shadow-md transition-colors hover:bg-background/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50", ArrowClass)"
-                disabled="@(CurrentSlide >= TotalSlides - 1 && !Loop)"
+                disabled="@(CurrentIndex >= EffectiveSlideCount - 1 && !Loop)"
                 @onclick="NextSlide">
             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -31,16 +40,17 @@
     @if (ShowDots)
     {
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-            @for (int i = 0; i < TotalSlides; i++)
+            @for (int i = 0; i < EffectiveSlideCount; i++)
             {
                 var index = i;
-                <button class="@Shell.Cn("h-2 w-2 rounded-full transition-colors", index == CurrentSlide ? "bg-primary" : "bg-muted")"
+                <button class="@Shell.Cn("h-2 w-2 rounded-full transition-colors", index == CurrentIndex ? "bg-primary" : "bg-muted")"
                         @onclick="() => GoToSlide(index)">
                 </button>
             }
         </div>
     }
 </div>
+</CascadingValue>
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -56,6 +66,15 @@
     [Parameter] public string ArrowClass { get; set; } = string.Empty;
     [Parameter] public string AspectRatio { get; set; } = "16/9";
     [Parameter] public EventCallback<int> OnSlideChanged { get; set; }
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public bool UseCarouselList { get; set; }
+
+    private List<CarouselSlide> _slides = new();
+    private bool _useValueBased => _slides.Count > 0;
+
+    public void RegisterSlide(CarouselSlide slide) => _slides.Add(slide);
+    public void UnregisterSlide(CarouselSlide slide) => _slides.Remove(slide);
 
     private ElementReference carouselRef;
     private Timer? autoPlayTimer;
@@ -81,44 +100,49 @@
         }
     }
 
+    public int EffectiveSlideCount => _useValueBased ? _slides.Count : TotalSlides;
+    public int CurrentIndex => _useValueBased ? Math.Max(0, _slides.FindIndex(s => s.Value == (Value ?? ""))) : CurrentSlide;
+
     private async Task NextSlide()
     {
-        if (CurrentSlide < TotalSlides - 1)
-        {
-            CurrentSlide++;
-        }
-        else if (Loop)
-        {
-            CurrentSlide = 0;
-        }
-        
-        await CurrentSlideChanged.InvokeAsync(CurrentSlide);
-        await OnSlideChanged.InvokeAsync(CurrentSlide);
-        StateHasChanged();
+        var count = EffectiveSlideCount;
+        var next = CurrentIndex;
+        if (next < count - 1) next++;
+        else if (Loop) next = 0;
+        await GoToSlide(next);
     }
 
     private async Task PreviousSlide()
     {
-        if (CurrentSlide > 0)
+        var count = EffectiveSlideCount;
+        var next = CurrentIndex;
+        if (next > 0) next--;
+        else if (Loop) next = count - 1;
+        await GoToSlide(next);
+    }
+
+    private async Task GoToSlide(int index)
+    {
+        if (_useValueBased && index >= 0 && index < _slides.Count)
         {
-            CurrentSlide--;
+            var val = _slides[index].Value;
+            Value = val;
+            await ValueChanged.InvokeAsync(val);
+            await OnSlideChanged.InvokeAsync(index);
         }
-        else if (Loop)
+        else if (!_useValueBased)
         {
-            CurrentSlide = TotalSlides - 1;
+            CurrentSlide = index;
+            await CurrentSlideChanged.InvokeAsync(CurrentSlide);
+            await OnSlideChanged.InvokeAsync(CurrentSlide);
         }
-        
-        await CurrentSlideChanged.InvokeAsync(CurrentSlide);
-        await OnSlideChanged.InvokeAsync(CurrentSlide);
         StateHasChanged();
     }
 
-    private async Task GoToSlide(int slide)
+    public async Task GoToSlideByValueAsync(string value)
     {
-        CurrentSlide = slide;
-        await CurrentSlideChanged.InvokeAsync(CurrentSlide);
-        await OnSlideChanged.InvokeAsync(CurrentSlide);
-        StateHasChanged();
+        var idx = _slides.FindIndex(s => s.Value == value);
+        if (idx >= 0) await GoToSlide(idx);
     }
 
     public async ValueTask DisposeAsync()
