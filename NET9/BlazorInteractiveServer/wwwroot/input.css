@@ -421,3 +421,28 @@ html, body, :host {
   font-family: var(--font-sans) !important;
   font-weight: 500 !important;
 }
+
+/* Blazor error UI - hidden by default, shown only when Blazor adds .show on error */
+#blazor-error-ui {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+  padding: 1rem;
+  z-index: 9999;
+  text-align: center;
+}
+#blazor-error-ui.show {
+  display: block;
+}
+#blazor-error-ui a {
+  color: inherit;
+  text-decoration: underline;
+  margin: 0 0.5rem;
+}
+#blazor-error-ui a:hover {
+  opacity: 0.8;
+}

@@ -428,6 +428,9 @@
       max-width: 96rem;
     }
   }
+  .-mx-2 {
+    margin-inline: calc(var(--spacing) * -2);
+  }
   .mx-2 {
     margin-inline: calc(var(--spacing) * 2);
   }
@@ -448,6 +451,9 @@
   }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
+  }
+  .mt-3 {
+    margin-top: calc(var(--spacing) * 3);
   }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
@@ -618,6 +624,9 @@
   }
   .h-\[1px\] {
     height: 1px;
+  }
+  .h-\[80px\] {
+    height: 80px;
   }
   .h-auto {
     height: auto;
@@ -3117,6 +3126,29 @@ html, body, :host {
   fill: var(--foreground) !important;
   font-family: var(--font-sans) !important;
   font-weight: 500 !important;
+}
+#blazor-error-ui {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+  padding: 1rem;
+  z-index: 9999;
+  text-align: center;
+}
+#blazor-error-ui.show {
+  display: block;
+}
+#blazor-error-ui a {
+  color: inherit;
+  text-decoration: underline;
+  margin: 0 0.5rem;
+}
+#blazor-error-ui a:hover {
+  opacity: 0.8;
 }
 @property --tw-translate-x {
   syntax: "*";
