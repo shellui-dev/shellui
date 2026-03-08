@@ -147,7 +147,10 @@ public class ComponentInstaller
             return InstallResult.Failed;
         }
 
-        var componentPath = Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath, metadata.FilePath);
+        var basePath = metadata.IsLayoutBlock
+            ? Path.Combine(Directory.GetCurrentDirectory(), config.LayoutPath ?? "Components/Layout")
+            : Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath);
+        var componentPath = Path.GetFullPath(Path.Combine(basePath, metadata.FilePath));
         
         // Check if already exists
         if (File.Exists(componentPath) && !force)
