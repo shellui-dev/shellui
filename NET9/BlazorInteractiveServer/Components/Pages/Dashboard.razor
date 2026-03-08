@@ -8,45 +8,42 @@
 
 <PageTitle>Dashboard</PageTitle>
 
-@* Stat cards with charts *@
+@* Stat cards with charts — label + value on top row, taller charts *@
 <div class="grid auto-rows-min gap-4 md:grid-cols-3">
     <div class="rounded-xl border border-border bg-card p-6">
-        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div class="flex flex-row items-center justify-between space-y-0 gap-2">
             <h3 class="text-sm font-medium text-muted-foreground">Total Revenue</h3>
-            <i class="fa-solid fa-dollar-sign text-muted-foreground"></i>
+            <span class="text-xl font-bold shrink-0">$45,231.89</span>
         </div>
-        <div class="text-2xl font-bold">$45,231.89</div>
-        <p class="text-xs text-muted-foreground">+20.1% from last month</p>
-        <div class="mt-3 h-[80px] -mx-2">
+        <p class="text-xs text-muted-foreground mt-1">+20.1% from last month</p>
+        <div class="mt-3 min-h-[160px] -mx-2">
             <BarChart TItem="SalesData" Data="RevenueData" Name="Revenue"
                       Title="" XValue="e => e.Month" YValue="e => e.Amount"
-                      Height="80px" Theme="ChartTheme.Default" />
+                      Height="160px" Theme="ChartTheme.Default" />
         </div>
     </div>
     <div class="rounded-xl border border-border bg-card p-6">
-        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div class="flex flex-row items-center justify-between space-y-0 gap-2">
             <h3 class="text-sm font-medium text-muted-foreground">Subscriptions</h3>
-            <i class="fa-solid fa-users text-muted-foreground"></i>
+            <span class="text-xl font-bold shrink-0">+2,350</span>
         </div>
-        <div class="text-2xl font-bold">+2,350</div>
-        <p class="text-xs text-muted-foreground">+180.1% from last month</p>
-        <div class="mt-3 h-[80px] -mx-2">
+        <p class="text-xs text-muted-foreground mt-1">+180.1% from last month</p>
+        <div class="mt-3 min-h-[160px] -mx-2">
             <LineChart TItem="SalesData" Data="SubscriptionData" Name="Subs"
                       Title="" XValue="e => e.Month" YValue="e => e.Amount"
-                      Height="80px" Theme="ChartTheme.Default" />
+                      Height="160px" Theme="ChartTheme.Default" />
         </div>
     </div>
     <div class="rounded-xl border border-border bg-card p-6">
-        <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div class="flex flex-row items-center justify-between space-y-0 gap-2">
             <h3 class="text-sm font-medium text-muted-foreground">Active Now</h3>
-            <i class="fa-solid fa-chart-line text-muted-foreground"></i>
+            <span class="text-xl font-bold shrink-0">+573</span>
         </div>
-        <div class="text-2xl font-bold">+573</div>
-        <p class="text-xs text-muted-foreground">+201 since last hour</p>
-        <div class="mt-3 h-[80px] -mx-2">
+        <p class="text-xs text-muted-foreground mt-1">+201 since last hour</p>
+        <div class="mt-3 min-h-[160px] -mx-2">
             <AreaChart TItem="SalesData" Data="ActiveData" Name="Active"
                       Title="" XValue="e => e.Month" YValue="e => e.Amount"
-                      Height="80px" Theme="ChartTheme.Colorful" />
+                      Height="160px" Theme="ChartTheme.Colorful" />
         </div>
     </div>
 </div>

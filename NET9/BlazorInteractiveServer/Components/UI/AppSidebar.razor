@@ -1,38 +1,32 @@
 @namespace BlazorInteractiveServer.Components.UI
+@inject NavigationManager Navigation
 
 @* ──────────────────────────────────────────────────────────
-   AppSidebar — shadcn sidebar-08 (Inset + Secondary Nav)
+   AppSidebar — Inset sidebar with secondary nav (shadcn sidebar-08)
    
-   Usage:
+   SIMPLE USAGE (3 pieces):
    <SidebarProvider>
        <AppSidebar />
        <SidebarInset>
-           <header class="flex h-16 shrink-0 items-center gap-2">
-               <div class="flex items-center gap-2 px-4">
-                   <SidebarTrigger Class="-ml-1" />
-                   <Separator Orientation="vertical" Class="mr-2 h-4" />
-                   <Breadcrumb>...</Breadcrumb>
-               </div>
-           </header>
-           <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
-               <!-- Your content here -->
-           </div>
+           <header>... <SidebarTrigger /> ...</header>
+           <div>@Body or your content</div>
        </SidebarInset>
    </SidebarProvider>
+   
+   Collapsible: Offcanvas (default) = sidebar slides off when collapsed.
+   Set Collapsible="SidebarCollapsible.Icon" for icon strip when collapsed.
    ────────────────────────────────────────────────────────── *@
 
-<Sidebar Variant="SidebarVariant.Inset" Collapsible="SidebarCollapsible.Icon" Class="@Class">
+<Sidebar Variant="SidebarVariant.Inset" Collapsible="@Collapsible" Class="@Class">
     @* ── Header: Logo & Company ── *@
     <SidebarHeader>
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton Size="lg" Href="#">
-                    <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                        <i class="fa-solid fa-terminal text-sm"></i>
-                    </div>
-                    <div class="grid flex-1 text-left text-sm leading-tight">
-                        <span class="truncate font-semibold">Acme Inc</span>
-                        <span class="truncate text-xs text-sidebar-foreground/70">Enterprise</span>
+                <SidebarMenuButton Size="lg" Href="/" Tooltip="ShellUI" Class="group-data-[collapsible=icon]:!bg-sidebar-primary group-data-[collapsible=icon]:text-sidebar-primary-foreground">
+                    <i class="fa-solid fa-terminal"></i>
+                    <div class="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                        <span class="truncate font-semibold">ShellUI</span>
+                        <span class="truncate text-xs text-sidebar-foreground/70">Components</span>
                     </div>
                 </SidebarMenuButton>
             </SidebarMenuItem>
@@ -42,68 +36,35 @@
     @* ── Content ── *@
     <SidebarContent>
 
-        @* ─── NavMain: Platform ─── *@
+        @* ─── Dashboard ─── *@
         <SidebarGroup>
-            <SidebarGroupLabel>Platform</SidebarGroupLabel>
+            <SidebarGroupLabel>Navigation</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    @foreach (var item in _navMainItems)
-                    {
-                        <SidebarMenuItem>
-                            <SidebarMenuButton Href="@item.Url" IsActive="@item.IsActive" Tooltip="@item.Title">
-                                <i class="@item.IconClass"></i>
-                                <span>@item.Title</span>
-                            </SidebarMenuButton>
-                            @if (item.SubItems?.Count > 0)
-                            {
-                                <SidebarMenuAction OnClick="() => ToggleExpand(item)"
-                                                   Class="@Shell.Cn("transition-transform duration-200", item.IsExpanded ? "rotate-90" : "")">
-                                    <i class="fa-solid fa-chevron-right text-xs"></i>
-                                </SidebarMenuAction>
-                                @if (item.IsExpanded)
-                                {
-                                    <SidebarMenuSub>
-                                        @foreach (var sub in item.SubItems)
-                                        {
-                                            <SidebarMenuSubItem>
-                                                <SidebarMenuSubButton Href="@sub.Url" IsActive="@sub.IsActive">
-                                                    <span>@sub.Title</span>
-                                                </SidebarMenuSubButton>
-                                            </SidebarMenuSubItem>
-                                        }
-                                    </SidebarMenuSub>
-                                }
-                            }
-                        </SidebarMenuItem>
-                    }
+                    <SidebarMenuItem>
+                        <SidebarMenuButton Href="/dashboard" IsActive="@IsCurrentPath("/dashboard")" Tooltip="Dashboard">
+                            <i class="fa-solid fa-table-columns"></i>
+                            <span>Dashboard</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
 
-        @* ─── NavProjects ─── *@
+        @* ─── Components (like shellui.dev/docs) ─── *@
         <SidebarGroup>
-            <SidebarGroupLabel>Projects</SidebarGroupLabel>
+            <SidebarGroupLabel>Components</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    @foreach (var project in _projects)
+                    @foreach (var item in _componentItems)
                     {
                         <SidebarMenuItem>
-                            <SidebarMenuButton Href="@project.Url" Tooltip="@project.Name">
-                                <i class="@project.IconClass"></i>
-                                <span>@project.Name</span>
+                            <SidebarMenuButton Href="@item.Url" IsActive="@IsCurrentPath(item.Url)" Tooltip="@item.Title">
+                                <i class="@item.IconClass"></i>
+                                <span>@item.Title</span>
                             </SidebarMenuButton>
-                            <SidebarMenuAction ShowOnHover="true">
-                                <i class="fa-solid fa-ellipsis"></i>
-                                <span class="sr-only">More</span>
-                            </SidebarMenuAction>
                         </SidebarMenuItem>
                     }
-                    <SidebarMenuItem>
-                        <SidebarMenuButton Class="text-sidebar-foreground/70">
-                            <i class="fa-solid fa-circle-plus"></i>
-                            <span>More</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
@@ -137,13 +98,22 @@
                             @onclick:stopPropagation="true"
                             data-sidebar="menu-button"
                             data-size="lg"
-                            class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2">
-                        <Avatar Fallback="@_user.Initials" Class="h-8 w-8 rounded-lg" />
-                        <div class="grid flex-1 text-left text-sm leading-tight">
+                            title="@_user.Name"
+                            class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:!rounded-full group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!items-center">
+                        @* Icon + expandable arrows when collapsed *@
+                        <span class="hidden size-8 min-h-8 min-w-8 flex-shrink-0 flex-col items-center justify-center gap-0 overflow-hidden rounded-full bg-sidebar-primary text-sidebar-primary-foreground group-data-[collapsible=icon]:!flex">
+                            <i class="fa-solid fa-user text-[10px] leading-none"></i>
+                            <i class="fa-solid fa-sort text-[8px] leading-none opacity-90"></i>
+                        </span>
+                        @* Avatar + text when expanded *@
+                        <span class="flex group-data-[collapsible=icon]:hidden">
+                            <Avatar Fallback="@_user.Initials" Class="h-8 w-8 flex-shrink-0 rounded-full" />
+                        </span>
+                        <div class="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                             <span class="truncate font-semibold">@_user.Name</span>
                             <span class="truncate text-xs text-sidebar-foreground/70">@_user.Email</span>
                         </div>
-                        <i class="fa-solid fa-sort ml-auto text-xs"></i>
+                        <i class="fa-solid fa-sort ml-auto shrink-0 text-xs group-data-[collapsible=icon]:hidden"></i>
                     </button>
 
                     @if (_showUserMenu)
@@ -192,6 +162,8 @@
 </Sidebar>
 
 @code {
+    /// <summary>Offcanvas = sidebar slides off when collapsed (simpler). Icon = shows icon strip when collapsed.</summary>
+    [Parameter] public SidebarCollapsible Collapsible { get; set; } = SidebarCollapsible.Offcanvas;
     [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
@@ -200,6 +172,15 @@
 
     private void ToggleUserMenu() => _showUserMenu = !_showUserMenu;
     private void ToggleExpand(NavItem item) { item.IsExpanded = !item.IsExpanded; }
+
+    private bool IsCurrentPath(string path)
+    {
+        var uri = new Uri(Navigation.Uri);
+        var currentPath = uri.AbsolutePath.TrimEnd('/');
+        var targetPath = path.TrimEnd('/');
+        return currentPath.Equals(targetPath, StringComparison.OrdinalIgnoreCase)
+            || currentPath.StartsWith(targetPath + "/", StringComparison.OrdinalIgnoreCase);
+    }
 
     // ── Data Models ──
     private class NavItem
@@ -236,88 +217,22 @@
     // ── User ──
     private readonly UserProfile _user = new()
     {
-        Name = "shadcn",
-        Email = "m@example.com",
-        Initials = "CN"
+        Name = "Shewart",
+        Email = "shewart@shellui.dev",
+        Initials = "SH"
     };
 
-    // ── Navigation Data ──
-    private readonly List<NavItem> _navMainItems = new()
+    // ── Component links (like shellui.dev/docs) ──
+    private readonly List<NavItem> _componentItems = new()
     {
-        new NavItem
-        {
-            Title = "Playground",
-            Url = "#",
-            IsActive = true,
-            IsExpanded = true,
-            IconClass = "fa-solid fa-code",
-            SubItems = new()
-            {
-                new SubNavItem { Title = "History", Url = "#" },
-                new SubNavItem { Title = "Starred", Url = "#" },
-                new SubNavItem { Title = "Settings", Url = "#" }
-            }
-        },
-        new NavItem
-        {
-            Title = "Models",
-            Url = "#",
-            IconClass = "fa-solid fa-microchip",
-            SubItems = new()
-            {
-                new SubNavItem { Title = "Genesis", Url = "#" },
-                new SubNavItem { Title = "Explorer", Url = "#" },
-                new SubNavItem { Title = "Quantum", Url = "#" }
-            }
-        },
-        new NavItem
-        {
-            Title = "Documentation",
-            Url = "#",
-            IconClass = "fa-solid fa-book",
-            SubItems = new()
-            {
-                new SubNavItem { Title = "Introduction", Url = "#" },
-                new SubNavItem { Title = "Get Started", Url = "#" },
-                new SubNavItem { Title = "Tutorials", Url = "#" },
-                new SubNavItem { Title = "Changelog", Url = "#" }
-            }
-        },
-        new NavItem
-        {
-            Title = "Settings",
-            Url = "#",
-            IconClass = "fa-solid fa-gear",
-            SubItems = new()
-            {
-                new SubNavItem { Title = "General", Url = "#" },
-                new SubNavItem { Title = "Team", Url = "#" },
-                new SubNavItem { Title = "Billing", Url = "#" },
-                new SubNavItem { Title = "Limits", Url = "#" }
-            }
-        }
-    };
-
-    private readonly List<ProjectItem> _projects = new()
-    {
-        new ProjectItem
-        {
-            Name = "Design Engineering",
-            Url = "#",
-            IconClass = "fa-solid fa-pen-ruler"
-        },
-        new ProjectItem
-        {
-            Name = "Sales & Marketing",
-            Url = "#",
-            IconClass = "fa-solid fa-bullhorn"
-        },
-        new ProjectItem
-        {
-            Name = "Travel",
-            Url = "#",
-            IconClass = "fa-solid fa-location-dot"
-        }
+        new NavItem { Title = "Overview", Url = "/components", IconClass = "fa-solid fa-layer-group" },
+        new NavItem { Title = "Button", Url = "/components/form/button", IconClass = "fa-solid fa-square" },
+        new NavItem { Title = "Checkbox", Url = "/components/form/checkbox", IconClass = "fa-solid fa-square-check" },
+        new NavItem { Title = "Input", Url = "/components/form/input", IconClass = "fa-solid fa-keyboard" },
+        new NavItem { Title = "Select", Url = "/components/form/select", IconClass = "fa-solid fa-caret-down" },
+        new NavItem { Title = "Switch", Url = "/components/form/switch", IconClass = "fa-solid fa-toggle-on" },
+        new NavItem { Title = "Badge", Url = "/components/data-display/badge", IconClass = "fa-solid fa-tag" },
+        new NavItem { Title = "Card", Url = "/components/data-display/card", IconClass = "fa-solid fa-id-card" }
     };
 
     private readonly List<NavItem> _secondaryItems = new()
