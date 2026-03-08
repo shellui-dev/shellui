@@ -5,6 +5,7 @@ public class ShellUIConfig
     public string Schema { get; set; } = "https://shellui.dev/schema.json";
     public string Style { get; set; } = "default"; // default, new-york, minimal
     public string ComponentsPath { get; set; } = "Components/UI";
+    public string LayoutPath { get; set; } = "Components/Layout";
     public TailwindConfig Tailwind { get; set; } = new();
     public List<InstalledComponent> InstalledComponents { get; set; } = new();
     public ProjectType ProjectType { get; set; }
