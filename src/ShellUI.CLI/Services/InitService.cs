@@ -102,6 +102,7 @@ public class InitService
                 {
                     Style = style,
                     ComponentsPath = "Components/UI",
+                    LayoutPath = "Components/Layout",
                     ProjectType = projectInfo.ProjectType,
                     Tailwind = new TailwindConfig
                     {
