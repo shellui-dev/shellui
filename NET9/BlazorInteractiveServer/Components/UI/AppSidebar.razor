@@ -1,29 +1,15 @@
 @namespace BlazorInteractiveServer.Components.UI
 @inject NavigationManager Navigation
 
-@* ──────────────────────────────────────────────────────────
-   AppSidebar — Inset sidebar with secondary nav (shadcn sidebar-08)
-   
-   SIMPLE USAGE (3 pieces):
-   <SidebarProvider>
-       <AppSidebar />
-       <SidebarInset>
-           <header>... <SidebarTrigger /> ...</header>
-           <div>@Body or your content</div>
-       </SidebarInset>
-   </SidebarProvider>
-   
-   Collapsible: Offcanvas (default) = sidebar slides off when collapsed.
-   Set Collapsible="SidebarCollapsible.Icon" for icon strip when collapsed.
-   ────────────────────────────────────────────────────────── *@
+@* AppSidebar - Inset sidebar with secondary nav. SidebarProvider > AppSidebar + SidebarInset. Collapsible: Offcanvas or Icon. *@
 
 <Sidebar Variant="SidebarVariant.Inset" Collapsible="@Collapsible" Class="@Class">
-    @* ── Header: Logo & Company ── *@
+    @* Header: Logo & Company *@
     <SidebarHeader>
         <SidebarMenu>
             <SidebarMenuItem>
                 <SidebarMenuButton Size="lg" Href="/" Tooltip="ShellUI" Class="group-data-[collapsible=icon]:!bg-sidebar-primary group-data-[collapsible=icon]:text-sidebar-primary-foreground">
-                    <i class="fa-solid fa-terminal"></i>
+                    <ShellUILogo Size="32" Class="shrink-0 text-sidebar-foreground group-data-[collapsible=icon]:text-sidebar-primary-foreground" />
                     <div class="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                         <span class="truncate font-semibold">ShellUI</span>
                         <span class="truncate text-xs text-sidebar-foreground/70">Components</span>
@@ -33,10 +19,10 @@
         </SidebarMenu>
     </SidebarHeader>
 
-    @* ── Content ── *@
+    @* Content *@
     <SidebarContent>
 
-        @* ─── Dashboard ─── *@
+        @* Dashboard *@
         <SidebarGroup>
             <SidebarGroupLabel>Navigation</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -47,11 +33,17 @@
                             <span>Dashboard</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton Href="/blocks" IsActive="@IsCurrentPath("/blocks")" Tooltip="Blocks">
+                            <i class="fa-solid fa-cubes"></i>
+                            <span>Blocks</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
 
-        @* ─── Components (like shellui.dev/docs) ─── *@
+        @* Components *@
         <SidebarGroup>
             <SidebarGroupLabel>Components</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -69,7 +61,7 @@
             </SidebarGroupContent>
         </SidebarGroup>
 
-        @* ─── NavSecondary (pushed to bottom) ─── *@
+        @* NavSecondary (pushed to bottom) *@
         <SidebarGroup Class="mt-auto">
             <SidebarGroupContent>
                 <SidebarMenu>
@@ -88,7 +80,7 @@
 
     </SidebarContent>
 
-    @* ── Footer: User Profile ── *@
+    @* Footer: User Profile *@
     <SidebarFooter>
         <SidebarMenu>
             <SidebarMenuItem>
@@ -178,11 +170,11 @@
         var uri = new Uri(Navigation.Uri);
         var currentPath = uri.AbsolutePath.TrimEnd('/');
         var targetPath = path.TrimEnd('/');
-        return currentPath.Equals(targetPath, StringComparison.OrdinalIgnoreCase)
-            || currentPath.StartsWith(targetPath + "/", StringComparison.OrdinalIgnoreCase);
+        // Exact match only — prevents parent (e.g. Overview at /components) from staying active when on child (e.g. Input at /components/form/input)
+        return currentPath.Equals(targetPath, StringComparison.OrdinalIgnoreCase);
     }
 
-    // ── Data Models ──
+    // Data Models
     private class NavItem
     {
         public string Title { get; set; } = "";
@@ -214,7 +206,7 @@
         public string Initials { get; set; } = "";
     }
 
-    // ── User ──
+    // User
     private readonly UserProfile _user = new()
     {
         Name = "Shewart",
@@ -222,17 +214,25 @@
         Initials = "SH"
     };
 
-    // ── Component links (like shellui.dev/docs) ──
+    // Component links (like shellui.dev/docs)
     private readonly List<NavItem> _componentItems = new()
     {
         new NavItem { Title = "Overview", Url = "/components", IconClass = "fa-solid fa-layer-group" },
         new NavItem { Title = "Button", Url = "/components/form/button", IconClass = "fa-solid fa-square" },
         new NavItem { Title = "Checkbox", Url = "/components/form/checkbox", IconClass = "fa-solid fa-square-check" },
         new NavItem { Title = "Input", Url = "/components/form/input", IconClass = "fa-solid fa-keyboard" },
+        new NavItem { Title = "Label", Url = "/components/form/label", IconClass = "fa-solid fa-heading" },
         new NavItem { Title = "Select", Url = "/components/form/select", IconClass = "fa-solid fa-caret-down" },
         new NavItem { Title = "Switch", Url = "/components/form/switch", IconClass = "fa-solid fa-toggle-on" },
+        new NavItem { Title = "Textarea", Url = "/components/form/textarea", IconClass = "fa-solid fa-align-left" },
+        new NavItem { Title = "Alert", Url = "/components/data-display/alert", IconClass = "fa-solid fa-triangle-exclamation" },
+        new NavItem { Title = "Avatar", Url = "/components/data-display/avatar", IconClass = "fa-solid fa-user" },
         new NavItem { Title = "Badge", Url = "/components/data-display/badge", IconClass = "fa-solid fa-tag" },
-        new NavItem { Title = "Card", Url = "/components/data-display/card", IconClass = "fa-solid fa-id-card" }
+        new NavItem { Title = "Card", Url = "/components/data-display/card", IconClass = "fa-solid fa-id-card" },
+        new NavItem { Title = "Accordion", Url = "/components/data-display/accordion", IconClass = "fa-solid fa-bars-staggered" },
+        new NavItem { Title = "Progress", Url = "/components/data-display/progress", IconClass = "fa-solid fa-bars-progress" },
+        new NavItem { Title = "Tabs", Url = "/components/data-display/tabs", IconClass = "fa-solid fa-folder" },
+        new NavItem { Title = "Dialog", Url = "/components/overlay/dialog", IconClass = "fa-solid fa-window-maximize" }
     };
 
     private readonly List<NavItem> _secondaryItems = new()

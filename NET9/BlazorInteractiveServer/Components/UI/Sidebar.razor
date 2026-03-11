@@ -75,7 +75,7 @@ else
 
     private bool IsFloatingOrInset => Variant == SidebarVariant.Floating || Variant == SidebarVariant.Inset;
 
-    // ── Inline styles for CSS variable widths (avoids Tailwind arbitrary value issues) ──
+    // Inline styles for CSS variable widths (avoids Tailwind arbitrary value issues)
 
     private string GapStyle
     {
@@ -128,7 +128,7 @@ else
         }
     }
 
-    // ── Tailwind classes (no CSS variable arbitrary values) ──
+    // Tailwind classes (no CSS variable arbitrary values)
 
     private string GapClass => Shell.Cn(
         "relative h-svh bg-transparent transition-[width] ease-linear duration-200",
