@@ -1,0 +1,78 @@
+@page "/components/form/input"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<PageTitle>Input | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Input</h1>
+        <p class="text-muted-foreground mt-1">Text input component with variants and two-way binding.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add input</code>
+            <CopyButton Text="dotnet shellui add input" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Basic</h3>
+        <div class="mb-6 max-w-xs">
+            <Label>Email</Label>
+            <Input @bind-Value="email" Placeholder="you@example.com" Class="mt-2" />
+        </div>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Variants</h3>
+        <div class="mb-6 space-y-4 max-w-xs">
+            <div>
+                <Label>Default</Label>
+                <Input @bind-Value="value1" Variant="@InputVariant.Default" Class="mt-2" />
+            </div>
+            <div>
+                <Label>Error</Label>
+                <Input @bind-Value="value2" Variant="@InputVariant.Error" Placeholder="Error state" Class="mt-2" />
+            </div>
+        </div>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Disabled</h3>
+        <div class="max-w-xs">
+            <Input Value="Disabled input" Disabled="true" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Value</td><td>string</td><td>""</td><td>Input value</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Variant</td><td>InputVariant</td><td>Default</td><td>Visual style</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Type</td><td>string</td><td>"text"</td><td>HTML input type</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Placeholder</td><td>string</td><td>""</td><td>Placeholder text</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Disabled</td><td>bool</td><td>false</td><td>Disables the input</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private string email = "";
+    private string value1 = "";
+    private string value2 = "";
+}

@@ -1,0 +1,61 @@
+@page "/components/form/label"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+
+<PageTitle>Label | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Label</h1>
+        <p class="text-muted-foreground mt-1">Accessible label for form controls.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add label</code>
+            <CopyButton Text="dotnet shellui add label" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">With Input</h3>
+        <div class="max-w-xs">
+            <Label For="email">Email</Label>
+            <Input id="email" @bind-Value="email" Placeholder="you@example.com" Class="mt-2" />
+        </div>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground mt-6">With Checkbox</h3>
+        <div class="flex items-center gap-2">
+            <Checkbox @bind-Checked="acceptTerms" id="terms" />
+            <Label For="terms">I accept the terms</Label>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">For</td><td>string?</td><td>ID of associated form control</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">ChildContent</td><td>RenderFragment</td><td>Label text</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private string email = "";
+    private bool acceptTerms = false;
+}

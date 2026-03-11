@@ -1,0 +1,87 @@
+@page "/components/form/select"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+
+<PageTitle>Select | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Select</h1>
+        <p class="text-muted-foreground mt-1">Dropdown select component for single selection.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add select</code>
+            <CopyButton Text="dotnet shellui add select" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Basic</h3>
+        <div class="mb-6 max-w-xs">
+            <Label>Choose a fruit</Label>
+            <Select Value="@selectedFruit" ValueChanged="@HandleSelectedFruitChanged" Class="mt-2">
+                <option value="">Select...</option>
+                <option value="apple">Apple</option>
+                <option value="banana">Banana</option>
+                <option value="orange">Orange</option>
+            </Select>
+            @if (!string.IsNullOrEmpty(selectedFruit))
+            {
+                <p class="text-sm text-muted-foreground mt-2">Selected: @selectedFruit</p>
+            }
+        </div>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Two-way Binding</h3>
+        <div class="mb-6 max-w-xs">
+            <Label>Framework</Label>
+            <Select @bind-Value="selectedFramework" Class="mt-2">
+                <option value="">Select...</option>
+                <option value="blazor">Blazor</option>
+                <option value="react">React</option>
+                <option value="vue">Vue</option>
+            </Select>
+        </div>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Disabled</h3>
+        <div class="max-w-xs">
+            <Select Value="apple" Disabled="true">
+                <option value="apple">Apple (disabled)</option>
+            </Select>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Value</td><td>string?</td><td>null</td><td>Selected value</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">ValueChanged</td><td>EventCallback&lt;string&gt;</td><td>—</td><td>Fires when selection changes</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Disabled</td><td>bool</td><td>false</td><td>Disables the select</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">ChildContent</td><td>RenderFragment</td><td>—</td><td>Option elements</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private string selectedFruit = "";
+    private string selectedFramework = "";
+
+    private void HandleSelectedFruitChanged(string value) => selectedFruit = value;
+}
