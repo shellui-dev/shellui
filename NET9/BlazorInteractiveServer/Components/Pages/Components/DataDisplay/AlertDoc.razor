@@ -1,0 +1,64 @@
+@page "/components/data-display/alert"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<PageTitle>Alert | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Alert</h1>
+        <p class="text-muted-foreground mt-1">Displays a callout for user attention with variant styles.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add alert</code>
+            <CopyButton Text="dotnet shellui add alert" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Variants</h3>
+        <div class="space-y-4">
+            <Alert Variant="@AlertVariant.Default" Title="Info">
+                <ChildContent>This is an informational alert.</ChildContent>
+            </Alert>
+            <Alert Variant="@AlertVariant.Success" Title="Success">
+                <ChildContent>Operation completed successfully!</ChildContent>
+            </Alert>
+            <Alert Variant="@AlertVariant.Warning" Title="Warning">
+                <ChildContent>Please check your input.</ChildContent>
+            </Alert>
+            <Alert Variant="@AlertVariant.Destructive" Title="Error">
+                <ChildContent>Something went wrong. Please try again.</ChildContent>
+            </Alert>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Variant</td><td>AlertVariant</td><td>Default</td><td>Visual style</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Title</td><td>string</td><td>""</td><td>Alert title</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Icon</td><td>RenderFragment</td><td>null</td><td>Optional icon</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">ChildContent</td><td>RenderFragment</td><td>—</td><td>Alert content</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

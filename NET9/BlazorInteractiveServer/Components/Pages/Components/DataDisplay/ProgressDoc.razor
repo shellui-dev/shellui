@@ -1,0 +1,62 @@
+@page "/components/data-display/progress"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<PageTitle>Progress | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Progress</h1>
+        <p class="text-muted-foreground mt-1">Displays an indicator showing the completion progress of a task.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add progress</code>
+            <CopyButton Text="dotnet shellui add progress" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Basic</h3>
+        <div class="space-y-4 max-w-md">
+            <div>
+                <Label>Progress: @progressValue%</Label>
+                <Progress Value="@progressValue" Class="mt-2" />
+            </div>
+            <div class="flex gap-2">
+                <Button Size="@ButtonSize.Sm" Variant="@ButtonVariant.Outline" @onclick="() => progressValue = Math.Max(0, progressValue - 25)">-25</Button>
+                <Button Size="@ButtonSize.Sm" Variant="@ButtonVariant.Outline" @onclick="() => progressValue = Math.Min(100, progressValue + 25)">+25</Button>
+            </div>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Value</td><td>int</td><td>0</td><td>Progress value (0-100)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Height</td><td>string</td><td>"0.5rem"</td><td>Bar height</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private int progressValue = 60;
+}

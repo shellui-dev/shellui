@@ -1,0 +1,73 @@
+@page "/components/data-display/card"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<PageTitle>Card | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Card</h1>
+        <p class="text-muted-foreground mt-1">Container component for grouping related content.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add card</code>
+            <CopyButton Text="dotnet shellui add card" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Basic</h3>
+        <div class="mb-6 max-w-md">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Card Title</CardTitle>
+                    <CardDescription>Card description goes here.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <p>This is the main content of the card. It can contain any content you want.</p>
+                </CardContent>
+                <CardFooter>
+                    <Button Variant="@ButtonVariant.Outline" Size="@ButtonSize.Sm">Action</Button>
+                </CardFooter>
+            </Card>
+        </div>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Simple Card</h3>
+        <div class="max-w-md">
+            <Card>
+                <CardContent class="pt-6">
+                    <p>Cards can be used with just CardContent for simpler layouts.</p>
+                </CardContent>
+            </Card>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Component</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Card</td><td>Root container</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">CardHeader</td><td>Header section</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">CardTitle</td><td>Title text</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">CardDescription</td><td>Description text</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">CardContent</td><td>Main content area</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">CardFooter</td><td>Footer section</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

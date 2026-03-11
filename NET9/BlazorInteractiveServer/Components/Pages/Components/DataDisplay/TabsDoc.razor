@@ -1,0 +1,88 @@
+@page "/components/data-display/tabs"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components.Models
+
+<PageTitle>Tabs | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Tabs</h1>
+        <p class="text-muted-foreground mt-1">Organize content into switchable panels.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add tabs</code>
+            <CopyButton Text="dotnet shellui add tabs" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Compositional (TabsList + TabsTrigger + TabsContent)</h3>
+        <div class="mb-6">
+            <Tabs @bind-Value="activeTab">
+                <TabsList>
+                    <TabsTrigger Value="overview">Overview</TabsTrigger>
+                    <TabsTrigger Value="analytics">Analytics</TabsTrigger>
+                    <TabsTrigger Value="reports">Reports</TabsTrigger>
+                </TabsList>
+                <TabsContent Value="overview">
+                    <div class="rounded-md border border-border bg-muted/50 p-4 mt-2">
+                        <p class="text-sm text-muted-foreground">Overview content goes here.</p>
+                    </div>
+                </TabsContent>
+                <TabsContent Value="analytics">
+                    <div class="rounded-md border border-border bg-muted/50 p-4 mt-2">
+                        <p class="text-sm text-muted-foreground">Analytics content goes here.</p>
+                    </div>
+                </TabsContent>
+                <TabsContent Value="reports">
+                    <div class="rounded-md border border-border bg-muted/50 p-4 mt-2">
+                        <p class="text-sm text-muted-foreground">Reports content goes here.</p>
+                    </div>
+                </TabsContent>
+            </Tabs>
+        </div>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">With TabItems (programmatic)</h3>
+        <div>
+            <Tabs TabItems="@tabItems" @bind-Value="activeTab2" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Component</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Tabs</td><td>Root container</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">TabsList</td><td>Tab button container</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">TabsTrigger</td><td>Individual tab button</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">TabsContent</td><td>Tab panel content</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private string activeTab = "overview";
+    private string activeTab2 = "tab1";
+
+    private List<TabItem> tabItems = new()
+    {
+        new TabItem { Id = "tab1", Label = "Tab 1", Content = builder => builder.AddMarkupContent(0, "<p class='text-sm text-muted-foreground p-4'>Tab 1 content</p>") },
+        new TabItem { Id = "tab2", Label = "Tab 2", Content = builder => builder.AddMarkupContent(0, "<p class='text-sm text-muted-foreground p-4'>Tab 2 content</p>") }
+    };
+}
