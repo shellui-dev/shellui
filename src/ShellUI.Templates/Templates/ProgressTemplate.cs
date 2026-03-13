@@ -17,8 +17,8 @@ public static class ProgressTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative w-full overflow-hidden rounded-full bg-secondary @ClassName"" style=""height: @Height"">
-    <div class=""h-full w-full flex-1 bg-primary transition-all"" style=""transform: translateX(-@(100 - Value)%)""></div>
+<div class=""@Shell.Cn(""relative w-full overflow-hidden rounded-full bg-secondary"", Class)"" style=""height: @Height"" @attributes=""AdditionalAttributes"">
+    <div class=""h-full bg-primary transition-all"" style=""width: @(Math.Clamp(Value, 0, 100))%""></div>
 </div>
 
 @code {
@@ -29,7 +29,7 @@ public static class ProgressTemplate
     public string Height { get; set; } = ""0.5rem"";
 
     [Parameter]
-    public string ClassName { get; set; } = """";
+    public string? Class { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }

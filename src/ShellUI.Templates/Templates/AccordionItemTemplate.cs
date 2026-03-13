@@ -11,7 +11,7 @@ public class AccordionItemTemplate
         Description = "Individual collapsible section within an Accordion",
         Category = ComponentCategory.Layout,
         FilePath = "AccordionItem.razor",
-
+        IsAvailable = false,
         Tags = new List<string> { "layout", "collapsible", "item" }
     };
 

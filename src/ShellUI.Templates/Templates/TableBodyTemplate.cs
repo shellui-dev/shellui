@@ -11,7 +11,7 @@ public class TableBodyTemplate
         Description = "Table body wrapper component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "TableBody.razor",
-
+        IsAvailable = false,
         Tags = new List<string> { "table", "body", "tbody" }
     };
 

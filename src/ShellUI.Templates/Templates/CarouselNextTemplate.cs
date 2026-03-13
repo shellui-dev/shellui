@@ -11,6 +11,7 @@ public static class CarouselNextTemplate
         Description = "Next button for carousel navigation",
         Category = ComponentCategory.Navigation,
         FilePath = "CarouselNext.razor",
+        IsAvailable = false,
         Tags = new List<string> { "carousel", "button", "next", "navigation" }
     };
 

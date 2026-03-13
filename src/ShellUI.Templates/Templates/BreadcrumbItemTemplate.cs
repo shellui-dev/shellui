@@ -11,13 +11,13 @@ public class BreadcrumbItemTemplate
         Description = "Individual breadcrumb item",
         Category = ComponentCategory.Layout,
         FilePath = "BreadcrumbItem.razor",
-
+        IsAvailable = false,
         Tags = new List<string> { "navigation", "breadcrumb", "item" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<li class=""inline-flex items-center gap-1.5 @ClassName"" @attributes=""AdditionalAttributes"">
+<li class=""@Shell.Cn(""inline-flex items-center gap-1.5"", Class)"" @attributes=""AdditionalAttributes"">
     @if (!string.IsNullOrEmpty(Href))
     {
         <a href=""@Href"" class=""transition-colors hover:text-foreground"">
@@ -50,7 +50,7 @@ public class BreadcrumbItemTemplate
     public RenderFragment? ChildContent { get; set; }
     
     [Parameter]
-    public string ClassName { get; set; } = """";
+    public string? Class { get; set; }
     
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }

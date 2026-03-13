@@ -11,6 +11,7 @@ public static class CarouselContentTemplate
         Description = "Content wrapper for carousel items",
         Category = ComponentCategory.DataDisplay,
         FilePath = "CarouselContent.razor",
+        IsAvailable = false,
         Tags = new List<string> { "carousel", "content", "wrapper" }
     };
 

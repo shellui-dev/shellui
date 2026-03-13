@@ -11,6 +11,7 @@ public static class CarouselItemTemplate
         Description = "An individual item within a carousel",
         Category = ComponentCategory.DataDisplay,
         FilePath = "CarouselItem.razor",
+        IsAvailable = false,
         Tags = new List<string> { "carousel", "item", "slide", "content" }
     };
 

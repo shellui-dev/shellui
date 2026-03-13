@@ -11,7 +11,7 @@ public class TableHeadTemplate
         Description = "Table header cell component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "TableHead.razor",
-
+        IsAvailable = false,
         Tags = new List<string> { "table", "header", "th" }
     };
 
