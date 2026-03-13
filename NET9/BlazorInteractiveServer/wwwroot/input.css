@@ -171,6 +171,14 @@
     @apply bg-background text-foreground;
   }
 }
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
 /* Ensure font-family updates when theme changes - must come after @theme inline */
 html, body, :host {
   font-family: var(--font-sans) !important;
