@@ -12,8 +12,11 @@ public class ComponentMetadata
     public required ComponentCategory Category { get; set; }
     public List<string> Dependencies { get; set; } = new();
 
-    // Relative to Components/UI folder
+    // Relative to Components/UI folder (or LayoutPath when IsLayoutBlock is true)
     public required string FilePath { get; set; }
+
+    // When true, file is written to LayoutPath instead of ComponentsPath.
+    public bool IsLayoutBlock { get; set; }
 
     public bool IsAvailable { get; set; } = true;
 
