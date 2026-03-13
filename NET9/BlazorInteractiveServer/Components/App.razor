@@ -53,10 +53,21 @@
     
     <ImportMap />
     <HeadOutlet @rendermode="InteractiveServer" />
+    <style>
+        #blazor-error-ui { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; background: hsl(var(--destructive)); color: hsl(var(--destructive-foreground)); padding: 1rem; text-align: center; box-shadow: 0 -4px 6px -1px rgb(0 0 0/0.2); }
+        #blazor-error-ui.show { display: block; }
+        #blazor-error-ui a { color: inherit; text-decoration: underline; }
+        #blazor-error-ui .dismiss { cursor: pointer; margin-left: 1rem; }
+    </style>
 </head>
 
 <body class="bg-background text-foreground">
     <Routes @rendermode="InteractiveServer" />
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">×</span>
+    </div>
     <script src="_framework/blazor.web.js"></script>
     <script src="shellui.js"></script>
 </body>
