@@ -96,7 +96,16 @@ dotnet shellui remove button input
 - `card`, `dialog`, `sheet`, `drawer`, `popover`, `tooltip`, `separator`, `scroll-area`, `resizable`, `collapsible`
 
 ### Navigation Components
-- `navbar`, `sidebar`, `navigation-menu`, `menubar`, `breadcrumb`, `pagination`, `tabs`
+- `navbar`, `sidebar`, `app-sidebar`, `navigation-menu`, `menubar`, `breadcrumb`, `pagination`, `tabs`
+
+### Dashboard / Layout Blocks (shadcn-style)
+- `dashboard-01` - Sidebar + content layout. Header scrolls with page.
+- `dashboard-02` - Same layout with **sticky header** (breadcrumb bar stays fixed on scroll)
+
+```bash
+dotnet shellui add dashboard-01   # or dashboard-02
+# Installs: sidebar, breadcrumb, separator, theme-toggle, app-sidebar + layout to Components/Layout/
+```
 
 ### Data Display
 - `table`, `data-table`, `badge`, `avatar`, `alert`, `toast`, `sonner`, `skeleton`, `progress`, `loading`
