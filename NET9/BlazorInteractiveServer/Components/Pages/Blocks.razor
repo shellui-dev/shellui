@@ -1,0 +1,46 @@
+@page "/blocks"
+@layout BlazorInteractiveServer.Components.Layout.BlocksLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+
+<PageTitle>Layout Blocks</PageTitle>
+
+<div class="max-w-4xl mx-auto space-y-8">
+    <div>
+        <p class="text-sm text-muted-foreground">Copy these layouts into your project. Install via CLI.</p>
+    </div>
+
+    <div class="flex flex-col gap-8">
+        @* Dashboard 01 - Card *@
+        <div class="rounded-xl border border-border bg-card shadow-sm overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-border">
+                <h3 class="font-semibold">dashboard-01</h3>
+                <p class="text-sm text-muted-foreground mt-1">Header scrolls with content (shadcn sidebar-01 style)</p>
+            </div>
+            <div class="flex-1 rounded-b-xl overflow-hidden bg-background min-h-[420px]">
+                <div class="h-full w-full overflow-hidden isolate">
+                    <DashboardBlockCard StickyHeader="false" />
+                </div>
+            </div>
+            <div class="p-3 border-t border-border bg-muted/30">
+                <code class="text-xs">dotnet shellui add dashboard-01</code>
+            </div>
+        </div>
+
+        @* Dashboard 02 - Card *@
+        <div class="rounded-xl border border-border bg-card shadow-sm overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-border">
+                <h3 class="font-semibold">dashboard-02</h3>
+                <p class="text-sm text-muted-foreground mt-1">Sticky header (breadcrumb bar stays fixed on scroll)</p>
+            </div>
+            <div class="flex-1 rounded-b-xl overflow-hidden bg-background min-h-[420px]">
+                <div class="h-full w-full overflow-hidden isolate">
+                    <DashboardBlockCard StickyHeader="true" />
+                </div>
+            </div>
+            <div class="p-3 border-t border-border bg-muted/30">
+                <code class="text-xs">dotnet shellui add dashboard-02</code>
+            </div>
+        </div>
+    </div>
+</div>
