@@ -1,23 +1,9 @@
 @namespace ShellUI.Components
 
-@* ──────────────────────────────────────────────────────────
-   AppSidebar — Inset sidebar with secondary nav (shadcn sidebar-08)
-   
-   SIMPLE USAGE (3 pieces):
-   <SidebarProvider>
-       <AppSidebar />
-       <SidebarInset>
-           <header>... <SidebarTrigger /> ...</header>
-           <div>@Body or your content</div>
-       </SidebarInset>
-   </SidebarProvider>
-   
-   Collapsible: Offcanvas (default) = sidebar slides off when collapsed.
-   Set Collapsible="SidebarCollapsible.Icon" for icon strip when collapsed.
-   ────────────────────────────────────────────────────────── *@
+@* AppSidebar - Inset sidebar. Usage: SidebarProvider > AppSidebar + SidebarInset. Collapsible: Offcanvas or Icon. *@
 
 <Sidebar Variant="SidebarVariant.Inset" Collapsible="@Collapsible" Class="@Class">
-    @* ── Header: Logo & Company ── *@
+    @* Header: Logo & Company *@
     <SidebarHeader>
         <SidebarMenu>
             <SidebarMenuItem>
@@ -32,10 +18,10 @@
         </SidebarMenu>
     </SidebarHeader>
 
-    @* ── Content ── *@
+    @* Content *@
     <SidebarContent>
 
-        @* ─── NavMain: Platform ─── *@
+        @* NavMain: Platform *@
         <SidebarGroup>
             <SidebarGroupLabel>Platform</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -73,7 +59,7 @@
             </SidebarGroupContent>
         </SidebarGroup>
 
-        @* ─── NavProjects ─── *@
+        @* NavProjects *@
         <SidebarGroup>
             <SidebarGroupLabel>Projects</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -101,7 +87,7 @@
             </SidebarGroupContent>
         </SidebarGroup>
 
-        @* ─── NavSecondary (pushed to bottom) ─── *@
+        @* NavSecondary (pushed to bottom) *@
         <SidebarGroup Class="mt-auto">
             <SidebarGroupContent>
                 <SidebarMenu>
@@ -120,7 +106,7 @@
 
     </SidebarContent>
 
-    @* ── Footer: User Profile ── *@
+    @* Footer: User Profile *@
     <SidebarFooter>
         <SidebarMenu>
             <SidebarMenuItem>
@@ -204,7 +190,7 @@
     private void ToggleUserMenu() => _showUserMenu = !_showUserMenu;
     private void ToggleExpand(NavItem item) { item.IsExpanded = !item.IsExpanded; }
 
-    // ── Data Models ──
+    // Data Models
     private class NavItem
     {
         public string Title { get; set; } = "";
@@ -236,7 +222,7 @@
         public string Initials { get; set; } = "";
     }
 
-    // ── User ──
+    // User
     private readonly UserProfile _user = new()
     {
         Name = "Shewart",
@@ -244,7 +230,7 @@
         Initials = "SH"
     };
 
-    // ── Navigation Data ──
+    // Navigation Data
     private readonly List<NavItem> _navMainItems = new()
     {
         new NavItem
