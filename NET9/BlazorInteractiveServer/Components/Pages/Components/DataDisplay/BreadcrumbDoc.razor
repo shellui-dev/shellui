@@ -1,0 +1,69 @@
+@page "/components/data-display/breadcrumb"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<PageTitle>Breadcrumb | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Breadcrumb</h1>
+        <p class="text-muted-foreground mt-1">Navigation breadcrumb for showing the current page hierarchy.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add breadcrumb</code>
+            <CopyButton Text="dotnet shellui add breadcrumb" Class="shrink-0" />
+        </div>
+        <p class="text-xs text-muted-foreground mt-2">Installs <code class="px-1 py-0.5 rounded bg-muted">breadcrumb</code> and <code class="px-1 py-0.5 rounded bg-muted">breadcrumb-item</code> (auto-installed as dependency).</p>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Basic</h3>
+        <div class="mb-6">
+            <Breadcrumb>
+                <BreadcrumbItem Href="/">Home</BreadcrumbItem>
+                <BreadcrumbItem Href="/components">Components</BreadcrumbItem>
+                <BreadcrumbItem IsLast="true">Breadcrumb</BreadcrumbItem>
+            </Breadcrumb>
+        </div>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">In Header</h3>
+        <div class="rounded-lg border border-border p-3">
+            <div class="flex items-center gap-2">
+                <Breadcrumb Class="flex flex-1 min-w-0 items-center text-sm">
+                    <BreadcrumbItem Href="/">Home</BreadcrumbItem>
+                    <BreadcrumbItem Href="/components">Components</BreadcrumbItem>
+                    <BreadcrumbItem IsLast="true">Breadcrumb</BreadcrumbItem>
+                </Breadcrumb>
+            </div>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Component</th>
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Breadcrumb</td><td>Class</td><td>string?</td><td>Additional CSS classes</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">BreadcrumbItem</td><td>Href</td><td>string?</td><td>Link URL (null for current/last)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">BreadcrumbItem</td><td>IsLast</td><td>bool</td><td>Marks as current page (no link)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">BreadcrumbItem</td><td>ChildContent</td><td>RenderFragment</td><td>Item label</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
