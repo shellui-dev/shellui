@@ -1,11 +1,11 @@
 @page "/blocks"
-@layout BlazorInteractiveServer.Components.Layout.BlocksLayout
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
 @rendermode InteractiveServer
 @using BlazorInteractiveServer.Components.UI
 
 <PageTitle>Layout Blocks</PageTitle>
 
-<div class="max-w-4xl mx-auto space-y-8">
+<div class="w-full space-y-8">
     <div>
         <p class="text-sm text-muted-foreground">Copy these layouts into your project. Install via CLI.</p>
     </div>
@@ -15,15 +15,18 @@
         <div class="rounded-xl border border-border bg-card shadow-sm overflow-hidden flex flex-col">
             <div class="p-4 border-b border-border">
                 <h3 class="font-semibold">dashboard-01</h3>
-                <p class="text-sm text-muted-foreground mt-1">Header scrolls with content (shadcn sidebar-01 style)</p>
+                <p class="text-sm text-muted-foreground mt-1">Simple sidebar with navigation grouped by section. Header scrolls with content. (shadcn sidebar-01)</p>
             </div>
             <div class="flex-1 rounded-b-xl overflow-hidden bg-background min-h-[420px]">
-                <div class="h-full w-full overflow-hidden isolate">
+                <div class="h-full w-full overflow-hidden isolate [contain:layout]">
                     <DashboardBlockCard StickyHeader="false" />
                 </div>
             </div>
             <div class="p-3 border-t border-border bg-muted/30">
-                <code class="text-xs">dotnet shellui add dashboard-01</code>
+                <div class="flex items-center justify-between gap-2">
+                    <code class="text-xs font-mono">dotnet shellui add dashboard-01</code>
+                    <CopyButton Text="dotnet shellui add dashboard-01" Class="shrink-0" />
+                </div>
             </div>
         </div>
 
@@ -31,15 +34,18 @@
         <div class="rounded-xl border border-border bg-card shadow-sm overflow-hidden flex flex-col">
             <div class="p-4 border-b border-border">
                 <h3 class="font-semibold">dashboard-02</h3>
-                <p class="text-sm text-muted-foreground mt-1">Sticky header (breadcrumb bar stays fixed on scroll)</p>
+                <p class="text-sm text-muted-foreground mt-1">Sticky header (breadcrumb bar stays fixed on scroll). Scrollable content area. (shadcn sidebar-02)</p>
             </div>
             <div class="flex-1 rounded-b-xl overflow-hidden bg-background min-h-[420px]">
-                <div class="h-full w-full overflow-hidden isolate">
+                <div class="h-full w-full overflow-hidden isolate [contain:layout]">
                     <DashboardBlockCard StickyHeader="true" />
                 </div>
             </div>
             <div class="p-3 border-t border-border bg-muted/30">
-                <code class="text-xs">dotnet shellui add dashboard-02</code>
+                <div class="flex items-center justify-between gap-2">
+                    <code class="text-xs font-mono">dotnet shellui add dashboard-02</code>
+                    <CopyButton Text="dotnet shellui add dashboard-02" Class="shrink-0" />
+                </div>
             </div>
         </div>
     </div>
