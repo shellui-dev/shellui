@@ -54,8 +54,9 @@
     <ImportMap />
     <HeadOutlet @rendermode="InteractiveServer" />
     <style>
-        #blazor-error-ui { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; background: hsl(var(--destructive)); color: hsl(var(--destructive-foreground)); padding: 1rem; text-align: center; box-shadow: 0 -4px 6px -1px rgb(0 0 0/0.2); }
-        #blazor-error-ui.show { display: block; }
+        /* Blazor adds .show only when an unhandled error occurs - hidden otherwise */
+        #blazor-error-ui { display: none !important; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; background: hsl(var(--destructive)); color: hsl(var(--destructive-foreground)); padding: 1rem; text-align: center; box-shadow: 0 -4px 6px -1px rgb(0 0 0/0.2); }
+        #blazor-error-ui.show { display: block !important; }
         #blazor-error-ui a { color: inherit; text-decoration: underline; }
         #blazor-error-ui .dismiss { cursor: pointer; margin-left: 1rem; }
     </style>
