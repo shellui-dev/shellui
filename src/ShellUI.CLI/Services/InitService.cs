@@ -92,9 +92,10 @@ public class InitService
                 Directory.CreateDirectory(componentsPath);
                 AnsiConsole.MarkupLine($"[green]Created:[/] Components/UI/");
 
-                // Step 3.5: Install Shell utilities
+                // Step 3.5: Install Shell utilities and shellui.js (required for CopyButton, FileUpload, Command)
                 ctx.Status("Installing Shell utilities...");
                 await ComponentInstaller.InstallComponentForInitAsync("shell", projectInfo);
+                await ComponentInstaller.InstallComponentForInitAsync("shellui-js", projectInfo);
 
                 // Step 4: Create shellui.json
                 ctx.Status("Creating configuration...");
@@ -180,6 +181,7 @@ public class InitService
         AnsiConsole.MarkupLine("\n[blue]Next steps:[/]");
         AnsiConsole.MarkupLine("  [dim]1. Add components:[/] dotnet shellui add button");
         AnsiConsole.MarkupLine("  [dim]2. Browse all:[/] dotnet shellui list");
+        AnsiConsole.MarkupLine("  [dim]3. CopyButton/FileUpload/Command:[/] Add [yellow]<script src=\"shellui.js\"></script>[/] before Blazor script in App.razor or index.html");
     }
 
     private static async Task SetupTailwindNpmAsync()
