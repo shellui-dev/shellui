@@ -1,0 +1,20 @@
+@inherits LayoutComponentBase
+@using BlazorInteractiveServer.Components.UI
+
+@* Blocks page layout — no main sidebar, full-width. Demos are independent. *@
+<div class="min-h-screen bg-background text-foreground">
+    <header class="sticky top-0 z-10 flex h-14 items-center gap-4 border-b border-border bg-background px-4">
+        <a href="/dashboard" class="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="size-4">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Dashboard
+        </a>
+        <span class="text-muted-foreground">|</span>
+        <h1 class="text-lg font-semibold">Layout Blocks</h1>
+        <ThemeToggle Size="sm" Variant="outline" Class="ml-auto" />
+    </header>
+    <main class="p-6">
+        @Body
+    </main>
+</div>

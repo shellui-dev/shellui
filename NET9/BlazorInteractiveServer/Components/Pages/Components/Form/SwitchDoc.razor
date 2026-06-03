@@ -1,0 +1,81 @@
+@page "/components/form/switch"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+
+<PageTitle>Switch | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Switch</h1>
+        <p class="text-muted-foreground mt-1">Toggle switch for boolean on/off states.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add switch</code>
+            <CopyButton Text="dotnet shellui add switch" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Basic</h3>
+        <div class="mb-6 flex items-center gap-2">
+            <Switch Checked="@isOn" CheckedChanged="@HandleChanged" />
+            <span class="text-sm text-muted-foreground">@(isOn ? "On" : "Off")</span>
+        </div>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">With Label</h3>
+        <div class="mb-6 flex items-center gap-2">
+            <Switch @bind-Checked="notifications" />
+            <Label>Enable notifications</Label>
+        </div>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Disabled</h3>
+        <div class="flex items-center gap-2">
+            <Switch Checked="true" Disabled="true" />
+            <Label>Disabled switch</Label>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Checked</td><td>bool</td><td>false</td><td>Checked state</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">CheckedChanged</td><td>EventCallback&lt;bool&gt;</td><td>—</td><td>Fires when checked state changes</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Disabled</td><td>bool</td><td>false</td><td>Disables the switch</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Class</td><td>string?</td><td>null</td><td>Additional CSS classes</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-2 text-card-foreground">Accessibility</h2>
+        <ul class="list-disc list-inside text-sm text-muted-foreground space-y-1">
+            <li>Proper ARIA attributes (role="switch", aria-checked)</li>
+            <li>Keyboard navigation support</li>
+            <li>Screen reader compatible</li>
+        </ul>
+    </section>
+</div>
+
+@code {
+    private bool isOn = false;
+    private bool notifications = true;
+
+    private void HandleChanged(bool value) => isOn = value;
+}

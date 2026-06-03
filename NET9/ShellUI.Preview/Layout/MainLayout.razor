@@ -1,16 +1,14 @@
-﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
+@inherits LayoutComponentBase
+<div class="min-h-screen bg-background text-foreground flex">
+    <aside class="w-48 border-r border-border p-4 shrink-0">
+        <nav class="space-y-2 text-sm">
+            <a href="/" class="block text-muted-foreground hover:text-foreground">Home</a>
+            <a href="/preview/button" class="block text-muted-foreground hover:text-foreground">Button</a>
+            <a href="/preview/dialog" class="block text-muted-foreground hover:text-foreground">Dialog</a>
+            <a href="/preview/accordion" class="block text-muted-foreground hover:text-foreground">Accordion</a>
+        </nav>
+    </aside>
+    <main class="flex-1 p-8">
+        @Body
     </main>
 </div>

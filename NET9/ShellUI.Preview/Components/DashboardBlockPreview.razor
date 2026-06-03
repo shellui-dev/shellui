@@ -1,0 +1,32 @@
+@using ShellUI.Components
+
+@* Renders dashboard block inside a bounded container (shadcn-style preview) *@
+<div class="h-full min-h-0 flex">
+<SidebarProvider Class="h-full min-h-0 flex-1">
+    <AppSidebar />
+    <SidebarInset>
+        <header class="@(StickyHeader ? "sticky top-0 z-10 bg-background" : "") flex h-16 shrink-0 items-center gap-2 border-b border-border px-4">
+            <SidebarTrigger Class="-ml-1 shrink-0" />
+            <Separator Orientation="vertical" Class="mr-2 h-4 shrink-0" />
+            <Breadcrumb Class="flex flex-1 min-w-0 items-center">
+                <BreadcrumbItem Href="/">Home</BreadcrumbItem>
+                <BreadcrumbItem Href="/dashboard">Dashboard</BreadcrumbItem>
+                <BreadcrumbItem IsLast="true">Preview</BreadcrumbItem>
+            </Breadcrumb>
+            <ThemeToggle Size="sm" Variant="outline" Class="ml-auto" />
+        </header>
+        <div class="flex flex-1 flex-col gap-4 overflow-auto p-4">
+            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+                <div class="aspect-video rounded-xl bg-muted/50" />
+                <div class="aspect-video rounded-xl bg-muted/50" />
+                <div class="aspect-video rounded-xl bg-muted/50" />
+            </div>
+            <div class="min-h-[120px] flex-1 rounded-xl bg-muted/50" />
+        </div>
+    </SidebarInset>
+</SidebarProvider>
+</div>
+
+@code {
+    [Parameter] public bool StickyHeader { get; set; }
+}

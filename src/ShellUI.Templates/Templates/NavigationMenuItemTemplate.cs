@@ -11,7 +11,7 @@ public class NavigationMenuItemTemplate
         Description = "Individual navigation menu item",
         Category = ComponentCategory.Navigation,
         FilePath = "NavigationMenuItem.razor",
-
+        IsAvailable = false,
         Tags = new List<string> { "navigation", "menu", "nav", "item" }
     };
 

@@ -11,7 +11,7 @@ public class TableRowTemplate
         Description = "Table row component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "TableRow.razor",
-
+        IsAvailable = false,
         Tags = new List<string> { "table", "row", "tr" }
     };
 

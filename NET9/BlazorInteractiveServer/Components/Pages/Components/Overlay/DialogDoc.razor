@@ -1,0 +1,78 @@
+@page "/components/overlay/dialog"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<PageTitle>Dialog | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Dialog</h1>
+        <p class="text-muted-foreground mt-1">Modal dialog for important messages or forms.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add dialog</code>
+            <CopyButton Text="dotnet shellui add dialog" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Basic (with DialogTrigger)</h3>
+        <div class="mb-6">
+            <Dialog Open="@showDialog" OpenChanged="@(v => showDialog = v)">
+                <DialogTrigger>
+                    <Button>Open Dialog</Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Dialog Title</DialogTitle>
+                        <DialogDescription>This is a description of the dialog content.</DialogDescription>
+                    </DialogHeader>
+                    <p class="text-sm text-muted-foreground">You can put any content here.</p>
+                    <DialogFooter>
+                        <DialogClose>
+                            <Button Variant="@ButtonVariant.Outline">Cancel</Button>
+                        </DialogClose>
+                        <DialogClose>
+                            <Button>Confirm</Button>
+                        </DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Component</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Dialog</td><td>Root, Open/OpenChanged for controlled state</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">DialogTrigger</td><td>Wraps the element that opens the dialog (e.g. Button)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">DialogContent</td><td>Modal content container</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">DialogHeader</td><td>Header section</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">DialogTitle</td><td>Title text</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">DialogDescription</td><td>Description text</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">DialogFooter</td><td>Footer section</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">DialogClose</td><td>Wraps element that closes the dialog on click</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private bool showDialog = false;
+}

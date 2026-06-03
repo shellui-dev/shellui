@@ -11,7 +11,7 @@ public class MenubarItemTemplate
         Description = "Individual menubar item",
         Category = ComponentCategory.Navigation,
         FilePath = "MenubarItem.razor",
-
+        IsAvailable = false,
         Tags = new List<string> { "navigation", "menu", "menubar", "item" }
     };
 

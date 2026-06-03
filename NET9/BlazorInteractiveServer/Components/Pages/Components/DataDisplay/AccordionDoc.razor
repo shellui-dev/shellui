@@ -1,0 +1,74 @@
+@page "/components/data-display/accordion"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<PageTitle>Accordion | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Accordion</h1>
+        <p class="text-muted-foreground mt-1">Collapsible content panels with single or multiple open items.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add accordion</code>
+            <CopyButton Text="dotnet shellui add accordion" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Single (default)</h3>
+        <div class="mb-6">
+            <Accordion>
+                <AccordionItem Title="Is it accessible?">
+                    <p class="text-sm text-muted-foreground">Yes. It adheres to the WAI-ARIA design pattern.</p>
+                </AccordionItem>
+                <AccordionItem Title="Is it styled?">
+                    <p class="text-sm text-muted-foreground">Yes. It comes with default styles that match the rest of the UI.</p>
+                </AccordionItem>
+                <AccordionItem Title="Is it animated?">
+                    <p class="text-sm text-muted-foreground">Yes. It's animated by default with smooth transitions.</p>
+                </AccordionItem>
+            </Accordion>
+        </div>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Multiple</h3>
+        <div>
+            <Accordion Type="@AccordionType.Multiple">
+                <AccordionItem Title="Item 1">
+                    <p class="text-sm text-muted-foreground">Content for item 1.</p>
+                </AccordionItem>
+                <AccordionItem Title="Item 2">
+                    <p class="text-sm text-muted-foreground">Content for item 2.</p>
+                </AccordionItem>
+            </Accordion>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Type</td><td>AccordionType</td><td>Single</td><td>Single or Multiple open items</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Collapsible</td><td>bool</td><td>true</td><td>Allow closing the last open item</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">AccordionItem Title</td><td>string</td><td>—</td><td>Panel header text</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

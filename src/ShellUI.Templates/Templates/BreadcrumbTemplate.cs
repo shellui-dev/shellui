@@ -18,8 +18,8 @@ public class BreadcrumbTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<nav aria-label=""breadcrumb"" class=""@ClassName"" @attributes=""AdditionalAttributes"">
-    <ol class=""flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5"">
+<nav aria-label=""breadcrumb"" class=""@Class"" @attributes=""AdditionalAttributes"">
+    <ol class=""@Shell.Cn(""flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5"", Class)"">
         @ChildContent
     </ol>
 </nav>
@@ -29,7 +29,7 @@ public class BreadcrumbTemplate
     public RenderFragment? ChildContent { get; set; }
     
     [Parameter]
-    public string ClassName { get; set; } = """";
+    public string? Class { get; set; }
     
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }

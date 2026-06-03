@@ -11,7 +11,7 @@ public static class AlertVariantsTemplate
         Description = "Variant definitions for Alert component",
         Category = ComponentCategory.Feedback,
         FilePath = "Variants/AlertVariants.cs",
-
+        IsAvailable = false,
         Dependencies = new List<string>()
     };
 

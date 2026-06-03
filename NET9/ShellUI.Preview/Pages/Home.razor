@@ -1,7 +1,55 @@
-﻿@page "/"
+@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>ShellUI Components</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="w-fit max-w-5xl mx-auto px-6 py-10">
+    <div class="mb-8">
+        <h1 class="text-2xl font-semibold tracking-tight text-foreground">ShellUI Components</h1>
+        <p class="mt-1 text-sm text-muted-foreground">Click a component to view its preview.</p>
+    </div>
 
-Welcome to your new app.
+    <Separator Class="mb-6" />
+
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+        @foreach (var item in _components)
+        {
+            <a href="/preview/@item.Id"
+               class="flex flex-col items-center gap-2 rounded-lg border border-border bg-card px-3 py-3 text-center text-xs font-medium text-foreground transition-colors hover:border-primary/50 hover:bg-accent/50 min-w-0">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted/60 text-muted-foreground [&>svg]:size-4">
+                    @((MarkupString)item.IconSvg)
+                </span>
+                <span class="truncate w-full">@item.Label</span>
+            </a>
+        }
+    </div>
+</div>
+
+@code {
+    private readonly List<(string Id, string Label, string IconSvg)> _components = new()
+    {
+        ("button", "Button", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"8\" width=\"16\" height=\"8\" rx=\"2\"/></svg>"),
+        ("badge", "Badge", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L5 9h7z\"/></svg>"),
+        ("switch", "Switch", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"6\" width=\"20\" height=\"12\" rx=\"6\"/><circle cx=\"8\" cy=\"12\" r=\"4\" fill=\"currentColor\"/></svg>"),
+        ("checkbox", "Checkbox", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\"/><path d=\"M9 12l2 2 4-4\"/></svg>"),
+        ("input", "Input", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"6\" width=\"16\" height=\"12\" rx=\"2\"/><path d=\"M8 10h8M8 14h4\"/></svg>"),
+        ("textarea", "Textarea", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\"/><path d=\"M8 8h8M8 12h8M8 16h4\"/></svg>"),
+        ("alert", "Alert", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M12 9v2M12 17h.01\"/><path d=\"M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z\"/></svg>"),
+        ("card", "Card", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\"/><path d=\"M2 10h20\"/></svg>"),
+        ("tabs", "Tabs", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"6\" width=\"20\" height=\"12\" rx=\"1\"/><path d=\"M2 10h20\"/><rect x=\"4\" y=\"8\" width=\"6\" height=\"4\" fill=\"currentColor\" opacity=\"0.3\"/></svg>"),
+        ("combobox", "Combobox", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M4 6h16M4 12h16M4 18h8\"/><path d=\"M18 15l3 3-3 3\"/></svg>"),
+        ("select", "Select", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"6\" width=\"16\" height=\"12\" rx=\"2\"/><path d=\"M9 10h6M9 14h4\"/><path d=\"M12 16l2-2 2 2\"/></svg>"),
+        ("datepicker", "DatePicker", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M4 10h16\"/></svg>"),
+        ("skeleton", "Skeleton", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\" stroke-dasharray=\"4 2\"/></svg>"),
+        ("dialog", "Dialog", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"2\"/><path d=\"M8 8h8M8 12h6\"/></svg>"),
+        ("accordion", "Accordion", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M4 6h16M4 12h16M4 18h10\"/><path d=\"M16 10l2 2-2 2\"/></svg>"),
+        ("avatar", "Avatar", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 20c0-4 4-6 8-6s8 2 8 6\"/></svg>"),
+        ("breadcrumb", "Breadcrumb", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M4 12h8M4 12l4-4M4 12l4 4\"/><path d=\"M16 12h4\"/></svg>"),
+        ("progress", "Progress", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"8\" width=\"20\" height=\"8\" rx=\"4\"/><rect x=\"4\" y=\"10\" width=\"8\" height=\"4\" rx=\"2\" fill=\"currentColor\"/></svg>"),
+        ("slider", "Slider", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M4 12h16\"/><circle cx=\"8\" cy=\"12\" r=\"2\" fill=\"currentColor\"/></svg>"),
+        ("separator", "Separator", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M4 12h16\"/></svg>"),
+        ("label", "Label", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M4 6h8l2 4-2 4H4\"/><path d=\"M14 6h6v12h-6\"/></svg>"),
+        ("toggle", "Toggle", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"6\" width=\"16\" height=\"12\" rx=\"2\"/><circle cx=\"10\" cy=\"12\" r=\"3\" fill=\"currentColor\"/></svg>"),
+        ("dashboard-01", "Dashboard 01", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\"/><path d=\"M2 10h20\"/><path d=\"M8 14h8\"/></svg>"),
+        ("dashboard-02", "Dashboard 02", "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\"/><path d=\"M2 10h20\"/><rect x=\"4\" y=\"10\" width=\"16\" height=\"2\" fill=\"currentColor\" opacity=\"0.3\"/></svg>"),
+    };
+}

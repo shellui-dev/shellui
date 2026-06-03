@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 shellui-installation-tests/
+
+# Preview publish output (testing artifacts)
+preview-publish/

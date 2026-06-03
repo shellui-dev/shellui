@@ -11,6 +11,7 @@ public static class CarouselDotsTemplate
         Description = "Dot indicators for carousel navigation",
         Category = ComponentCategory.Navigation,
         FilePath = "CarouselDots.razor",
+        IsAvailable = false,
         Tags = new List<string> { "carousel", "dots", "indicators", "navigation" }
     };
 

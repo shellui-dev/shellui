@@ -11,6 +11,7 @@ public class SonnerServiceTemplate
         Description = "Service for showing and managing Sonner toast notifications",
         Category = ComponentCategory.Feedback,
         FilePath = "Services/SonnerService.cs",
+        IsAvailable = false,
         Tags = new List<string> { "sonner", "toast", "service", "feedback" }
     };
 

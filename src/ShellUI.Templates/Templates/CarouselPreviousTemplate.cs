@@ -11,6 +11,7 @@ public static class CarouselPreviousTemplate
         Description = "Previous button for carousel navigation",
         Category = ComponentCategory.Navigation,
         FilePath = "CarouselPrevious.razor",
+        IsAvailable = false,
         Tags = new List<string> { "carousel", "button", "previous", "navigation" }
     };
 

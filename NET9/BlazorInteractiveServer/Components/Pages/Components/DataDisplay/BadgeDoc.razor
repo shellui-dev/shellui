@@ -1,0 +1,63 @@
+@page "/components/data-display/badge"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<PageTitle>Badge | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Badge</h1>
+        <p class="text-muted-foreground mt-1">Small status indicator or label component.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add badge</code>
+            <CopyButton Text="dotnet shellui add badge" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Basic</h3>
+        <div class="mb-6">
+            <Badge>Default</Badge>
+        </div>
+
+        <h3 class="text-base font-medium mb-2 text-card-foreground">Variants</h3>
+        <div class="flex flex-wrap gap-4">
+            <Badge Variant="@BadgeVariant.Default">Default</Badge>
+            <Badge Variant="@BadgeVariant.Secondary">Secondary</Badge>
+            <Badge Variant="@BadgeVariant.Destructive">Destructive</Badge>
+            <Badge Variant="@BadgeVariant.Outline">Outline</Badge>
+            <Badge Variant="@BadgeVariant.Success">Success</Badge>
+            <Badge Variant="@BadgeVariant.Warning">Warning</Badge>
+            <Badge Variant="@BadgeVariant.Info">Info</Badge>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-lg font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Variant</td><td>BadgeVariant</td><td>Default</td><td>Visual style</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Class</td><td>string?</td><td>null</td><td>Additional CSS classes</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">ChildContent</td><td>RenderFragment</td><td>—</td><td>Badge content</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

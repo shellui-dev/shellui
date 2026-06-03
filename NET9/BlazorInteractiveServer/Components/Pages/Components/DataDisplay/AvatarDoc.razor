@@ -1,0 +1,61 @@
+@page "/components/data-display/avatar"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components
+
+<PageTitle>Avatar | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Avatar</h1>
+        <p class="text-muted-foreground mt-1">An image or fallback for representing a user or entity.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add avatar</code>
+            <CopyButton Text="dotnet shellui add avatar" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">With Fallback</h3>
+        <div class="flex gap-4 mb-6">
+            <Avatar Fallback="SH" />
+            <Avatar Fallback="JD" />
+            <Avatar Fallback="AB" />
+        </div>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Sizes</h3>
+        <div class="flex items-center gap-4">
+            <Avatar Fallback="S" Size="@AvatarSize.Sm" />
+            <Avatar Fallback="M" Size="@AvatarSize.Default" />
+            <Avatar Fallback="L" Size="@AvatarSize.Lg" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Src</td><td>string?</td><td>null</td><td>Image URL</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Fallback</td><td>string?</td><td>null</td><td>Fallback text (e.g. initials)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Size</td><td>AvatarSize</td><td>Default</td><td>Sm, Default, Lg</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

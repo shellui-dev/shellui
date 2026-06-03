@@ -1,0 +1,26 @@
+@using ShellUI.Components
+
+<Dialog Open="_open" OpenChanged="@(v => { _open = v; StateHasChanged(); })">
+    <DialogTrigger>
+        <Button>Open Dialog</Button>
+    </DialogTrigger>
+    <DialogContent>
+        <DialogHeader>
+            <DialogTitle>Dialog Title</DialogTitle>
+            <DialogDescription>Preview for docs embedding.</DialogDescription>
+        </DialogHeader>
+        <p class="text-sm text-muted-foreground">Content goes here.</p>
+        <DialogFooter>
+            <DialogClose>
+                <Button Variant="@ButtonVariant.Outline">Cancel</Button>
+            </DialogClose>
+            <DialogClose>
+                <Button>Confirm</Button>
+            </DialogClose>
+        </DialogFooter>
+    </DialogContent>
+</Dialog>
+
+@code {
+    private bool _open;
+}

@@ -11,7 +11,7 @@ public static class AvatarVariantsTemplate
         Description = "Variant definitions for Avatar component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "Variants/AvatarVariants.cs",
-
+        IsAvailable = false,
         Dependencies = new List<string>()
     };
 

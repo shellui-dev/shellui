@@ -11,7 +11,7 @@ public class TableHeaderTemplate
         Description = "Table header wrapper component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "TableHeader.razor",
-
+        IsAvailable = false,
         Tags = new List<string> { "table", "header", "thead" }
     };
 

@@ -1,0 +1,46 @@
+@page "/components"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+
+<PageTitle>Components | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Components</h1>
+        <p class="text-muted-foreground mt-1">Browse ShellUI components with usage examples and variants.</p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <section class="rounded-lg border border-border bg-card p-6">
+            <h2 class="text-xl font-semibold mb-4 text-card-foreground">Form</h2>
+            <ul class="space-y-2">
+                <li><a href="/components/form/button" class="text-primary hover:underline">Button</a></li>
+                <li><a href="/components/form/checkbox" class="text-primary hover:underline">Checkbox</a></li>
+                <li><a href="/components/form/input" class="text-primary hover:underline">Input</a></li>
+                <li><a href="/components/form/label" class="text-primary hover:underline">Label</a></li>
+                <li><a href="/components/form/select" class="text-primary hover:underline">Select</a></li>
+                <li><a href="/components/form/switch" class="text-primary hover:underline">Switch</a></li>
+                <li><a href="/components/form/textarea" class="text-primary hover:underline">Textarea</a></li>
+            </ul>
+        </section>
+        <section class="rounded-lg border border-border bg-card p-6">
+            <h2 class="text-xl font-semibold mb-4 text-card-foreground">Data Display</h2>
+            <ul class="space-y-2">
+                <li><a href="/components/data-display/alert" class="text-primary hover:underline">Alert</a></li>
+                <li><a href="/components/data-display/avatar" class="text-primary hover:underline">Avatar</a></li>
+                <li><a href="/components/data-display/badge" class="text-primary hover:underline">Badge</a></li>
+                <li><a href="/components/data-display/card" class="text-primary hover:underline">Card</a></li>
+                <li><a href="/components/data-display/accordion" class="text-primary hover:underline">Accordion</a></li>
+                <li><a href="/components/data-display/progress" class="text-primary hover:underline">Progress</a></li>
+                <li><a href="/components/data-display/tabs" class="text-primary hover:underline">Tabs</a></li>
+            </ul>
+        </section>
+        <section class="rounded-lg border border-border bg-card p-6">
+            <h2 class="text-xl font-semibold mb-4 text-card-foreground">Overlay</h2>
+            <ul class="space-y-2">
+                <li><a href="/components/overlay/dialog" class="text-primary hover:underline">Dialog</a></li>
+            </ul>
+        </section>
+    </div>
+</div>

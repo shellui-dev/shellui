@@ -11,7 +11,7 @@ public class TableCellTemplate
         Description = "Table data cell component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "TableCell.razor",
-
+        IsAvailable = false,
         Tags = new List<string> { "table", "cell", "td" }
     };
 
