@@ -12,7 +12,7 @@ public class FileUploadTemplate
         Category = ComponentCategory.Form,
 
         FilePath = "FileUpload.razor",
-        Dependencies = new List<string>(),
+        Dependencies = new List<string> { "shellui-js" },
         Tags = new List<string> { "file", "upload", "drag", "drop", "validation", "storage" }
     };
 

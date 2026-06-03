@@ -11,6 +11,7 @@ public class SonnerVariantsTemplate
         Description = "Position variants for Sonner toast component",
         Category = ComponentCategory.Overlay,
         FilePath = "Variants/SonnerVariants.cs",
+        IsAvailable = false,
         Tags = new List<string> { "sonner", "toast", "variants", "overlay" }
     };
 

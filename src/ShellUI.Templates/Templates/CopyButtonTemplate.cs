@@ -11,7 +11,7 @@ public static class CopyButtonTemplate
         Description = "One-click copy to clipboard button",
         Category = ComponentCategory.Utility,
         FilePath = "CopyButton.razor",
-        Dependencies = new List<string>(),
+        Dependencies = new List<string> { "shellui-js" },
         Tags = new List<string> { "utility", "clipboard", "copy", "docs", "code" }
     };
 
