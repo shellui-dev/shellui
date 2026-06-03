@@ -1,4 +1,70 @@
-# ShellUI v0.3.0-alpha.2 🚧
+# ShellUI v0.3.0-alpha.3 🚧
+
+> Third alpha of v0.3.0 — dashboard sidebar blocks, JS install fixes, and NuGet Core packaging. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
+
+## What's in this release
+
+v0.3.0-alpha.3 adds shadcn-style dashboard layout blocks, completes the sidebar component install chain (including JavaScript interop), and fixes NuGet so `ShellUI.Components` can resolve `ShellUI.Core`.
+
+### ✨ New
+
+- **Dashboard layout blocks** — `dotnet shellui add dashboard-01` (header scrolls, shadcn sidebar-01) and `dashboard-02` (sticky header, shadcn sidebar-02)
+- **`shellui-js` template** — installs `wwwroot/shellui.js` at init and as a dependency of `copy-button` / `file-upload`
+- **Blocks demo** — `/blocks` page with live previews, install commands, and `CopyButton` per block
+- **`DashboardDemoSidebar`** — isolated demo sidebar content (separate from main app sidebar)
+
+### 🐛 Fixes
+
+- **NuGet: `ShellUI.Core` now published** — `ShellUI.Core` is packable; release workflow pushes Core + Components so `dotnet add package ShellUI.Components` restores successfully (was NU1102 when only Core 0.1.0 existed on NuGet)
+- **Dependency auto-install** — variant/service templates (`alert-variants`, `badge-variants`, `avatar-variants`, `sonner-variants`, `sonner-service`, `toggle-variants`) marked `IsAvailable = false` so they install only with their parent
+- **Breadcrumb** — single `dotnet shellui add breadcrumb`; `breadcrumb-item` auto-installed
+- **Blazor error UI** — hidden until an error occurs (`.show` class)
+- **Init** — installs `shellui.js` and reminds you to add `<script src="shellui.js"></script>` in App.razor or index.html
+
+### 🔧 Sidebar / JS
+
+| Asset | Installed when | CLI usage |
+|-------|----------------|-----------|
+| `shellui-sidebar.js` | `sidebar-provider` → `sidebar-js` | Dynamic import in `SidebarProvider` |
+| `shellui.js` | `init`, `copy-button`, `file-upload` | Global `ShellUI.*`; requires script tag in HTML |
+
+NuGet consumers: both JS files ship as static web assets under `_content/ShellUI.Components/`.
+
+### 📦 Installation
+
+```bash
+# CLI
+dotnet tool install -g ShellUI.CLI --version 0.3.0-alpha.3
+# or
+dotnet tool update -g ShellUI.CLI --version 0.3.0-alpha.3
+
+shellui init
+shellui add dashboard-01   # or dashboard-02
+```
+
+```bash
+# NuGet (requires ShellUI.Core on NuGet at same version)
+dotnet add package ShellUI.Core --version 0.3.0-alpha.3 --prerelease
+dotnet add package ShellUI.Components --version 0.3.0-alpha.3 --prerelease
+```
+
+After `shellui init`, add before the Blazor script:
+
+```html
+<script src="shellui.js"></script>
+```
+
+## 🔗 Links
+
+- **Documentation**: https://shellui.dev
+- **GitHub**: https://github.com/shellui-dev/shellui
+- **NuGet**: https://www.nuget.org/packages/ShellUI.Components
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.3.0-alpha.2...v0.3.0-alpha.3
+
+---
+
+# ShellUI v0.3.0-alpha.2 🚧 (Historical)
 
 > Second alpha of v0.3.0 — fixes CLI registry for Drawer/Sheet compositional subcomponents. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
 
