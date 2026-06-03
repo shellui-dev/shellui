@@ -18,6 +18,11 @@
     
     <style>
         body { font-family: 'Inter', sans-serif; }
+        /* Blazor error UI - hidden by default, only visible when Blazor adds .show on error */
+        #blazor-error-ui { display: none !important; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; background: #dc2626; color: #fff; padding: 1rem; text-align: center; }
+        #blazor-error-ui.show { display: block !important; }
+        #blazor-error-ui a { color: inherit; text-decoration: underline; }
+        #blazor-error-ui .dismiss { cursor: pointer; margin-left: 1rem; }
     </style>
 </head>
 
@@ -34,7 +39,7 @@
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="." class="reload">Reload</a>
-        <span class="dismiss">🗙</span>
+        <span class="dismiss">×</span>
     </div>
     
     <!-- Blazor Boot -->
