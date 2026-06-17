@@ -15,7 +15,7 @@ ShellUI is a CLI-first Blazor component library that copies components directly 
 - ComponentInstaller (add, update – resolves dependencies, writes files)
 - ComponentManager (list, remove)
 
-**ShellUI.Templates** (embedded in CLI) provides ComponentRegistry with 139 templates. `GetComponentContent(name)` returns Razor/C# source.
+**ShellUI.Templates** (embedded in CLI) provides ComponentRegistry with 167 templates total (68 installable top-level components + sub-components, variants, models, services that auto-install as dependencies). `GetComponentContent(name)` returns Razor/C# source.
 
 **Packages:** ShellUI.Core (models/config), ShellUI.Components (NuGet – components, variants, services, theme CSS).
 
@@ -30,19 +30,18 @@ ShellUI is a CLI-first Blazor component library that copies components directly 
 
 ## Component Counts (Actual Components Only)
 
-When you run `shellui add button`, that counts as **1 component**. Dependencies (button-variants, etc.) are auto-installed and **not** counted.
+When you run `shellui add button`, that counts as **1 component**. Dependencies (button-variants, etc.) are auto-installed and **not** counted. Counts derived from `ComponentRegistry` where `IsAvailable = true`.
 
-| Category | Installable | Description |
-|----------|-------------|-------------|
-| Form | 14 | Button, Input, Select, Checkbox, Switch, etc. |
-| Layout | 15 | Card, Dialog, Sheet, Drawer, Popover, etc. |
-| Navigation | 12 | Navbar, Sidebar, Tabs, Breadcrumb, etc. |
-| Data Display | 14 | Table, Badge, Avatar, Alert, Toast, Sonner, etc. |
-| Feedback | 8 | Toast, Sonner, Loading, Skeleton, Progress, etc. |
-| Overlay | 10 | Dialog, Sheet, Drawer, Tooltip, Popover, etc. |
-| Charts | 9 | Chart, BarChart, LineChart, PieChart, etc. |
-| Utility | 18 | ThemeToggle, CopyButton, ScrollArea, etc. |
-| **Total** | **~100** | *Actual components only; *-variants, *-service excluded* |
+| Category | Installable | Examples |
+|----------|-------------|----------|
+| Form | 17 | Button, Input, Select, Checkbox, Switch, Combobox, DatePicker, … |
+| Layout | 12 | Card, Sidebar, Navbar, Accordion, Resizable, DashboardLayout01/02, … |
+| Navigation | 7 | Tabs, Menubar, NavigationMenu, Pagination, Stepper, … |
+| Overlay | 8 | Dialog, Sheet, Drawer, Popover, Dropdown, Command, … |
+| Data Display | 13 | Table, DataTable, Badge, Avatar, Calendar, Carousel, Chart family, … |
+| Feedback | 9 | Alert, Callout, Toast, Sonner, Loading, Progress, Tooltip, … |
+| Utility | 2 | CopyButton, ThemeToggle |
+| **Total** | **68** | *Top-level components only; sub-components, variants, models, services excluded* |
 
 ## Project Structure
 

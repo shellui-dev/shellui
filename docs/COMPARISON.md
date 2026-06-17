@@ -9,7 +9,7 @@ A comprehensive comparison of ShellUI with other popular Blazor component librar
 | **Distribution** | CLI (Copy) | NuGet | NuGet | NuGet | NuGet | NuGet |
 | **Customization** | Full Source | Limited | Limited | Limited | Limited | Limited |
 | **CSS Framework** | Tailwind v4 | Custom | Bootstrap | Bootstrap/Custom | Ant Design | Custom |
-| **Component Count** | 100+ | 50+ | 90+ | 80+ | 60+ | 60+ |
+| **Component Count** | 68 | 50+ | 90+ | 80+ | 60+ | 60+ |
 | **Open Source** | Yes (MIT) | Yes (MIT) | Partial | Yes (MIT) | Yes (MIT) | Yes (MIT) |
 | **Commercial License** | Free | Free | Paid Plans | Free | Free | Free |
 | **Dark Mode** | Built-in | Built-in | Built-in | Built-in | Built-in | Built-in |

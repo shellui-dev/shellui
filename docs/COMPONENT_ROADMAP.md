@@ -2,29 +2,25 @@
 
 **Goal:** Build ALL components from shadcn/ui + extras needed for ShellDocs (Blazor fumadocs equivalent)
 
-## Current Status: 100 Installable Components - v0.3.0-alpha
+## Current Status: 68 Installable Components - v0.3.0-alpha
 
-### Completed (~100 install targets, dependencies auto-installed)
+### Completed (68 install targets; sub-components, variants, models, services auto-installed)
 
-**Form (11):** Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider
+Counts are top-level components users invoke directly via `shellui add <name>`. Anything that auto-installs as a dependency (e.g. `SidebarTrigger`, `DialogContent`, `ButtonVariants`, `SonnerService`) is not counted here.
 
-**Layout (19):** Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Tabs, TabsList, TabsTrigger, TabsContent, TabModels, Navbar, Sidebar, Separator, Accordion, AccordionItem, AccordionTrigger, AccordionContent, Breadcrumb, BreadcrumbItem, Collapsible, CollapsibleTrigger, CollapsibleContent, Resizable
+**Form (17):** Button, Checkbox, Combobox, DatePicker, DateRangePicker, FileUpload, Form, Input, InputOTP, Label, RadioGroup, Select, Slider, Switch, Textarea, TimePicker, Toggle
 
-**Navigation (8):** NavigationMenu, NavigationMenuItem, Menubar, MenubarItem, Dropdown, Pagination, ScrollArea, Sheet
+**Layout (12):** Accordion, Breadcrumb, Card, Collapsible, DashboardLayout01, DashboardLayout02, LinkCard, Navbar, Resizable, ScrollArea, Separator, Sidebar
 
-**Feedback (7):** Alert, AlertVariants, Progress, Skeleton, Toast, Loading, EmptyState
+**Navigation (7):** ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs
 
-**Overlay (8):** Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose, AlertDialog, Popover, Tooltip, HoverCard, Drawer, ContextMenu, Command
+**Overlay (8):** AlertDialog, Command, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
 
-**Data Display (10):** Badge, BadgeVariants, Avatar, AvatarVariants, Table, TableHeader, TableBody, TableRow, TableHead, TableCell, DataTable
+**Data Display (13):** AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, DataTable, LineChart, MultiSeriesChart, PieChart, Table
 
-**Data Visualization (7):** Chart, BarChart, LineChart, AreaChart, PieChart, MultiSeriesChart, ChartSeries, ChartVariants
+**Feedback (9):** Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
 
-**Advanced (6):** Carousel, CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
-
-**Form Advanced (5):** Form, InputOTP, Combobox, DatePicker, DateRangePicker, TimePicker
-
-**Utility (3):** ThemeToggle, Shell, ButtonVariants, ToggleVariants, FileUpload, Stepper, StepperList, StepperStep, StepperContent, Calendar
+**Utility (2):** CopyButton, ThemeToggle
 
 ---
 
@@ -124,7 +120,7 @@ ShellDocs will need:
 
 - v0.1.0 (Dec 2025) - 73 components, CLI + NuGet
 - v0.1.1 (Dec 2025) - Hotfix, package publishing
-- **v0.3.0-alpha (Feb 2026) - Current alpha: Charts, 100 components, Tailwind 4.1.18**
+- **v0.3.0-alpha (Feb 2026) - Current alpha: Charts, 68 installable components, Tailwind 4.1.18**
 - v0.3.0 (Q1 2026) - ShellDocs components (CodeBlock, MDX, Callout, Steps, etc.)
 - v0.4.0 (Q2 2026) - ShellDocs site launch
 - v1.0.0 (Q2-Q3 2026) - .NET 10, stable API, comprehensive docs

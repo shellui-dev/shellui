@@ -110,7 +110,7 @@ dotnet shellui add dashboard-01   # or dashboard-02
 ### Data Display
 - `table`, `data-table`, `badge`, `avatar`, `alert`, `toast`, `sonner`, `skeleton`, `progress`, `loading`
 
-**~100 components total** (run `dotnet shellui list` for full list; dependencies auto-installed)
+**68 installable components total** (run `dotnet shellui list` for full list; sub-components, variants, models, and services auto-install as dependencies)
 
 ### Interactive Components
 - `dropdown`, `accordion`, `toggle`, `theme-toggle`, `command`, `context-menu`, `hover-card`

@@ -6,8 +6,8 @@ ShellUI follows a **unified versioning approach** where all components, CLI, and
 
 ## Version Number: v0.3.0-alpha.2 ✅
 
-**Current Release:** v0.3.0-alpha.2
-- ✅ 100 production-ready components
+**Current Release:** v0.3.0-alpha.3
+- ✅ 68 installable production-ready components
 - ✅ CLI tool + NuGet packages
 - ✅ Full Blazor WebAssembly + Server support
 - ✅ Tailwind CSS v4.1.17 integration
@@ -25,7 +25,7 @@ ShellUI follows a **unified versioning approach** where all components, CLI, and
 
 **Automatically Applied To:**
 - ✅ All NuGet packages (`ShellUI.CLI`, `ShellUI.Components`, `ShellUI.Core`)
-- ✅ All ~100 component templates
+- ✅ All 68 installable component templates (167 templates total including dependencies)
 - ✅ Build configurations
 - ✅ Component metadata
 
