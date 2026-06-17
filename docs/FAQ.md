@@ -7,7 +7,7 @@ Quick answers to common questions about ShellUI.
 ### Q: What's the difference between NuGet package and CLI?
 
 **NuGet Package:**
-- **Contains:** ALL 100+ components in a compiled DLL
+- **Contains:** ALL 68 installable components in a compiled DLL
 - **Installation:** `dotnet add package ShellUI.Components`
 - **Format:** Compiled Razor Class Library (traditional)
 - **Usage:** Import and use immediately
@@ -31,7 +31,7 @@ Quick answers to common questions about ShellUI.
 **YES! This is actually recommended!**
 
 ```bash
-# 1. Install NuGet package (all 100+ components)
+# 1. Install NuGet package (all 68 components)
 dotnet add package ShellUI.Components
 
 # 2. Use NuGet components everywhere

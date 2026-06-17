@@ -4,8 +4,8 @@
 
 **ShellUI alpha is available on NuGet!** Test before upgrading to stable.
 
-- ✅ **Version 0.3.0-alpha.2** - 100 installable components (actual components only; dependencies auto-installed)
-- ✅ **100 Production-Ready Components** - Fully functional and tested
+- ✅ **Version 0.3.0-alpha.3** - 68 installable components (top-level only; sub-components, variants, models, services auto-installed)
+- ✅ **68 Production-Ready Components** - Fully functional and tested
 - ✅ **CLI Tool Published** - `dotnet tool install -g ShellUI.CLI`
 - ✅ **NuGet Packages Published** - `ShellUI.Components`, `ShellUI.CLI`, `ShellUI.Templates`
 - ✅ **Hybrid Distribution** - CLI + NuGet packages (best of both worlds!)
@@ -18,17 +18,21 @@
 - [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet
 - [x] Components Package (`ShellUI.Components`) - Published to NuGet
 - [x] Templates Package (`ShellUI.Templates`) - Embedded in CLI
-- [x] Component Registry - 139 templates (~100 installable)
+- [x] Component Registry - 167 templates (68 installable; rest are sub-components/variants/models/services that auto-install)
 - [x] Tailwind CSS Integration - v4.1.18 standalone CLI support
 - [x] MSBuild Integration - Automatic CSS compilation
 
-### Components (100 Installable)
-- [x] **Form Components (14)**: Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider, Form, InputOTP, Combobox
-- [x] **Layout Components (15)**: Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, ScrollArea, Resizable, Collapsible, Accordion, Sonner, Toast
-- [x] **Navigation Components (12)**: Navbar, Sidebar, NavigationMenu, Menubar, MenubarItem, Pagination, Tabs, Stepper, Breadcrumb, BreadcrumbItem
-- [x] **Data Display (14)**: Table, DataTable, Badge, Avatar, Alert, Toast, Sonner, Skeleton, Progress, Loading
-- [x] **Interactive Components (8)**: Dropdown, Command, ContextMenu, HoverCard, ThemeToggle, EmptyState, FileUpload, CopyButton
-- [x] **Advanced Components (18+)**: Calendar, DatePicker, DateRangePicker, TimePicker, AlertDialog, Carousel, Charts (Chart, BarChart, LineChart, PieChart, AreaChart, MultiSeriesChart)
+### Components (68 Installable)
+
+Counts are top-level components users invoke directly via `shellui add <name>`. Anything that auto-installs as a dependency (e.g. `SidebarTrigger`, `DialogContent`, `ButtonVariants`, `SonnerService`) is not counted.
+
+- [x] **Form (17)**: Button, Checkbox, Combobox, DatePicker, DateRangePicker, FileUpload, Form, Input, InputOTP, Label, RadioGroup, Select, Slider, Switch, Textarea, TimePicker, Toggle
+- [x] **Layout (12)**: Accordion, Breadcrumb, Card, Collapsible, DashboardLayout01, DashboardLayout02, LinkCard, Navbar, Resizable, ScrollArea, Separator, Sidebar
+- [x] **Navigation (7)**: ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs
+- [x] **Overlay (8)**: AlertDialog, Command, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
+- [x] **Data Display (13)**: AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, DataTable, LineChart, MultiSeriesChart, PieChart, Table
+- [x] **Feedback (9)**: Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
+- [x] **Utility (2)**: CopyButton, ThemeToggle
 
 ### Documentation
 - [x] README.md - Project overview and quick start
@@ -73,7 +77,7 @@
 
 | Milestone | Status |
 |-----------|--------|
-| v0.3.0-alpha - 100 components, CLI, NuGet | ✅ Done |
+| v0.3.0-alpha - 68 installable components, CLI, NuGet | ✅ Done |
 | Tailwind v4.1.18 standalone | ✅ Done |
 | Alpha testing & validation | 🔄 In progress |
 | v0.3.0 stable (after testing) | 🎯 Next |
@@ -169,12 +173,12 @@ dotnet shellui add button input card
 - [x] CLI tool published to NuGet
 - [x] NuGet packages published (Components, CLI, Templates)
 - [x] Can initialize projects (no Node.js!)
-- [x] 100 components working (both CLI and NuGet)
+- [x] 68 installable components working (both CLI and NuGet)
 - [x] Basic documentation live
 - [ ] 50+ GitHub stars (in progress)
 
 ### Beta Success (Q2 2026)
-- [x] 100+ components available
+- [x] 68 installable components available
 - [ ] Component registry operational
 - [ ] Hybrid workflow proven
 - [ ] 500+ GitHub stars

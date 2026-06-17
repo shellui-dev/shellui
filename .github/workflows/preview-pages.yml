@@ -42,6 +42,11 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        with:
+          # Auto-enable Pages on first run so this workflow can deploy without
+          # someone clicking through Settings → Pages first. Requires the
+          # GITHUB_TOKEN to have `pages: write` (already set above).
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

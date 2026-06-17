@@ -140,26 +140,26 @@ public static class ChartVariants
                 },
                 Custom = @""function({ series, seriesIndex, dataPointIndex, w }) {
                     const xLabel = w.globals.labels[dataPointIndex] || '';
-                    let html = '<div class=""custom-tooltip"">';
-                    
+                    let html = '<div class=""""custom-tooltip"""">';
+
                     if (xLabel) {
-                        html += '<div class=""custom-tooltip-title"">' + xLabel + '</div>';
+                        html += '<div class=""""custom-tooltip-title"""">' + xLabel + '</div>';
                     }
-                    
+
                     w.globals.initialSeries.forEach((s, idx) => {
                         const color = w.config.colors[idx];
                         const name = s.name || '';
-                        const value = series[idx] && series[idx][dataPointIndex] !== undefined 
-                                     ? series[idx][dataPointIndex] 
+                        const value = series[idx] && series[idx][dataPointIndex] !== undefined
+                                     ? series[idx][dataPointIndex]
                                      : '-';
-                        
-                        html += '<div class=""custom-tooltip-item"">' +
-                               '<span class=""custom-tooltip-marker"" style=""background-color: ' + color + ';""></span>' +
-                               '<span class=""custom-tooltip-label"">' + name + ':</span>' +
-                               '<span class=""custom-tooltip-value"">' + value + '</span>' +
+
+                        html += '<div class=""""custom-tooltip-item"""">' +
+                               '<span class=""""custom-tooltip-marker"""" style=""""background-color: ' + color + ';""""></span>' +
+                               '<span class=""""custom-tooltip-label"""">' + name + ':</span>' +
+                               '<span class=""""custom-tooltip-value"""">' + value + '</span>' +
                                '</div>';
                     });
-                    
+
                     html += '</div>';
                     return html;
                 }""

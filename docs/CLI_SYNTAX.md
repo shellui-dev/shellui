@@ -179,7 +179,7 @@ Examples:
   dotnet shellui list --json
 ```
 
-**Output:** A table with columns: Component, Status (installed/available), Version, Category, Description. Run `dotnet shellui list` to see all ~100 available components.
+**Output:** A table with columns: Component, Status (installed/available), Version, Category, Description. Run `dotnet shellui list` to see all 68 installable components.
 
 ## update - Update Components
 

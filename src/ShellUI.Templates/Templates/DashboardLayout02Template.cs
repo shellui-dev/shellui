@@ -83,7 +83,7 @@ public static class DashboardLayout02Template
         var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
 
         _breadcrumbItems.Clear();
-        if (segments.Length == 0 || (segments.Length == 1 && segments[0] == ""))
+        if (segments.Length == 0 || (segments.Length == 1 && segments[0] == """"))
         {
             _breadcrumbItems.Add(new BreadcrumbItemData { Label = ""Home"", Href = ""/"", IsLast = true });
             return;

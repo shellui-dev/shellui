@@ -29,7 +29,7 @@ dotnet shellui add card dialog
 ## What's Included
 
 This package contains:
-- **~100 Installable Component Templates** - Primary components (dependencies like *-variants auto-installed)
+- **68 Installable Component Templates** - Top-level components (167 templates total; sub-components, variants, models, services auto-install as dependencies)
 - **Metadata** - Component metadata including dependencies, categories, and descriptions
 - **Registry** - Component registry for CLI discovery
 

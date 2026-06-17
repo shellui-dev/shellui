@@ -1,6 +1,6 @@
 # ShellUI Quick Start Guide
 
-**Note:** ShellUI is in alpha with 100 components. Test and provide feedback!
+**Note:** ShellUI is in alpha with 68 installable components. Test and provide feedback!
 
 ## What is ShellUI?
 
@@ -164,7 +164,7 @@ Then use it:
 dotnet shellui list
 ```
 
-Output: A table showing component name, status (installed/available), version, category, and description. Run `dotnet shellui list` to see all ~100 components.
+Output: A table showing component name, status (installed/available), version, category, and description. Run `dotnet shellui list` to see all 68 installable components.
 
 ### List only installed components
 

@@ -4,7 +4,7 @@ Beautiful, accessible Blazor components inspired by shadcn/ui. A CLI-first compo
 
 ## Features
 
-- 🎨 **100 Production-ready components** - Button, Input, Card, Dialog, Sonner, Table, Charts, and more
+- 🎨 **68 Production-ready installable components** - Button, Input, Card, Dialog, Sonner, Table, Charts, and more (sub-components and variants ship as auto-installed dependencies)
 - 🎯 **CLI-first approach** - Install components individually with `dotnet shellui add`
 - 🎨 **Tailwind CSS styling** - Utility-first CSS with dark mode support
 - ♿ **Accessible by default** - Built with accessibility in mind

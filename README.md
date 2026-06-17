@@ -39,12 +39,12 @@ ShellUI transforms Blazor component development with a hybrid approach:
 - Powered by Tailwind CSS v4.1.18 (standalone CLI - no Node.js required!)
 - Best of both worlds: flexibility when you need it, convenience when you want it
 
-## Current Status: 100 Components (Alpha) 🎉
+## Current Status: 68 Components (Alpha) 🎉
 
 **ShellUI is in alpha!** Test and provide feedback before we ship stable. We've completed:
 - ✅ **CLI Tool** (`dotnet tool install -g ShellUI.CLI`)
 - ✅ **NuGet Package** (`dotnet add package ShellUI.Components`)
-- ✅ **100 Components** with Tailwind v4.1.18 *(actual components only; *-variants, *-service auto-installed)*
+- ✅ **68 Installable Components** with Tailwind v4.1.18 *(top-level components you `shellui add` — sub-components, variants, models, and services auto-install as dependencies)*
 - ✅ **Hybrid Workflow** (CLI + NuGet)
 - ✅ **No Node.js Required** (Standalone Tailwind CLI)
 - ✅ **Comprehensive Documentation**
@@ -96,7 +96,7 @@ To update ShellUI version across all components:
 
 This single file change updates:
 - ✅ All NuGet packages (`ShellUI.CLI`, `ShellUI.Components`)
-- ✅ All component templates (~100 installable components)
+- ✅ All component templates (68 installable components)
 - ✅ Build configurations and metadata
 
 **Example for pre-release:**
@@ -116,25 +116,30 @@ Results in version: `0.3.0-alpha.2`
 
 **For Advanced Users:** Future versions may support component-specific versioning for power users who need granular control.
 
-### ✅ 100 Production-Ready Components
+### ✅ 68 Production-Ready Components
 
-**Form Components (14):**
-Button, Input, Textarea, Select, Checkbox, RadioGroup, RadioGroupItem, Switch, Toggle, Label, Slider, Form, InputOTP
+Counts below are top-level components you can `shellui add` directly. Sub-components (e.g. `SidebarTrigger`, `DialogContent`, `TableRow`), variants (`ButtonVariants`, `AlertVariants`, …), models, and services auto-install as dependencies and are not counted.
 
-**Layout Components (15):**
-Card, Dialog, Sheet, Drawer, Popover, Tooltip, Separator, ScrollArea, Resizable, Collapsible, Accordion, Breadcrumb, BreadcrumbItem, Sonner, Toast
+**Form (17):**
+Button, Checkbox, Combobox, DatePicker, DateRangePicker, FileUpload, Form, Input, InputOTP, Label, RadioGroup, Select, Slider, Switch, Textarea, TimePicker, Toggle
 
-**Navigation Components (12):**
-Navbar, Sidebar, NavigationMenu, NavigationMenuItem, Menubar, MenubarItem, Pagination, Tabs, Stepper
+**Layout (12):**
+Accordion, Breadcrumb, Card, Collapsible, DashboardLayout01, DashboardLayout02, LinkCard, Navbar, Resizable, ScrollArea, Separator, Sidebar
 
-**Data Display (14):**
-Table, TableHeader, TableBody, TableRow, TableHead, TableCell, DataTable, Badge, Avatar, Alert, Toast, Sonner, Skeleton, Progress, Loading
+**Navigation (7):**
+ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs
 
-**Interactive Components (8):**
-Dropdown, Command, ContextMenu, HoverCard, ThemeToggle, EmptyState, FileUpload
+**Overlay (8):**
+AlertDialog, Command, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
 
-**Advanced Components (18):**
-Calendar, DatePicker, DateRangePicker, TimePicker, Combobox, AlertDialog, Carousel, Charts (Chart, BarChart, LineChart, PieChart, AreaChart, MultiSeriesChart), CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, CarouselDots
+**Data Display (13):**
+AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, DataTable, LineChart, MultiSeriesChart, PieChart, Table
+
+**Feedback (9):**
+Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
+
+**Utility (2):**
+CopyButton, ThemeToggle
 
 ### ✅ Tailwind CSS v4.1.18 Integration
 
@@ -252,7 +257,7 @@ shellui init
 shellui add button input card dialog
 # Or: dotnet shellui add button input card dialog
 
-shellui list  # See all 100 available components
+shellui list  # See all 68 available components
 # Or: dotnet shellui list
 ```
 
@@ -294,7 +299,7 @@ Simply edit the component file in `Components/UI/` - it's yours to modify!
 | Hybrid Workflow | ✅ | ❌ | ❌ | ❌ |
 | Free & Open Source | ✅ | ✅ | Partial | ✅ |
 | Customization | Full | Limited | Limited | Limited |
-| Components | 100+ | 70+ | 50+ | 80+ |
+| Components | 68 | 70+ | 50+ | 80+ |
 | Current Status | Production Ready | Mature | Commercial | Mature |
 
 ## 📦 Package Overview
@@ -606,7 +611,7 @@ MIT License - See LICENSE.txt for details
 
 ## Status
 
-**Alpha:** 100 components, CLI + NuGet, Tailwind v4.1.18. Test before stable.
+**Alpha:** 68 components, CLI + NuGet, Tailwind v4.1.18. Test before stable.
 **🚀 Ready to use today!**
 
 ---
