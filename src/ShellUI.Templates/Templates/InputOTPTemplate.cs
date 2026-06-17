@@ -11,7 +11,9 @@ public class InputOTPTemplate
         Description = "One-time password input component",
         Category = ComponentCategory.Form,
         FilePath = "InputOTP.razor",
-
+        // shellui-js provides ShellUI.focusElement for moving focus between OTP digit inputs.
+        // Shell.Cn is installed by `shellui init` via the shell template, so it is not listed here.
+        Dependencies = new List<string> { "shellui-js" },
         Tags = new List<string> { "form", "input", "otp", "password", "verification" }
     };
 
@@ -19,18 +21,16 @@ public class InputOTPTemplate
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
 
-<div class=""@(""flex items-center "" + ClassName)"" @attributes=""AdditionalAttributes"">
+<div class=""@Shell.Cn(""flex items-center gap-2"", Class)"" @attributes=""AdditionalAttributes"">
     @for (int i = 0; i < Length; i++)
     {
         var index = i;
-        var isGroupStart = GroupBy > 0 && i % GroupBy == 0;
-        var isGroupEnd = GroupBy > 0 && (i + 1) % GroupBy == 0;
-        
-        @if (isGroupStart && i > 0)
+
+        @if (GroupBy > 0 && i > 0 && i % GroupBy == 0)
         {
-            <span class=""text-muted-foreground text-xl font-bold mx-2"">-</span>
+            <span class=""text-muted-foreground text-xl font-bold px-1"">-</span>
         }
-        
+
         <input @ref=""_inputRefs[index]""
                id=""@($""otp-input-{_id}-{index}"")""
                type=""text""
@@ -43,72 +43,58 @@ public class InputOTPTemplate
                @onpaste=""@HandlePaste""
                @onfocus=""@(() => _focusedIndex = index)""
                disabled=""@Disabled""
-               class=""@(""w-10 h-12 text-center text-lg font-semibold border-2 rounded-md transition-colors "" + (Disabled ? ""opacity-50 cursor-not-allowed bg-muted"" : ""bg-background"") + "" "" + (_focusedIndex == index ? ""border-ring ring-2 ring-ring ring-offset-2"" : ""border-input"") + "" focus:outline-none focus:border-ring focus:ring-2 focus:ring-ring focus:ring-offset-2 "" + (isGroupEnd && i < Length - 1 ? ""mr-0"" : ""mr-1""))"" />
+               class=""@Shell.Cn(""w-10 h-12 text-center text-lg font-semibold border-2 rounded-md transition-colors focus:outline-none focus:border-ring focus:ring-2 focus:ring-ring focus:ring-offset-2"", Disabled ? ""opacity-50 cursor-not-allowed bg-muted"" : ""bg-background"", _focusedIndex == index ? ""border-ring ring-2 ring-ring ring-offset-2"" : ""border-input"")"" />
     }
 </div>
 
 @code {
-    [Parameter]
-    public string Value { get; set; } = """";
-    
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
-    
-    [Parameter]
-    public EventCallback<string> OnComplete { get; set; }
-    
-    [Parameter]
-    public int Length { get; set; } = 6;
-    
-    [Parameter]
-    public int GroupBy { get; set; } = 3;
-    
-    [Parameter]
-    public bool Disabled { get; set; }
-    
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string Value { get; set; } = """";
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public EventCallback<string> OnComplete { get; set; }
+    [Parameter] public int Length { get; set; } = 6;
+    [Parameter] public int GroupBy { get; set; } = 3;
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
+
     private int _focusedIndex = -1;
     private ElementReference[] _inputRefs = null!;
     private string _id = Guid.NewGuid().ToString(""N"")[..8];
-    
+
     protected override void OnInitialized()
     {
         _inputRefs = new ElementReference[Length];
     }
-    
+
     private string GetDigit(int index) => index < Value.Length ? Value[index].ToString() : """";
-    
+
     private async Task HandleInput(int index, ChangeEventArgs e)
     {
         var input = e.Value?.ToString() ?? """";
-        if (string.IsNullOrEmpty(input) || !char.IsDigit(input[0])) 
+        if (string.IsNullOrEmpty(input) || !char.IsDigit(input[0]))
         {
             return;
         }
-        
+
         var newValue = Value.PadRight(Length, ' ');
         var chars = newValue.ToCharArray();
         chars[index] = input[0];
         Value = new string(chars).TrimEnd();
-        
+
         await ValueChanged.InvokeAsync(Value);
-        
+
         if (index < Length - 1)
         {
             await FocusInput(index + 1);
         }
-        
+
         if (Value.Replace("" "", """").Length == Length)
         {
             await OnComplete.InvokeAsync(Value);
         }
     }
-    
+
     private async Task HandleKeyDown(int index, KeyboardEventArgs e)
     {
         if (e.Key == ""Backspace"")
@@ -140,27 +126,27 @@ public class InputOTPTemplate
             await FocusInput(index + 1);
         }
     }
-    
+
     private async Task HandlePaste(ClipboardEventArgs e)
     {
+        // Paste handling will be done via JS in a real implementation
         await Task.CompletedTask;
     }
-    
+
     private async Task FocusInput(int index)
     {
         if (index >= 0 && index < Length)
         {
             try
             {
-                await JS.InvokeVoidAsync(""eval"", $""document.getElementById('otp-input-{_id}-{index}')?.focus()"");
+                await JS.InvokeVoidAsync(""ShellUI.focusElement"", $""otp-input-{_id}-{index}"");
             }
             catch
             {
+                // Ignore JS interop errors
             }
         }
     }
 }
 ";
 }
-
-
