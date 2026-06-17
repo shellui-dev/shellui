@@ -51,6 +51,20 @@ jobs:
         dotnet new blazor -o SmokeApp --no-restore
         cd SmokeApp
         shellui init --tailwind standalone --yes
+
+        # Assert init produced a working host: App.razor patched with render mode,
+        # theme bootstrap, and shellui.js script tag.
+        grep -q 'HeadOutlet @rendermode="InteractiveServer"' Components/App.razor || (echo "init did not patch HeadOutlet @rendermode"; exit 1)
+        grep -q 'Routes @rendermode="InteractiveServer"' Components/App.razor || (echo "init did not patch Routes @rendermode"; exit 1)
+        grep -q 'ShellUI theme bootstrap' Components/App.razor || (echo "init did not inject theme bootstrap"; exit 1)
+        grep -q '<script src="shellui.js"></script>' Components/App.razor || (echo "init did not inject shellui.js script tag"; exit 1)
+        grep -q 'shellui-sidebar.js' Components/App.razor && (echo "init incorrectly injected shellui-sidebar.js script tag (sidebar JS is dynamically imported)"; exit 1) || true
+
+        # Assert input.css has the full theme, not just @import "tailwindcss";
+        grep -q '@theme inline' wwwroot/input.css || (echo "init did not write full theme to input.css"; exit 1)
+        grep -q ':root' wwwroot/input.css || (echo "init did not write :root variables to input.css"; exit 1)
+        grep -q '\.dark' wwwroot/input.css || (echo "init did not write .dark variables to input.css"; exit 1)
+
         shellui add chart pie-chart dashboard-02 --force || true
         # Chart components reference ApexCharts.* types but the CLI does not yet
         # auto-add the runtime NuGet dep. Drop this line once `shellui add chart`
