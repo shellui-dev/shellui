@@ -33,14 +33,21 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         _instances.Add(this);
-        
+    }
+
+    // localStorage and document mutation must run after first render — JSRuntime
+    // is unavailable during prerender on Blazor Server.
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
         try
         {
             var theme = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "theme");
             _isDark = string.IsNullOrEmpty(theme) ? true : theme == "dark";
+            StateHasChanged();
         }
         catch
         {
@@ -52,21 +59,14 @@
     {
         _isDark = !_isDark;
         var theme = _isDark ? "dark" : "light";
-        
+
         try
         {
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", "theme", theme);
-            
-            if (_isDark)
-            {
-                await JSRuntime.InvokeVoidAsync("eval", "document.documentElement.classList.add('dark')");
-            }
-            else
-            {
-                await JSRuntime.InvokeVoidAsync("eval", "document.documentElement.classList.remove('dark')");
-            }
-            
-            // Update all ThemeToggle instances
+            await JSRuntime.InvokeVoidAsync(
+                _isDark ? "ShellUI.addClassToDocument" : "ShellUI.removeClassFromDocument",
+                "dark");
+
             foreach (var instance in _instances)
             {
                 if (instance != this)
@@ -75,7 +75,7 @@
                     instance.StateHasChanged();
                 }
             }
-            
+
             StateHasChanged();
         }
         catch

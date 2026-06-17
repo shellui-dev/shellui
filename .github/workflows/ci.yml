@@ -36,10 +36,8 @@ jobs:
     - name: Run tests
       run: dotnet test ShellUI.sln --no-restore --no-build --configuration Release --verbosity normal
 
-    # Guards against the template-escape bug class from shellui-fixes-for-lib.md
-    # (Fixes 2, 9, 10). TemplateCompileTests verifies generated content parses;
-    # this end-to-end build catches anything the syntactic check misses
-    # (e.g. missing using directives).
+    # End-to-end build of a scaffolded project — catches anything the in-process
+    # TemplateCompileTests miss (missing usings, dependency resolution).
     - name: Smoke-test CLI scaffolding
       shell: bash
       run: |
@@ -53,13 +51,10 @@ jobs:
         dotnet new blazor -o SmokeApp --no-restore
         cd SmokeApp
         shellui init --tailwind standalone --yes
-        # Hit the three components that regressed last time:
         shellui add chart pie-chart dashboard-02 --force || true
-        # Chart components reference ApexCharts.* types — `shellui add chart`
-        # does NOT auto-install Blazor-ApexCharts today (tracked as Fix 12.3:
-        # `nugetDependencies` field on component manifests). Add it explicitly
-        # here so the smoke test isolates THIS PR's bug class (template escapes)
-        # from that one. When Fix 12.3 lands, remove this line.
+        # Chart components reference ApexCharts.* types but the CLI does not yet
+        # auto-add the runtime NuGet dep. Drop this line once `shellui add chart`
+        # declares Blazor-ApexCharts as a nuget dependency.
         dotnet add package Blazor-ApexCharts --version 6.0.2
         dotnet build -c Debug
 

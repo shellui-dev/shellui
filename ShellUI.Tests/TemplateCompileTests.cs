@@ -8,10 +8,9 @@ using Xunit;
 namespace ShellUI.Tests;
 
 /// Verifies that the *generated* content of each template parses as valid C#.
-/// For pure-.cs templates (variants), parse the whole content.
-/// For .razor templates, extract the @code { ... } block and parse its body.
-/// This catches the exact class of bug from shellui-fixes-for-lib.md (Fixes 2, 9, 10):
-/// unescaped quotes inside C# verbatim strings that ship as compile errors to consumers.
+/// Pure-.cs templates (variants) parse the whole content; .razor templates parse
+/// the body of the @code block. Catches unescaped quotes inside C# verbatim
+/// strings — the kind of error that ships as a compile failure to consumers.
 public class TemplateCompileTests
 {
     [Theory]

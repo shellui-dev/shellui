@@ -12,7 +12,9 @@ public static class ThemeToggleTemplate
         Category = ComponentCategory.Utility,
 
         FilePath = "ThemeToggle.razor",
-        Dependencies = new List<string>()
+        // shellui-js provides ShellUI.addClassToDocument / removeClassFromDocument
+        // used by the toggle action. Without it the toggle silently no-ops.
+        Dependencies = new List<string> { "shellui-js" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
@@ -22,7 +24,7 @@ public static class ThemeToggleTemplate
 
 <button 
     @onclick=""ToggleTheme"" 
-    class=""inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 @(Variant == ""outline"" ? ""border border-input bg-background"" : """") hover:bg-accent hover:text-accent-foreground @(Size == ""sm"" ? ""h-8 w-8"" : Size == ""lg"" ? ""h-11 w-11"" : ""h-9 w-9"")""
+    class=""inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 @(Variant == ""outline"" ? ""border border-input bg-background"" : """") hover:bg-accent hover:text-accent-foreground @(Size == ""sm"" ? ""h-8 w-8"" : Size == ""lg"" ? ""h-11 w-11"" : ""h-9 w-9"") @Class""
     title=""Toggle theme""
     type=""button""
     @attributes=""AdditionalAttributes"">
@@ -44,23 +46,27 @@ public static class ThemeToggleTemplate
     private static readonly List<ThemeToggle> _instances = new();
     private bool _isDark = true;
 
-    [Parameter]
-    public string Size { get; set; } = ""default"";
-
-    [Parameter]
-    public string Variant { get; set; } = ""ghost"";
-
+    [Parameter] public string Size { get; set; } = ""default"";
+    [Parameter] public string Variant { get; set; } = ""ghost"";
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         _instances.Add(this);
-        
+    }
+
+    // localStorage and document mutation must run after first render — JSRuntime
+    // is unavailable during prerender on Blazor Server.
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
         try
         {
             var theme = await JSRuntime.InvokeAsync<string>(""localStorage.getItem"", ""theme"");
             _isDark = string.IsNullOrEmpty(theme) ? true : theme == ""dark"";
+            StateHasChanged();
         }
         catch
         {
@@ -72,21 +78,14 @@ public static class ThemeToggleTemplate
     {
         _isDark = !_isDark;
         var theme = _isDark ? ""dark"" : ""light"";
-        
+
         try
         {
             await JSRuntime.InvokeVoidAsync(""localStorage.setItem"", ""theme"", theme);
-            
-            if (_isDark)
-            {
-                await JSRuntime.InvokeVoidAsync(""eval"", ""document.documentElement.classList.add('dark')"");
-            }
-            else
-            {
-                await JSRuntime.InvokeVoidAsync(""eval"", ""document.documentElement.classList.remove('dark')"");
-            }
-            
-            // Update all ThemeToggle instances
+            await JSRuntime.InvokeVoidAsync(
+                _isDark ? ""ShellUI.addClassToDocument"" : ""ShellUI.removeClassFromDocument"",
+                ""dark"");
+
             foreach (var instance in _instances)
             {
                 if (instance != this)
@@ -95,7 +94,7 @@ public static class ThemeToggleTemplate
                     instance.StateHasChanged();
                 }
             }
-            
+
             StateHasChanged();
         }
         catch
@@ -151,19 +150,13 @@ public class ThemeService : IThemeService
     public async Task SetThemeAsync(string theme)
     {
         _currentTheme = theme;
-        
+
         try
         {
             await _jsRuntime.InvokeVoidAsync(""localStorage.setItem"", ""theme"", theme);
-            
-            if (theme == ""dark"")
-            {
-                await _jsRuntime.InvokeVoidAsync(""eval"", ""document.documentElement.classList.add('dark')"");
-            }
-            else
-            {
-                await _jsRuntime.InvokeVoidAsync(""eval"", ""document.documentElement.classList.remove('dark')"");
-            }
+            await _jsRuntime.InvokeVoidAsync(
+                theme == ""dark"" ? ""ShellUI.addClassToDocument"" : ""ShellUI.removeClassFromDocument"",
+                ""dark"");
         }
         catch
         {

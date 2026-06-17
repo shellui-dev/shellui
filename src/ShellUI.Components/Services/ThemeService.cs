@@ -37,19 +37,13 @@ public class ThemeService : IThemeService
     public async Task SetThemeAsync(string theme)
     {
         _currentTheme = theme;
-        
+
         try
         {
             await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "theme", theme);
-            
-            if (theme == "dark")
-            {
-                await _jsRuntime.InvokeVoidAsync("eval", "document.documentElement.classList.add('dark')");
-            }
-            else
-            {
-                await _jsRuntime.InvokeVoidAsync("eval", "document.documentElement.classList.remove('dark')");
-            }
+            await _jsRuntime.InvokeVoidAsync(
+                theme == "dark" ? "ShellUI.addClassToDocument" : "ShellUI.removeClassFromDocument",
+                "dark");
         }
         catch
         {
