@@ -1,6 +1,7 @@
 using ShellUI.Core.Models;
 using ShellUI.Templates;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Spectre.Console;
 
 namespace ShellUI.CLI.Services;
@@ -147,6 +148,10 @@ public class InitService
                     await SetupTailwindStandaloneAsync();
                 }
 
+                // Step 6.5: Patch App.razor / index.html — render mode + theme bootstrap + shellui.js
+                ctx.Status("Wiring up theme and render mode...");
+                await BootstrapHostAsync(projectInfo);
+
                 // Step 7: Create MSBuild targets file
                 ctx.Status("Setting up MSBuild integration...");
                 var buildPath = Path.Combine(Directory.GetCurrentDirectory(), "Build");
@@ -181,7 +186,6 @@ public class InitService
         AnsiConsole.MarkupLine("\n[blue]Next steps:[/]");
         AnsiConsole.MarkupLine("  [dim]1. Add components:[/] dotnet shellui add button");
         AnsiConsole.MarkupLine("  [dim]2. Browse all:[/] dotnet shellui list");
-        AnsiConsole.MarkupLine("  [dim]3. CopyButton/FileUpload/Command:[/] Add [yellow]<script src=\"shellui.js\"></script>[/] before Blazor script in App.razor or index.html");
     }
 
     private static async Task SetupTailwindNpmAsync()
@@ -433,6 +437,107 @@ public class InitService
             content = content.Insert(insertIndex, targetsImport + Environment.NewLine + Environment.NewLine);
             await File.WriteAllTextAsync(projectFilePath, content);
         }
+    }
+
+    private static async Task BootstrapHostAsync(ProjectInfo projectInfo)
+    {
+        var cwd = Directory.GetCurrentDirectory();
+
+        // Blazor Web App / Server / SSR: patch Components/App.razor
+        var appRazor = Path.Combine(cwd, "Components", "App.razor");
+        if (File.Exists(appRazor))
+        {
+            var original = await File.ReadAllTextAsync(appRazor);
+            var patched = RewriteAppRazor(original);
+            if (patched != original)
+            {
+                await File.WriteAllTextAsync(appRazor, patched);
+                AnsiConsole.MarkupLine("[green]Patched:[/] Components/App.razor");
+            }
+            return;
+        }
+
+        // Blazor WASM (standalone): patch wwwroot/index.html instead — no Routes/HeadOutlet
+        // render-mode pattern there; just inject theme bootstrap + shellui.js script tag.
+        var indexHtml = Path.Combine(cwd, "wwwroot", "index.html");
+        if (File.Exists(indexHtml))
+        {
+            var original = await File.ReadAllTextAsync(indexHtml);
+            var patched = RewriteWasmIndexHtml(original);
+            if (patched != original)
+            {
+                await File.WriteAllTextAsync(indexHtml, patched);
+                AnsiConsole.MarkupLine("[green]Patched:[/] wwwroot/index.html");
+            }
+            return;
+        }
+
+        AnsiConsole.MarkupLine("[yellow]No Components/App.razor or wwwroot/index.html found — skipped host bootstrap.[/]");
+    }
+
+    // Idempotent: a second `shellui init` won't double-inject. Tags that already
+    // carry @rendermode or any other attribute aren't matched, so user customizations
+    // are preserved (they'll need to set @rendermode manually).
+    internal static string RewriteAppRazor(string content)
+    {
+        content = Regex.Replace(content, @"<HeadOutlet\s*/>", @"<HeadOutlet @rendermode=""InteractiveServer"" />");
+        content = Regex.Replace(content, @"<Routes\s*/>", @"<Routes @rendermode=""InteractiveServer"" />");
+
+        // 3. Theme bootstrap in <head> — sets `dark` class before paint to avoid FOUC.
+        if (!content.Contains("ShellUI theme bootstrap"))
+        {
+            const string themeScript =
+@"    <script>
+        // ShellUI theme bootstrap — runs before Blazor mounts to avoid a light-flash on dark pages.
+        if (!localStorage.getItem('theme')) { localStorage.setItem('theme', 'light'); }
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+";
+            content = Regex.Replace(content, @"</head>", themeScript + "</head>", RegexOptions.IgnoreCase);
+        }
+
+        // 4. <script src="shellui.js"></script> immediately before blazor.web.js — provides
+        //    window.ShellUI.* (addClassToDocument, focusElement, copyToClipboard, …) for
+        //    ThemeToggle, CopyButton, InputOTP, FileUpload, Command. The pattern matches
+        //    both the modern `@Assets["_framework/blazor.web.js"]` and the bare form.
+        if (!content.Contains("shellui.js"))
+        {
+            content = Regex.Replace(
+                content,
+                @"(<script\s+src=[^>]*_framework/blazor\.web\.js[^>]*>)",
+                "<script src=\"shellui.js\"></script>\n    $1");
+        }
+
+        return content;
+    }
+
+    internal static string RewriteWasmIndexHtml(string content)
+    {
+        if (!content.Contains("ShellUI theme bootstrap"))
+        {
+            const string themeScript =
+@"    <script>
+        // ShellUI theme bootstrap — runs before Blazor mounts to avoid a light-flash on dark pages.
+        if (!localStorage.getItem('theme')) { localStorage.setItem('theme', 'light'); }
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+";
+            content = Regex.Replace(content, @"</head>", themeScript + "</head>", RegexOptions.IgnoreCase);
+        }
+
+        if (!content.Contains("shellui.js"))
+        {
+            content = Regex.Replace(
+                content,
+                @"(<script\s+src=[^>]*_framework/blazor\.webassembly\.js[^>]*>)",
+                "<script src=\"shellui.js\"></script>\n    $1");
+        }
+
+        return content;
     }
 
     private static void RemoveBootstrapFiles()
