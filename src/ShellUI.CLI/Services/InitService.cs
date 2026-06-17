@@ -500,12 +500,13 @@ public class InitService
 
         // 4. <script src="shellui.js"></script> immediately before blazor.web.js — provides
         //    window.ShellUI.* (addClassToDocument, focusElement, copyToClipboard, …) for
-        //    ThemeToggle, CopyButton, InputOTP, FileUpload, Command.
+        //    ThemeToggle, CopyButton, InputOTP, FileUpload, Command. The pattern matches
+        //    both the modern `@Assets["_framework/blazor.web.js"]` and the bare form.
         if (!content.Contains("shellui.js"))
         {
             content = Regex.Replace(
                 content,
-                @"(<script\s+src=""_framework/blazor\.web\.js"")",
+                @"(<script\s+src=[^>]*_framework/blazor\.web\.js[^>]*>)",
                 "<script src=\"shellui.js\"></script>\n    $1");
         }
 
@@ -532,7 +533,7 @@ public class InitService
         {
             content = Regex.Replace(
                 content,
-                @"(<script\s+src=""_framework/blazor\.webassembly\.js"")",
+                @"(<script\s+src=[^>]*_framework/blazor\.webassembly\.js[^>]*>)",
                 "<script src=\"shellui.js\"></script>\n    $1");
         }
 

@@ -5,6 +5,9 @@ namespace ShellUI.Tests;
 
 public class InitBootstrapTests
 {
+    // Mirrors the App.razor that `dotnet new blazor` (net9) produces, including the
+    // @Assets[] asset-fingerprinting wrapper around the Blazor script. The wrapper
+    // is what tripped the smoke test on the first CI run of this branch.
     private const string FreshAppRazor = @"<!DOCTYPE html>
 <html lang=""en"">
 
@@ -19,7 +22,7 @@ public class InitBootstrapTests
 
 <body>
     <Routes />
-    <script src=""_framework/blazor.web.js""></script>
+    <script src=""@Assets[""_framework/blazor.web.js""]""></script>
 </body>
 
 </html>
@@ -53,10 +56,22 @@ public class InitBootstrapTests
         var result = InitService.RewriteAppRazor(FreshAppRazor);
 
         var shelluiIdx = result.IndexOf(@"<script src=""shellui.js""></script>");
-        var blazorIdx = result.IndexOf(@"<script src=""_framework/blazor.web.js""");
+        var blazorIdx = result.IndexOf("blazor.web.js");
 
         Assert.True(shelluiIdx > 0, "shellui.js script tag was not injected");
         Assert.True(shelluiIdx < blazorIdx, "shellui.js must precede blazor.web.js so window.ShellUI.* is defined before Blazor calls into it");
+    }
+
+    [Fact]
+    public void RewriteAppRazor_HandlesBareBlazorScriptTag()
+    {
+        // Older templates ship the bare form without @Assets[]. The patcher must handle both.
+        const string bare = @"<head><HeadOutlet /></head><body><Routes /><script src=""_framework/blazor.web.js""></script></body>";
+
+        var result = InitService.RewriteAppRazor(bare);
+
+        Assert.Contains(@"<script src=""shellui.js""></script>", result);
+        Assert.True(result.IndexOf(@"shellui.js") < result.IndexOf(@"blazor.web.js"));
     }
 
     [Fact]
