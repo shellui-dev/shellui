@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\src\ShellUI.Core\ShellUI.Core.csproj" />
     <ProjectReference Include="..\src\ShellUI.Templates\ShellUI.Templates.csproj" />
+    <ProjectReference Include="..\src\ShellUI.CLI\ShellUI.CLI.csproj" />
   </ItemGroup>
 
 </Project>
