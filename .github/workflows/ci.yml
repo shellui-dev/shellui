@@ -36,8 +36,26 @@ jobs:
     - name: Run tests
       run: dotnet test ShellUI.sln --no-restore --no-build --configuration Release --verbosity normal
 
-    - name: Pack NuGet packages
-      run: dotnet pack ShellUI.sln --no-build --configuration Release -p:ContinuousIntegrationBuild=true
+    # Guards against the template-escape bug class from shellui-fixes-for-lib.md
+    # (Fixes 2, 9, 10). TemplateCompileTests verifies generated content parses,
+    # but a final dotnet-build of a real scaffolded project catches anything the
+    # syntactic check misses (e.g. missing using directives).
+    - name: Smoke-test CLI scaffolding
+      shell: bash
+      run: |
+        set -euxo pipefail
+        TMPDIR=$(mktemp -d)
+        dotnet pack src/ShellUI.CLI/ShellUI.CLI.csproj -c Release -o "$TMPDIR/nupkgs" --no-build
+        dotnet tool install --tool-path "$TMPDIR/tools" --add-source "$TMPDIR/nupkgs" ShellUI.CLI --prerelease
+        export PATH="$TMPDIR/tools:$PATH"
+
+        mkdir -p "$TMPDIR/app" && cd "$TMPDIR/app"
+        dotnet new blazor -o SmokeApp --no-restore
+        cd SmokeApp
+        shellui init --tailwind standalone --yes
+        # Hit the three components that regressed last time:
+        shellui add chart pie-chart dashboard-02 --force || true
+        dotnet build -c Debug
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
