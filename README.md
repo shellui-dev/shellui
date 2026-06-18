@@ -304,67 +304,43 @@ Simply edit the component file in `Components/UI/` - it's yours to modify!
 
 ## 📦 Package Overview
 
-ShellUI consists of 2 packages:
+ShellUI ships two NuGet packages — the CLI is the primary install path; the runtime DLL is optional.
 
-| Package | Type | Purpose | When to Use |
-|---------|------|---------|-------------|
-| `ShellUI.CLI` | Global Tool | Command-line tool for component installation | Development tool, install globally |
-| `ShellUI.Components` | NuGet Package | Blazor components and variants | Runtime dependency for your app |
+| Package | Type | Required? | Purpose |
+|---------|------|-----------|---------|
+| `ShellUI.CLI` | .NET global tool | ✅ Yes — primary install path | Sets up Tailwind, theme CSS, patches `App.razor`, and copies component source so Tailwind can scan it |
+| `ShellUI.Components` | Razor class library | Optional | Runtime DLL with the same components + `shellui.js` interop + `Shell.Cn` helper. Useful when you want to reference component types from your own code or build a library on top of ShellUI |
 
-**For Users:**
-- Install `ShellUI.CLI` as a global tool: `dotnet tool install -g ShellUI.CLI`
-- Install `ShellUI.Components` in your project: `dotnet add package ShellUI.Components`
+`ShellUI.Core` and `ShellUI.Templates` are internal to the CLI and not published to NuGet — consumers never reference them directly.
 
-## Installation Options
+## Installation
 
-### Option 1: CLI Tool (Recommended)
+ShellUI is a **CLI-first** library. The CLI is what wires up Tailwind, drops the theme into `wwwroot/input.css`, patches `App.razor` with the render mode and theme bootstrap, and copies component source into your project so Tailwind can scan it.
+
 ```bash
 dotnet tool install -g ShellUI.CLI
-shellui init  # Choose your Tailwind method
-shellui add button input card dialog
-# Note: CLI tool must be installed first with 'dotnet tool install -g ShellUI.CLI'
+shellui init                          # one-time setup
+shellui add button card dialog        # any time you want more components
 ```
 
-### Option 2: NuGet Package
-```bash
-# Add the component package
-dotnet add package ShellUI.Components
+That's it. Components render styled out of the box. Re-run `shellui add` whenever you want more.
 
-# Manual setup required - detailed steps below
-```
+### Where does `ShellUI.Components` (the NuGet package) fit?
 
-**📋 NuGet Package Setup Guide:**
+The NuGet package ships the same component DLLs, the JS interop (`shellui.js`), and helpers like `Shell.Cn`. It's useful when you want the runtime types referenced directly — e.g. consuming `Shell.Cn` from your own code, or shipping a library that re-exports ShellUI components.
 
-#### 1. **Install Tailwind CSS v4.1.18**
-```bash
-# Download the standalone Tailwind CLI
-curl -L https://github.com/tailwindlabs/tailwindcss/releases/download/v4.1.18/tailwindcss-linux-x64 -o tailwindcss
-chmod +x tailwindcss
-sudo mv tailwindcss /usr/local/bin/
-```
+**The NuGet package alone does not produce styled components.** Tailwind v4 builds the CSS at compile time by scanning `.razor` source files. The component source lives inside the DLL, so Tailwind never sees the utility classes used inside ShellUI components and emits no rules for them. The result: components render with the right HTML structure but with most styling missing.
 
-#### 2. **Remove Bootstrap Files**
-Delete these files/folders from your `wwwroot` directory:
-```bash
-# Remove Bootstrap CSS/JS
-rm -rf wwwroot/lib/bootstrap/
-rm wwwroot/css/bootstrap*.css
-rm wwwroot/css/bootstrap*.min.css
-```
+The supported way to get styled components is:
 
-#### 3. **Include ShellUI Theme CSS**
-Add this link to your main layout file (usually `Shared/MainLayout.razor` or similar):
-```html
-<link rel="stylesheet" href="_content/ShellUI.Components/shellui-theme.css" />
-```
+1. `dotnet tool install -g ShellUI.CLI`
+2. `shellui init` — sets up Tailwind, theme CSS, and patches `App.razor`
+3. `shellui add <component-name>` for every component you want styled — this copies the `.razor` source into your project so Tailwind can scan it
+4. *(Optional)* `dotnet add package ShellUI.Components --prerelease` if you also want the runtime DLL on hand (most projects don't need both — pick one)
 
-#### 4. **Update _Imports.razor**
-Add this line to your `Pages/_Imports.razor` or `Components/_Imports.razor`:
-```razor
-@using ShellUI.Components
-```
+We're tracking a proper "NuGet-only with auto-CSS" path for a future release (`v0.4.x`). Until then, run the CLI.
 
-#### 5. **Configure Tailwind CSS**
+### Configure Tailwind CSS manually (advanced)
 Create/update `wwwroot/tailwind.config.js`:
 ```javascript
 /** @type {import('tailwindcss').Config} */
@@ -554,27 +530,15 @@ Update `wwwroot/app.css` (or create it):
 @import "./input.css";
 ```
 
-#### 5. **Update _Layout.cshtml or MainLayout.razor**
-Add Tailwind CSS to your layout:
+#### 5. **Reference the compiled CSS**
+Add the link to your layout (`_Layout.cshtml` or `MainLayout.razor`):
 ```html
-<!-- In _Layout.cshtml -->
-<link href="~/app.css" rel="stylesheet" />
-
-<!-- Or in MainLayout.razor -->
 <link href="app.css" rel="stylesheet" />
 ```
 
-**📋 NuGet Package Checklist:**
-- ✅ Install package: `dotnet add package ShellUI.Components`
-- ✅ **Remove Bootstrap**: Delete `wwwroot/lib/bootstrap/` folder and `wwwroot/css/bootstrap*.css` files
-- ✅ **Install Tailwind**: Download Tailwind CLI v4.1.18
-- ✅ **Include theme CSS**: Add ShellUI theme CSS link to your main layout
-- ✅ **Add using**: `@using ShellUI.Components` in `_Imports.razor`
-- ✅ **Create config**: `wwwroot/tailwind.config.js`
-- ✅ **Create CSS**: `wwwroot/input.css` and `wwwroot/app.css`
-- ✅ **Update layout**: Add CSS link to your main layout file
+This is what `shellui init` does for you automatically; documented here for the manual path.
 
-**⚠️ Important:** ShellUI components require Tailwind CSS. The NuGet package includes components only - you'll need to set up Tailwind separately.
+**⚠️ Reminder:** even with all the manual setup above, you still need to copy each component's `.razor` source into your project (`shellui add <name>`) so Tailwind sees the classes it uses. There's no way around this for Tailwind v4 short of pre-compiling a complete CSS bundle and shipping it with the package — which is what the [v0.4.x NuGet-only path](https://github.com/shellui-dev/shellui/issues) will deliver.
 
 ## Contributing
 
