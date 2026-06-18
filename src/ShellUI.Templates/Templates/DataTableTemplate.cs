@@ -11,8 +11,11 @@ public static class DataTableTemplate
         Description = "Advanced data table with sorting, filtering, and pagination",
         Category = ComponentCategory.DataDisplay,
         FilePath = "DataTable.razor",
-
-        Dependencies = new List<string> { "data-table-models" }
+        Dependencies = new List<string> { "data-table-models" },
+        NuGetDependencies = new List<NuGetDependency>
+        {
+            new() { PackageId = "System.Linq.Dynamic.Core", Version = "1.7.1" }
+        }
     };
 
     public static string Content => @"@typeparam TItem

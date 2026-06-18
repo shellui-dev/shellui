@@ -12,6 +12,10 @@ public class ChartTemplate
         Category = ComponentCategory.DataDisplay,
         FilePath = "Chart.razor",
         Dependencies = new List<string> { "chart-variants" },
+        NuGetDependencies = new List<NuGetDependency>
+        {
+            new() { PackageId = "Blazor-ApexCharts", Version = "6.0.2" }
+        },
         Variants = new List<string> { "default", "colorful", "monochrome" },
         Tags = new List<string> { "chart", "data", "visualization", "apexcharts" }
     };

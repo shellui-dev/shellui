@@ -65,11 +65,17 @@ jobs:
         grep -q ':root' wwwroot/input.css || (echo "init did not write :root variables to input.css"; exit 1)
         grep -q '\.dark' wwwroot/input.css || (echo "init did not write .dark variables to input.css"; exit 1)
 
-        shellui add chart pie-chart dashboard-02 --force || true
-        # Chart components reference ApexCharts.* types but the CLI does not yet
-        # auto-add the runtime NuGet dep. Drop this line once `shellui add chart`
-        # declares Blazor-ApexCharts as a nuget dependency.
-        dotnet add package Blazor-ApexCharts --version 6.0.2
+        shellui add chart pie-chart dashboard-02 data-table --force
+
+        # NuGet dependencies (Blazor-ApexCharts, System.Linq.Dynamic.Core) should
+        # now be added automatically by `shellui add`. Assert they appear in the
+        # project file so a regression in the auto-install fails loudly here.
+        grep -q 'Blazor-ApexCharts' SmokeApp.csproj || (echo "shellui add chart did not add Blazor-ApexCharts NuGet dep"; exit 1)
+        grep -q 'System.Linq.Dynamic.Core' SmokeApp.csproj || (echo "shellui add data-table did not add System.Linq.Dynamic.Core NuGet dep"; exit 1)
+
+        # And the DataTable models file must land at Components/UI/Models/, not be missing.
+        test -f Components/UI/Models/DataTableModels.cs || (echo "shellui add data-table did not install data-table-models"; exit 1)
+
         dotnet build -c Debug
 
     - name: Upload build artifacts
