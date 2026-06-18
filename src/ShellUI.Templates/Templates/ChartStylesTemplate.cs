@@ -10,7 +10,9 @@ public class ChartStylesTemplate
         DisplayName = "Chart Styles",
         Description = "CSS styles for ApexCharts integration with ShellUI theme system",
         Category = ComponentCategory.DataDisplay,
-        FilePath = "wwwroot/css/charts.css",
+        // FilePath walks up out of Components/UI/ to project root then into wwwroot/css/,
+        // matching the trick shellui-js uses for its own asset path.
+        FilePath = "../../wwwroot/css/charts.css",
         IsAvailable = false,
         Dependencies = new List<string>(),
         Variants = new List<string>(),

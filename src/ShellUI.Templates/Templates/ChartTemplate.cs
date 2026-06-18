@@ -11,7 +11,7 @@ public class ChartTemplate
         Description = "Base chart component with ShellUI theming and ApexCharts integration",
         Category = ComponentCategory.DataDisplay,
         FilePath = "Chart.razor",
-        Dependencies = new List<string> { "chart-variants" },
+        Dependencies = new List<string> { "chart-variants", "chart-styles" },
         NuGetDependencies = new List<NuGetDependency>
         {
             new() { PackageId = "Blazor-ApexCharts", Version = "6.0.2" }
