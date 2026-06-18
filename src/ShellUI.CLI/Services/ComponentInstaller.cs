@@ -77,6 +77,20 @@ public class ComponentInstaller
         // (so `dotnet add package` doesn't restore between every component).
         await InstallNuGetDependenciesAsync(projectInfo, pendingNuGetDeps);
 
+        // Wire any installed wwwroot/ stylesheets into the host so the user doesn't
+        // have to add <link> tags by hand. Detected via FilePath, which uses the
+        // `../../wwwroot/` traversal trick that asset templates already follow.
+        foreach (var name in installedSet)
+        {
+            var metadata = ComponentRegistry.GetMetadata(name);
+            if (metadata == null) continue;
+            var href = ResolveHostStylesheetHref(metadata.FilePath);
+            if (href != null)
+            {
+                await InitService.InjectStylesheetIntoHostAsync(href);
+            }
+        }
+
         // Update config
         var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions
         {
@@ -325,6 +339,18 @@ public class ComponentInstaller
                 AnsiConsole.MarkupLine($"[yellow]Warning:[/] could not add {dep.PackageId}: {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
             }
         }
+    }
+
+    // Returns the href that should appear in the host's <link> tag, or null if the
+    // component's FilePath isn't a CSS asset under wwwroot/. Strips the `../../wwwroot/`
+    // prefix that asset templates use to escape Components/UI/.
+    internal static string? ResolveHostStylesheetHref(string filePath)
+    {
+        if (!filePath.EndsWith(".css", StringComparison.OrdinalIgnoreCase)) return null;
+        var normalized = filePath.Replace('\\', '/');
+        const string prefix = "../../wwwroot/";
+        if (!normalized.StartsWith(prefix, StringComparison.Ordinal)) return null;
+        return normalized.Substring(prefix.Length);
     }
 
     private enum InstallResult
