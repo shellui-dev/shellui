@@ -17,10 +17,13 @@ dotnet shellui init
 ```
 
 This automatically:
-- ✅ Downloads Tailwind CSS CLI (standalone, no Node.js required)
-- ✅ Creates CSS files and configuration
-- ✅ Sets up MSBuild integration for auto-building
-- ✅ Creates component folders
+- ✅ Downloads Tailwind CSS CLI (standalone, no Node.js required) — or uses your npm install if you prefer
+- ✅ Writes the full default theme (`:root`, `.dark`, `@theme inline`) to `wwwroot/input.css`
+- ✅ Patches `Components/App.razor` with `@rendermode="InteractiveServer"`, a theme-bootstrap `<script>` (no light-flash on dark pages), and the `<script src="shellui.js">` tag
+- ✅ Patches `wwwroot/index.html` instead for Blazor WebAssembly standalone projects
+- ✅ Sets up MSBuild integration so Tailwind rebuilds on every `dotnet build`
+- ✅ Creates the `Components/UI/` folder structure
+- ✅ Idempotent — running it twice is a no-op
 
 ### Add components
 

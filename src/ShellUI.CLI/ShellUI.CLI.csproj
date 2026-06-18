@@ -3,7 +3,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ShellUI.Core\ShellUI.Core.csproj" />
     <ProjectReference Include="..\ShellUI.Templates\ShellUI.Templates.csproj" />
-    <ProjectReference Include="..\ShellUI.Components\ShellUI.Components.csproj" />
   </ItemGroup>
 
   <ItemGroup>
