@@ -11,119 +11,65 @@ Beautiful, accessible Blazor components inspired by shadcn/ui. A CLI-first compo
 - 📱 **Responsive design** - Mobile-first approach
 - 🔧 **Fully customizable** - Copy components to your project for full control
 
-## Quick Start
+## ⚠️ Read this first
 
-### Option 1: CLI Tool (Recommended)
+This package ships the component DLLs, JS interop, and helpers (`Shell.Cn`). **It does not produce styled components on its own.** Tailwind v4 builds CSS by scanning `.razor` source files at compile time — the component source lives inside this DLL, so Tailwind never sees the utility classes used inside ShellUI components.
 
-The CLI tool provides the best developer experience with automatic setup:
-
-#### 1. Install the CLI tool
+The supported way to get styled components is the **`ShellUI.CLI` global tool**:
 
 ```bash
 dotnet tool install -g ShellUI.CLI
+shellui init                          # sets up Tailwind, theme CSS, patches App.razor
+shellui add button card dialog        # copies component source so Tailwind can scan it
 ```
 
-#### 2. Initialize ShellUI in your project
+`shellui add` copies the `.razor` files into your project, where Tailwind picks up the classes. From then on, components render styled.
+
+A future release (`v0.4.x`) will support installing this NuGet package by itself — by shipping a pre-compiled stylesheet — without needing the CLI for setup. Until then, **install the CLI**.
+
+## When is this NuGet package useful on its own?
+
+- You're building a library that re-exports ShellUI components or extends them with custom variants
+- You want to reference `Shell.Cn` (the class-name combiner) from your own helpers
+- You want the JS interop registration (`shellui.js`) provided as a `_content/ShellUI.Components/` static asset
+
+Otherwise: start with the CLI.
+
+## CLI quick start
 
 ```bash
-dotnet shellui init
+dotnet tool install -g ShellUI.CLI
+shellui init           # one-time
+shellui add button     # any time you want more components
+shellui list           # see what's available
 ```
 
-This automatically:
-- ✅ Downloads Tailwind CSS CLI (standalone, no Node.js required)
-- ✅ Creates CSS files and configuration
-- ✅ Sets up MSBuild integration for auto-building
-- ✅ Creates component folders
+`shellui init` automatically:
+- Downloads Tailwind CSS CLI (standalone, no Node.js required) or uses your existing npm install
+- Writes the full default theme to `wwwroot/input.css` (`:root` / `.dark` / `@theme inline` blocks)
+- Patches `Components/App.razor` (or `wwwroot/index.html` for WASM) with `@rendermode`, a theme-bootstrap `<script>` to avoid FOUC, and a `<script src="shellui.js">` tag for the JS interop
+- Sets up MSBuild integration so Tailwind rebuilds on every `dotnet build`
 
-#### 3. Add components
+`shellui add <name>` automatically:
+- Resolves and installs all sub-component dependencies
+- Runs `dotnet add package` for any required NuGet packages (e.g. `Blazor-ApexCharts` for charts, `System.Linq.Dynamic.Core` for `DataTable`)
+- Auto-links any CSS assets (e.g. `wwwroot/css/charts.css`) into your `App.razor`
+- Suggests close matches if you mistype a component name
 
-```bash
-# Add a button component
-dotnet shellui add button
+## Using components
 
-# Add multiple components
-dotnet shellui add input card dialog
+After `shellui init` + `shellui add`, components are in your project source:
 
-# List available components
-dotnet shellui list
-```
+```razor
+@using YourProject.Components.UI
 
-### Option 2: NuGet Package
-
-For manual setup or existing projects:
-
-#### 1. Install the package
-
-```bash
-dotnet add package ShellUI.Components
-```
-
-#### 2. Set up Tailwind CSS
-
-Choose one of these methods:
-
-**Method A: Tailwind CLI (Recommended)**
-```bash
-# Download Tailwind CLI (standalone)
-curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-windows-x64.exe
-# Or for Linux/Mac: tailwindcss-linux-x64 or tailwindcss-macos-x64
-
-# Create input.css
-echo '@import "tailwindcss";' > wwwroot/input.css
-
-# Create tailwind.config.js
-echo 'module.exports = {
-  content: ["./**/*.{razor,html,cs}"],
-  theme: { extend: {} },
-  plugins: []
-}' > tailwind.config.js
-
-# Build CSS
-./tailwindcss -i wwwroot/input.css -o wwwroot/app.css
-```
-
-**Method B: npm (if you prefer Node.js)**
-```bash
-# Install Tailwind CSS
-npm install -D tailwindcss
-npx tailwindcss init
-
-# Update tailwind.config.js
-echo 'module.exports = {
-  content: ["./**/*.{razor,html,cs}"],
-  theme: { extend: {} },
-  plugins: []
-}' > tailwind.config.js
-
-# Create input.css
-echo '@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";' > wwwroot/input.css
-
-# Build CSS
-npx tailwindcss -i wwwroot/input.css -o wwwroot/app.css
-```
-
-#### 3. Add to your layout
-
-```html
-<!-- In your MainLayout.razor or App.razor -->
-<link href="~/app.css" rel="stylesheet" />
-```
-
-#### 4. Use components
-
-```html
-@using ShellUI.Components
-
-<Button Variant="primary">Click me</Button>
-<Input Placeholder="Enter text..." />
+<Button Variant="ButtonVariant.Default">Click me</Button>
 <Card>
     <CardHeader>
         <CardTitle>Hello World</CardTitle>
     </CardHeader>
     <CardContent>
-        <p>This is a card component!</p>
+        <p>This is a card component.</p>
     </CardContent>
 </Card>
 ```
