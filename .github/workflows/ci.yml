@@ -76,6 +76,11 @@ jobs:
         # And the DataTable models file must land at Components/UI/Models/, not be missing.
         test -f Components/UI/Models/DataTableModels.cs || (echo "shellui add data-table did not install data-table-models"; exit 1)
 
+        # chart-styles ships the CSS for the custom tooltip + ApexCharts chrome.
+        # Without it, hovering a chart shows invisible white-on-white text.
+        test -f wwwroot/css/charts.css || (echo "shellui add chart did not install chart-styles CSS"; exit 1)
+        grep -q '<link href="css/charts.css"' Components/App.razor || (echo "shellui add chart did not link charts.css in App.razor"; exit 1)
+
         dotnet build -c Debug
 
     - name: Upload build artifacts
