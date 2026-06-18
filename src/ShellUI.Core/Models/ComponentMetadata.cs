@@ -12,6 +12,12 @@ public class ComponentMetadata
     public required ComponentCategory Category { get; set; }
     public List<string> Dependencies { get; set; } = new();
 
+    // NuGet packages the rendered component references at compile time (e.g. Chart
+    // uses Blazor-ApexCharts; DataTable uses System.Linq.Dynamic.Core). The CLI
+    // runs `dotnet add package` for each on install — without this the consumer
+    // sees CS0246 errors after `shellui add`.
+    public List<NuGetDependency> NuGetDependencies { get; set; } = new();
+
     // Relative to Components/UI folder (or LayoutPath when IsLayoutBlock is true)
     public required string FilePath { get; set; }
 
