@@ -11,7 +11,7 @@ public static class DataTableModelsTemplate
         Description = "Models for DataTable component",
         Category = ComponentCategory.DataDisplay,
         FilePath = "Models/DataTableModels.cs",
-
+        IsAvailable = false,
         Dependencies = new List<string>()
     };
 
