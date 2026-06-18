@@ -540,6 +540,50 @@ public class InitService
         return content;
     }
 
+    // Idempotent injection of a stylesheet <link> before </head>. Used by post-install
+    // hooks when a component ships a CSS asset (e.g. chart-styles → css/charts.css).
+    internal static string InjectStylesheetLink(string content, string href)
+    {
+        var linkTag = $"<link href=\"{href}\" rel=\"stylesheet\" />";
+        if (content.Contains($"href=\"{href}\""))
+        {
+            return content;
+        }
+        return Regex.Replace(content, @"</head>", $"    {linkTag}\n</head>", RegexOptions.IgnoreCase);
+    }
+
+    // Used by ComponentInstaller after `shellui add` so newly-installed CSS assets
+    // are wired into the host without requiring the user to edit App.razor by hand.
+    internal static async Task InjectStylesheetIntoHostAsync(string href)
+    {
+        var cwd = Directory.GetCurrentDirectory();
+
+        var appRazor = Path.Combine(cwd, "Components", "App.razor");
+        if (File.Exists(appRazor))
+        {
+            var original = await File.ReadAllTextAsync(appRazor);
+            var patched = InjectStylesheetLink(original, href);
+            if (patched != original)
+            {
+                await File.WriteAllTextAsync(appRazor, patched);
+                AnsiConsole.MarkupLine($"[green]Linked:[/] Components/App.razor → {href}");
+            }
+            return;
+        }
+
+        var indexHtml = Path.Combine(cwd, "wwwroot", "index.html");
+        if (File.Exists(indexHtml))
+        {
+            var original = await File.ReadAllTextAsync(indexHtml);
+            var patched = InjectStylesheetLink(original, href);
+            if (patched != original)
+            {
+                await File.WriteAllTextAsync(indexHtml, patched);
+                AnsiConsole.MarkupLine($"[green]Linked:[/] wwwroot/index.html → {href}");
+            }
+        }
+    }
+
     private static void RemoveBootstrapFiles()
     {
         try
