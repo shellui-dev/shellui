@@ -4,21 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
-    <!-- NuGet Package Metadata -->
-    <PackageId>ShellUI.Core</PackageId>
-    <Authors>ShellUI</Authors>
-    <Company>ShellUI</Company>
-    <Product>ShellUI</Product>
-    <Description>Core models and interfaces for ShellUI component library.</Description>
-    <PackageProjectUrl>https://github.com/shellui-dev/shellui</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/shellui-dev/shellui</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>blazor;components;ui;shellui;core</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- Internal library — consumed only by ShellUI.CLI. Not published to NuGet. -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
 </Project>
