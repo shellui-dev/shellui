@@ -66,7 +66,7 @@ public class CliIntegrationTests : IDisposable
     {
         // Get the path to the CLI from the test directory perspective
         var solutionDir = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), ".."));
-        var cliPath = Path.Combine(solutionDir, "src", "ShellUI.CLI", "bin", "Release", "net9.0", "ShellUI.CLI.dll");
+        var cliPath = Path.Combine(solutionDir, "src", "ShellUI.CLI", "bin", "Release", "net10.0", "ShellUI.CLI.dll");
 
         var process = new Process
         {
