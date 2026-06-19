@@ -18,7 +18,7 @@ This guide shows you how to set up Tailwind CSS for a new Blazor project using t
 
 ## Prerequisites
 
-- .NET 9.0 SDK
+- .NET 10.0 SDK
 - A Blazor project (new or existing)
 
 ## Method 1: Using ShellUI CLI (Recommended)
