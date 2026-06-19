@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     
@@ -21,9 +21,6 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-    <!-- Disable static web assets compression for packaging (.NET 10 SDK bug workaround) -->
-    <EnableStaticWebAssetsCompression>false</EnableStaticWebAssetsCompression>
-    <StaticWebAssetsBuildMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">Default</StaticWebAssetsBuildMode>
   </PropertyGroup>
 
 
@@ -32,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
     <PackageReference Include="Blazor-ApexCharts" Version="6.0.2" />
   </ItemGroup>

@@ -25,16 +25,16 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
-          9.0.x
+          10.0.x
 
     - name: Restore dependencies
-      run: dotnet restore ShellUI.sln
+      run: dotnet restore ShellUI.slnx
 
     - name: Build
-      run: dotnet build ShellUI.sln --no-restore --configuration Release
+      run: dotnet build ShellUI.slnx --no-restore --configuration Release
 
     - name: Run tests
-      run: dotnet test ShellUI.sln --no-restore --no-build --configuration Release --verbosity normal
+      run: dotnet test ShellUI.slnx --no-restore --no-build --configuration Release --verbosity normal
 
     # End-to-end build of a scaffolded project — catches anything the in-process
     # TemplateCompileTests miss (missing usings, dependency resolution).

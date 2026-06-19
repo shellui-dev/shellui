@@ -23,7 +23,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.0.x'
+        dotnet-version: '10.0.x'
 
     - name: Cache NuGet packages
       uses: actions/cache@v4
@@ -34,16 +34,16 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Restore dependencies
-      run: dotnet restore ShellUI.sln
+      run: dotnet restore ShellUI.slnx
 
     - name: Build
-      run: dotnet build ShellUI.sln --no-restore --configuration Release
+      run: dotnet build ShellUI.slnx --no-restore --configuration Release
 
     - name: Run tests
-      run: dotnet test ShellUI.sln --no-restore --no-build --configuration Release --verbosity normal
+      run: dotnet test ShellUI.slnx --no-restore --no-build --configuration Release --verbosity normal
 
     - name: Pack NuGet packages
-      run: dotnet pack ShellUI.sln --no-build --configuration Release -p:ContinuousIntegrationBuild=true
+      run: dotnet pack ShellUI.slnx --no-build --configuration Release -p:ContinuousIntegrationBuild=true
 
     # ShellUI.Core and ShellUI.Templates are internal-only — they have no public API
     # surface that consumers reference. Only the CLI tool and the Components runtime

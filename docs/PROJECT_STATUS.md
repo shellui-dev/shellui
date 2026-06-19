@@ -88,7 +88,7 @@ Counts are top-level components users invoke directly via `shellui add <name>`. 
 ## How to Get Started with Development
 
 ### Prerequisites
-- .NET 9.0 SDK or higher (components target .NET 9.0)
+- .NET 10.0 SDK or higher (components target .NET 10.0)
 - Git
 - Visual Studio 2022 or VS Code
 - Basic understanding of Blazor
@@ -129,7 +129,7 @@ dotnet shellui add button input card
 
 3. **Run the demo**
    ```bash
-   cd NET9/BlazorInteractiveServer
+   cd NET10/BlazorInteractiveServer
    dotnet run
    ```
 
@@ -157,10 +157,10 @@ dotnet shellui add button input card
 **Rationale:** Full customization, no version lock-in, better debugging  
 **Trade-off:** Users manage updates manually
 
-### 4. .NET 9.0 Target
-**Decision:** Target .NET 9.0  
-**Rationale:** Latest features, best performance, modern Blazor capabilities  
-**Impact:** Requires .NET 9.0 SDK or higher
+### 4. .NET 10.0 Target
+**Decision:** Target .NET 10.0 (LTS)
+**Rationale:** Long-term support through Nov 2028, latest C# 14 features, modern Blazor capabilities including the asset-fingerprinting `@Assets[...]` helper that init now patches
+**Impact:** Requires .NET 10.0 SDK or higher. Users on .NET 8 LTS can stay on `ShellUI 0.3.x` until they upgrade — we can multi-target `net8.0;net10.0` later if enterprise demand justifies it.
 
 ### 5. Accessibility First
 **Decision:** WCAG 2.1 AA compliance required for all components  

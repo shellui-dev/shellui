@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/ShellUI.CLI/ShellUI.CLI.csproj" />
+    <Project Path="src/ShellUI.Components/ShellUI.Components.csproj" />
+    <Project Path="src/ShellUI.Core/ShellUI.Core.csproj" />
+    <Project Path="src/ShellUI.Templates/ShellUI.Templates.csproj" />
+  </Folder>
+  <Project Path="ShellUI.Tests/ShellUI.Tests.csproj" />
+</Solution>

@@ -49,7 +49,7 @@ When you run `shellui add button`, that counts as **1 component**. Dependencies 
 - **src/ShellUI.Core/** – ComponentMetadata, ShellUIConfig
 - **src/ShellUI.Templates/** – 139 component templates (embedded in CLI)
 - **src/ShellUI.Components/** – NuGet package
-- **NET9/** – Blazor demo app
+- **NET10/** – Blazor demo app
 - **docs/** – Documentation
 
 ## Core Principles
