@@ -1,3 +1,4 @@
+using ShellUI.Core;
 using ShellUI.Core.Models;
 using ShellUI.Templates;
 using System.Text.Json;
@@ -109,7 +110,7 @@ public class InitService
                     Tailwind = new TailwindConfig
                     {
                         Enabled = true,
-                        Version = "4.1.18",
+                        Version = TailwindConstants.Version,
                         Method = method,
                         CssPath = "wwwroot/app.css"
                     }
@@ -198,8 +199,8 @@ public class InitService
 
         // Install Tailwind CSS packages (v4 with @tailwindcss/cli)
         AnsiConsole.MarkupLine("[cyan]Installing Tailwind CSS packages...[/]");
-        await RunNpmCommandAsync("install", "-D", "tailwindcss@^4.1.18", "@tailwindcss/cli@^4.1.18");
-        AnsiConsole.MarkupLine("[green]Installed:[/] tailwindcss v4.1.18, @tailwindcss/cli");
+        await RunNpmCommandAsync("install", "-D", $"tailwindcss@{TailwindConstants.NpmRange}", $"@tailwindcss/cli@{TailwindConstants.NpmRange}");
+        AnsiConsole.MarkupLine($"[green]Installed:[/] tailwindcss v{TailwindConstants.Version}, @tailwindcss/cli");
 
         // Create CSS files
         AnsiConsole.MarkupLine("[cyan]Creating CSS files...[/]");
