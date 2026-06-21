@@ -83,6 +83,27 @@ jobs:
 
         dotnet build -c Debug
 
+    # Pure-NuGet install path — `dotnet add package ShellUI.Components` without
+    # the CLI. Verifies the safelist ships and is reachable by the consumer's
+    # Tailwind setup.
+    - name: NuGet-only install — verify safelist ships
+      shell: bash
+      run: |
+        set -euxo pipefail
+        TMPDIR=$(mktemp -d)
+        mkdir -p "$TMPDIR/app" && cd "$TMPDIR/app"
+        dotnet new blazor -o NuGetSmoke --no-restore
+        cd NuGetSmoke
+        dotnet add package ShellUI.Components --source "$(realpath ../../../src/ShellUI.Components/bin/Release)" --prerelease
+        # The safelist file should be in the consumer's project after restore.
+        # Razor SDK places it under wwwroot/ via the contentFile mechanism.
+        find . -name 'shellui-classes.txt' | head -3
+        test -n "$(find . -name 'shellui-classes.txt' | head -1)" || (echo "shellui-classes.txt did not land in consumer project after NuGet restore"; exit 1)
+        # Sanity: the safelist contains real Tailwind classes
+        SAFELIST="$(find . -name 'shellui-classes.txt' | head -1)"
+        grep -q 'bg-background' "$SAFELIST" || (echo "safelist appears malformed — missing core Tailwind class 'bg-background'"; exit 1)
+        wc -l "$SAFELIST"
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
