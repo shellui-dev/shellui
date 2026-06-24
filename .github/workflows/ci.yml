@@ -116,11 +116,18 @@ jobs:
 
         dotnet add package ShellUI.Components --prerelease
 
-        # The safelist file should be in the consumer's project after restore.
-        # Razor SDK places it under wwwroot/ via the contentFile mechanism.
-        find . -name 'shellui-classes.txt' | head -3
-        SAFELIST="$(find . -name 'shellui-classes.txt' | head -1)"
-        test -n "$SAFELIST" || (echo "shellui-classes.txt did not land in consumer project after NuGet restore"; exit 1)
+        # The safelist gets copied into wwwroot/ during the consumer's build by
+        # the package's build/ShellUI.Components.targets — auto-imported by NuGet.
+        # Need to actually build the project, not just restore, for the Copy to run.
+        dotnet build -c Debug
+
+        SAFELIST="wwwroot/shellui-classes.txt"
+        test -f "$SAFELIST" || (
+          echo "ERROR: $SAFELIST not in consumer project after dotnet build."
+          echo "The package's build/ShellUI.Components.targets should have copied it."
+          echo "Files in wwwroot/:"; ls -la wwwroot/ 2>/dev/null || echo "  (no wwwroot/ directory)"
+          exit 1
+        )
 
         # Sanity: the safelist contains real Tailwind classes
         grep -q 'bg-background' "$SAFELIST" || (echo "safelist appears malformed — missing core Tailwind class 'bg-background'"; exit 1)
