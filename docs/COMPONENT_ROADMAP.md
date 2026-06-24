@@ -120,7 +120,7 @@ ShellDocs will need:
 
 - v0.1.0 (Dec 2025) - 73 components, CLI + NuGet
 - v0.1.1 (Dec 2025) - Hotfix, package publishing
-- **v0.3.0-alpha (Feb 2026) - Current alpha: Charts, 68 installable components, Tailwind 4.1.18**
+- **v0.3.0-alpha (Feb 2026) - Current alpha: Charts, 68 installable components, Tailwind 4.3.1**
 - v0.3.0 (Q1 2026) - ShellDocs components (CodeBlock, MDX, Callout, Steps, etc.)
 - v0.4.0 (Q2 2026) - ShellDocs site launch
 - v1.0.0 (Q2-Q3 2026) - .NET 10, stable API, comprehensive docs

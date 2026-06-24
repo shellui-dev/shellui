@@ -10,7 +10,7 @@
 - ✅ **NuGet Packages Published** - `ShellUI.Components`, `ShellUI.CLI`, `ShellUI.Templates`
 - ✅ **Hybrid Distribution** - CLI + NuGet packages (best of both worlds!)
 - ✅ **No Node.js Required** - Using Tailwind standalone CLI (zero JavaScript dependencies!)
-- ✅ **Tailwind CSS v4.1.18** - Latest version with standalone CLI support
+- ✅ **Tailwind CSS v4.3.1** - Latest version with standalone CLI support
 
 ## What's Complete ✅
 
@@ -19,7 +19,7 @@
 - [x] Components Package (`ShellUI.Components`) - Published to NuGet
 - [x] Templates Package (`ShellUI.Templates`) - Embedded in CLI
 - [x] Component Registry - 167 templates (68 installable; rest are sub-components/variants/models/services that auto-install)
-- [x] Tailwind CSS Integration - v4.1.18 standalone CLI support
+- [x] Tailwind CSS Integration - v4.3.1 standalone CLI support
 - [x] MSBuild Integration - Automatic CSS compilation
 
 ### Components (68 Installable)
@@ -78,7 +78,7 @@ Counts are top-level components users invoke directly via `shellui add <name>`. 
 | Milestone | Status |
 |-----------|--------|
 | v0.3.0-alpha - 68 installable components, CLI, NuGet | ✅ Done |
-| Tailwind v4.1.18 standalone | ✅ Done |
+| Tailwind v4.3.1 standalone | ✅ Done |
 | Alpha testing & validation | 🔄 In progress |
 | v0.3.0 stable (after testing) | 🎯 Next |
 | v1.0 - Full release | 🎯 Target Q2-Q3 2026 |
