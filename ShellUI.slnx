@@ -10,5 +10,8 @@
     <Project Path="src/ShellUI.Core/ShellUI.Core.csproj" />
     <Project Path="src/ShellUI.Templates/ShellUI.Templates.csproj" />
   </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/ShellUI.SafelistGenerator/ShellUI.SafelistGenerator.csproj" />
+  </Folder>
   <Project Path="ShellUI.Tests/ShellUI.Tests.csproj" />
 </Solution>
