@@ -1,3 +1,5 @@
+using ShellUI.Core;
+
 namespace ShellUI.Core.Models;
 
 public class ShellUIConfig
@@ -14,7 +16,7 @@ public class ShellUIConfig
 public class TailwindConfig
 {
     public bool Enabled { get; set; } = true;
-    public string Version { get; set; } = "4.1.18";
+    public string Version { get; set; } = TailwindConstants.Version;
     public string Method { get; set; } = "standalone"; // "standalone" or "npm"
     public string ConfigPath { get; set; } = "tailwind.config.js";
     public string CssPath { get; set; } = "wwwroot/app.css";
