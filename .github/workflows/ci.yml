@@ -84,23 +84,45 @@ jobs:
         dotnet build -c Debug
 
     # Pure-NuGet install path — `dotnet add package ShellUI.Components` without
-    # the CLI. Verifies the safelist ships and is reachable by the consumer's
-    # Tailwind setup.
+    # the CLI. Uses a one-off NuGet.config that whitelists ONLY the local feed,
+    # so a missing local package can't silently fall back to nuget.org and pull
+    # an older version (which would mask whether the current PR's package is
+    # correct). $GITHUB_WORKSPACE is absolute — relative paths from inside the
+    # temp consumer dir would resolve to the wrong root.
     - name: NuGet-only install — verify safelist ships
       shell: bash
       run: |
         set -euxo pipefail
+        LOCAL_FEED="$GITHUB_WORKSPACE/src/ShellUI.Components/bin/Release"
+        test -d "$LOCAL_FEED" || (echo "local feed not found at $LOCAL_FEED — did the pack step run?"; exit 1)
+        ls "$LOCAL_FEED"/*.nupkg | head -3
+
         TMPDIR=$(mktemp -d)
         mkdir -p "$TMPDIR/app" && cd "$TMPDIR/app"
         dotnet new blazor -o NuGetSmoke --no-restore
         cd NuGetSmoke
-        dotnet add package ShellUI.Components --source "$(realpath ../../../src/ShellUI.Components/bin/Release)" --prerelease
+
+        # Pin restore to only the local feed; nuget.org explicitly disabled so a
+        # broken local feed can't be papered over by a public-published older version.
+        cat > NuGet.config <<EOF
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <packageSources>
+            <clear />
+            <add key="local" value="$LOCAL_FEED" />
+          </packageSources>
+        </configuration>
+        EOF
+
+        dotnet add package ShellUI.Components --prerelease
+
         # The safelist file should be in the consumer's project after restore.
         # Razor SDK places it under wwwroot/ via the contentFile mechanism.
         find . -name 'shellui-classes.txt' | head -3
-        test -n "$(find . -name 'shellui-classes.txt' | head -1)" || (echo "shellui-classes.txt did not land in consumer project after NuGet restore"; exit 1)
-        # Sanity: the safelist contains real Tailwind classes
         SAFELIST="$(find . -name 'shellui-classes.txt' | head -1)"
+        test -n "$SAFELIST" || (echo "shellui-classes.txt did not land in consumer project after NuGet restore"; exit 1)
+
+        # Sanity: the safelist contains real Tailwind classes
         grep -q 'bg-background' "$SAFELIST" || (echo "safelist appears malformed — missing core Tailwind class 'bg-background'"; exit 1)
         wc -l "$SAFELIST"
 
