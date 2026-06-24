@@ -1,0 +1,26 @@
+<Project>
+  <!--
+    NuGet auto-imports any build/<PackageId>.targets file when a consumer references
+    this package. We use that to physically copy the Tailwind safelist into the
+    consumer's wwwroot/ so their input.css can `@source "./shellui-classes.txt"`
+    and Tailwind picks up the classes ShellUI components use.
+
+    The contentFiles mechanism alone keeps the file in the NuGet cache, which is
+    not reachable from a build-time `@source` directive without an absolute path.
+  -->
+  <PropertyGroup>
+    <ShellUIComponentsSafelistSource>$(MSBuildThisFileDirectory)shellui-classes.txt</ShellUIComponentsSafelistSource>
+    <ShellUIComponentsSafelistDestination>$(MSBuildProjectDirectory)\wwwroot\shellui-classes.txt</ShellUIComponentsSafelistDestination>
+  </PropertyGroup>
+
+  <Target Name="CopyShellUISafelist"
+          BeforeTargets="BeforeBuild"
+          Inputs="$(ShellUIComponentsSafelistSource)"
+          Outputs="$(ShellUIComponentsSafelistDestination)"
+          Condition="Exists('$(ShellUIComponentsSafelistSource)')">
+    <Message Importance="low" Text="ShellUI: copying Tailwind safelist to $(ShellUIComponentsSafelistDestination)" />
+    <Copy SourceFiles="$(ShellUIComponentsSafelistSource)"
+          DestinationFiles="$(ShellUIComponentsSafelistDestination)"
+          SkipUnchangedFiles="true" />
+  </Target>
+</Project>
