@@ -5,7 +5,7 @@ namespace ShellUI.Core;
 /// docs sweep) picks it up via a rebuild.
 public static class TailwindConstants
 {
-    public const string Version = "4.3.1";
+    public const string Version = "4.3.2";
     public const string GitHubTag = "v" + Version;
     public const string NpmRange = "^" + Version;
 }
