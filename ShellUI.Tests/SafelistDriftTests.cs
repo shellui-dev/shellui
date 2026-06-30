@@ -12,6 +12,12 @@ namespace ShellUI.Tests;
 /// classes are missing — so NuGet consumers don't ship with broken styles.
 public class SafelistDriftTests
 {
+    private const string RegenerateCommand =
+        "dotnet run --project tools/ShellUI.SafelistGenerator -- "
+        + "src/ShellUI.Components/Components "
+        + "src/ShellUI.Components/wwwroot/shellui-classes.txt "
+        + "src/ShellUI.Components/build/ShellUI.Components.targets";
+
     [Fact]
     public void Safelist_MatchesGeneratedFromCurrentRazorSources()
     {
@@ -19,8 +25,7 @@ public class SafelistDriftTests
         var safelistPath = ResolveSafelistPath();
 
         Assert.True(Directory.Exists(componentsDir), $"components dir not found: {componentsDir}");
-        Assert.True(File.Exists(safelistPath),
-            $"safelist not found at {safelistPath}. Run: dotnet run --project tools/ShellUI.SafelistGenerator -- src/ShellUI.Components/Components src/ShellUI.Components/wwwroot/shellui-classes.txt");
+        Assert.True(File.Exists(safelistPath), $"safelist not found at {safelistPath}. Run: {RegenerateCommand}");
 
         var razorFiles = Directory.GetFiles(componentsDir, "*.razor", SearchOption.AllDirectories);
         var freshlyGenerated = Program.GenerateSafelist(razorFiles);
@@ -33,6 +38,30 @@ public class SafelistDriftTests
 
         Assert.True(addedSinceCommit.Count == 0 && removedSinceCommit.Count == 0,
             BuildDiffMessage(addedSinceCommit, removedSinceCommit));
+    }
+
+    [Fact]
+    public void GeneratedTargetsFile_EmbedsSameClassesAsSafelist()
+    {
+        // The build/ShellUI.Components.targets file ships in the NuGet package and
+        // writes the safelist into the consumer's wwwroot/ at build time. If the
+        // embedded ItemGroup drifts from the .txt source-of-truth, NuGet consumers
+        // see different classes than CLI consumers — bug class we want to never
+        // ship.
+        var safelistPath = ResolveSafelistPath();
+        var targetsPath = ResolveTargetsPath();
+
+        Assert.True(File.Exists(targetsPath), $"targets file not found at {targetsPath}. Run: {RegenerateCommand}");
+
+        var committedClasses = File.ReadAllLines(safelistPath)
+            .Where(line => !string.IsNullOrWhiteSpace(line))
+            .ToHashSet();
+        var freshTargetsContent = Program.BuildTargetsFileContent(new SortedSet<string>(committedClasses, StringComparer.Ordinal));
+        var committedTargetsContent = File.ReadAllText(targetsPath);
+
+        Assert.True(freshTargetsContent == committedTargetsContent,
+            $"build/ShellUI.Components.targets is out of sync with wwwroot/shellui-classes.txt. " +
+            $"Regenerate with:\n  {RegenerateCommand}");
     }
 
     private static string BuildDiffMessage(System.Collections.Generic.List<string> added, System.Collections.Generic.List<string> removed)
@@ -64,5 +93,11 @@ public class SafelistDriftTests
     {
         var testDir = Path.GetDirectoryName(GetThisFilePath())!;
         return Path.GetFullPath(Path.Combine(testDir, "..", "src", "ShellUI.Components", "wwwroot", "shellui-classes.txt"));
+    }
+
+    private static string ResolveTargetsPath()
+    {
+        var testDir = Path.GetDirectoryName(GetThisFilePath())!;
+        return Path.GetFullPath(Path.Combine(testDir, "..", "src", "ShellUI.Components", "build", "ShellUI.Components.targets"));
     }
 }
