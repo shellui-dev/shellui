@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Xml;
 using ShellUI.SafelistGenerator;
 using Xunit;
 
@@ -38,6 +39,24 @@ public class SafelistDriftTests
 
         Assert.True(addedSinceCommit.Count == 0 && removedSinceCommit.Count == 0,
             BuildDiffMessage(addedSinceCommit, removedSinceCommit));
+    }
+
+    [Fact]
+    public void GeneratedTargetsFile_IsValidXml()
+    {
+        // XML 1.0 disallows `--` inside comment bodies. Some MSBuild versions are
+        // permissive (Windows .NET 10.300 accepts it); strict parsers reject the
+        // whole file with MSB4024. Run an actual XML parse so we catch this and
+        // any other malformed-XML class of bug before the consumer's build does.
+        var targetsPath = ResolveTargetsPath();
+        Assert.True(File.Exists(targetsPath), $"targets file not found at {targetsPath}");
+
+        var doc = new XmlDocument();
+        var ex = Record.Exception(() => doc.Load(targetsPath));
+        Assert.True(ex is null,
+            $"build/ShellUI.Components.targets is not valid XML — strict MSBuild parsers will reject it.\n" +
+            $"Likely cause: a `--` sequence inside an XML comment body. See the SafelistGenerator's comment template.\n\n" +
+            $"Underlying error: {ex?.Message}");
     }
 
     [Fact]
