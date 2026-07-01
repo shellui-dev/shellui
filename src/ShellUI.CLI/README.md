@@ -1,6 +1,21 @@
 # ShellUI CLI
 
-Command-line tool for managing ShellUI Blazor components. Install components individually with a simple command.
+Command-line tool for managing ShellUI Blazor components. Install components as `.razor` source files you own, styled with Tailwind CSS.
+
+## Is this what I want?
+
+This is the **CLI install path (Path C)** — best for **owning your component source and editing freely**. If that's not you, there are three other paths worth considering:
+
+- **[Path A — Precompiled bundle](https://www.nuget.org/packages/ShellUI.Components)** — one `<link>` tag, zero Tailwind setup. Best for quick starts.
+- **[Path B — Safelist](https://www.nuget.org/packages/ShellUI.Components)** — for projects that already run Tailwind. Tree-shaken CSS.
+- **[Path D — CDN](https://github.com/shellui-dev/shellui#path-d--cdn-no-nuget-static-html)** — one `<link>` tag from jsdelivr. Best for static HTML and prototypes.
+
+**Use this CLI (Path C) when you want:**
+- ✅ Source-level ownership of every component
+- ✅ To restyle by editing `.razor` files directly
+- ✅ Automatic host wiring (`shellui init` patches App.razor)
+- ✅ tweakcn output to paste straight into your `wwwroot/input.css`
+- ✅ Zero runtime CSS dependency on any package or CDN
 
 ## Installation
 
