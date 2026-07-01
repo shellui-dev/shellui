@@ -39,9 +39,10 @@ jobs:
     # Regenerate the precompiled CSS bundle before build so publishes can never
     # ship a stale one. Drift check matches ci.yml — same script, same guard.
     - name: Verify precompiled CSS bundle is up-to-date
+      # Invoke via `bash` so we don't rely on the file's executable bit.
       run: |
         set -euxo pipefail
-        ./scripts/rebuild-precompiled-css.sh
+        bash scripts/rebuild-precompiled-css.sh
         git diff --exit-code src/ShellUI.Components/wwwroot/shellui-all.css || (
           echo "ERROR: precompiled CSS bundle drift on release. Regenerate and commit."
           exit 1

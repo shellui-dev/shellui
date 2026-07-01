@@ -34,9 +34,12 @@ jobs:
     # differs from the committed file. Prevents the "someone edited a component
     # but forgot to rebuild the precompiled bundle" bug shipping to NuGet users.
     - name: Verify precompiled CSS bundle is up-to-date
+      # Invoke via `bash` (not `./script.sh`) so we don't rely on the file's
+      # executable bit. Windows contributors can edit and commit without
+      # remembering `git update-index --chmod=+x`.
       run: |
         set -euxo pipefail
-        ./scripts/rebuild-precompiled-css.sh
+        bash scripts/rebuild-precompiled-css.sh
         git diff --exit-code src/ShellUI.Components/wwwroot/shellui-all.css || (
           echo ""
           echo "ERROR: src/ShellUI.Components/wwwroot/shellui-all.css is out of sync with the razor sources."
