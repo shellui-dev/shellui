@@ -1,12 +1,13 @@
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+using ShellUI.Core;
 using Spectre.Console;
 
 namespace ShellUI.CLI.Services;
 
 public class TailwindDownloader
 {
-    private const string TailwindVersion = "v4.1.18";
+    private const string TailwindVersion = TailwindConstants.GitHubTag;
     private const string BaseUrl = "https://github.com/tailwindlabs/tailwindcss/releases/download";
     
     public static async Task<string> EnsureTailwindCliAsync(string projectRoot)

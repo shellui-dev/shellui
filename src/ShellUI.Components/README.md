@@ -11,11 +11,37 @@ Beautiful, accessible Blazor components inspired by shadcn/ui. A CLI-first compo
 - 📱 **Responsive design** - Mobile-first approach
 - 🔧 **Fully customizable** - Copy components to your project for full control
 
-## ⚠️ Read this first
+## Two install paths
 
-This package ships the component DLLs, JS interop, and helpers (`Shell.Cn`). **It does not produce styled components on its own.** Tailwind v4 builds CSS by scanning `.razor` source files at compile time — the component source lives inside this DLL, so Tailwind never sees the utility classes used inside ShellUI components.
+Pick one based on whether you have Tailwind set up in your project.
 
-The supported way to get styled components is the **`ShellUI.CLI` global tool**:
+### Path A — NuGet + your existing Tailwind setup (new in 0.4.x)
+
+If your project already uses Tailwind, install the NuGet package and add one `@source` directive to your input.css. The package ships a `shellui-classes.txt` safelist that Tailwind scans at build time so utility classes used inside ShellUI components end up in your compiled CSS — tree-shaken, only what's used:
+
+```bash
+dotnet add package ShellUI.Components
+```
+
+After restore, the safelist appears at `wwwroot/shellui-classes.txt` in your project. In your `wwwroot/input.css`:
+
+```css
+@import "tailwindcss";
+@source "./shellui-classes.txt";
+
+/* ... your theme variables, custom layers, etc. ... */
+```
+
+Then in your `App.razor` or `_Host.cshtml`:
+```html
+@using ShellUI.Components
+```
+
+That's it. `<Button>`, `<Card>`, `<Dialog>` etc. work with full styling — Tailwind has seen every utility class ShellUI emits.
+
+### Path B — CLI tool (best DX, full source control)
+
+If you don't already use Tailwind, or want full source-level control over every component, use the CLI:
 
 ```bash
 dotnet tool install -g ShellUI.CLI
@@ -23,9 +49,11 @@ shellui init                          # sets up Tailwind, theme CSS, patches App
 shellui add button card dialog        # copies component source so Tailwind can scan it
 ```
 
+The CLI copies the `.razor` files into your project, where Tailwind picks up the classes. You can edit any component freely — it's your code.
+
 `shellui add` copies the `.razor` files into your project, where Tailwind picks up the classes. From then on, components render styled.
 
-A future release (`v0.4.x`) will support installing this NuGet package by itself — by shipping a pre-compiled stylesheet — without needing the CLI for setup. Until then, **install the CLI**.
+A future release will ship a pre-compiled stylesheet (`shellui-all.css`) for users who don't want Tailwind set up at all — `<link>` tag, no build step. Tracked under the v0.5 milestone.
 
 ## When is this NuGet package useful on its own?
 
