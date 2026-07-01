@@ -20,7 +20,7 @@ public class SafelistDriftTests
         + "src/ShellUI.Components/build/ShellUI.Components.targets";
 
     [Fact]
-    public void Safelist_MatchesGeneratedFromCurrentRazorSources()
+    public void Safelist_MatchesGeneratedFromCurrentSources()
     {
         var componentsDir = ResolveComponentsDir();
         var safelistPath = ResolveSafelistPath();
@@ -28,8 +28,15 @@ public class SafelistDriftTests
         Assert.True(Directory.Exists(componentsDir), $"components dir not found: {componentsDir}");
         Assert.True(File.Exists(safelistPath), $"safelist not found at {safelistPath}. Run: {RegenerateCommand}");
 
+        // Match the generator's dual scan: .razor for components, .cs from the
+        // parent Components/ root for variants/services that compose class strings
+        // in C# (BadgeVariants, AlertVariants, etc.). Missing the .cs scan is why
+        // Path A/B users hit incomplete Badge padding in 0.4.0-alpha.1.
         var razorFiles = Directory.GetFiles(componentsDir, "*.razor", SearchOption.AllDirectories);
-        var freshlyGenerated = Program.GenerateSafelist(razorFiles);
+        var componentsRoot = Path.GetDirectoryName(componentsDir.TrimEnd(Path.DirectorySeparatorChar))!;
+        var csFiles = Directory.GetFiles(componentsRoot, "*.cs", SearchOption.AllDirectories);
+
+        var freshlyGenerated = Program.GenerateSafelist(razorFiles.Concat(csFiles));
         var committed = File.ReadAllLines(safelistPath)
             .Where(line => !string.IsNullOrWhiteSpace(line))
             .ToHashSet();
