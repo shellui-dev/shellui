@@ -30,6 +30,31 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ShellUI.slnx
 
+    # Regenerates src/ShellUI.Components/wwwroot/shellui-all.css and fails if it
+    # differs from the committed file. Prevents the "someone edited a component
+    # but forgot to rebuild the precompiled bundle" bug shipping to NuGet users.
+    - name: Verify precompiled CSS bundle is up-to-date
+      run: |
+        set -euxo pipefail
+        ./scripts/rebuild-precompiled-css.sh
+        git diff --exit-code src/ShellUI.Components/wwwroot/shellui-all.css || (
+          echo ""
+          echo "ERROR: src/ShellUI.Components/wwwroot/shellui-all.css is out of sync with the razor sources."
+          echo "Regenerate locally and commit:"
+          echo "  ./scripts/rebuild-precompiled-css.sh"
+          exit 1
+        )
+        # Bundle size guard — well above the ~77KB the current 68 components emit,
+        # generous enough to absorb reasonable growth but tight enough to catch a
+        # runaway (e.g. someone accidentally disables minify or dumps the whole
+        # tailwind base without tree-shake).
+        size=$(wc -c < src/ShellUI.Components/wwwroot/shellui-all.css)
+        echo "precompiled bundle size: ${size} bytes"
+        if [ "$size" -gt 150000 ]; then
+          echo "ERROR: bundle exceeded 150KB — investigate before shipping."
+          exit 1
+        fi
+
     - name: Build
       run: dotnet build ShellUI.slnx --no-restore --configuration Release
 
@@ -132,6 +157,28 @@ jobs:
         # Sanity: the safelist contains real Tailwind classes
         grep -q 'bg-background' "$SAFELIST" || (echo "safelist appears malformed — missing core Tailwind class 'bg-background'"; exit 1)
         wc -l "$SAFELIST"
+
+        # The precompiled bundle is a runtime static web asset. After the consumer's
+        # build, Razor SDK copies static assets from referenced packages into the
+        # consumer's build output under bin/…/wwwroot/_content/<PackageId>/. Assert
+        # the path exists and the bundle has real Tailwind rules — the "install
+        # NuGet + one <link> tag = styled components" story hinges on this.
+        BUNDLE="$(find bin -type f -name 'shellui-all.css' | head -1)"
+        test -n "$BUNDLE" || (
+          echo "ERROR: shellui-all.css not in consumer's build output — the pure-NuGet install path is broken."
+          find bin -type d -name '_content' -exec ls -la {} \; 2>/dev/null || echo "  (no _content dir)"
+          exit 1
+        )
+        echo "found bundle at: $BUNDLE"
+        BUNDLE_SIZE=$(wc -c < "$BUNDLE")
+        echo "bundle size: $BUNDLE_SIZE bytes"
+
+        # Spot-check a handful of representative rules covering the categories
+        # that break most easily (theme vars, hover, data-attribute selectors).
+        grep -q -- '--background:' "$BUNDLE" || (echo "ERROR: bundle missing --background theme var"; exit 1)
+        grep -q '\.bg-background' "$BUNDLE" || (echo "ERROR: bundle missing .bg-background utility"; exit 1)
+        grep -q '\.hover.:bg-accent:hover' "$BUNDLE" || (echo "ERROR: bundle missing hover:bg-accent modifier rule"; exit 1)
+        grep -q '\[state=open\]' "$BUNDLE" || (echo "ERROR: bundle missing data-[state=open] modifier — arbitrary values not compiled"; exit 1)
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
