@@ -36,17 +36,18 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ShellUI.slnx
 
-    # Regenerate the precompiled CSS bundle before build so publishes can never
-    # ship a stale one. Drift check matches ci.yml — same script, same guard.
-    - name: Verify precompiled CSS bundle is up-to-date
-      # Invoke via `bash` so we don't rely on the file's executable bit.
+    # Generate the precompiled CSS bundle before build so releases always ship
+    # a fresh one. File is gitignored — regenerated on every CI/release run.
+    - name: Build precompiled CSS bundle
       run: |
         set -euxo pipefail
         bash scripts/rebuild-precompiled-css.sh
-        git diff --exit-code src/ShellUI.Components/wwwroot/shellui-all.css || (
-          echo "ERROR: precompiled CSS bundle drift on release. Regenerate and commit."
-          exit 1
-        )
+        BUNDLE=src/ShellUI.Components/wwwroot/shellui-all.css
+        test -f "$BUNDLE" || (echo "ERROR: bundle was not produced"; exit 1)
+        # Content sanity — same assertions ci.yml runs.
+        grep -q -- '--background:' "$BUNDLE" || (echo "ERROR: theme vars missing"; exit 1)
+        grep -q '\.bg-background' "$BUNDLE" || (echo "ERROR: utilities missing"; exit 1)
+        echo "release bundle size: $(wc -c < "$BUNDLE") bytes"
 
     - name: Build
       run: dotnet build ShellUI.slnx --no-restore --configuration Release
