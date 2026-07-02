@@ -366,3 +366,8 @@ shellui-installation-tests/
 
 # Preview publish output (testing artifacts)
 preview-publish/
+# Generated Tailwind bundle — regenerated in CI, not committed.
+# Windows and Linux Tailwind CLI produce byte-different output; committing
+# would cause spurious drift-check failures. Local devs: run
+# `bash scripts/rebuild-precompiled-css.sh` before running Path A tests.
+src/ShellUI.Components/wwwroot/shellui-all.css

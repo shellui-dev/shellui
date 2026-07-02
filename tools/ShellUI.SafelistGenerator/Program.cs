@@ -36,7 +36,16 @@ public static class Program
         }
 
         var razorFiles = Directory.GetFiles(razorDir, "*.razor", SearchOption.AllDirectories);
-        var classes = GenerateSafelist(razorFiles);
+        // Also scan Variants/*.cs, Services/*.cs etc. — some components compose their
+        // class strings in C# helpers (BadgeVariants.cs, AlertVariants.cs, ...). Those
+        // classes never make it into a razor `class="..."` attribute directly, so we
+        // must scan the C# side too or the safelist will miss padding/hover states
+        // (e.g. `px-2.5`, `py-0.5`, `border-transparent`, `hover:bg-primary/80`).
+        var componentsRoot = Path.GetDirectoryName(razorDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
+            ?? razorDir;
+        var csFiles = Directory.GetFiles(componentsRoot, "*.cs", SearchOption.AllDirectories);
+
+        var classes = GenerateSafelist(razorFiles.Concat(csFiles));
 
         Directory.CreateDirectory(Path.GetDirectoryName(txtOut)!);
         File.WriteAllLines(txtOut, classes);
@@ -44,21 +53,40 @@ public static class Program
         Directory.CreateDirectory(Path.GetDirectoryName(targetsOut)!);
         File.WriteAllText(targetsOut, BuildTargetsFileContent(classes));
 
-        Console.WriteLine($"wrote {classes.Count} classes from {razorFiles.Length} razor files");
+        Console.WriteLine($"wrote {classes.Count} classes from {razorFiles.Length} razor + {csFiles.Length} cs files");
         Console.WriteLine($"  txt:     {txtOut}");
         Console.WriteLine($"  targets: {targetsOut}");
         return 0;
     }
 
     /// Public for in-process testing — runs the same extraction the CLI invocation does.
-    public static SortedSet<string> GenerateSafelist(IEnumerable<string> razorFilePaths)
+    public static SortedSet<string> GenerateSafelist(IEnumerable<string> sourceFilePaths)
     {
         var classes = new SortedSet<string>(StringComparer.Ordinal);
-        foreach (var file in razorFilePaths)
+        foreach (var file in sourceFilePaths)
         {
-            ExtractClasses(File.ReadAllText(file), classes);
+            var text = File.ReadAllText(file);
+            if (file.EndsWith(".razor", StringComparison.OrdinalIgnoreCase))
+            {
+                ExtractClasses(text, classes);
+            }
+            else if (file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+            {
+                ExtractFromCSharp(text, classes);
+            }
         }
         return classes;
+    }
+
+    // For .cs files (Variants, Services), pull tokens out of every string literal.
+    // Any lowercase-starting token that contains a `-`, `:`, `[`, or `/` gets treated
+    // as a potential Tailwind class — same heuristic HarvestTokens uses for razor.
+    private static void ExtractFromCSharp(string content, SortedSet<string> sink)
+    {
+        foreach (Match lit in StringLiteralRegex.Matches(content))
+        {
+            HarvestTokens(lit.Groups["lit"].Value, sink);
+        }
     }
 
     /// Public for in-process testing — produces the same .targets content the CLI writes.
