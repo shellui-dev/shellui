@@ -130,6 +130,13 @@ jobs:
         test -d "$LOCAL_FEED" || (echo "local feed not found at $LOCAL_FEED — did the pack step run?"; exit 1)
         ls "$LOCAL_FEED"/*.nupkg | head -3
 
+        # DIAGNOSTIC: dump what's actually inside the fresh nupkg. The precompiled
+        # bundle must ship as a static web asset for consumers to `<link>` it.
+        echo "---nupkg contents (looking for shellui-all.css):---"
+        unzip -l "$LOCAL_FEED"/ShellUI.Components*.nupkg | grep -E 'shellui-all|staticwebassets/' | head -10 || echo "  (no matches — bundle not in nupkg!)"
+        echo "---source wwwroot check:---"
+        ls -la "$GITHUB_WORKSPACE/src/ShellUI.Components/wwwroot/" | head -10
+
         TMPDIR=$(mktemp -d)
         mkdir -p "$TMPDIR/app" && cd "$TMPDIR/app"
         dotnet new blazor -o NuGetSmoke --no-restore
@@ -180,11 +187,14 @@ jobs:
         # the path exists and the bundle has real Tailwind rules — the "install
         # NuGet + one <link> tag = styled components" story hinges on this.
         BUNDLE="$(find bin -type f -name 'shellui-all.css' | head -1)"
-        test -n "$BUNDLE" || (
+        if [ -z "$BUNDLE" ]; then
           echo "ERROR: shellui-all.css not in consumer's build output — the pure-NuGet install path is broken."
-          find bin -type d -name '_content' -exec ls -la {} \; 2>/dev/null || echo "  (no _content dir)"
+          echo "---consumer bin/ tree (top 30 entries):---"
+          find bin -type f 2>/dev/null | head -30
+          echo "---consumer's extracted NuGet cache for ShellUI.Components:---"
+          find ~/.nuget/packages/shellui.components -type f 2>/dev/null | head -20
           exit 1
-        )
+        fi
         echo "found bundle at: $BUNDLE"
         BUNDLE_SIZE=$(wc -c < "$BUNDLE")
         echo "bundle size: $BUNDLE_SIZE bytes"
