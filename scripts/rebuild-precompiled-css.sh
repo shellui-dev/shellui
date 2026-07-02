@@ -40,7 +40,10 @@ if [[ ! -f "$BINARY_PATH" ]]; then
   chmod +x "$BINARY_PATH"
 fi
 
-INPUT_CSS="$(mktemp --suffix=.css)"
+# Portable mktemp: --suffix is GNU-only, breaks on macOS/BSD. Template form works everywhere.
+INPUT_CSS="$(mktemp "${TMPDIR:-/tmp}/shellui-input.XXXXXX")"
+mv "$INPUT_CSS" "$INPUT_CSS.css"
+INPUT_CSS="$INPUT_CSS.css"
 COMPONENTS_ROOT="src/ShellUI.Components"
 
 # Compose the input fixture: theme block + inline safelist.
