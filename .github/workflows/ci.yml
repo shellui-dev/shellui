@@ -147,6 +147,14 @@ jobs:
         </configuration>
         EOF
 
+        # Evict every cached ShellUI.Components from ~/.nuget/packages before restore.
+        # The runner-level cache is restored from actions/cache and may contain a
+        # stale copy of the current version from an earlier CI run (before we added
+        # the precompiled bundle, .cs scan, etc.). NuGet prefers cached over local
+        # feeds when version matches, so a stale cache silently masks the fresh
+        # nupkg. Wildcard covers any version — future-proof.
+        rm -rf ~/.nuget/packages/shellui.components
+
         dotnet add package ShellUI.Components --prerelease
 
         # The safelist gets copied into wwwroot/ during the consumer's build by
