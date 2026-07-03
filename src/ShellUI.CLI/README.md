@@ -31,7 +31,13 @@ dotnet tool install -g ShellUI.CLI
 dotnet shellui init
 ```
 
-This automatically:
+Or in one shot with a tweakcn theme baked in:
+
+```bash
+dotnet shellui theme init https://tweakcn.com/themes/<id> --yes
+```
+
+`init` automatically:
 - ✅ Downloads Tailwind CSS CLI (standalone, no Node.js required) — or uses your npm install if you prefer
 - ✅ Writes the full default theme (`:root`, `.dark`, `@theme inline`) to `wwwroot/input.css`
 - ✅ Patches `Components/App.razor` with `@rendermode="InteractiveServer"`, a theme-bootstrap `<script>` (no light-flash on dark pages), and the `<script src="shellui.js">` tag
@@ -104,6 +110,26 @@ dotnet shellui remove button input
 
 **Options:**
 - `--all` - Remove all installed components
+
+### `theme` — bake tweakcn themes at build time
+
+Fetch a theme from [tweakcn.com](https://tweakcn.com) and write it into your project. No runtime fetch, works offline, exactly-what-you-see-is-what-ships.
+
+```bash
+# Fresh project — init + apply theme in one step
+dotnet shellui theme init https://tweakcn.com/themes/<id>
+
+# Existing project — apply theme to wwwroot/input.css
+dotnet shellui theme apply https://tweakcn.com/themes/<id>
+
+# Emit standalone override CSS (for Path A/D consumers who use the precompiled bundle)
+dotnet shellui theme apply https://tweakcn.com/themes/<id> --emit-override wwwroot/theme.css
+
+# Re-fetch the theme recorded in shellui.theme.lock
+dotnet shellui theme update
+```
+
+Each `apply` writes a `shellui.theme.lock` file (source URL + SHA-256) so `update` can refresh from the same source without you having to remember the URL. Re-applies are idempotent — user content outside the sentinel-marked region survives verbatim.
 
 ## Available Components
 

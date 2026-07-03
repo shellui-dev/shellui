@@ -482,18 +482,51 @@ Now write raw HTML with ShellUI's Tailwind classes:
 
 ---
 
+### Using tweakcn themes with `shellui theme` (new in 0.4.x)
+
+[tweakcn.com](https://tweakcn.com) is a visual theme editor for shadcn-style CSS variables. ShellUI's `theme` subcommand fetches a theme by URL and bakes it into your project at **build time** — no runtime dep, works offline, exactly-what-you-see-is-what-ships.
+
+```bash
+# One-shot: init a fresh project AND apply a theme (Path C setup)
+shellui theme init https://tweakcn.com/themes/<id>
+
+# Existing project: apply a theme to your input.css (Path B/C)
+shellui theme apply https://tweakcn.com/themes/<id>
+
+# Existing project: emit standalone override CSS (Path A/D)
+shellui theme apply https://tweakcn.com/themes/<id> --emit-override wwwroot/theme.css
+
+# Re-fetch the theme recorded in shellui.theme.lock
+shellui theme update
+```
+
+Each `apply` writes a `shellui.theme.lock` file recording the source URL + SHA-256, so `shellui theme update` refreshes from the same source without you having to remember the URL.
+
+**How it drops into each install path:**
+
+| Path | Command | Where the theme lands |
+|---|---|---|
+| **A** — precompiled bundle | `shellui theme apply <url> --emit-override wwwroot/theme.css`, then `<link>` it after `shellui-all.css` | Standalone override CSS; wins the cascade over the baked bundle |
+| **B** — safelist | `shellui theme apply <url>` | Sentinel-marked region in your `wwwroot/input.css`; user content outside markers survives re-applies |
+| **C** — CLI | `shellui theme init <url>` (fresh) or `shellui theme apply <url>` (existing) | Sentinel-marked region in the `input.css` `shellui init` created; Tailwind rebuilds on `dotnet build` |
+| **D** — CDN | `shellui theme apply <url> --emit-override theme.css`, then `<link>` it after the CDN link | Same override pattern as Path A |
+
+The apply is **idempotent** — re-running with the same URL produces byte-identical output. Custom utilities, `@source` directives, and imports you added around the theme block are preserved verbatim.
+
+---
+
 ### Theming across paths
 
 All four paths use the same CSS variable system, so theming works uniformly — just with different edit surfaces:
 
-| Path | Where the theme lives | How you edit it |
-|---|---|---|
-| A | Baked in `shellui-all.css` | Override CSS vars in a `<style>` block *after* the link |
-| B | Your `wwwroot/input.css` | Edit directly, paste tweakcn output over `:root`/`.dark` blocks |
-| C | `wwwroot/input.css` created by `shellui init` | Edit directly — Tailwind auto-rebuilds on `dotnet build` |
-| D | Baked in the CDN-served CSS | Override in a `<style>` tag |
+| Path | Where the theme lives | How you edit it | Auto-import from tweakcn |
+|---|---|---|---|
+| A | Baked in `shellui-all.css` | Override CSS vars in a `<style>` block *after* the link | `shellui theme apply <url> --emit-override wwwroot/theme.css` |
+| B | Your `wwwroot/input.css` | Edit directly, paste tweakcn output over `:root`/`.dark` blocks | `shellui theme apply <url>` |
+| C | `wwwroot/input.css` created by `shellui init` | Edit directly — Tailwind auto-rebuilds on `dotnet build` | `shellui theme init <url>` or `shellui theme apply <url>` |
+| D | Baked in the CDN-served CSS | Override in a `<style>` tag | `shellui theme apply <url> --emit-override theme.css` |
 
-Change one CSS variable (e.g. `--primary`) and every component updates immediately. See each install-path README under `shellui-installation-tests/` for concrete theming examples.
+Change one CSS variable (e.g. `--primary`) and every component updates immediately.
 
 ### Configure Tailwind CSS manually (advanced)
 Create/update `wwwroot/tailwind.config.js`:
