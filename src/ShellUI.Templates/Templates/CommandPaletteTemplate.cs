@@ -11,7 +11,7 @@ public static class CommandPaletteTemplate
         Description = "Cmd+K palette wrapper — binds a global hotkey to open a Command",
         Category = ComponentCategory.Overlay,
         FilePath = "CommandPalette.razor",
-        Dependencies = new List<string> { "command" }
+        Dependencies = new List<string> { "command", "shellui-js" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
@@ -29,6 +29,7 @@ public static class CommandPaletteTemplate
     [Parameter] public List<CommandItem> Commands { get; set; } = new();
     [Parameter] public EventCallback<CommandItem> CommandSelected { get; set; }
     [Parameter] public string Placeholder { get; set; } = ""Type a command or search..."";
+
     [Parameter] public string HotkeyChar { get; set; } = ""k"";
     [Parameter] public bool UseCtrl { get; set; } = true;
     [Parameter] public bool UseMeta { get; set; } = true;
@@ -36,7 +37,6 @@ public static class CommandPaletteTemplate
     [Parameter] public bool UseAlt { get; set; }
 
     private bool _isOpen;
-    private IJSObjectReference? _module;
     private DotNetObjectReference<CommandPalette>? _selfRef;
     private readonly string _handle = Guid.NewGuid().ToString(""N"");
 
@@ -44,8 +44,11 @@ public static class CommandPaletteTemplate
     {
         if (!firstRender) return;
         _selfRef = DotNetObjectReference.Create(this);
-        _module = await JS.InvokeAsync<IJSObjectReference>(""import"", ""./_content/ShellUI.Components/shellui.js"");
-        await _module.InvokeVoidAsync(""registerShortcut"", _handle, HotkeyChar, UseCtrl, UseMeta, UseShift, UseAlt, _selfRef);
+        try
+        {
+            await JS.InvokeVoidAsync(""ShellUI.registerShortcut"", _handle, HotkeyChar, UseCtrl, UseMeta, UseShift, UseAlt, _selfRef);
+        }
+        catch { }
     }
 
     [JSInvokable]
@@ -69,15 +72,7 @@ public static class CommandPaletteTemplate
 
     public async ValueTask DisposeAsync()
     {
-        try
-        {
-            if (_module is not null)
-            {
-                await _module.InvokeVoidAsync(""unregisterShortcut"", _handle);
-                await _module.DisposeAsync();
-            }
-        }
-        catch { }
+        try { await JS.InvokeVoidAsync(""ShellUI.unregisterShortcut"", _handle); } catch { }
         _selfRef?.Dispose();
     }
 }

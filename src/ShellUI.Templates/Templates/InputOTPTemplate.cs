@@ -135,17 +135,13 @@ public class InputOTPTemplate
 
     private async Task FocusInput(int index)
     {
-        if (index >= 0 && index < Length)
+        if (index < 0 || index >= Length) return;
+        var elementId = $""otp-input-{_id}-{index}"";
+        try
         {
-            try
-            {
-                await JS.InvokeVoidAsync(""ShellUI.focusElement"", $""otp-input-{_id}-{index}"");
-            }
-            catch
-            {
-                // Ignore JS interop errors
-            }
+            await JS.InvokeVoidAsync(""ShellUI.focusElement"", elementId);
         }
+        catch { }
     }
 }
 ";

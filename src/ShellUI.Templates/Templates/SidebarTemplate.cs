@@ -44,7 +44,7 @@ public static class SidebarTemplate
         @ChildContent
     </div>
 }
-else if (SidebarProvider?.IsMobile == true)
+else if (SidebarProvider?.IsMobile == true && !Inline)
 {
     @if (SidebarProvider.MobileOpen)
     {
@@ -95,6 +95,10 @@ else
     [Parameter] public SidebarSide Side { get; set; } = SidebarSide.Left;
     [Parameter] public SidebarVariant Variant { get; set; } = SidebarVariant.Sidebar;
     [Parameter] public SidebarCollapsible Collapsible { get; set; } = SidebarCollapsible.Offcanvas;
+    /// When true, the sidebar positions itself absolutely (not fixed) so it stays inside
+    /// a bounded parent container. Parent must be `position: relative` with a set height.
+    /// Intended for inline demos and previews; production sidebars should leave this false.
+    [Parameter] public bool Inline { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
@@ -153,12 +157,15 @@ else
     }
 
     private string GapClass => Shell.Cn(
-        ""relative h-svh bg-transparent transition-[width] ease-linear duration-200"",
+        ""relative bg-transparent transition-[width] ease-linear duration-200"",
+        Inline ? ""h-full"" : ""h-svh"",
         Side == SidebarSide.Right ? ""rotate-180"" : null
     );
 
     private string FixedClass => Shell.Cn(
-        ""fixed inset-y-0 z-10 hidden h-svh transition-[left,right,width] ease-linear duration-200 md:flex"",
+        Inline ? ""absolute"" : ""fixed"",
+        ""inset-y-0 z-10 hidden transition-[left,right,width] ease-linear duration-200 md:flex"",
+        Inline ? ""h-full"" : ""h-svh"",
         IsFloatingOrInset ? ""p-2"" : null,
         !IsFloatingOrInset && Side == SidebarSide.Left ? ""border-r"" : null,
         !IsFloatingOrInset && Side == SidebarSide.Right ? ""border-l"" : null,
