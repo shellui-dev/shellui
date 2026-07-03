@@ -1,0 +1,76 @@
+@page "/components/form/tag-input"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+
+<PageTitle>TagInput | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">TagInput</h1>
+        <p class="text-muted-foreground mt-1">Free-form tag entry. Enter to confirm, Backspace on empty removes the last, and pasting comma/newline-separated text bulk-adds.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add tag-input</code>
+            <CopyButton Text="dotnet shellui add tag-input" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Basic</h3>
+        <div class="mb-6 max-w-md">
+            <TagInput Tags="_tags" TagsChanged="@(ts => _tags = ts)" Placeholder="Add tag..." />
+            <p class="mt-3 text-xs text-muted-foreground">Current: <span class="font-mono">[@string.Join(", ", _tags)]</span></p>
+        </div>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Max 5 tags, allow duplicates</h3>
+        <div class="mb-6 max-w-md">
+            <TagInput Tags="_tagsCapped"
+                      TagsChanged="@(ts => _tagsCapped = ts)"
+                      Placeholder="Max 5..."
+                      MaxTags="5"
+                      AllowDuplicates="true" />
+            <p class="mt-3 text-xs text-muted-foreground">@_tagsCapped.Count / 5</p>
+        </div>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Disabled</h3>
+        <div class="max-w-md">
+            <TagInput Tags="@(new List<string> { "readonly", "example" })" Disabled="true" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Tags</td><td>List&lt;string&gt;</td><td>empty</td><td>Current tags</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">TagsChanged</td><td>EventCallback&lt;List&lt;string&gt;&gt;</td><td>—</td><td>Fired when tags change</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Placeholder</td><td>string</td><td>"Add tag..."</td><td>Placeholder while empty</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">MaxTags</td><td>int?</td><td>null</td><td>Cap the number of tags</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">AllowDuplicates</td><td>bool</td><td>false</td><td>Allow identical tags (case-insensitive by default)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Separators</td><td>string[]</td><td>",", ";", "\t", "\n"</td><td>Split chars for paste-to-bulk-add</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Disabled</td><td>bool</td><td>false</td><td>Disables input and remove buttons</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<string> _tags = new() { "blazor", "shellui" };
+    private List<string> _tagsCapped = new();
+}

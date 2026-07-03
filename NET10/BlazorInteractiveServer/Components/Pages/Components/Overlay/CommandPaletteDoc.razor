@@ -1,0 +1,73 @@
+@page "/components/overlay/command-palette"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+@using BlazorInteractiveServer.Components.Models
+
+<PageTitle>CommandPalette | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">CommandPalette</h1>
+        <p class="text-muted-foreground mt-1">Wraps <code class="text-xs font-mono bg-muted px-1 rounded">Command</code> with a global keyboard shortcut (default <kbd class="rounded border border-border bg-muted px-1 font-mono text-xs">Ctrl</kbd>+<kbd class="rounded border border-border bg-muted px-1 font-mono text-xs">K</kbd> / <kbd class="rounded border border-border bg-muted px-1 font-mono text-xs">⌘K</kbd>).</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add command-palette</code>
+            <CopyButton Text="dotnet shellui add command-palette" Class="shrink-0" />
+        </div>
+        <p class="mt-2 text-xs text-muted-foreground">Auto-installs the <code class="font-mono">command</code> dependency.</p>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Try it</h2>
+        <p class="text-sm mb-4">Press <kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">Ctrl</kbd> + <kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">K</kbd> (or <kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">⌘K</kbd> on Mac) to open the palette. Type to filter, <kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">Enter</kbd> selects, <kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">Esc</kbd> closes.</p>
+
+        <CommandPalette Commands="_commands" CommandSelected="@(c => _last = c.Title)" />
+
+        @if (_last is not null)
+        {
+            <div class="mt-4 rounded-md border border-border bg-muted p-3 text-sm">
+                Last selected: <span class="font-mono">@_last</span>
+            </div>
+        }
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Commands</td><td>List&lt;CommandItem&gt;</td><td>empty</td><td>Commands available in the palette</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">CommandSelected</td><td>EventCallback&lt;CommandItem&gt;</td><td>—</td><td>Fired when the user picks a command</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">HotkeyChar</td><td>string</td><td>"k"</td><td>Hotkey character</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">UseCtrl</td><td>bool</td><td>true</td><td>Require Ctrl</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">UseMeta</td><td>bool</td><td>true</td><td>Require ⌘ (Meta) — either Ctrl or Meta triggers</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">UseShift / UseAlt</td><td>bool</td><td>false</td><td>Require Shift / Alt</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<CommandItem> _commands = new()
+    {
+        new() { Title = "Go to Home", Description = "Navigate to the home page", Shortcut = "Ctrl+H" },
+        new() { Title = "Toggle Theme", Description = "Switch between light and dark mode", Shortcut = "Ctrl+T" },
+        new() { Title = "Search Components", Description = "Open component search" },
+        new() { Title = "Open Settings", Description = "Application preferences" },
+        new() { Title = "Sign Out", Description = "End your session" },
+    };
+    private string? _last;
+}
