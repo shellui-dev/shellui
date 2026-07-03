@@ -93,6 +93,7 @@
     <ShellUISafelistEntry Include="flex-col-reverse" />
     <ShellUISafelistEntry Include="flex-row" />
     <ShellUISafelistEntry Include="flex-shrink-0" />
+    <ShellUISafelistEntry Include="flex-wrap" />
     <ShellUISafelistEntry Include="focus-visible:[&amp;::-moz-range-thumb]:ring-2" />
     <ShellUISafelistEntry Include="focus-visible:[&amp;::-moz-range-thumb]:ring-offset-2" />
     <ShellUISafelistEntry Include="focus-visible:[&amp;::-moz-range-thumb]:ring-ring" />
@@ -107,6 +108,7 @@
     <ShellUISafelistEntry Include="focus-visible:ring-ring" />
     <ShellUISafelistEntry Include="focus:bg-accent" />
     <ShellUISafelistEntry Include="focus:outline-none" />
+    <ShellUISafelistEntry Include="focus:ring-1" />
     <ShellUISafelistEntry Include="focus:ring-2" />
     <ShellUISafelistEntry Include="focus:ring-offset-2" />
     <ShellUISafelistEntry Include="focus:ring-ring" />
@@ -169,6 +171,7 @@
     <ShellUISafelistEntry Include="hover:bg-yellow-600" />
     <ShellUISafelistEntry Include="hover:opacity-100" />
     <ShellUISafelistEntry Include="hover:text-accent-foreground" />
+    <ShellUISafelistEntry Include="hover:text-destructive" />
     <ShellUISafelistEntry Include="hover:text-foreground" />
     <ShellUISafelistEntry Include="hover:text-muted-foreground" />
     <ShellUISafelistEntry Include="hover:text-sidebar-accent-foreground" />
@@ -188,6 +191,7 @@
     <ShellUISafelistEntry Include="leading-tight" />
     <ShellUISafelistEntry Include="left-0" />
     <ShellUISafelistEntry Include="left-1/2" />
+    <ShellUISafelistEntry Include="left-2" />
     <ShellUISafelistEntry Include="lg:space-x-8" />
     <ShellUISafelistEntry Include="list-none" />
     <ShellUISafelistEntry Include="material-symbols-outlined" />
@@ -203,6 +207,7 @@
     <ShellUISafelistEntry Include="min-h-8" />
     <ShellUISafelistEntry Include="min-h-[80px]" />
     <ShellUISafelistEntry Include="min-w-0" />
+    <ShellUISafelistEntry Include="min-w-24" />
     <ShellUISafelistEntry Include="min-w-8" />
     <ShellUISafelistEntry Include="min-w-[640px]" />
     <ShellUISafelistEntry Include="min-w-[8rem]" />
