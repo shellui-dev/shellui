@@ -181,30 +181,30 @@ jobs:
         grep -q 'bg-background' "$SAFELIST" || (echo "safelist appears malformed — missing core Tailwind class 'bg-background'"; exit 1)
         wc -l "$SAFELIST"
 
-        # The precompiled bundle is a runtime static web asset. After the consumer's
-        # build, Razor SDK copies static assets from referenced packages into the
-        # consumer's build output under bin/…/wwwroot/_content/<PackageId>/. Assert
-        # the path exists and the bundle has real Tailwind rules — the "install
-        # NuGet + one <link> tag = styled components" story hinges on this.
-        BUNDLE="$(find bin -type f -name 'shellui-all.css' | head -1)"
+        # In .NET 10, MapStaticAssets() doesn't physically copy static web assets
+        # from referenced packages into the consumer's bin/ during `dotnet build`
+        # — it uses a manifest and reads from the extracted NuGet cache at runtime.
+        # So the correct assertion is "does the file exist in the extracted package
+        # cache after restore", which proves it'll be served at
+        # `_content/ShellUI.Components/shellui-all.css` in the running app.
+        BUNDLE="$(find ~/.nuget/packages/shellui.components -name 'shellui-all.css' -type f | head -1)"
         if [ -z "$BUNDLE" ]; then
-          echo "ERROR: shellui-all.css not in consumer's build output — the pure-NuGet install path is broken."
-          echo "---consumer bin/ tree (top 30 entries):---"
-          find bin -type f 2>/dev/null | head -30
-          echo "---consumer's extracted NuGet cache for ShellUI.Components:---"
-          find ~/.nuget/packages/shellui.components -type f 2>/dev/null | head -20
+          echo "ERROR: shellui-all.css not in consumer's extracted NuGet cache — the pure-NuGet install path is broken."
+          echo "---consumer's extracted NuGet cache tree:---"
+          find ~/.nuget/packages/shellui.components -type f 2>/dev/null | head -30
           exit 1
         fi
         echo "found bundle at: $BUNDLE"
         BUNDLE_SIZE=$(wc -c < "$BUNDLE")
         echo "bundle size: $BUNDLE_SIZE bytes"
 
-        # Spot-check a handful of representative rules covering the categories
-        # that break most easily (theme vars, hover, data-attribute selectors).
-        grep -q -- '--background:' "$BUNDLE" || (echo "ERROR: bundle missing --background theme var"; exit 1)
-        grep -q '\.bg-background' "$BUNDLE" || (echo "ERROR: bundle missing .bg-background utility"; exit 1)
-        grep -q '\.hover.:bg-accent:hover' "$BUNDLE" || (echo "ERROR: bundle missing hover:bg-accent modifier rule"; exit 1)
-        grep -q '\[state=open\]' "$BUNDLE" || (echo "ERROR: bundle missing data-[state=open] modifier — arbitrary values not compiled"; exit 1)
+        # Spot-check a handful of representative rules using fixed-string grep
+        # (no regex escaping headaches). These catch classes of bugs we've hit.
+        grep -Fq -- '--background' "$BUNDLE" || (echo "ERROR: bundle missing --background theme var"; exit 1)
+        grep -Fq '.bg-background' "$BUNDLE" || (echo "ERROR: bundle missing .bg-background utility"; exit 1)
+        grep -Fq 'hover\:bg-accent' "$BUNDLE" || (echo "ERROR: bundle missing hover:bg-accent modifier rule"; exit 1)
+        grep -Fq 'state=open' "$BUNDLE" || (echo "ERROR: bundle missing data-[state=open] arbitrary-value modifier"; exit 1)
+        grep -Fq 'px-2\.5' "$BUNDLE" || (echo "ERROR: bundle missing Badge padding — .cs variant scan regression?"; exit 1)
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
