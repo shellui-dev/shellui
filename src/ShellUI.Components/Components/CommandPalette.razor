@@ -16,7 +16,6 @@
     [Parameter] public EventCallback<CommandItem> CommandSelected { get; set; }
     [Parameter] public string Placeholder { get; set; } = "Type a command or search...";
 
-    /// Hotkey character. Default "k" — combined with Ctrl/Cmd = Cmd+K / Ctrl+K.
     [Parameter] public string HotkeyChar { get; set; } = "k";
     [Parameter] public bool UseCtrl { get; set; } = true;
     [Parameter] public bool UseMeta { get; set; } = true;
@@ -32,8 +31,15 @@
     {
         if (!firstRender) return;
         _selfRef = DotNetObjectReference.Create(this);
-        _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/ShellUI.Components/shellui.js");
-        await _module.InvokeVoidAsync("registerShortcut", _handle, HotkeyChar, UseCtrl, UseMeta, UseShift, UseAlt, _selfRef);
+        try
+        {
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/ShellUI.Components/shellui.js");
+            await _module.InvokeVoidAsync("registerShortcut", _handle, HotkeyChar, UseCtrl, UseMeta, UseShift, UseAlt, _selfRef);
+        }
+        catch
+        {
+            try { await JS.InvokeVoidAsync("ShellUI.registerShortcut", _handle, HotkeyChar, UseCtrl, UseMeta, UseShift, UseAlt, _selfRef); } catch { }
+        }
     }
 
     [JSInvokable]
@@ -63,6 +69,10 @@
             {
                 await _module.InvokeVoidAsync("unregisterShortcut", _handle);
                 await _module.DisposeAsync();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("ShellUI.unregisterShortcut", _handle);
             }
         }
         catch { }
