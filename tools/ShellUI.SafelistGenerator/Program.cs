@@ -4,17 +4,10 @@ using System.Xml;
 
 namespace ShellUI.SafelistGenerator;
 
-/// Scans .razor files for Tailwind utility classes and emits two artifacts:
-///
-///   1. wwwroot/shellui-classes.txt — flat sorted list (committed for drift detection
-///      and used by the live ShellUI demo's own Tailwind build).
-///
-///   2. build/ShellUI.Components.targets — NuGet-auto-imported MSBuild file that
-///      embeds every class in an <ItemGroup> and writes them out to the consumer's
-///      wwwroot/ during build. Self-contained — no second NuGet file to extract.
-///
-/// Usage:
-///   dotnet run --project tools/ShellUI.SafelistGenerator -- <razorDir> <txtOut> <targetsOut>
+/* Scans .razor and .cs files for Tailwind utility classes and emits:
+     - wwwroot/shellui-classes.txt (committed, used for drift detection + demo build)
+     - build/ShellUI.Components.targets (NuGet auto-imports; embeds the list inline so we don't
+       depend on NuGet extracting a separate data file — behavior varies by client) */
 public static class Program
 {
     public static int Main(string[] args)
@@ -50,10 +43,7 @@ public static class Program
         return 0;
     }
 
-    /// Public — enumerates the source files the generator scans. Reused by tests
-    /// so the drift check compares against the same file list the CLI would use.
-    /// Both .razor components and .cs helpers get scanned (Variants, Services);
-    /// bin/ and obj/ are excluded so contributors' build outputs don't taint output.
+    // Shared with tests so the drift check scans the same file set as the CLI.
     public static (string[] razorFiles, string[] csFiles) EnumerateSources(string razorDir)
     {
         var razorFiles = Directory.GetFiles(razorDir, "*.razor", SearchOption.AllDirectories);
@@ -66,7 +56,6 @@ public static class Program
         return (razorFiles, csFiles);
     }
 
-    /// Public for in-process testing — runs the same extraction the CLI invocation does.
     public static SortedSet<string> GenerateSafelist(IEnumerable<string> sourceFilePaths)
     {
         var classes = new SortedSet<string>(StringComparer.Ordinal);
@@ -85,11 +74,7 @@ public static class Program
         return classes;
     }
 
-    // For .cs files (Variants, Services), pull tokens out of every string literal
-    // — but only from literals that LOOK like a class-list string. Filters out
-    // JS/HTML fragments, URLs, CSS property strings, error messages, and other
-    // non-Tailwind literals that would otherwise pollute the safelist with tokens
-    // like `background-color:`, `series[idx]`, `shadcn/ui.`, etc.
+    // .cs literals need filtering — without it, JS/CSS/error-message strings pollute the safelist.
     private static void ExtractFromCSharp(string content, SortedSet<string> sink)
     {
         foreach (Match lit in StringLiteralRegex.Matches(content))
@@ -100,18 +85,13 @@ public static class Program
         }
     }
 
-    // Heuristic: a class-list string is space-separated tokens, each looking like
-    // a Tailwind utility. Reject literals that contain characters/patterns that
-    // never appear in a real class list.
     private static bool LooksLikeClassList(string s)
     {
         if (s.Length == 0 || s.Length > 500) return false;
-        // URLs, HTML/XML tags, JS fragments, C# format placeholders, CSS property syntax
+        // `=` outside `[…]` implies key=value pairs, not class strings.
         if (s.Contains("://") || s.Contains('<') || s.Contains('>') || s.Contains('{')
-            || s.Contains(';') || s.Contains('=') && !s.Contains('[')  // `=` outside `[…]` = probably not a class
+            || s.Contains(';') || s.Contains('=') && !s.Contains('[')
             || s.Contains('\n')) return false;
-        // Must contain at least one token that looks Tailwindy: contains `-` or `:` or `[`
-        // AND is composed of tokens that all satisfy the "utility class" shape.
         var tokens = s.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
         if (tokens.Length == 0) return false;
         var anyUtility = false;
@@ -121,7 +101,6 @@ public static class Program
             var t = tok.TrimEnd(',', ';', ')', '"');
             if (t.Length < 2) return false;
             if (!char.IsLower(t[0]) && t[0] != '[' && t[0] != '!') return false;
-            // Reject tokens with characters that never appear in a class name
             foreach (var c in t)
             {
                 if (!(char.IsLetterOrDigit(c) || c is '-' or '_' or ':' or '/' or '.' or '[' or ']'
@@ -134,25 +113,13 @@ public static class Program
         return anyUtility;
     }
 
-    /// Public for in-process testing — produces the same .targets content the CLI writes.
+    // XML comments in the generated .targets must not contain `--` (XML 1.0 spec); MSBuild on
+    // Linux .NET 10.301+ rejects the file with MSB4024. Keep the emitted comment text safe.
     public static string BuildTargetsFileContent(IEnumerable<string> classes)
     {
-        // XML comments cannot contain a `--` sequence (XML 1.0 spec). Some MSBuild
-        // versions accept it; others (Linux .NET 10.301+) reject the whole file
-        // with MSB4024. Avoid `--` anywhere in the comment text — that's why we
-        // don't show example CLI flags here. Regen instructions live in the tool's
-        // own help output: `dotnet run --project tools/ShellUI.SafelistGenerator`.
         var sb = new StringBuilder();
         sb.AppendLine("<Project>");
-        sb.AppendLine("  <!--");
-        sb.AppendLine("    AUTO-GENERATED by tools/ShellUI.SafelistGenerator. Do not edit by hand.");
-        sb.AppendLine();
-        sb.AppendLine("    NuGet auto-imports build/<PackageId>.targets into any consumer build. We");
-        sb.AppendLine("    embed the Tailwind safelist inline so we do not depend on NuGet extracting");
-        sb.AppendLine("    a separate data file (behavior varies by client and version). At consumer");
-        sb.AppendLine("    build time, WriteLinesToFile drops the list into wwwroot so input.css can");
-        sb.AppendLine("    reference it via @source.");
-        sb.AppendLine("  -->");
+        sb.AppendLine("  <!-- AUTO-GENERATED by tools/ShellUI.SafelistGenerator. Do not edit by hand. -->");
         sb.AppendLine("  <ItemGroup>");
         foreach (var cls in classes)
         {
@@ -176,17 +143,12 @@ public static class Program
 
     private static string XmlEscape(string s)
     {
-        // We control the input (extracted Tailwind class strings) but `&` and `"` show
-        // up in arbitrary values like data-[state=on] — escape conservatively.
         return s.Replace("&", "&amp;")
                 .Replace("\"", "&quot;")
                 .Replace("<", "&lt;")
                 .Replace(">", "&gt;");
     }
 
-    // Class-attribute extraction — handles literal strings, Razor expressions, nested
-    // Shell.Cn("foo", …) literals. Razor variable parts (`@Class`) are dropped because
-    // Tailwind would not see those at build time anyway.
     private static readonly Regex ClassAttributeRegex = new(
         "class\\s*=\\s*\"(?<value>[^\"]*)\"",
         RegexOptions.Compiled);
@@ -208,9 +170,6 @@ public static class Program
         }
     }
 
-    // A token qualifies as a Tailwind utility class if it contains at least one of
-    // `-`, `:`, `[`, `/` AND starts with a lowercase letter. Excludes C# identifiers
-    // (`Class`, `Variant`) caught by our literal extraction.
     private static void HarvestTokens(string text, SortedSet<string> sink)
     {
         var tokens = text.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);

@@ -15,14 +15,111 @@ class Program
             Description = "Add beautiful, accessible components to your Blazor app. Inspired by shadcn/ui."
         };
 
-        // Add commands
         rootCommand.AddCommand(CreateInitCommand());
         rootCommand.AddCommand(CreateAddCommand());
         rootCommand.AddCommand(CreateListCommand());
         rootCommand.AddCommand(CreateRemoveCommand());
         rootCommand.AddCommand(CreateUpdateCommand());
+        rootCommand.AddCommand(CreateThemeCommand());
 
         return await rootCommand.InvokeAsync(args);
+    }
+
+    static Command CreateThemeCommand()
+    {
+        var theme = new Command("theme", "Fetch and apply themes from tweakcn.com at build time.");
+        theme.AddCommand(CreateThemeApplyCommand());
+        theme.AddCommand(CreateThemeUpdateCommand());
+        return theme;
+    }
+
+    static Command CreateThemeApplyCommand()
+    {
+        var command = new Command("apply", "Fetch a theme from tweakcn and bake it into wwwroot/input.css");
+
+        var urlArg = new Argument<string>("url",
+            "tweakcn URL or theme id. Accepts https://tweakcn.com/themes/<id>, the raw <id>, or the public https://tweakcn.com/r/themes/<id> endpoint.");
+        command.AddArgument(urlArg);
+
+        var emitOverrideOpt = new Option<string?>("--emit-override",
+            "Write the theme block to a standalone CSS file (Path A/D users link this after shellui-all.css). If omitted, updates wwwroot/input.css in-place.");
+        command.AddOption(emitOverrideOpt);
+
+        command.SetHandler(async (url, emitOverride) =>
+        {
+            try
+            {
+                await ApplyThemeAsync(url, emitOverride);
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
+                Environment.Exit(1);
+            }
+        }, urlArg, emitOverrideOpt);
+
+        return command;
+    }
+
+    static Command CreateThemeUpdateCommand()
+    {
+        var command = new Command("update", "Re-fetch the theme recorded in shellui.theme.lock and re-apply it.");
+
+        command.SetHandler(async () =>
+        {
+            try
+            {
+                var cwd = Directory.GetCurrentDirectory();
+                var lockFile = ThemeService.ReadLockFile(cwd);
+                if (lockFile is null)
+                {
+                    AnsiConsole.MarkupLine("[yellow]No shellui.theme.lock in this directory.[/] Run [bold]shellui theme apply <url>[/] first.");
+                    Environment.Exit(2);
+                    return;
+                }
+                AnsiConsole.MarkupLine($"[cyan]Updating theme[/] [bold]{lockFile!.ThemeName}[/] from [dim]{lockFile.SourceUrl}[/]");
+                await ApplyThemeAsync(lockFile.SourceUrl, emitOverride: null);
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
+                Environment.Exit(1);
+            }
+        });
+
+        return command;
+    }
+
+    private static async Task ApplyThemeAsync(string url, string? emitOverride)
+    {
+        var cwd = Directory.GetCurrentDirectory();
+
+        AnsiConsole.MarkupLine($"[cyan]Fetching theme:[/] {url.Replace("[", "[[").Replace("]", "]]")}");
+        var json = await ThemeService.FetchThemeJsonAsync(url);
+        var theme = ThemeService.ParseTheme(json);
+        AnsiConsole.MarkupLine($"[green]✓[/] Fetched: [bold]{theme.Name}[/] ({theme.LightVars.Count} light + {theme.DarkVars.Count} dark vars)");
+
+        if (!string.IsNullOrEmpty(emitOverride))
+        {
+            var outPath = Path.IsPathRooted(emitOverride) ? emitOverride : Path.Combine(cwd, emitOverride);
+            ThemeService.EmitOverride(outPath, theme);
+            AnsiConsole.MarkupLine($"[green]✓[/] Wrote override: [dim]{outPath}[/]");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[yellow]Next step:[/] link the override AFTER shellui-all.css in your App.razor <head>:");
+            AnsiConsole.MarkupLine($"  [dim]<link rel=\"stylesheet\" href=\"_content/ShellUI.Components/shellui-all.css\" />[/]");
+            AnsiConsole.MarkupLine($"  [bold]<link rel=\"stylesheet\" href=\"{Path.GetFileName(outPath)}\" />[/]");
+        }
+        else
+        {
+            var inputCss = Path.Combine(cwd, "wwwroot", "input.css");
+            ThemeService.ApplyToInputCss(inputCss, theme);
+            AnsiConsole.MarkupLine($"[green]✓[/] Updated: [dim]wwwroot/input.css[/]");
+            AnsiConsole.MarkupLine("");
+            AnsiConsole.MarkupLine("[yellow]Next step:[/] rebuild Tailwind (or run [bold]dotnet build[/] if the CLI wired that up during init).");
+        }
+
+        ThemeService.WriteLockFile(cwd, url, json, theme.Name);
+        AnsiConsole.MarkupLine($"[dim]Lock file written: shellui.theme.lock[/]");
     }
 
     static Command CreateInitCommand()
@@ -53,7 +150,6 @@ class Program
         {
             try
             {
-                // Beautiful ASCII art logo for SHELLUI
                 var logo = @"
  ███████╗██╗  ██╗███████╗██╗     ██╗     ██╗   ██╗██╗
  ██╔════╝██║  ██║██╔════╝██║     ██║     ██║   ██║██║
