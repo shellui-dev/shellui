@@ -376,7 +376,7 @@ Done. `<Button>`, `<Card>`, `<Dialog>` etc. all render fully styled.
 dotnet add package ShellUI.Components
 ```
 
-The package copies `shellui-classes.txt` (safelist of 307 unique Tailwind classes ShellUI uses) into your `wwwroot/`. Point Tailwind at it:
+The package copies `shellui-classes.txt` (auto-generated safelist of every Tailwind class ShellUI uses) into your `wwwroot/`. Point Tailwind at it:
 
 ```css
 /* wwwroot/input.css */
