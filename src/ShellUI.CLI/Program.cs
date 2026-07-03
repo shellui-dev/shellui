@@ -28,9 +28,49 @@ class Program
     static Command CreateThemeCommand()
     {
         var theme = new Command("theme", "Fetch and apply themes from tweakcn.com at build time.");
+        theme.AddCommand(CreateThemeInitCommand());
         theme.AddCommand(CreateThemeApplyCommand());
         theme.AddCommand(CreateThemeUpdateCommand());
         return theme;
+    }
+
+    static Command CreateThemeInitCommand()
+    {
+        var command = new Command("init", "Initialize ShellUI in a fresh Blazor project and bake in a tweakcn theme in one shot.");
+
+        var urlArg = new Argument<string>("url",
+            "tweakcn URL or theme id. Accepts https://tweakcn.com/themes/<id>, the raw <id>, or the public https://tweakcn.com/r/themes/<id> endpoint.");
+        command.AddArgument(urlArg);
+
+        var forceOpt = new Option<bool>("--force", "Reinitialize even if already initialized");
+        var styleOpt = new Option<string>("--style", getDefaultValue: () => "default",
+            "Component style: default, new-york, minimal");
+        var tailwindOpt = new Option<string>("--tailwind", getDefaultValue: () => "standalone",
+            "Tailwind method: standalone, npm");
+        var yesOpt = new Option<bool>("--yes", "Non-interactive mode with default options");
+        command.AddOption(forceOpt);
+        command.AddOption(styleOpt);
+        command.AddOption(tailwindOpt);
+        command.AddOption(yesOpt);
+
+        command.SetHandler(async (url, force, style, tailwind, nonInteractive) =>
+        {
+            try
+            {
+                AnsiConsole.MarkupLine("[cyan]Step 1/2:[/] initializing ShellUI…");
+                await InitService.InitializeAsync(style, force, tailwind, nonInteractive);
+                AnsiConsole.MarkupLine("");
+                AnsiConsole.MarkupLine("[cyan]Step 2/2:[/] applying tweakcn theme…");
+                await ApplyThemeAsync(url, emitOverride: null);
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
+                Environment.Exit(1);
+            }
+        }, urlArg, forceOpt, styleOpt, tailwindOpt, yesOpt);
+
+        return command;
     }
 
     static Command CreateThemeApplyCommand()
