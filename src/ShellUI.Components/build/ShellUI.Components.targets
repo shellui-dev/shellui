@@ -17,12 +17,16 @@
     <ShellUISafelistEntry Include="aspect-square" />
     <ShellUISafelistEntry Include="backdrop-blur-md" />
     <ShellUISafelistEntry Include="backdrop-blur-sm" />
+    <ShellUISafelistEntry Include="bg-accent" />
     <ShellUISafelistEntry Include="bg-background" />
     <ShellUISafelistEntry Include="bg-background/80" />
     <ShellUISafelistEntry Include="bg-background/95" />
     <ShellUISafelistEntry Include="bg-black/80" />
+    <ShellUISafelistEntry Include="bg-blue-500" />
     <ShellUISafelistEntry Include="bg-border" />
     <ShellUISafelistEntry Include="bg-card" />
+    <ShellUISafelistEntry Include="bg-destructive" />
+    <ShellUISafelistEntry Include="bg-green-500" />
     <ShellUISafelistEntry Include="bg-muted" />
     <ShellUISafelistEntry Include="bg-muted/30" />
     <ShellUISafelistEntry Include="bg-popover" />
@@ -31,23 +35,39 @@
     <ShellUISafelistEntry Include="bg-sidebar" />
     <ShellUISafelistEntry Include="bg-sidebar-primary" />
     <ShellUISafelistEntry Include="bg-transparent" />
+    <ShellUISafelistEntry Include="bg-yellow-500" />
     <ShellUISafelistEntry Include="border-0" />
     <ShellUISafelistEntry Include="border-2" />
     <ShellUISafelistEntry Include="border-b" />
     <ShellUISafelistEntry Include="border-border" />
+    <ShellUISafelistEntry Include="border-border/40" />
+    <ShellUISafelistEntry Include="border-destructive" />
     <ShellUISafelistEntry Include="border-input" />
+    <ShellUISafelistEntry Include="border-l" />
     <ShellUISafelistEntry Include="border-primary/20" />
+    <ShellUISafelistEntry Include="border-r" />
+    <ShellUISafelistEntry Include="border-t" />
+    <ShellUISafelistEntry Include="border-transparent" />
+    <ShellUISafelistEntry Include="bottom-0" />
     <ShellUISafelistEntry Include="bottom-4" />
     <ShellUISafelistEntry Include="bottom-full" />
     <ShellUISafelistEntry Include="caption-bottom" />
     <ShellUISafelistEntry Include="cursor-default" />
     <ShellUISafelistEntry Include="cursor-pointer" />
+    <ShellUISafelistEntry Include="custom-tooltip" />
+    <ShellUISafelistEntry Include="custom-tooltip-item" />
+    <ShellUISafelistEntry Include="custom-tooltip-label" />
+    <ShellUISafelistEntry Include="custom-tooltip-marker" />
+    <ShellUISafelistEntry Include="custom-tooltip-title" />
+    <ShellUISafelistEntry Include="custom-tooltip-value" />
     <ShellUISafelistEntry Include="data-[selected]:bg-accent" />
     <ShellUISafelistEntry Include="data-[selected]:text-accent-foreground" />
     <ShellUISafelistEntry Include="data-[state=closed]:animate-out" />
+    <ShellUISafelistEntry Include="data-[state=closed]:duration-300" />
     <ShellUISafelistEntry Include="data-[state=closed]:fade-out-0" />
     <ShellUISafelistEntry Include="data-[state=open]:animate-in" />
     <ShellUISafelistEntry Include="data-[state=open]:bg-accent" />
+    <ShellUISafelistEntry Include="data-[state=open]:duration-500" />
     <ShellUISafelistEntry Include="data-[state=open]:fade-in-0" />
     <ShellUISafelistEntry Include="data-[state=open]:grid-rows-[1fr]" />
     <ShellUISafelistEntry Include="data-[state=open]:text-muted-foreground" />
@@ -78,6 +98,7 @@
     <ShellUISafelistEntry Include="fill-primary-foreground" />
     <ShellUISafelistEntry Include="flex-1" />
     <ShellUISafelistEntry Include="flex-col" />
+    <ShellUISafelistEntry Include="flex-col-reverse" />
     <ShellUISafelistEntry Include="flex-row" />
     <ShellUISafelistEntry Include="flex-shrink-0" />
     <ShellUISafelistEntry Include="focus-visible:[&amp;::-moz-range-thumb]:ring-2" />
@@ -89,6 +110,7 @@
     <ShellUISafelistEntry Include="focus-visible:outline-none" />
     <ShellUISafelistEntry Include="focus-visible:ring-1" />
     <ShellUISafelistEntry Include="focus-visible:ring-2" />
+    <ShellUISafelistEntry Include="focus-visible:ring-destructive" />
     <ShellUISafelistEntry Include="focus-visible:ring-offset-2" />
     <ShellUISafelistEntry Include="focus-visible:ring-ring" />
     <ShellUISafelistEntry Include="focus:bg-accent" />
@@ -125,8 +147,10 @@
     <ShellUISafelistEntry Include="group-data-[variant=floating]:shadow" />
     <ShellUISafelistEntry Include="h-1/2" />
     <ShellUISafelistEntry Include="h-10" />
+    <ShellUISafelistEntry Include="h-11" />
     <ShellUISafelistEntry Include="h-12" />
     <ShellUISafelistEntry Include="h-14" />
+    <ShellUISafelistEntry Include="h-16" />
     <ShellUISafelistEntry Include="h-2" />
     <ShellUISafelistEntry Include="h-2.5" />
     <ShellUISafelistEntry Include="h-24" />
@@ -141,16 +165,26 @@
     <ShellUISafelistEntry Include="h-px" />
     <ShellUISafelistEntry Include="hover:bg-accent" />
     <ShellUISafelistEntry Include="hover:bg-accent/50" />
+    <ShellUISafelistEntry Include="hover:bg-blue-600" />
+    <ShellUISafelistEntry Include="hover:bg-destructive/80" />
+    <ShellUISafelistEntry Include="hover:bg-destructive/90" />
+    <ShellUISafelistEntry Include="hover:bg-green-600" />
+    <ShellUISafelistEntry Include="hover:bg-muted" />
+    <ShellUISafelistEntry Include="hover:bg-primary/80" />
     <ShellUISafelistEntry Include="hover:bg-primary/90" />
+    <ShellUISafelistEntry Include="hover:bg-secondary/80" />
     <ShellUISafelistEntry Include="hover:bg-sidebar-accent" />
+    <ShellUISafelistEntry Include="hover:bg-yellow-600" />
     <ShellUISafelistEntry Include="hover:opacity-100" />
     <ShellUISafelistEntry Include="hover:text-accent-foreground" />
     <ShellUISafelistEntry Include="hover:text-foreground" />
+    <ShellUISafelistEntry Include="hover:text-muted-foreground" />
     <ShellUISafelistEntry Include="hover:text-sidebar-accent-foreground" />
     <ShellUISafelistEntry Include="hover:underline" />
     <ShellUISafelistEntry Include="inline-block" />
     <ShellUISafelistEntry Include="inline-flex" />
     <ShellUISafelistEntry Include="inset-0" />
+    <ShellUISafelistEntry Include="inset-x-0" />
     <ShellUISafelistEntry Include="inset-y-0" />
     <ShellUISafelistEntry Include="items-center" />
     <ShellUISafelistEntry Include="items-end" />
@@ -175,6 +209,7 @@
     <ShellUISafelistEntry Include="md:block" />
     <ShellUISafelistEntry Include="min-h-0" />
     <ShellUISafelistEntry Include="min-h-8" />
+    <ShellUISafelistEntry Include="min-h-[80px]" />
     <ShellUISafelistEntry Include="min-w-0" />
     <ShellUISafelistEntry Include="min-w-8" />
     <ShellUISafelistEntry Include="min-w-[640px]" />
@@ -228,8 +263,12 @@
     <ShellUISafelistEntry Include="px-1" />
     <ShellUISafelistEntry Include="px-1.5" />
     <ShellUISafelistEntry Include="px-2" />
+    <ShellUISafelistEntry Include="px-2.5" />
     <ShellUISafelistEntry Include="px-3" />
     <ShellUISafelistEntry Include="px-4" />
+    <ShellUISafelistEntry Include="px-5" />
+    <ShellUISafelistEntry Include="px-8" />
+    <ShellUISafelistEntry Include="py-0.5" />
     <ShellUISafelistEntry Include="py-1" />
     <ShellUISafelistEntry Include="py-1.5" />
     <ShellUISafelistEntry Include="py-2" />
@@ -256,9 +295,16 @@
     <ShellUISafelistEntry Include="shrink-0" />
     <ShellUISafelistEntry Include="size-4" />
     <ShellUISafelistEntry Include="size-8" />
+    <ShellUISafelistEntry Include="slide-in-from-bottom" />
+    <ShellUISafelistEntry Include="slide-in-from-bottom-2" />
+    <ShellUISafelistEntry Include="slide-in-from-left" />
+    <ShellUISafelistEntry Include="slide-in-from-right" />
+    <ShellUISafelistEntry Include="slide-in-from-top" />
+    <ShellUISafelistEntry Include="slide-in-from-top-2" />
     <ShellUISafelistEntry Include="sm:flex-row" />
     <ShellUISafelistEntry Include="sm:items-center" />
     <ShellUISafelistEntry Include="sm:justify-between" />
+    <ShellUISafelistEntry Include="sm:max-w-sm" />
     <ShellUISafelistEntry Include="sm:space-x-6" />
     <ShellUISafelistEntry Include="sm:text-left" />
     <ShellUISafelistEntry Include="space-x-1" />
@@ -269,8 +315,10 @@
     <ShellUISafelistEntry Include="text-5xl" />
     <ShellUISafelistEntry Include="text-[10px]" />
     <ShellUISafelistEntry Include="text-[8px]" />
+    <ShellUISafelistEntry Include="text-accent-foreground" />
     <ShellUISafelistEntry Include="text-card-foreground" />
     <ShellUISafelistEntry Include="text-center" />
+    <ShellUISafelistEntry Include="text-destructive-foreground" />
     <ShellUISafelistEntry Include="text-foreground" />
     <ShellUISafelistEntry Include="text-left" />
     <ShellUISafelistEntry Include="text-lg" />
@@ -279,12 +327,15 @@
     <ShellUISafelistEntry Include="text-primary" />
     <ShellUISafelistEntry Include="text-primary-foreground" />
     <ShellUISafelistEntry Include="text-right" />
+    <ShellUISafelistEntry Include="text-secondary-foreground" />
     <ShellUISafelistEntry Include="text-sidebar-foreground" />
     <ShellUISafelistEntry Include="text-sidebar-foreground/70" />
     <ShellUISafelistEntry Include="text-sidebar-primary-foreground" />
     <ShellUISafelistEntry Include="text-sm" />
+    <ShellUISafelistEntry Include="text-white" />
     <ShellUISafelistEntry Include="text-xl" />
     <ShellUISafelistEntry Include="text-xs" />
+    <ShellUISafelistEntry Include="top-0" />
     <ShellUISafelistEntry Include="top-2" />
     <ShellUISafelistEntry Include="top-4" />
     <ShellUISafelistEntry Include="top-8" />
@@ -296,11 +347,15 @@
     <ShellUISafelistEntry Include="transition-colors" />
     <ShellUISafelistEntry Include="transition-opacity" />
     <ShellUISafelistEntry Include="transition-transform" />
+    <ShellUISafelistEntry Include="underline-offset-4" />
     <ShellUISafelistEntry Include="w-1/2" />
+    <ShellUISafelistEntry Include="w-10" />
     <ShellUISafelistEntry Include="w-12" />
+    <ShellUISafelistEntry Include="w-16" />
     <ShellUISafelistEntry Include="w-2.5" />
     <ShellUISafelistEntry Include="w-3" />
     <ShellUISafelistEntry Include="w-3.5" />
+    <ShellUISafelistEntry Include="w-3/4" />
     <ShellUISafelistEntry Include="w-4" />
     <ShellUISafelistEntry Include="w-5" />
     <ShellUISafelistEntry Include="w-56" />

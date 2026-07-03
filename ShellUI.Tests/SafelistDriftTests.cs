@@ -20,7 +20,7 @@ public class SafelistDriftTests
         + "src/ShellUI.Components/build/ShellUI.Components.targets";
 
     [Fact]
-    public void Safelist_MatchesGeneratedFromCurrentRazorSources()
+    public void Safelist_MatchesGeneratedFromCurrentSources()
     {
         var componentsDir = ResolveComponentsDir();
         var safelistPath = ResolveSafelistPath();
@@ -28,8 +28,10 @@ public class SafelistDriftTests
         Assert.True(Directory.Exists(componentsDir), $"components dir not found: {componentsDir}");
         Assert.True(File.Exists(safelistPath), $"safelist not found at {safelistPath}. Run: {RegenerateCommand}");
 
-        var razorFiles = Directory.GetFiles(componentsDir, "*.razor", SearchOption.AllDirectories);
-        var freshlyGenerated = Program.GenerateSafelist(razorFiles);
+        // Use the same source enumeration the CLI uses (dual .razor + .cs, minus
+        // bin/obj). Diverging file lists would produce false-positive drifts.
+        var (razorFiles, csFiles) = Program.EnumerateSources(componentsDir);
+        var freshlyGenerated = Program.GenerateSafelist(razorFiles.Concat(csFiles));
         var committed = File.ReadAllLines(safelistPath)
             .Where(line => !string.IsNullOrWhiteSpace(line))
             .ToHashSet();

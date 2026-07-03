@@ -35,8 +35,8 @@ public static class Program
             return 2;
         }
 
-        var razorFiles = Directory.GetFiles(razorDir, "*.razor", SearchOption.AllDirectories);
-        var classes = GenerateSafelist(razorFiles);
+        var (razorFiles, csFiles) = EnumerateSources(razorDir);
+        var classes = GenerateSafelist(razorFiles.Concat(csFiles));
 
         Directory.CreateDirectory(Path.GetDirectoryName(txtOut)!);
         File.WriteAllLines(txtOut, classes);
@@ -44,21 +44,94 @@ public static class Program
         Directory.CreateDirectory(Path.GetDirectoryName(targetsOut)!);
         File.WriteAllText(targetsOut, BuildTargetsFileContent(classes));
 
-        Console.WriteLine($"wrote {classes.Count} classes from {razorFiles.Length} razor files");
+        Console.WriteLine($"wrote {classes.Count} classes from {razorFiles.Length} razor + {csFiles.Length} cs files");
         Console.WriteLine($"  txt:     {txtOut}");
         Console.WriteLine($"  targets: {targetsOut}");
         return 0;
     }
 
+    /// Public — enumerates the source files the generator scans. Reused by tests
+    /// so the drift check compares against the same file list the CLI would use.
+    /// Both .razor components and .cs helpers get scanned (Variants, Services);
+    /// bin/ and obj/ are excluded so contributors' build outputs don't taint output.
+    public static (string[] razorFiles, string[] csFiles) EnumerateSources(string razorDir)
+    {
+        var razorFiles = Directory.GetFiles(razorDir, "*.razor", SearchOption.AllDirectories);
+        var componentsRoot = Path.GetDirectoryName(razorDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
+            ?? razorDir;
+        var csFiles = Directory.GetFiles(componentsRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(p => !p.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}")
+                     && !p.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"))
+            .ToArray();
+        return (razorFiles, csFiles);
+    }
+
     /// Public for in-process testing — runs the same extraction the CLI invocation does.
-    public static SortedSet<string> GenerateSafelist(IEnumerable<string> razorFilePaths)
+    public static SortedSet<string> GenerateSafelist(IEnumerable<string> sourceFilePaths)
     {
         var classes = new SortedSet<string>(StringComparer.Ordinal);
-        foreach (var file in razorFilePaths)
+        foreach (var file in sourceFilePaths)
         {
-            ExtractClasses(File.ReadAllText(file), classes);
+            var text = File.ReadAllText(file);
+            if (file.EndsWith(".razor", StringComparison.OrdinalIgnoreCase))
+            {
+                ExtractClasses(text, classes);
+            }
+            else if (file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+            {
+                ExtractFromCSharp(text, classes);
+            }
         }
         return classes;
+    }
+
+    // For .cs files (Variants, Services), pull tokens out of every string literal
+    // — but only from literals that LOOK like a class-list string. Filters out
+    // JS/HTML fragments, URLs, CSS property strings, error messages, and other
+    // non-Tailwind literals that would otherwise pollute the safelist with tokens
+    // like `background-color:`, `series[idx]`, `shadcn/ui.`, etc.
+    private static void ExtractFromCSharp(string content, SortedSet<string> sink)
+    {
+        foreach (Match lit in StringLiteralRegex.Matches(content))
+        {
+            var value = lit.Groups["lit"].Value;
+            if (!LooksLikeClassList(value)) continue;
+            HarvestTokens(value, sink);
+        }
+    }
+
+    // Heuristic: a class-list string is space-separated tokens, each looking like
+    // a Tailwind utility. Reject literals that contain characters/patterns that
+    // never appear in a real class list.
+    private static bool LooksLikeClassList(string s)
+    {
+        if (s.Length == 0 || s.Length > 500) return false;
+        // URLs, HTML/XML tags, JS fragments, C# format placeholders, CSS property syntax
+        if (s.Contains("://") || s.Contains('<') || s.Contains('>') || s.Contains('{')
+            || s.Contains(';') || s.Contains('=') && !s.Contains('[')  // `=` outside `[…]` = probably not a class
+            || s.Contains('\n')) return false;
+        // Must contain at least one token that looks Tailwindy: contains `-` or `:` or `[`
+        // AND is composed of tokens that all satisfy the "utility class" shape.
+        var tokens = s.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        if (tokens.Length == 0) return false;
+        var anyUtility = false;
+        foreach (var tok in tokens)
+        {
+            if (tok.Length < 2) return false;
+            var t = tok.TrimEnd(',', ';', ')', '"');
+            if (t.Length < 2) return false;
+            if (!char.IsLower(t[0]) && t[0] != '[' && t[0] != '!') return false;
+            // Reject tokens with characters that never appear in a class name
+            foreach (var c in t)
+            {
+                if (!(char.IsLetterOrDigit(c) || c is '-' or '_' or ':' or '/' or '.' or '[' or ']'
+                    or '(' or ')' or '=' or '&' or ',' or '!' or '%' or '#' or '@' or '*'))
+                    return false;
+            }
+            if (t.Contains('-') || t.Contains(':') || t.Contains('[') || t.Contains('/'))
+                anyUtility = true;
+        }
+        return anyUtility;
     }
 
     /// Public for in-process testing — produces the same .targets content the CLI writes.

@@ -30,6 +30,39 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ShellUI.slnx
 
+    # Generates src/ShellUI.Components/wwwroot/shellui-all.css fresh on every run.
+    # File is gitignored — the Windows + Linux Tailwind CLI binaries produce
+    # byte-different output, so drift-checking a committed file failed spuriously.
+    # Instead we regenerate and validate content properties.
+    - name: Build precompiled CSS bundle
+      # Invoke via `bash` (not `./script.sh`) so we don't rely on the file's
+      # executable bit. Windows contributors can edit and commit without
+      # remembering `git update-index --chmod=+x`.
+      run: |
+        set -euxo pipefail
+        bash scripts/rebuild-precompiled-css.sh
+        BUNDLE=src/ShellUI.Components/wwwroot/shellui-all.css
+        test -f "$BUNDLE" || (echo "ERROR: bundle was not produced"; exit 1)
+
+        # Content assertions using grep -F (fixed-string, no regex escaping headaches).
+        # These catch classes of bugs we've actually shipped before — worth the paranoia.
+        grep -Fq -- '--background' "$BUNDLE" || (echo "ERROR: theme vars not in bundle"; exit 1)
+        grep -Fq '.bg-background' "$BUNDLE" || (echo "ERROR: core utility rule missing"; exit 1)
+        grep -Fq 'hover\:bg-accent' "$BUNDLE" || (echo "ERROR: hover: modifier rules missing"; exit 1)
+        grep -Fq 'state=open' "$BUNDLE" || (echo "ERROR: data-[state=open] arbitrary value not compiled"; exit 1)
+        grep -Fq 'px-2\.5' "$BUNDLE" || (echo "ERROR: Badge padding class px-2.5 missing (variant .cs helpers not scanned?)"; exit 1)
+        grep -Fq 'border-transparent' "$BUNDLE" || (echo "ERROR: border-transparent missing (variant .cs helpers not scanned?)"; exit 1)
+
+        # Size guard — well above the ~77KB current 68 components emit, tight
+        # enough to catch a runaway (someone disabling minify, dumping the whole
+        # tailwind base without tree-shake, etc.).
+        size=$(wc -c < "$BUNDLE")
+        echo "precompiled bundle size: ${size} bytes"
+        if [ "$size" -gt 150000 ]; then
+          echo "ERROR: bundle exceeded 150KB — investigate before shipping."
+          exit 1
+        fi
+
     - name: Build
       run: dotnet build ShellUI.slnx --no-restore --configuration Release
 
@@ -97,6 +130,13 @@ jobs:
         test -d "$LOCAL_FEED" || (echo "local feed not found at $LOCAL_FEED — did the pack step run?"; exit 1)
         ls "$LOCAL_FEED"/*.nupkg | head -3
 
+        # DIAGNOSTIC: dump what's actually inside the fresh nupkg. The precompiled
+        # bundle must ship as a static web asset for consumers to `<link>` it.
+        echo "---nupkg contents (looking for shellui-all.css):---"
+        unzip -l "$LOCAL_FEED"/ShellUI.Components*.nupkg | grep -E 'shellui-all|staticwebassets/' | head -10 || echo "  (no matches — bundle not in nupkg!)"
+        echo "---source wwwroot check:---"
+        ls -la "$GITHUB_WORKSPACE/src/ShellUI.Components/wwwroot/" | head -10
+
         TMPDIR=$(mktemp -d)
         mkdir -p "$TMPDIR/app" && cd "$TMPDIR/app"
         dotnet new blazor -o NuGetSmoke --no-restore
@@ -113,6 +153,14 @@ jobs:
           </packageSources>
         </configuration>
         EOF
+
+        # Evict every cached ShellUI.Components from ~/.nuget/packages before restore.
+        # The runner-level cache is restored from actions/cache and may contain a
+        # stale copy of the current version from an earlier CI run (before we added
+        # the precompiled bundle, .cs scan, etc.). NuGet prefers cached over local
+        # feeds when version matches, so a stale cache silently masks the fresh
+        # nupkg. Wildcard covers any version — future-proof.
+        rm -rf ~/.nuget/packages/shellui.components
 
         dotnet add package ShellUI.Components --prerelease
 
@@ -132,6 +180,31 @@ jobs:
         # Sanity: the safelist contains real Tailwind classes
         grep -q 'bg-background' "$SAFELIST" || (echo "safelist appears malformed — missing core Tailwind class 'bg-background'"; exit 1)
         wc -l "$SAFELIST"
+
+        # In .NET 10, MapStaticAssets() doesn't physically copy static web assets
+        # from referenced packages into the consumer's bin/ during `dotnet build`
+        # — it uses a manifest and reads from the extracted NuGet cache at runtime.
+        # So the correct assertion is "does the file exist in the extracted package
+        # cache after restore", which proves it'll be served at
+        # `_content/ShellUI.Components/shellui-all.css` in the running app.
+        BUNDLE="$(find ~/.nuget/packages/shellui.components -name 'shellui-all.css' -type f | head -1)"
+        if [ -z "$BUNDLE" ]; then
+          echo "ERROR: shellui-all.css not in consumer's extracted NuGet cache — the pure-NuGet install path is broken."
+          echo "---consumer's extracted NuGet cache tree:---"
+          find ~/.nuget/packages/shellui.components -type f 2>/dev/null | head -30
+          exit 1
+        fi
+        echo "found bundle at: $BUNDLE"
+        BUNDLE_SIZE=$(wc -c < "$BUNDLE")
+        echo "bundle size: $BUNDLE_SIZE bytes"
+
+        # Spot-check a handful of representative rules using fixed-string grep
+        # (no regex escaping headaches). These catch classes of bugs we've hit.
+        grep -Fq -- '--background' "$BUNDLE" || (echo "ERROR: bundle missing --background theme var"; exit 1)
+        grep -Fq '.bg-background' "$BUNDLE" || (echo "ERROR: bundle missing .bg-background utility"; exit 1)
+        grep -Fq 'hover\:bg-accent' "$BUNDLE" || (echo "ERROR: bundle missing hover:bg-accent modifier rule"; exit 1)
+        grep -Fq 'state=open' "$BUNDLE" || (echo "ERROR: bundle missing data-[state=open] arbitrary-value modifier"; exit 1)
+        grep -Fq 'px-2\.5' "$BUNDLE" || (echo "ERROR: bundle missing Badge padding — .cs variant scan regression?"; exit 1)
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4

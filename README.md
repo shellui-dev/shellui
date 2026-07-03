@@ -315,46 +315,185 @@ ShellUI ships two NuGet packages — the CLI is the primary install path; the ru
 
 ## Installation
 
-Two paths — pick based on whether you already have Tailwind set up.
+**Four install paths.** Pick one — they cover every "shape" of Blazor / static project.
 
-### Path A — NuGet + your existing Tailwind setup (new in 0.4.x)
+### 🚦 Quick decision matrix
 
-If your project already builds Tailwind, install the runtime DLL via NuGet and add one line to your `input.css`:
+| I want to… | Use |
+|---|---|
+| Ship the fastest — one `<link>` tag, no build config | **Path A** — NuGet + precompiled bundle |
+| Tree-shaken CSS, I already run Tailwind for my own utilities | **Path B** — NuGet + safelist |
+| Own the component source code, restyle by editing `.razor` files | **Path C** — CLI |
+| Prototype in a static HTML page or JSFiddle without NuGet at all | **Path D** — CDN |
+
+The four paths coexist cleanly. You can even mix them (use CLI for a few customized components and NuGet for the rest).
+
+---
+
+### Path A — NuGet + precompiled CSS bundle (simplest, new in 0.4.x)
+
+**Who it's for:** you want components on screen with minimum ceremony. No Tailwind config, no npm, no CLI. Just NuGet and a `<link>` tag.
+
+**Setup (2 lines of code):**
 
 ```bash
 dotnet add package ShellUI.Components
 ```
 
-The package ships a `shellui-classes.txt` safelist at `wwwroot/shellui-classes.txt` in your project. Wire Tailwind to scan it:
+```razor
+@* App.razor <head> *@
+<link href="_content/ShellUI.Components/shellui-all.css" rel="stylesheet" />
+
+@* _Imports.razor *@
+@using ShellUI.Components
+```
+
+Done. `<Button>`, `<Card>`, `<Dialog>` etc. all render fully styled.
+
+**Benefits:**
+- ✅ **Fastest to set up** — 30 seconds from `dotnet new blazor` to styled components
+- ✅ **Zero build step for CSS** — the package ships a pre-compiled ~77KB bundle
+- ✅ **No downloads at build time** — no Tailwind binary, no npm install
+- ✅ **Deterministic** — the exact CSS you see locally is the exact CSS that ships
+- ✅ **Works offline** — no network dep, ever
+- ✅ **All 68 components styled** — regardless of which ones you use
+
+**Trade-offs:**
+- ❌ **No tree-shaking** — you pay ~77KB even if you only use 3 components (negligible for most sites)
+- ❌ **Theming via override only** — theme vars are baked into the bundle. You customize by *overriding* CSS variables in a later `<style>` block, not by editing an `input.css`. Works fine for color tweaks; less flexible for structural theme changes.
+
+**Best for:** new projects, prototypes, teams that don't already run Tailwind, "just get me components" scenarios.
+
+---
+
+### Path B — NuGet + your existing Tailwind setup (tree-shaken, new in 0.4.x)
+
+**Who it's for:** your project already runs Tailwind for your own utility classes, and you want ShellUI's classes tree-shaken into the same compiled output.
+
+**Setup:**
+
+```bash
+dotnet add package ShellUI.Components
+```
+
+The package copies `shellui-classes.txt` (auto-generated safelist of every Tailwind class ShellUI uses) into your `wwwroot/`. Point Tailwind at it:
 
 ```css
 /* wwwroot/input.css */
 @import "tailwindcss";
 @source "./shellui-classes.txt";
+
+/* Your own theme variables — full source of truth, paste tweakcn output here */
+:root {
+    --background: oklch(0.99 0 0);
+    --foreground: oklch(0 0 0);
+    /* ... */
+}
 ```
 
-`@using ShellUI.Components` in your `_Imports.razor` and you're done. Tailwind tree-shakes — only classes that actually appear in your code (yours + ShellUI's) end up in the compiled CSS.
+```razor
+@* _Imports.razor *@
+@using ShellUI.Components
+```
 
-### Path B — CLI tool (full source control, no Tailwind setup required)
+**Benefits:**
+- ✅ **Tree-shaken CSS** — only classes your compiled app *actually uses* are emitted (~30-50KB for a typical site)
+- ✅ **Single Tailwind build** — ShellUI's classes and your own classes compile in one pass
+- ✅ **Your `input.css` is the theme source of truth** — paste tweakcn output directly; no cascade tricks
+- ✅ **Composable** — add your own utilities, `@apply`, custom `@theme` blocks freely
 
-If you want zero Tailwind config of your own, or want to edit component source directly, use the CLI:
+**Trade-offs:**
+- ❌ Requires you to already have (or set up) a Tailwind build pipeline
+- ❌ Slightly more setup than Path A
+
+**Best for:** existing Blazor projects that already run Tailwind, teams that want CSS efficiency, projects with heavy custom styling on top of ShellUI.
+
+---
+
+### Path C — CLI (source ownership, shadcn-style)
+
+**Who it's for:** you want to *own* the component source code. Edit any `.razor` file directly to change behavior or styling. This is the shadcn philosophy — you don't import components, you copy them.
+
+**Setup:**
 
 ```bash
 dotnet tool install -g ShellUI.CLI
-shellui init                          # one-time setup — installs Tailwind, theme CSS, patches App.razor
+shellui init                          # one-time setup
 shellui add button card dialog        # any time you want more components
 ```
 
-The CLI copies the `.razor` files into your project. You own them — edit them however you like.
+`shellui init` automatically:
+- Downloads Tailwind standalone CLI (no Node.js needed) — or uses your npm install if you prefer
+- Writes the full default theme to `wwwroot/input.css` (`:root`, `.dark`, `@theme inline`)
+- Patches `App.razor` with `@rendermode="InteractiveServer"`, theme bootstrap script, `shellui.js` script tag
+- Sets up MSBuild integration — Tailwind rebuilds on every `dotnet build`
 
-### Which one?
+`shellui add <component>` copies the `.razor` source into `Components/UI/` in your project. Edit freely.
 
-| You want… | Use |
-|---|---|
-| Full source control over every component | CLI |
-| Restyle by editing the component source | CLI |
-| Minimal install, you already use Tailwind | NuGet |
-| Mix — NuGet for most, CLI for ones you customize | both (no conflict; NuGet's classes are tree-shaken via the safelist, CLI-copied components Tailwind scans directly)
+**Benefits:**
+- ✅ **Source-level ownership** — every component is your code, editable, versionable, forkable
+- ✅ **Best theming experience** — you own `wwwroot/input.css`, edit directly, tweakcn pastes straight in
+- ✅ **Zero external runtime deps** — Tailwind rebuilds on `dotnet build`; no network per build
+- ✅ **Automatic host wiring** — `shellui init` patches App.razor for you
+- ✅ **Composable with NuGet** — mix CLI-installed components with NuGet-provided ones
+
+**Trade-offs:**
+- ❌ First `shellui init` downloads ~25MB Tailwind binary (cached in `.shellui/bin/`)
+- ❌ Component updates are manual — you own the source, so you also merge upstream changes
+
+**Best for:** custom design systems, projects that heavily restyle ShellUI, teams that want everything in their own repo, anyone following the shadcn workflow.
+
+---
+
+### Path D — CDN (no NuGet, static HTML)
+
+**Who it's for:** prototypes, blog embeds, JSFiddle/CodePen/CodeSandbox demos, static marketing pages, or any scenario where NuGet is overkill.
+
+**Setup (one line):**
+
+```html
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/shellui-dev/shellui@v0.4.0/dist/shellui-all.css" />
+```
+
+jsdelivr auto-serves any file from a tagged GitHub release. Free, global edge cache, no account needed.
+
+Now write raw HTML with ShellUI's Tailwind classes:
+
+```html
+<button class="inline-flex items-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+    Click me
+</button>
+```
+
+**Benefits:**
+- ✅ **Zero installation** — no `dotnet add`, no CLI, no npm
+- ✅ **Zero build step** — one `<link>` tag and you're done
+- ✅ **Global edge cache** — jsdelivr serves from the nearest datacenter
+- ✅ **Works in any HTML context** — static sites, WordPress, MDX docs, any framework
+- ✅ **Same bundle as Path A** — theming, size, features are identical
+
+**Trade-offs:**
+- ❌ **Runtime dep on jsdelivr** — extremely reliable but not zero-risk
+- ❌ **No components** — this ships CSS only. For Blazor with components use Path A instead.
+- ❌ **Needs network** — no good for airgapped deployments
+
+**Best for:** landing pages, demos, "look at this cool ShellUI component" tweets, non-Blazor contexts.
+
+---
+
+### Theming across paths
+
+All four paths use the same CSS variable system, so theming works uniformly — just with different edit surfaces:
+
+| Path | Where the theme lives | How you edit it |
+|---|---|---|
+| A | Baked in `shellui-all.css` | Override CSS vars in a `<style>` block *after* the link |
+| B | Your `wwwroot/input.css` | Edit directly, paste tweakcn output over `:root`/`.dark` blocks |
+| C | `wwwroot/input.css` created by `shellui init` | Edit directly — Tailwind auto-rebuilds on `dotnet build` |
+| D | Baked in the CDN-served CSS | Override in a `<style>` tag |
+
+Change one CSS variable (e.g. `--primary`) and every component updates immediately. See each install-path README under `shellui-installation-tests/` for concrete theming examples.
 
 ### Configure Tailwind CSS manually (advanced)
 Create/update `wwwroot/tailwind.config.js`:
