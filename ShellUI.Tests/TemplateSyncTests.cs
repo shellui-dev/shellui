@@ -24,6 +24,10 @@ public class TemplateSyncTests
     [InlineData("sidebar-trigger", "SidebarTrigger.razor")]
     [InlineData("theme-toggle", "ThemeToggle.razor")]
     [InlineData("input-otp", "InputOTP.razor")]
+    [InlineData("data-picker", "DataPicker.razor")]
+    [InlineData("multi-select", "MultiSelect.razor")]
+    [InlineData("tag-input", "TagInput.razor")]
+    [InlineData("command-palette", "CommandPalette.razor")]
     public void TemplateCodeBlock_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         if (AllowedDrift.ContainsKey(templateName)) return;
