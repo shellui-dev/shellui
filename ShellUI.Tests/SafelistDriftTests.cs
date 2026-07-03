@@ -28,14 +28,9 @@ public class SafelistDriftTests
         Assert.True(Directory.Exists(componentsDir), $"components dir not found: {componentsDir}");
         Assert.True(File.Exists(safelistPath), $"safelist not found at {safelistPath}. Run: {RegenerateCommand}");
 
-        // Match the generator's dual scan: .razor for components, .cs from the
-        // parent Components/ root for variants/services that compose class strings
-        // in C# (BadgeVariants, AlertVariants, etc.). Missing the .cs scan is why
-        // Path A/B users hit incomplete Badge padding in 0.4.0-alpha.1.
-        var razorFiles = Directory.GetFiles(componentsDir, "*.razor", SearchOption.AllDirectories);
-        var componentsRoot = Path.GetDirectoryName(componentsDir.TrimEnd(Path.DirectorySeparatorChar))!;
-        var csFiles = Directory.GetFiles(componentsRoot, "*.cs", SearchOption.AllDirectories);
-
+        // Use the same source enumeration the CLI uses (dual .razor + .cs, minus
+        // bin/obj). Diverging file lists would produce false-positive drifts.
+        var (razorFiles, csFiles) = Program.EnumerateSources(componentsDir);
         var freshlyGenerated = Program.GenerateSafelist(razorFiles.Concat(csFiles));
         var committed = File.ReadAllLines(safelistPath)
             .Where(line => !string.IsNullOrWhiteSpace(line))
