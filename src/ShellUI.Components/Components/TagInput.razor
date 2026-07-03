@@ -1,0 +1,95 @@
+@namespace ShellUI.Components
+
+<div class="@Shell.Cn("flex min-h-10 w-full flex-wrap items-center gap-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2", Disabled ? "cursor-not-allowed opacity-50" : "", Class)"
+     @onclick="FocusInput"
+     @attributes="AdditionalAttributes">
+    @foreach (var tag in Tags)
+    {
+        var chip = tag;
+        <span class="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
+            @chip
+            <span role="button"
+                  tabindex="0"
+                  class="cursor-pointer rounded-sm outline-none hover:text-destructive focus:ring-1 focus:ring-ring"
+                  @onclick:stopPropagation="true"
+                  @onclick="() => RemoveTag(chip)">
+                <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </span>
+        </span>
+    }
+    <input @ref="_input"
+           type="text"
+           @bind="_current"
+           @bind:event="oninput"
+           @onkeydown="OnKeyDown"
+           @onpaste="OnPaste"
+           disabled="@Disabled"
+           placeholder="@(Tags.Count == 0 ? Placeholder : "")"
+           class="flex-1 min-w-24 bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed" />
+</div>
+
+@code {
+    [Parameter] public List<string> Tags { get; set; } = new();
+    [Parameter] public EventCallback<List<string>> TagsChanged { get; set; }
+    [Parameter] public string Placeholder { get; set; } = "Add tag...";
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public int? MaxTags { get; set; }
+    [Parameter] public bool AllowDuplicates { get; set; }
+    [Parameter] public string[] Separators { get; set; } = new[] { ",", ";", "\t", "\n" };
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string _current = "";
+    private ElementReference _input;
+
+    private async Task FocusInput()
+    {
+        if (!Disabled)
+        {
+            try { await _input.FocusAsync(); } catch { }
+        }
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(_current))
+        {
+            await AddTag(_current);
+        }
+        else if (e.Key == "Backspace" && string.IsNullOrEmpty(_current) && Tags.Count > 0)
+        {
+            await RemoveTag(Tags[^1]);
+        }
+    }
+
+    private async Task OnPaste(ClipboardEventArgs e)
+    {
+        if (string.IsNullOrEmpty(_current)) return;
+        var candidates = _current.Split(Separators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (candidates.Length <= 1) return;
+        _current = "";
+        foreach (var c in candidates) await AddTag(c);
+    }
+
+    private async Task AddTag(string tag)
+    {
+        var t = tag.Trim();
+        if (string.IsNullOrEmpty(t)) return;
+        if (MaxTags.HasValue && Tags.Count >= MaxTags.Value) return;
+        if (!AllowDuplicates && Tags.Contains(t, StringComparer.OrdinalIgnoreCase)) { _current = ""; return; }
+        var next = new List<string>(Tags) { t };
+        Tags = next;
+        _current = "";
+        await TagsChanged.InvokeAsync(next);
+    }
+
+    private async Task RemoveTag(string tag)
+    {
+        var next = Tags.Where(t => !t.Equals(tag, StringComparison.Ordinal)).ToList();
+        Tags = next;
+        await TagsChanged.InvokeAsync(next);
+    }
+}
