@@ -56,12 +56,15 @@ Done. `<Button>`, `<Card>`, `<Dialog>` all render styled.
 
 **Trade-offs:**
 - ❌ No tree-shaking — you pay ~77KB even if you use 3 components (negligible for most sites)
-- ❌ Theme customization is via override only — theme vars are baked in. You add a `<style>` block *after* the link:
+- ❌ Theme customization is via override only — theme vars are baked in. You add a `<style>` block *after* the link, or (recommended) generate one automatically from a tweakcn theme with the CLI:
+  ```bash
+  dotnet tool install -g ShellUI.CLI
+  dotnet shellui theme apply https://tweakcn.com/themes/<id> --emit-override wwwroot/theme.css
+  ```
+  Then link the override AFTER `shellui-all.css` so it wins the cascade:
   ```html
   <link href="_content/ShellUI.Components/shellui-all.css" rel="stylesheet" />
-  <style>
-      :root { --primary: oklch(0.55 0.15 250); }  /* your color */
-  </style>
+  <link href="theme.css" rel="stylesheet" />
   ```
 
 **Best for:** new projects, prototypes, teams without existing Tailwind, "just get me components" scenarios.
@@ -93,6 +96,13 @@ The package copies `shellui-classes.txt` (auto-generated safelist of every Tailw
 }
 ```
 
+Or auto-import a tweakcn theme into the `:root` / `.dark` blocks (idempotent, preserves your custom utilities and imports around it):
+
+```bash
+dotnet tool install -g ShellUI.CLI
+dotnet shellui theme apply https://tweakcn.com/themes/<id>
+```
+
 ```razor
 @* _Imports.razor *@
 @using ShellUI.Components
@@ -122,6 +132,9 @@ The package copies `shellui-classes.txt` (auto-generated safelist of every Tailw
 dotnet tool install -g ShellUI.CLI
 shellui init                          # one-time
 shellui add button card dialog        # any time you want more components
+
+# Or one-shot: init + tweakcn theme
+shellui theme init https://tweakcn.com/themes/<id> --yes
 ```
 
 `shellui init` automatically:
@@ -259,12 +272,29 @@ ShellUI components work alongside Bootstrap. You can:
 
 ### 🎨 Theme Customization
 
-**Easily customize themes with [tweakcn](https://tweakcn.com/):**
+**Easiest — auto-import a [tweakcn](https://tweakcn.com/) theme with the CLI:**
+
+```bash
+dotnet tool install -g ShellUI.CLI
+
+# Path B / Path C — write into wwwroot/input.css between sentinel markers
+dotnet shellui theme apply https://tweakcn.com/themes/<id>
+
+# Path A — emit standalone override CSS, link AFTER shellui-all.css
+dotnet shellui theme apply https://tweakcn.com/themes/<id> --emit-override wwwroot/theme.css
+
+# Refresh later from the same URL (recorded in shellui.theme.lock)
+dotnet shellui theme update
+```
+
+Re-runs are idempotent. Your custom utilities, `@source` directives, and imports outside the sentinel block are preserved verbatim.
+
+**Manual alternative:**
 
 1. Design your perfect theme on tweakcn
 2. Copy the generated CSS variables
 3. Paste into `wwwroot/input.css`
-4. All ShellUI components update automatically!
+4. All ShellUI components update automatically
 
 **Custom Fonts:** Add Google Fonts links and update `--font-*` variables in your CSS.
 
