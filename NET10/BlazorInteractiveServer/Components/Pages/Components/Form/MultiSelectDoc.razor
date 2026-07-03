@@ -1,0 +1,95 @@
+@page "/components/form/multi-select"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+
+<PageTitle>MultiSelect | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">MultiSelect</h1>
+        <p class="text-muted-foreground mt-1">Generic multi-value picker. Renders selected items as chips with inline remove; toggle rows in the popover to add/remove.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add multi-select</code>
+            <CopyButton Text="dotnet shellui add multi-select" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Basic</h3>
+        <div class="mb-6 max-w-md">
+            <MultiSelect TItem="Tech" TKey="string"
+                         Items="_stack"
+                         Values="_picked"
+                         ValuesChanged="@(vs => _picked = vs)"
+                         KeySelector="@(t => t.Id)"
+                         DisplaySelector="@(t => t.Name)"
+                         Placeholder="Pick your stack..." />
+            <p class="mt-3 text-xs text-muted-foreground">Selected: <span class="font-mono">@_picked.Count</span></p>
+        </div>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">With option template</h3>
+        <div class="max-w-md">
+            <MultiSelect TItem="Tech" TKey="string"
+                         Items="_stack"
+                         Values="_pickedRich"
+                         ValuesChanged="@(vs => _pickedRich = vs)"
+                         KeySelector="@(t => t.Id)"
+                         DisplaySelector="@(t => t.Name)"
+                         Placeholder="Pick with details...">
+                <OptionTemplate>
+                    <div class="flex flex-col">
+                        <span class="font-medium">@context.Name</span>
+                        <span class="text-xs text-muted-foreground">@context.Kind</span>
+                    </div>
+                </OptionTemplate>
+            </MultiSelect>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Items</td><td>IEnumerable&lt;TItem&gt;</td><td>—</td><td>Source list (required)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Values</td><td>List&lt;TItem&gt;</td><td>empty</td><td>Currently selected items</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">ValuesChanged</td><td>EventCallback&lt;List&lt;TItem&gt;&gt;</td><td>—</td><td>Fired when selection changes</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">KeySelector</td><td>Func&lt;TItem, TKey&gt;</td><td>—</td><td>Extract stable identity (required)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">ChipTemplate</td><td>RenderFragment&lt;TItem&gt;?</td><td>—</td><td>Custom render for chips in the trigger</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">OptionTemplate</td><td>RenderFragment&lt;TItem&gt;?</td><td>—</td><td>Custom render for each option row</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Disabled</td><td>bool</td><td>false</td><td>Disables the trigger</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+@code {
+    private record Tech(string Id, string Name, string Kind);
+    private List<Tech> _stack = new()
+    {
+        new("blazor", "Blazor", "Framework"),
+        new("tailwind", "Tailwind CSS", "Styling"),
+        new("net10", ".NET 10", "Runtime"),
+        new("csharp14", "C# 14", "Language"),
+        new("apex", "ApexCharts", "Charts"),
+        new("shadcn", "shadcn/ui", "Inspiration"),
+    };
+    private List<Tech> _picked = new();
+    private List<Tech> _pickedRich = new();
+}

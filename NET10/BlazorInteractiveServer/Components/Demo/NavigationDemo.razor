@@ -31,13 +31,11 @@
         <!-- Sidebar Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Sidebar</h3>
+            <p class="text-xs text-muted-foreground mb-3">Inline mode — <code class="font-mono bg-muted px-1 rounded">Inline="true"</code> keeps the sidebar inside the demo card. For full-viewport usage see <a href="/dashboard" class="underline">/dashboard</a>.</p>
             <div class="space-y-4">
-                <Button OnClick="ToggleSidebar">
-                    @(IsSidebarOpen ? "Close" : "Open") Sidebar
-                </Button>
                 <div class="relative border border-border rounded-lg overflow-hidden h-96 bg-background">
-                    <Sidebar IsOpen="@IsSidebarOpen">
-                        <div class="space-y-4">
+                    <Sidebar Inline="true">
+                        <div class="p-4 space-y-4">
                             <h4 class="font-semibold text-lg">Navigation</h4>
                             <nav class="space-y-2">
                                 <a href="/dashboard" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
@@ -48,18 +46,16 @@
                                     <span class="material-symbols-outlined text-sm">folder</span>
                                     <span>Components</span>
                                 </a>
-                                <a href="/dashboard" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
+                                <a href="#" class="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
                                     <span class="material-symbols-outlined text-sm">settings</span>
                                     <span>Settings</span>
                                 </a>
                             </nav>
                         </div>
                     </Sidebar>
-                    <div class="@(IsSidebarOpen ? "ml-64" : "") transition-all p-6">
+                    <div class="ml-64 p-6">
                         <h4 class="font-semibold mb-2 text-foreground">Main Content Area</h4>
-                        <p class="text-sm text-muted-foreground">
-                            Toggle the sidebar to see the smooth slide-in animation!
-                        </p>
+                        <p class="text-sm text-muted-foreground">Sidebar respects the bounded container thanks to <code class="font-mono bg-muted px-1 rounded">Inline="true"</code>.</p>
                     </div>
                 </div>
             </div>

@@ -48,6 +48,51 @@
         case "combobox":
             <Combobox Options="@_comboboxOptions" Placeholder="Select framework..." />
             break;
+        case "data-picker":
+            <div class="w-[280px]">
+                <DataPicker TItem="Framework" TKey="string"
+                            Items="@_frameworks"
+                            Value="@_pickedFramework"
+                            ValueChanged="@(f => _pickedFramework = f)"
+                            KeySelector="@(f => f.Id)"
+                            DisplaySelector="@(f => f.Name)"
+                            Placeholder="Select framework..." />
+                @if (_pickedFramework is not null)
+                {
+                    <p class="mt-3 text-xs text-muted-foreground">Picked: <span class="font-mono">@_pickedFramework.Name</span> (@_pickedFramework.Category)</p>
+                }
+            </div>
+            break;
+        case "multi-select":
+            <div class="w-[320px]">
+                <MultiSelect TItem="Framework" TKey="string"
+                             Items="@_frameworks"
+                             Values="@_pickedFrameworks"
+                             ValuesChanged="@(vs => _pickedFrameworks = vs)"
+                             KeySelector="@(f => f.Id)"
+                             DisplaySelector="@(f => f.Name)"
+                             Placeholder="Pick multiple frameworks..." />
+                <p class="mt-3 text-xs text-muted-foreground">Selected: @_pickedFrameworks.Count</p>
+            </div>
+            break;
+        case "tag-input":
+            <div class="w-[320px]">
+                <TagInput Tags="@_tags"
+                          TagsChanged="@(ts => _tags = ts)"
+                          Placeholder="Add tag, Enter to confirm..." />
+                <p class="mt-3 text-xs text-muted-foreground">Enter to add, Backspace to remove last, paste comma/newline-separated to bulk-add.</p>
+            </div>
+            break;
+        case "command-palette":
+            <div class="flex flex-col items-center gap-3">
+                <p class="text-sm text-muted-foreground">Press <kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">Ctrl</kbd> + <kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">K</kbd> (or <kbd class="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-xs">⌘K</kbd>) to open.</p>
+                <CommandPalette Commands="@_paletteCommands" CommandSelected="@(c => _lastCommand = c.Title)" />
+                @if (_lastCommand is not null)
+                {
+                    <p class="text-xs text-muted-foreground">Last selected: <span class="font-mono">@_lastCommand</span></p>
+                }
+            </div>
+            break;
         case "select":
             <div class="w-full max-w-[200px]">
                 <Select @bind-Value="_selectValue">
@@ -173,4 +218,32 @@
     private List<string> _comboboxOptions => new() { "Next.js", "SvelteKit", "Nuxt.js", "Remix", "Astro" };
 
     private string _selectValue { get; set; } = "";
+
+    private record Framework(string Id, string Name, string Category);
+
+    private List<Framework> _frameworks => new()
+    {
+        new("next", "Next.js", "React"),
+        new("sveltekit", "SvelteKit", "Svelte"),
+        new("nuxt", "Nuxt.js", "Vue"),
+        new("remix", "Remix", "React"),
+        new("astro", "Astro", "Multi"),
+        new("qwik", "Qwik", "Fresh"),
+        new("solidstart", "SolidStart", "Solid"),
+        new("blazor", "Blazor", ".NET"),
+    };
+    private Framework? _pickedFramework;
+    private List<Framework> _pickedFrameworks = new();
+
+    private List<string> _tags = new() { "blazor", "shellui" };
+
+    private List<CommandItem> _paletteCommands => new()
+    {
+        new() { Title = "Go to Home", Description = "Navigate to home page", Shortcut = "Ctrl+H" },
+        new() { Title = "Toggle Theme", Description = "Switch light/dark mode", Shortcut = "Ctrl+T" },
+        new() { Title = "Search Components", Description = "Open component search" },
+        new() { Title = "Open Settings", Description = "Application preferences" },
+        new() { Title = "Sign Out", Description = "End your session" },
+    };
+    private string? _lastCommand;
 }

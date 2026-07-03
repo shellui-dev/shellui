@@ -1,0 +1,122 @@
+@page "/components/form/data-picker"
+@layout BlazorInteractiveServer.Components.Layout.DashboardLayout
+@rendermode InteractiveServer
+@using BlazorInteractiveServer.Components.UI
+
+<PageTitle>DataPicker | ShellUI</PageTitle>
+
+<div class="space-y-8">
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">DataPicker</h1>
+        <p class="text-muted-foreground mt-1">Generic typed picker with search, keyboard navigation, and templated rendering. The typed sibling of Combobox.</p>
+    </div>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Installation</h2>
+        <div class="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-4 py-2">
+            <code class="text-sm font-mono">dotnet shellui add data-picker</code>
+            <CopyButton Text="dotnet shellui add data-picker" Class="shrink-0" />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">Usage</h2>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Basic — string display, real domain type</h3>
+        <div class="mb-6 max-w-sm">
+            <DataPicker TItem="Framework" TKey="string"
+                        Items="_frameworks"
+                        Value="_picked"
+                        ValueChanged="@(f => _picked = f)"
+                        KeySelector="@(f => f.Id)"
+                        DisplaySelector="@(f => f.Name)"
+                        Placeholder="Select framework..." />
+            @if (_picked is not null)
+            {
+                <p class="mt-3 text-xs text-muted-foreground">Picked: <span class="font-mono">@_picked.Name</span> · <span class="font-mono">@_picked.Category</span></p>
+            }
+        </div>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">With templates — rich rows</h3>
+        <div class="mb-6 max-w-sm">
+            <DataPicker TItem="Framework" TKey="string"
+                        Items="_frameworks"
+                        Value="_pickedTemplated"
+                        ValueChanged="@(f => _pickedTemplated = f)"
+                        KeySelector="@(f => f.Id)"
+                        DisplaySelector="@(f => f.Name)"
+                        Placeholder="Pick with details...">
+                <OptionTemplate>
+                    <div class="flex flex-col">
+                        <span class="font-medium">@context.Name</span>
+                        <span class="text-xs text-muted-foreground">@context.Category</span>
+                    </div>
+                </OptionTemplate>
+            </DataPicker>
+        </div>
+
+        <h3 class="text-lg font-medium mb-2 text-card-foreground">Disabled</h3>
+        <div class="max-w-sm">
+            <DataPicker TItem="Framework" TKey="string"
+                        Items="_frameworks"
+                        KeySelector="@(f => f.Id)"
+                        DisplaySelector="@(f => f.Name)"
+                        Disabled="true"
+                        Placeholder="Disabled..." />
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-4 text-card-foreground">API Reference</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-border">
+                        <th class="text-left py-2 font-medium">Parameter</th>
+                        <th class="text-left py-2 font-medium">Type</th>
+                        <th class="text-left py-2 font-medium">Default</th>
+                        <th class="text-left py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-border"><td class="py-2">Items</td><td>IEnumerable&lt;TItem&gt;</td><td>—</td><td>Source list (required)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Value</td><td>TItem?</td><td>null</td><td>Currently selected item</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">ValueChanged</td><td>EventCallback&lt;TItem?&gt;</td><td>—</td><td>Fired when selection changes</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">KeySelector</td><td>Func&lt;TItem, TKey&gt;</td><td>—</td><td>Extract stable identity (required)</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">DisplaySelector</td><td>Func&lt;TItem, string&gt;?</td><td>ToString</td><td>Default row display</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">SearchPredicate</td><td>Func&lt;TItem, string, bool&gt;?</td><td>DisplaySelector Contains</td><td>Custom filter</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">SelectedTemplate</td><td>RenderFragment&lt;TItem&gt;?</td><td>—</td><td>Custom render for selected value in the trigger</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">OptionTemplate</td><td>RenderFragment&lt;TItem&gt;?</td><td>—</td><td>Custom render for each option row</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Placeholder</td><td>string</td><td>"Select..."</td><td>Trigger placeholder</td></tr>
+                    <tr class="border-b border-border"><td class="py-2">Disabled</td><td>bool</td><td>false</td><td>Disables the trigger</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="rounded-lg border border-border bg-card p-6">
+        <h2 class="text-xl font-semibold mb-2 text-card-foreground">Keyboard</h2>
+        <ul class="list-disc list-inside text-sm text-muted-foreground space-y-1">
+            <li><kbd class="rounded border border-border bg-muted px-1 font-mono text-xs">↑</kbd> / <kbd class="rounded border border-border bg-muted px-1 font-mono text-xs">↓</kbd> move highlighted row</li>
+            <li><kbd class="rounded border border-border bg-muted px-1 font-mono text-xs">Enter</kbd> select highlighted row</li>
+            <li><kbd class="rounded border border-border bg-muted px-1 font-mono text-xs">Esc</kbd> close</li>
+        </ul>
+    </section>
+</div>
+
+@code {
+    private record Framework(string Id, string Name, string Category);
+    private List<Framework> _frameworks = new()
+    {
+        new("next", "Next.js", "React"),
+        new("sveltekit", "SvelteKit", "Svelte"),
+        new("nuxt", "Nuxt.js", "Vue"),
+        new("remix", "Remix", "React"),
+        new("astro", "Astro", "Multi"),
+        new("qwik", "Qwik", "Fresh"),
+        new("solidstart", "SolidStart", "Solid"),
+        new("blazor", "Blazor", ".NET"),
+    };
+    private Framework? _picked;
+    private Framework? _pickedTemplated;
+}

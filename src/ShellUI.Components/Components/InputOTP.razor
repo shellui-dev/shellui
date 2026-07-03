@@ -116,16 +116,18 @@
     
     private async Task FocusInput(int index)
     {
-        if (index >= 0 && index < Length)
+        if (index < 0 || index >= Length) return;
+        var elementId = $"otp-input-{_id}-{index}";
+        try
         {
-            try
-            {
-                await JS.InvokeVoidAsync("ShellUI.focusElement", $"otp-input-{_id}-{index}");
-            }
-            catch
-            {
-                // Ignore JS interop errors
-            }
+            // Path A/B (NuGet package): import module to ensure window.ShellUI is bootstrapped.
+            var module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/ShellUI.Components/shellui.js");
+            await module.InvokeVoidAsync("focusElement", elementId);
+        }
+        catch
+        {
+            // Path C (CLI): shellui.js was loaded via <script> tag; window.ShellUI is already global.
+            try { await JS.InvokeVoidAsync("ShellUI.focusElement", elementId); } catch { }
         }
     }
 }
