@@ -19,247 +19,154 @@ public class ChartStylesTemplate
         Tags = new List<string> { "chart", "css", "styles", "apexcharts" }
     };
 
-    public static string Content => @"/* ==========================================================================
-   ShellUI Chart Styles - ApexCharts Theme Integration
+    public static string Content => @"/* ==========================================================
+   ShellUI Chart Styles — ApexCharts chrome tuned to shadcn/ui
    Auto-installed by: shellui add chart
    Add to your App.razor or _Host.cshtml:
      <link href=""css/charts.css"" rel=""stylesheet"" />
-   ========================================================================== */
+   ========================================================== */
 
-/* Canvas */
-.apexcharts-canvas {
-    background: transparent !important;
+.apexcharts-canvas { background: transparent; }
+
+/* Gridlines — subtle horizontal dashes */
+.apexcharts-gridline {
+    stroke: var(--border);
+    stroke-opacity: 0.6;
 }
 
-/* Tooltip - Uses ShellUI theme variables with fallbacks */
-.apexcharts-tooltip {
-    z-index: 9999 !important;
-    position: absolute !important;
-    background: var(--popover, #fff) !important;
-    border: 1px solid var(--border, #e5e7eb) !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
-    padding: 6px 8px !important;
-    font-family: inherit !important;
-    font-size: 11px !important;
-    line-height: 1.4 !important;
-    color: var(--popover-foreground, #09090b) !important;
+/* Axis + legend text */
+.apexcharts-text,
+.apexcharts-xaxis-label,
+.apexcharts-yaxis-label {
+    fill: var(--muted-foreground);
+    font-family: inherit;
+}
+.apexcharts-legend-text {
+    color: var(--foreground) !important;
+    font-family: inherit;
 }
 
-/* Backdrop blur with browser support fallback */
-@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-    .apexcharts-tooltip {
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-    }
-}
+/* Title + subtitle */
+.apexcharts-title-text { fill: var(--foreground); font-family: inherit; }
+.apexcharts-subtitle-text { fill: var(--muted-foreground); font-family: inherit; }
 
-/* Tooltip title */
-.apexcharts-tooltip-title {
-    background: var(--muted, #f4f4f5) !important;
-    border-bottom: 1px solid var(--border, #e5e7eb) !important;
-    color: var(--foreground, #09090b) !important;
-    font-family: inherit !important;
-    font-weight: 600 !important;
-    font-size: 11px !important;
-    padding: 4px 6px !important;
-    margin: -6px -8px 4px -8px !important;
-}
-
-/* Custom Tooltip - Full control over structure */
-.custom-tooltip {
-    padding: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 6px !important;
-}
-
-.custom-tooltip-title {
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    color: var(--foreground, #09090b) !important;
-    line-height: 1.2 !important;
-    padding-bottom: 4px !important;
-    border-bottom: 1px solid var(--border, #e5e7eb) !important;
-    margin-bottom: 2px !important;
-}
-
-.custom-tooltip-item {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    padding: 0 !important;
-    line-height: 1 !important;
-}
-
-.custom-tooltip-marker {
-    width: 8px !important;
-    height: 8px !important;
-    border-radius: 2px !important;
-    flex-shrink: 0 !important;
-    display: block !important;
-}
-
-.custom-tooltip-label {
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    color: var(--muted-foreground, #71717a) !important;
-    line-height: 1 !important;
-}
-
-.custom-tooltip-value {
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    color: var(--popover-foreground, #09090b) !important;
-    line-height: 1 !important;
-    margin-left: 4px !important;
-}
-
-/* Fallback for default ApexCharts tooltip */
-.apexcharts-tooltip-series-group {
-    padding: 3px 0 !important;
-    display: grid !important;
-    grid-template-columns: 8px 1fr !important;
-    align-items: center !important;
-    gap: 8px !important;
-}
-
-.apexcharts-tooltip-marker {
-    width: 8px !important;
-    height: 8px !important;
-    border-radius: 2px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.apexcharts-tooltip-text {
-    font-family: inherit !important;
-    font-size: 11px !important;
-    color: var(--popover-foreground, #09090b) !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    line-height: 1.1 !important;
-}
-
-.apexcharts-tooltip-text-y-label,
-.apexcharts-tooltip-text-y-value {
-    line-height: 1.1 !important;
-}
-
-.apexcharts-tooltip-text-y-label {
-    font-weight: 500 !important;
-    color: var(--muted-foreground, #71717a) !important;
-}
-
-.apexcharts-tooltip-text-y-value {
-    font-weight: 600 !important;
-    color: var(--popover-foreground, #09090b) !important;
-    margin-left: 4px !important;
-}
-
-/* Axis Tooltips */
-.apexcharts-xaxistooltip,
-.apexcharts-yaxistooltip {
-    z-index: 9998 !important;
-    background: var(--popover, #fff) !important;
-    border: 1px solid var(--border, #e5e7eb) !important;
-    border-radius: 4px !important;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
-    font-family: inherit !important;
-    font-size: 11px !important;
-    color: var(--popover-foreground, #09090b) !important;
-    padding: 4px 8px !important;
-}
-
-.apexcharts-xaxistooltip-bottom:before,
-.apexcharts-xaxistooltip-bottom:after {
-    border-bottom-color: var(--border, #e5e7eb) !important;
-}
-
-/* Legend */
+/* Legend — top-left, circle markers */
 .apexcharts-legend {
-    padding: 8px 0 4px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0 0 12px 0;
 }
-
 .apexcharts-legend-series {
     display: inline-flex !important;
     align-items: center !important;
-    margin: 0 8px 4px 0 !important;
-    gap: 6px !important;
+    margin: 0 !important;
+    gap: 6px;
 }
-
-.apexcharts-legend-text {
-    color: var(--foreground, #09090b) !important;
-    font-family: inherit !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-}
-
 .apexcharts-legend-marker {
-    border-radius: 2px !important;
-    flex-shrink: 0 !important;
+    border-radius: 9999px !important;
+    border: none !important;
+    margin: 0 !important;
+    vertical-align: middle !important;
+    flex-shrink: 0;
 }
 
-/* Toolbar */
-.apexcharts-toolbar {
-    z-index: 100 !important;
+/* Custom shellui tooltip — compact shadcn look */
+.shellui-chart-tooltip {
+    background: var(--popover);
+    color: var(--popover-foreground);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) - 2px);
+    box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.1);
+    font-family: inherit;
+    overflow: hidden;
+    min-width: 0;
+    max-width: 220px;
+}
+.shellui-chart-tooltip-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--foreground);
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+.shellui-chart-tooltip-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 4px 8px;
+}
+.shellui-chart-tooltip-row {
+    display: grid;
+    grid-template-columns: 10px 1fr auto;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+.shellui-chart-tooltip-marker {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    display: block;
+}
+.shellui-chart-tooltip-label { color: var(--muted-foreground); font-weight: 500; }
+.shellui-chart-tooltip-value {
+    color: var(--foreground);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    padding-left: 12px;
 }
 
-.apexcharts-menu {
-    z-index: 9999 !important;
-    background: var(--popover, #fff) !important;
-    border: 1px solid var(--border, #e5e7eb) !important;
-    border-radius: 8px !important;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important;
-    padding: 4px !important;
+/* Kill default ApexCharts tooltip wrapper — we render our own */
+.apexcharts-tooltip {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
 }
 
-.apexcharts-menu-item {
-    color: var(--foreground, #09090b) !important;
-    font-family: inherit !important;
-    font-size: 13px !important;
-    padding: 6px 12px !important;
-    border-radius: 4px !important;
-    transition: background-color 150ms !important;
+/* Crosshair on hover */
+.apexcharts-xcrosshairs,
+.apexcharts-ycrosshairs {
+    stroke: var(--border);
+    stroke-dasharray: 3;
 }
 
-.apexcharts-menu-item:hover {
-    background: var(--accent, #f4f4f5) !important;
-    color: var(--accent-foreground, #18181b) !important;
-}
-
+/* Toolbar (opt-in via ShowToolbar) */
+.apexcharts-toolbar { z-index: 10; }
 .apexcharts-toolbar-item {
-    color: var(--muted-foreground, #71717a) !important;
-    transition: color 150ms !important;
+    color: var(--muted-foreground);
+    transition: color 150ms;
+}
+.apexcharts-toolbar-item:hover { color: var(--foreground); }
+.apexcharts-menu {
+    background: var(--popover);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) - 2px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    padding: 4px;
+}
+.apexcharts-menu-item {
+    color: var(--foreground);
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: calc(var(--radius) - 4px);
+    transition: background-color 150ms;
+}
+.apexcharts-menu-item:hover {
+    background: var(--accent);
+    color: var(--accent-foreground);
 }
 
-.apexcharts-toolbar-item:hover {
-    color: var(--foreground, #09090b) !important;
-}
-
-/* Grid and Axis */
-.apexcharts-gridline {
-    stroke: var(--border, #e5e7eb) !important;
-    stroke-opacity: 0.5 !important;
-}
-
-.apexcharts-text {
-    fill: var(--muted-foreground, #71717a) !important;
-    font-family: inherit !important;
-}
-
-.apexcharts-xaxis-label,
-.apexcharts-yaxis-label {
-    fill: var(--muted-foreground, #71717a) !important;
-}
-
-/* Data Labels */
+/* Data labels */
 .apexcharts-datalabel,
 .apexcharts-datalabel-label,
 .apexcharts-datalabel-value {
-    fill: var(--foreground, #09090b) !important;
-    font-family: inherit !important;
-    font-weight: 500 !important;
+    fill: var(--foreground);
+    font-family: inherit;
+    font-weight: 500;
 }
 ";
 }

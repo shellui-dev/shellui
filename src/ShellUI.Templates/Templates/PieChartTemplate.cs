@@ -45,34 +45,10 @@ public class PieChartTemplate
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-
         if (ChartOptions.Chart != null)
         {
             ChartOptions.Chart.Type = ApexCharts.ChartType.Pie;
         }
-
-        /* Custom tooltip for pie chart */
-        ChartOptions.Tooltip = new ApexCharts.Tooltip
-        {
-            Enabled = true,
-            Style = new ApexCharts.TooltipStyle
-            {
-                FontSize = ""12px""
-            },
-            Custom = @""function({ series, seriesIndex, dataPointIndex, w }) {
-                const label = w.globals.labels[seriesIndex];
-                const value = series[seriesIndex];
-                const color = w.config.colors[seriesIndex];
-
-                return '<div class=""""custom-tooltip"""">' +
-                       '<div class=""""custom-tooltip-item"""">' +
-                       '<span class=""""custom-tooltip-marker"""" style=""""background-color: ' + color + ';""""' + '></span>' +
-                       '<span class=""""custom-tooltip-label"""">' + label + ':</span>' +
-                       '<span class=""""custom-tooltip-value"""">' + value + '</span>' +
-                       '</div>' +
-                       '</div>';
-            }""
-        };
     }
 }
 ";
