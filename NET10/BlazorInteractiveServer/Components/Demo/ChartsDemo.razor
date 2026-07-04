@@ -68,6 +68,39 @@
 </section>
 
 <section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Donut Chart</h2>
+    <DonutChart TItem="CategoryData"
+                Data="CategoryData"
+                Title="Traffic by Device"
+                Name="Traffic"
+                XValue="e => e.Category"
+                YValue="e => e.Value"
+                Height="300px" />
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Radar Chart</h2>
+    <RadarChart TItem="SkillItem"
+                Data="Skills"
+                Title="Frontend Skills"
+                Name="Level"
+                XValue="e => e.Skill"
+                YValue="e => e.Level"
+                Height="300px" />
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Radial Chart</h2>
+    <RadialChart TItem="ProgressItem"
+                 Data="Progress"
+                 Title="Quarterly Goal"
+                 Name="Progress"
+                 XValue="e => e.Label"
+                 YValue="e => e.Value"
+                 Height="300px" />
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Chart Themes</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
@@ -107,6 +140,11 @@
     private List<SalesData> SalesData { get; set; } = new();
     private List<SalesData> ProfitData { get; set; } = new();
     private List<CategoryData> CategoryData { get; set; } = new();
+    private List<SkillItem> Skills { get; set; } = new();
+    private List<ProgressItem> Progress { get; set; } = new();
+
+    public class SkillItem { public string Skill { get; set; } = ""; public decimal Level { get; set; } }
+    public class ProgressItem { public string Label { get; set; } = ""; public decimal Value { get; set; } }
 
     protected override void OnInitialized()
     {
@@ -135,6 +173,21 @@
             new CategoryData { Category = "Desktop", Value = 45 },
             new CategoryData { Category = "Mobile", Value = 35 },
             new CategoryData { Category = "Tablet", Value = 20 }
+        };
+
+        Skills = new List<SkillItem>
+        {
+            new SkillItem { Skill = "React", Level = 85 },
+            new SkillItem { Skill = "TypeScript", Level = 90 },
+            new SkillItem { Skill = "CSS", Level = 80 },
+            new SkillItem { Skill = "Testing", Level = 65 },
+            new SkillItem { Skill = "Design", Level = 70 },
+            new SkillItem { Skill = "Perf", Level = 75 }
+        };
+
+        Progress = new List<ProgressItem>
+        {
+            new ProgressItem { Label = "Q4 Goal", Value = 72 }
         };
     }
 
