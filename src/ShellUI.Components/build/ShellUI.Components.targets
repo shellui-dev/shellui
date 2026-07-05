@@ -46,12 +46,6 @@
     <ShellUISafelistEntry Include="caption-bottom" />
     <ShellUISafelistEntry Include="cursor-default" />
     <ShellUISafelistEntry Include="cursor-pointer" />
-    <ShellUISafelistEntry Include="custom-tooltip" />
-    <ShellUISafelistEntry Include="custom-tooltip-item" />
-    <ShellUISafelistEntry Include="custom-tooltip-label" />
-    <ShellUISafelistEntry Include="custom-tooltip-marker" />
-    <ShellUISafelistEntry Include="custom-tooltip-title" />
-    <ShellUISafelistEntry Include="custom-tooltip-value" />
     <ShellUISafelistEntry Include="data-[selected]:bg-accent" />
     <ShellUISafelistEntry Include="data-[selected]:text-accent-foreground" />
     <ShellUISafelistEntry Include="data-[state=closed]:animate-out" />
@@ -289,6 +283,13 @@
     <ShellUISafelistEntry Include="shadow-md" />
     <ShellUISafelistEntry Include="shadow-sm" />
     <ShellUISafelistEntry Include="shadow-xl" />
+    <ShellUISafelistEntry Include="shellui-chart-tooltip" />
+    <ShellUISafelistEntry Include="shellui-chart-tooltip-body" />
+    <ShellUISafelistEntry Include="shellui-chart-tooltip-label" />
+    <ShellUISafelistEntry Include="shellui-chart-tooltip-marker" />
+    <ShellUISafelistEntry Include="shellui-chart-tooltip-row" />
+    <ShellUISafelistEntry Include="shellui-chart-tooltip-title" />
+    <ShellUISafelistEntry Include="shellui-chart-tooltip-value" />
     <ShellUISafelistEntry Include="shrink-0" />
     <ShellUISafelistEntry Include="size-4" />
     <ShellUISafelistEntry Include="size-8" />
@@ -345,6 +346,8 @@
     <ShellUISafelistEntry Include="transition-opacity" />
     <ShellUISafelistEntry Include="transition-transform" />
     <ShellUISafelistEntry Include="underline-offset-4" />
+    <ShellUISafelistEntry Include="var(--border" />
+    <ShellUISafelistEntry Include="var(--muted" />
     <ShellUISafelistEntry Include="w-1/2" />
     <ShellUISafelistEntry Include="w-10" />
     <ShellUISafelistEntry Include="w-12" />

@@ -39,14 +39,14 @@ public class ChartStylesRegistryTests
     {
         var content = ComponentRegistry.GetComponentContent("chart-styles");
         Assert.NotNull(content);
-        // Custom tooltip emitted by ChartVariants' Custom HTML — these were invisible
-        // before this branch because the CSS template existed but was never installed.
-        Assert.Contains(".custom-tooltip", content);
-        Assert.Contains(".custom-tooltip-title", content);
-        Assert.Contains(".custom-tooltip-item", content);
-        Assert.Contains(".custom-tooltip-marker", content);
-        Assert.Contains(".custom-tooltip-label", content);
-        Assert.Contains(".custom-tooltip-value", content);
+        // Custom tooltip emitted by ChartVariants' Custom HTML.
+        Assert.Contains(".shellui-chart-tooltip", content);
+        Assert.Contains(".shellui-chart-tooltip-title", content);
+        Assert.Contains(".shellui-chart-tooltip-body", content);
+        Assert.Contains(".shellui-chart-tooltip-row", content);
+        Assert.Contains(".shellui-chart-tooltip-marker", content);
+        Assert.Contains(".shellui-chart-tooltip-label", content);
+        Assert.Contains(".shellui-chart-tooltip-value", content);
         // ApexCharts built-in classes also styled so charts without the custom HTML still look right.
         Assert.Contains(".apexcharts-tooltip", content);
         Assert.Contains(".apexcharts-legend", content);

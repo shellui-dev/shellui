@@ -1,4 +1,4 @@
-@namespace ShellUI.Components
+@namespace BlazorInteractiveServer.Components.UI
 @using ApexCharts
 @inherits Chart<TItem>
 @typeparam TItem where TItem : class
@@ -12,7 +12,7 @@
         <ApexPointSeries TItem="TItem"
                          Items="Data"
                          Name="@Name"
-                         SeriesType="SeriesType.Pie"
+                         SeriesType="SeriesType.RadialBar"
                          XValue="@XValue"
                          YValue="@YValue" />
     </ApexChart>
@@ -20,16 +20,7 @@
 
 @code {
     [Parameter] public IEnumerable<TItem>? Data { get; set; }
-    [Parameter] public string Name { get; set; } = "Data";
+    [Parameter] public string Name { get; set; } = "Progress";
     [Parameter] public Func<TItem, object>? XValue { get; set; }
     [Parameter] public Func<TItem, decimal?>? YValue { get; set; }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        if (ChartOptions.Chart != null)
-        {
-            ChartOptions.Chart.Type = ApexCharts.ChartType.Pie;
-        }
-    }
 }
