@@ -1,0 +1,8 @@
+@inherits LayoutComponentBase
+
+@* Chrome-less layout for /embed/{name} — used when the preview is loaded inside an iframe
+   from shellui.dev or ShellDocs. No header, no theme toggle, no back link. Sized to fill
+   whatever the iframe reserves. *@
+<div class="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+    @Body
+</div>

@@ -45,10 +45,17 @@
     <!-- Blazor Boot -->
     <script src="_framework/blazor.webassembly.js"></script>
     
-    <!-- Theme Script -->
+    <!-- Theme bootstrap — runs before Blazor mounts so there's no FOUC.
+         Resolution order: ?theme= query param (for iframe embeds) → localStorage → prefers-color-scheme → light. -->
     <script>
-        // Force dark mode for now, or read from query param
-        document.documentElement.classList.add('dark');
+        (function () {
+            var q = new URLSearchParams(location.search).get('theme');
+            var saved = null;
+            try { saved = localStorage.getItem('shellui-theme'); } catch (e) { /* private mode */ }
+            var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var mode = q || saved || (systemDark ? 'dark' : 'light');
+            if (mode === 'dark') document.documentElement.classList.add('dark');
+        })();
     </script>
 </body>
 

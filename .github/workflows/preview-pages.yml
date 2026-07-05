@@ -35,10 +35,22 @@ jobs:
           dotnet publish NET10/ShellUI.Preview/ShellUI.Preview.csproj \
             -c Release \
             -o ./preview-publish
-        env:
-          # For GH Pages: base href = /repo-name/ (set your repo name)
-          # Leave empty for root: https://user.github.io/repo-name/
-          BASE_HREF: /
+
+      # GitHub Pages serves at https://<owner>.github.io/<repo>/, so the Blazor
+      # <base href> must be /<repo>/ or the framework files 404. Patch after
+      # publish so local dev stays on / and only the deployed artifact is rewritten.
+      - name: Rewrite base href for GH Pages
+        run: |
+          BASE_HREF="/${GITHUB_REPOSITORY#*/}/"
+          echo "Rewriting <base href> to $BASE_HREF"
+          sed -i "s|<base href=\"/\" />|<base href=\"$BASE_HREF\" />|" ./preview-publish/wwwroot/index.html
+          grep '<base href' ./preview-publish/wwwroot/index.html
+
+      # SPA fallback: GH Pages doesn't rewrite unknown paths to index.html, so
+      # deep links like /preview/button 404 on first load. Copying index.html to
+      # 404.html gets us the standard "jekyll-less SPA on Pages" fallback.
+      - name: Add SPA 404 fallback
+        run: cp ./preview-publish/wwwroot/index.html ./preview-publish/wwwroot/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
