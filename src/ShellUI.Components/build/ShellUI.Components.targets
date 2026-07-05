@@ -347,11 +347,6 @@
     <ShellUISafelistEntry Include="transition-transform" />
     <ShellUISafelistEntry Include="underline-offset-4" />
     <ShellUISafelistEntry Include="var(--border" />
-    <ShellUISafelistEntry Include="var(--chart-1" />
-    <ShellUISafelistEntry Include="var(--chart-2" />
-    <ShellUISafelistEntry Include="var(--chart-3" />
-    <ShellUISafelistEntry Include="var(--chart-4" />
-    <ShellUISafelistEntry Include="var(--chart-5" />
     <ShellUISafelistEntry Include="var(--muted" />
     <ShellUISafelistEntry Include="w-1/2" />
     <ShellUISafelistEntry Include="w-10" />
