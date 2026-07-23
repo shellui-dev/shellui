@@ -207,6 +207,8 @@
     <ShellUISafelistEntry Include="min-w-[8rem]" />
     <ShellUISafelistEntry Include="ml-3" />
     <ShellUISafelistEntry Include="ml-auto" />
+    <ShellUISafelistEntry Include="motion-reduce:animate-none" />
+    <ShellUISafelistEntry Include="motion-reduce:transition-none" />
     <ShellUISafelistEntry Include="mr-2" />
     <ShellUISafelistEntry Include="mr-3" />
     <ShellUISafelistEntry Include="mt-0.5" />
@@ -318,6 +320,7 @@
     <ShellUISafelistEntry Include="text-center" />
     <ShellUISafelistEntry Include="text-destructive-foreground" />
     <ShellUISafelistEntry Include="text-foreground" />
+    <ShellUISafelistEntry Include="text-foreground/70" />
     <ShellUISafelistEntry Include="text-left" />
     <ShellUISafelistEntry Include="text-lg" />
     <ShellUISafelistEntry Include="text-muted-foreground" />
