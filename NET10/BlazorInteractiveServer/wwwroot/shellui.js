@@ -140,6 +140,41 @@ window.ShellUI = {
             window.removeEventListener("keydown", listener);
             this._shortcutHandlers.delete(handle);
         }
+    },
+
+    _scrollLockCount: 0,
+    _originalOverflow: "",
+    lockBodyScroll: function () {
+        if (this._scrollLockCount === 0) {
+            this._originalOverflow = document.body.style.overflow;
+            document.body.style.overflow = "hidden";
+        }
+        this._scrollLockCount++;
+    },
+    unlockBodyScroll: function () {
+        if (this._scrollLockCount === 0) return;
+        this._scrollLockCount--;
+        if (this._scrollLockCount === 0) {
+            document.body.style.overflow = this._originalOverflow;
+        }
+    },
+
+    // Fire a .NET callback when the window scrolls or resizes. Used by dropdowns
+    // to close when the page scrolls (Blazor can't reposition popovers natively).
+    _dismissHandlers: new Map(),
+    onDismissEvents: function (handle, dotNetRef) {
+        const listener = () => dotNetRef.invokeMethodAsync("OnDismissEvent");
+        window.addEventListener("scroll", listener);
+        window.addEventListener("resize", listener);
+        this._dismissHandlers.set(handle, listener);
+    },
+    offDismissEvents: function (handle) {
+        const listener = this._dismissHandlers.get(handle);
+        if (listener) {
+            window.removeEventListener("scroll", listener);
+            window.removeEventListener("resize", listener);
+            this._dismissHandlers.delete(handle);
+        }
     }
 };
 

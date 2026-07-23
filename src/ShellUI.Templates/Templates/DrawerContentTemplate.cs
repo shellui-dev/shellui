@@ -18,6 +18,9 @@ public class DrawerContentTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using YourProjectNamespace.Components.UI.Variants
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 @if (Parent?.Open == true)
 {
@@ -37,9 +40,32 @@ public class DrawerContentTemplate
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
+    private bool _isLocked;
+
     private async Task Close()
     {
         if (Parent != null) await Parent.SetOpen(false);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var shouldBeLocked = Parent?.Open == true;
+        if (shouldBeLocked && !_isLocked)
+        {
+            try { await JS.InvokeVoidAsync(""ShellUI.lockBodyScroll""); _isLocked = true; } catch { }
+        }
+        else if (!shouldBeLocked && _isLocked)
+        {
+            try { await JS.InvokeVoidAsync(""ShellUI.unlockBodyScroll""); _isLocked = false; } catch { }
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_isLocked)
+        {
+            try { await JS.InvokeVoidAsync(""ShellUI.unlockBodyScroll""); } catch { }
+        }
     }
 }
 ";

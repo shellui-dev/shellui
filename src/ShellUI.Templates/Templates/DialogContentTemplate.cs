@@ -16,6 +16,9 @@ public static class DialogContentTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 @if (Dialog?.Open == true)
 {
@@ -36,6 +39,8 @@ public static class DialogContentTemplate
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
+    private bool _isLocked;
+
     private async Task Close()
     {
         if (Dialog != null)
@@ -43,8 +48,27 @@ public static class DialogContentTemplate
             await Dialog.SetOpen(false);
         }
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var shouldBeLocked = Dialog?.Open == true;
+        if (shouldBeLocked && !_isLocked)
+        {
+            try { await JS.InvokeVoidAsync(""ShellUI.lockBodyScroll""); _isLocked = true; } catch { }
+        }
+        else if (!shouldBeLocked && _isLocked)
+        {
+            try { await JS.InvokeVoidAsync(""ShellUI.unlockBodyScroll""); _isLocked = false; } catch { }
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_isLocked)
+        {
+            try { await JS.InvokeVoidAsync(""ShellUI.unlockBodyScroll""); } catch { }
+        }
+    }
 }
 ";
 }
-
-

@@ -3,7 +3,7 @@
 @if (IsVisible)
 {
     <div class="@Shell.Cn("fixed z-50 flex max-h-screen w-full flex-col-reverse gap-2 p-4 sm:flex-col md:max-w-[420px]", GetPositionClass())">
-        <div class="@Shell.Cn("pointer-events-auto group relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border border-border p-6 pr-8 shadow-lg transition-all", GetVariantClass(), Class)"
+        <div class="@Shell.Cn("pointer-events-auto group relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border border-border p-6 pr-8 shadow-lg transition-all motion-reduce:transition-none", GetVariantClass(), Class)"
              @attributes="AdditionalAttributes">
             <div class="grid gap-1">
                 @if (!string.IsNullOrEmpty(Title))

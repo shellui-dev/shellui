@@ -14,8 +14,11 @@ public static class MultiSelectTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using Microsoft.JSInterop
 @typeparam TItem
 @typeparam TKey where TKey : notnull
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 <div class=""@Shell.Cn(""relative"", Class)"" @attributes=""AdditionalAttributes"">
     <button type=""button""
@@ -63,7 +66,7 @@ public static class MultiSelectTemplate
     {
         <div class=""absolute z-50 mt-1 w-full rounded-md border border-border bg-popover shadow-md animate-in fade-in-0 zoom-in-95"">
             <div class=""flex items-center border-b border-border px-3"">
-                <svg class=""mr-2 h-4 w-4 shrink-0 text-muted-foreground"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                <svg class=""mr-2 h-4 w-4 shrink-0 text-foreground/70"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
                     <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"" />
                 </svg>
                 <input @ref=""_searchInput""
@@ -136,6 +139,9 @@ public static class MultiSelectTemplate
     [Parameter] public string SearchPlaceholder { get; set; } = ""Search..."";
     [Parameter] public string EmptyText { get; set; } = ""No results found."";
     [Parameter] public bool Disabled { get; set; }
+    /// Dismiss the dropdown when the page scrolls. Matches shadcn/Radix behavior.
+    /// Set false to keep the dropdown open across scroll (useful for infinite-scroll pages).
+    [Parameter] public bool CloseOnScroll { get; set; }
     [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
@@ -145,6 +151,9 @@ public static class MultiSelectTemplate
     private int _highlightedIndex;
     private ElementReference _searchInput;
     private bool _shouldFocus;
+    private DotNetObjectReference<MultiSelect<TItem, TKey>>? _selfRef;
+    private readonly string _dismissHandle = Guid.NewGuid().ToString(""N"");
+    private bool _dismissRegistered;
 
     private string DisplayFor(TItem item) => DisplaySelector?.Invoke(item) ?? item?.ToString() ?? """";
     private TKey KeyFor(TItem item) => KeySelector(item);
@@ -157,7 +166,7 @@ public static class MultiSelectTemplate
         return Items.Where(i => DisplayFor(i).Contains(q, StringComparison.OrdinalIgnoreCase));
     }
 
-    private void Toggle()
+    private async Task Toggle()
     {
         if (Disabled) return;
         IsOpen = !IsOpen;
@@ -166,10 +175,49 @@ public static class MultiSelectTemplate
             _searchQuery = """";
             _highlightedIndex = 0;
             _shouldFocus = true;
+            await RegisterDismissAsync();
+        }
+        else
+        {
+            await UnregisterDismissAsync();
         }
     }
 
-    private void Close() => IsOpen = false;
+    private async Task Close()
+    {
+        IsOpen = false;
+        await UnregisterDismissAsync();
+    }
+
+    [JSInvokable]
+    public async Task OnDismissEvent()
+    {
+        if (IsOpen)
+        {
+            IsOpen = false;
+            await UnregisterDismissAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task RegisterDismissAsync()
+    {
+        if (!CloseOnScroll || _dismissRegistered) return;
+        _selfRef ??= DotNetObjectReference.Create(this);
+        try
+        {
+            await JS.InvokeVoidAsync(""ShellUI.onDismissEvents"", _dismissHandle, _selfRef);
+            _dismissRegistered = true;
+        }
+        catch { }
+    }
+
+    private async Task UnregisterDismissAsync()
+    {
+        if (!_dismissRegistered) return;
+        try { await JS.InvokeVoidAsync(""ShellUI.offDismissEvents"", _dismissHandle); } catch { }
+        _dismissRegistered = false;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -201,7 +249,7 @@ public static class MultiSelectTemplate
     private async Task OnKeyDown(KeyboardEventArgs e)
     {
         var filtered = Filter().ToList();
-        if (e.Key == ""Escape"") { Close(); return; }
+        if (e.Key == ""Escape"") { await Close(); return; }
         if (e.Key == ""ArrowDown"") { _highlightedIndex = Math.Min(_highlightedIndex + 1, filtered.Count - 1); return; }
         if (e.Key == ""ArrowUp"") { _highlightedIndex = Math.Max(_highlightedIndex - 1, 0); return; }
         if (e.Key == ""Enter"" && filtered.Count > 0)
@@ -209,6 +257,12 @@ public static class MultiSelectTemplate
             var idx = Math.Clamp(_highlightedIndex, 0, filtered.Count - 1);
             await ToggleItem(filtered[idx]);
         }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await UnregisterDismissAsync();
+        _selfRef?.Dispose();
     }
 }
 ";

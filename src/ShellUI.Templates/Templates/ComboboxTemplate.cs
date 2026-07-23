@@ -15,6 +15,9 @@ public static class ComboboxTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 <div class=""@Shell.Cn(""relative"", Class)"" @attributes=""AdditionalAttributes"">
     <button type=""button""
@@ -91,6 +94,9 @@ public static class ComboboxTemplate
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public IEnumerable<string>? Options { get; set; }
     [Parameter] public bool Searchable { get; set; } = true;
+    /// Dismiss the dropdown when the page scrolls. Matches shadcn/Radix behavior.
+    /// Set false to keep the dropdown open across scroll.
+    [Parameter] public bool CloseOnScroll { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
@@ -98,23 +104,73 @@ public static class ComboboxTemplate
     
     private bool IsOpen { get; set; }
     private string searchQuery = """";
-    
-    private void Toggle() 
+    private DotNetObjectReference<Combobox>? _selfRef;
+    private readonly string _dismissHandle = Guid.NewGuid().ToString(""N"");
+    private bool _dismissRegistered;
+
+    private async Task Toggle()
     {
-        if (!Disabled)
+        if (Disabled) return;
+        IsOpen = !IsOpen;
+        if (IsOpen)
         {
-            IsOpen = !IsOpen;
-            if (IsOpen) searchQuery = """";
+            searchQuery = """";
+            await RegisterDismissAsync();
+        }
+        else
+        {
+            await UnregisterDismissAsync();
         }
     }
-    
-    private void Close() => IsOpen = false;
-    
+
+    private async Task Close()
+    {
+        IsOpen = false;
+        await UnregisterDismissAsync();
+    }
+
+    [JSInvokable]
+    public async Task OnDismissEvent()
+    {
+        if (IsOpen)
+        {
+            IsOpen = false;
+            await UnregisterDismissAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task RegisterDismissAsync()
+    {
+        if (!CloseOnScroll || _dismissRegistered) return;
+        _selfRef ??= DotNetObjectReference.Create(this);
+        try
+        {
+            await JS.InvokeVoidAsync(""ShellUI.onDismissEvents"", _dismissHandle, _selfRef);
+            _dismissRegistered = true;
+        }
+        catch { }
+    }
+
+    private async Task UnregisterDismissAsync()
+    {
+        if (!_dismissRegistered) return;
+        try { await JS.InvokeVoidAsync(""ShellUI.offDismissEvents"", _dismissHandle); } catch { }
+        _dismissRegistered = false;
+    }
+
     public async Task SelectValue(string value)
     {
         Value = value;
-        await ValueChanged.InvokeAsync(value);
         IsOpen = false;
+        await UnregisterDismissAsync();
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await UnregisterDismissAsync();
+        _selfRef?.Dispose();
     }
 }
 ";

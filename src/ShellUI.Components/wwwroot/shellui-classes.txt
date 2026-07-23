@@ -204,6 +204,8 @@ min-w-[640px]
 min-w-[8rem]
 ml-3
 ml-auto
+motion-reduce:animate-none
+motion-reduce:transition-none
 mr-2
 mr-3
 mt-0.5
@@ -315,6 +317,7 @@ text-card-foreground
 text-center
 text-destructive-foreground
 text-foreground
+text-foreground/70
 text-left
 text-lg
 text-muted-foreground

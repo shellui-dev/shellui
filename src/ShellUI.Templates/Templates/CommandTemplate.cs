@@ -23,7 +23,7 @@ public static class CommandTemplate
     <div class=""fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-0 shadow-lg duration-200 sm:rounded-lg"">
         <!-- Search Input -->
         <div class=""flex items-center border-b px-3"">
-            <svg class=""mr-2 h-4 w-4 shrink-0 opacity-50"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+            <svg class=""mr-2 h-4 w-4 shrink-0 text-foreground/70"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
                 <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"" />
             </svg>
             <input
