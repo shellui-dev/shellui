@@ -124,7 +124,7 @@
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Drawer & Sheet</h3>
             <div class="flex flex-wrap gap-2">
-                <Drawer @bind-Open="drawerOpen" Side="@DrawerSide.Bottom">
+                <Drawer @bind-Open="drawerOpen" Side="@DrawerSide.Bottom" Compositional="true">
                     <DrawerTrigger>
                         <Button Variant="@ButtonVariant.Outline">Open Drawer</Button>
                     </DrawerTrigger>
@@ -134,7 +134,7 @@
                         <Button @onclick="() => drawerOpen = false">Close</Button>
                     </DrawerContent>
                 </Drawer>
-                <Sheet @bind-Open="sheetOpen" Side="@SheetSide.Right">
+                <Sheet @bind-Open="sheetOpen" Side="@SheetSide.Right" Compositional="true">
                     <SheetTrigger>
                         <Button Variant="@ButtonVariant.Outline">Open Sheet</Button>
                     </SheetTrigger>

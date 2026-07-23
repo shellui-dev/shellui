@@ -1,6 +1,5 @@
 @namespace BlazorInteractiveServer.Components.UI
 @using BlazorInteractiveServer.Components.Services
-@using BlazorInteractiveServer.Components
 @implements IDisposable
 @inject SonnerService SonnerService
 
@@ -14,7 +13,7 @@
         var stackClass = i > 0 ? (IsTop ? "-mt-20 group-hover:mt-0" : "-mb-20 group-hover:mb-0") : "";
         <div @key="toast.Id"
              style="z-index: @(i + 1)"
-             class="@stackClass @GetToastClasses(toast.Variant) pointer-events-auto relative flex min-w-0 w-full items-center gap-3 overflow-hidden rounded-lg p-4 shadow-lg transition-all duration-300 animate-in fade-in-0 @SonnerVariants.GetToastAnimation(Position) shrink-0">
+             class="@stackClass @GetToastClasses(toast.Variant) pointer-events-auto relative flex min-w-0 w-full items-center gap-3 overflow-hidden rounded-lg p-4 shadow-lg transition-all duration-300 motion-reduce:transition-none animate-in fade-in-0 motion-reduce:animate-none @SonnerVariants.GetToastAnimation(Position) shrink-0">
             <div class="grid flex-1 gap-1">
                 @if (!string.IsNullOrEmpty(toast.Message))
                 {
@@ -51,6 +50,8 @@
     {
         "destructive" => "bg-destructive text-destructive-foreground",
         "success" => "bg-green-500/20 text-green-700 dark:bg-green-900/30 dark:text-green-100",
+        "info" => "bg-blue-500/20 text-blue-700 dark:bg-blue-900/30 dark:text-blue-100",
+        "warning" => "bg-yellow-500/20 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-100",
         _ => "bg-background text-foreground"
     };
 }

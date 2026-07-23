@@ -33,7 +33,7 @@
                     @foreach (var column in Columns)
                     {
                         <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground @(column.Sortable ? "cursor-pointer hover:bg-accent/50" : "")"
-                            @onclick="() => { if (column.Sortable) OnSortClicked(column); }">
+                            @onclick="async () => { if (column.Sortable) await OnSortClicked(column); }">
                             <div class="flex items-center gap-2">
                                 @column.Header
                                 @if (column.Sortable)
@@ -114,7 +114,7 @@
     </div>
 
     <!-- Pagination -->
-    @if (ShowPagination && _filteredItems.Any())
+    @if (ShowPagination && (_filteredItems.Any() || (ServerSide && _serverTotalCount > 0)))
     {
         <div class="flex flex-col gap-4 px-2 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex-1 text-sm text-muted-foreground">
@@ -124,7 +124,7 @@
                 }
                 else
                 {
-                    @($"Showing {_startIndex} - {_endIndex} of {_filteredItems.Count()} results")
+                    @($"Showing {_startIndex} - {_endIndex} of {(ServerSide ? _serverTotalCount : _filteredItems.Count())} results")
                 }
             </div>
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:space-x-6 lg:space-x-8">
@@ -138,7 +138,7 @@
                             }
                         </select>
                         <div class="absolute inset-y-0 right-1 flex items-center pointer-events-none">
-                            <svg class="h-3 w-3 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-3 w-3 text-foreground/70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
@@ -191,6 +191,16 @@
     [Parameter]
     public EventCallback<HashSet<TItem>> SelectedItemsChanged { get; set; }
 
+    /// When true, `Items` is ignored and the table calls `OnDataRequest` for each
+    /// filter / sort / page change. Use for datasets too large to materialize client-side.
+    [Parameter]
+    public bool ServerSide { get; set; }
+
+    /// Required when `ServerSide` is true. Receives the current DataTableRequest
+    /// (skip/take/sort/search) and returns the page of items plus total count.
+    [Parameter]
+    public Func<DataTableRequest, Task<DataTableResponse<TItem>>>? OnDataRequest { get; set; }
+
     private string _filterText = "";
     private IEnumerable<TItem> _filteredItems = new List<TItem>();
     private IEnumerable<TItem> _paginatedItems = new List<TItem>();
@@ -200,11 +210,51 @@
     private int _startIndex = 1;
     private int _endIndex = 1;
     private int _pageSize = 10;
+    private int _serverTotalCount = 0;
     private TItem? _openActionsItem = default(TItem);
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        UpdateFilteredItems();
+        await RefreshAsync();
+    }
+
+    private async Task RefreshAsync()
+    {
+        if (ServerSide && OnDataRequest is not null)
+        {
+            await LoadServerPageAsync();
+        }
+        else
+        {
+            UpdateFilteredItems();
+        }
+    }
+
+    private async Task LoadServerPageAsync()
+    {
+        var sortColumn = Columns.FirstOrDefault(c => c.SortDirection != SortDirection.None);
+        var request = new DataTableRequest
+        {
+            Skip = (_currentPage - 1) * _pageSize,
+            Take = _pageSize,
+            SortBy = sortColumn?.PropertyName,
+            SortDirection = sortColumn?.SortDirection ?? SortDirection.None,
+            SearchQuery = _filterText ?? ""
+        };
+
+        var response = await OnDataRequest!(request);
+
+        _paginatedItems = response.Items;
+        _serverTotalCount = response.TotalCount;
+        _totalPages = Math.Max(1, (int)Math.Ceiling(_serverTotalCount / (double)_pageSize));
+        _currentPage = Math.Min(_currentPage, _totalPages);
+        _startIndex = _serverTotalCount == 0 ? 0 : (_currentPage - 1) * _pageSize + 1;
+        _endIndex = Math.Min(_currentPage * _pageSize, _serverTotalCount);
+        // Keep the "select-all" checkbox and count displays honest — they only ever
+        // reference the currently loaded page in server-side mode.
+        _filteredItems = _paginatedItems;
+
+        StateHasChanged();
     }
 
     private void UpdateFilteredItems()
@@ -213,7 +263,7 @@
         _filteredItems = string.IsNullOrWhiteSpace(_filterText)
             ? Items
             : Items.Where(item =>
-                Columns.Any(col => 
+                Columns.Any(col =>
                 {
                     // Simple text search - check if any property contains the filter text
                     var property = typeof(TItem).GetProperty(col.PropertyName);
@@ -243,31 +293,29 @@
         StateHasChanged();
     }
 
-    private void OnFilterInput(ChangeEventArgs e)
+    private async Task OnFilterInput(ChangeEventArgs e)
     {
         _filterText = e.Value?.ToString() ?? "";
-        _currentPage = 1; // Reset to first page
-        UpdateFilteredItems();
+        _currentPage = 1;
+        await RefreshAsync();
     }
 
-    private void OnFilterChanged(string value)
+    private async Task OnFilterChanged(string value)
     {
         _filterText = value;
-        _currentPage = 1; // Reset to first page
-        UpdateFilteredItems();
+        _currentPage = 1;
+        await RefreshAsync();
     }
 
-    private void OnSortClicked(DataTableColumn<TItem> column)
+    private async Task OnSortClicked(DataTableColumn<TItem> column)
     {
         if (!column.Sortable) return;
 
-        // Reset other columns
         foreach (var col in Columns.Where(c => c != column))
         {
             col.SortDirection = SortDirection.None;
         }
 
-        // Cycle sort direction
         column.SortDirection = column.SortDirection switch
         {
             SortDirection.None => SortDirection.Ascending,
@@ -276,7 +324,7 @@
             _ => SortDirection.Ascending
         };
 
-        UpdateFilteredItems();
+        await RefreshAsync();
     }
 
     private void OnSelectAllChanged(bool selected)
@@ -311,31 +359,31 @@
 
     private bool IsSelected(TItem item) => _selectedItems.Contains(item);
 
-    private void OnPageSizeChanged(ChangeEventArgs e)
+    private async Task OnPageSizeChanged(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value?.ToString(), out var size))
         {
             _pageSize = size;
             _currentPage = 1;
-            UpdateFilteredItems();
+            await RefreshAsync();
         }
     }
 
-    private void OnPreviousPage()
+    private async Task OnPreviousPage()
     {
         if (_currentPage > 1)
         {
             _currentPage--;
-            UpdateFilteredItems();
+            await RefreshAsync();
         }
     }
 
-    private void OnNextPage()
+    private async Task OnNextPage()
     {
         if (_currentPage < _totalPages)
         {
             _currentPage++;
-            UpdateFilteredItems();
+            await RefreshAsync();
         }
     }
 
@@ -351,3 +399,4 @@
         StateHasChanged();
     }
 }
+
