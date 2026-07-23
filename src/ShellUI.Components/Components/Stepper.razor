@@ -1,7 +1,7 @@
 @namespace ShellUI.Components
 @using ShellUI.Components.Models
 
-<CascadingValue Value="this" IsFixed="true">
+<CascadingValue Value="this">
     <div class="@Shell.Cn("w-full", Class)">
         @if (StepItems.Count > 0)
         {
@@ -13,13 +13,22 @@
                     var isActive = i == _activeStep;
                     var isCompleted = i < _highestStepReached;
                     var isClickable = i <= _highestStepReached;
+                    var capturedIndex = i;
+
+                    string stateClass;
+                    if (isActive)
+                        stateClass = "border-primary bg-primary text-primary-foreground ring-2 ring-primary/20 ring-offset-2 ring-offset-background";
+                    else if (isCompleted)
+                        stateClass = "border-primary bg-primary/10 text-primary";
+                    else
+                        stateClass = "border-muted bg-background text-muted-foreground";
 
                     <div class="flex flex-col items-center relative">
                         <button type="button"
-                                class="@Shell.Cn("flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-medium transition-colors", isCompleted ? "border-primary bg-primary text-primary-foreground" : isActive ? "border-primary bg-background text-primary" : "border-muted bg-background text-muted-foreground", isClickable ? "cursor-pointer hover:border-primary/50" : "cursor-not-allowed")"
+                                class="@Shell.Cn("flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-medium transition-colors", stateClass, isClickable ? "cursor-pointer" : "cursor-not-allowed", isClickable && !isActive ? "hover:border-primary/50" : "")"
                                 disabled="@(!isClickable)"
-                                @onclick="async () => await GoToStepAsync(i)">
-                            @if (isCompleted)
+                                @onclick="async () => await GoToStepAsync(capturedIndex)">
+                            @if (isCompleted && !isActive)
                             {
                                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
