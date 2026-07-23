@@ -22,7 +22,7 @@ public class ToastTemplate
 @if (IsVisible)
 {
     <div class=""@(""fixed z-50 flex max-h-screen w-full flex-col-reverse gap-2 p-4 sm:flex-col md:max-w-[420px] "" + (Position == ""top-left"" ? ""top-0 left-0"" : Position == ""top-right"" ? ""top-0 right-0"" : Position == ""bottom-left"" ? ""bottom-0 left-0"" : ""bottom-0 right-0""))"">
-        <div class=""@(""pointer-events-auto group relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all text-foreground "" + (Variant == ""destructive"" ? ""border-red-500 bg-red-50 dark:bg-red-900/20 dark:border-red-500/50"" : Variant == ""success"" ? ""border-green-500 bg-green-50 dark:bg-green-900/20 dark:border-green-500/50"" : Variant == ""warning"" ? ""border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-500/50"" : ""border-border bg-background"") + "" "" + ClassName)""
+        <div class=""@(""pointer-events-auto group relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all motion-reduce:transition-none text-foreground "" + (Variant == ""destructive"" ? ""border-red-500 bg-red-50 dark:bg-red-900/20 dark:border-red-500/50"" : Variant == ""success"" ? ""border-green-500 bg-green-50 dark:bg-green-900/20 dark:border-green-500/50"" : Variant == ""warning"" ? ""border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-500/50"" : ""border-border bg-background"") + "" "" + ClassName)""
              @attributes=""AdditionalAttributes"">
             <div class=""grid gap-1"">
                 @if (!string.IsNullOrEmpty(Title))

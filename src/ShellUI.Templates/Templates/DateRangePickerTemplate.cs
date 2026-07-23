@@ -16,20 +16,23 @@ public class DateRangePickerTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 <div class=""@(""relative "" + ClassName)"" @attributes=""AdditionalAttributes"">
     <button type=""button""
             @onclick=""ToggleCalendar""
             disabled=""@Disabled""
-            class=""@(""flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 "" + (Disabled ? ""opacity-50 cursor-not-allowed"" : """"))"">
-        <span class=""@(StartDate == null && EndDate == null ? ""text-muted-foreground"" : """")"">
+            class=""@(""flex h-10 w-full items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 "" + (Disabled ? ""opacity-50 cursor-not-allowed"" : """"))"">
+        <span class=""@(""flex-1 text-left "" + (StartDate == null && EndDate == null ? ""text-muted-foreground"" : """"))"">
             @GetDisplayText()
         </span>
-        <div class=""flex items-center gap-1"">
+        <div class=""ml-auto flex items-center gap-1 shrink-0"">
             @if (AllowClear && (StartDate.HasValue || EndDate.HasValue))
             {
-                <button type=""button"" 
-                        @onclick=""ClearRange"" 
+                <button type=""button""
+                        @onclick=""ClearRange""
                         @onclick:stopPropagation=""true""
                         class=""p-0.5 hover:bg-accent rounded transition-colors"">
                     <svg class=""h-3.5 w-3.5 text-muted-foreground hover:text-foreground"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
@@ -37,7 +40,7 @@ public class DateRangePickerTemplate
                     </svg>
                 </button>
             }
-            <svg class=""h-4 w-4 text-muted-foreground"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+            <svg class=""h-4 w-4 text-foreground/70"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
                 <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"" />
             </svg>
         </div>
@@ -108,7 +111,12 @@ public class DateRangePickerTemplate
     
     [Parameter]
     public bool Disabled { get; set; }
-    
+
+    /// Dismiss the calendar when the page scrolls. Matches shadcn/Radix behavior.
+    /// Set false to keep the calendar open across scroll.
+    [Parameter]
+    public bool CloseOnScroll { get; set; }
+
     [Parameter]
     public string ClassName { get; set; } = """";
     
@@ -118,6 +126,9 @@ public class DateRangePickerTemplate
     private bool _isOpen;
     private DateTime _currentMonth = DateTime.Now;
     private bool _selectingStart = true;
+    private DotNetObjectReference<DateRangePicker>? _selfRef;
+    private readonly string _dismissHandle = Guid.NewGuid().ToString(""N"");
+    private bool _dismissRegistered;
     
     private string GetDisplayText()
     {
@@ -155,7 +166,43 @@ public class DateRangePickerTemplate
         return baseClass;
     }
     
-    private void ToggleCalendar() => _isOpen = !_isOpen;
+    private async Task ToggleCalendar()
+    {
+        _isOpen = !_isOpen;
+        if (_isOpen) await RegisterDismissAsync();
+        else await UnregisterDismissAsync();
+    }
+
+    [JSInvokable]
+    public async Task OnDismissEvent()
+    {
+        if (_isOpen)
+        {
+            _isOpen = false;
+            await UnregisterDismissAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task RegisterDismissAsync()
+    {
+        if (!CloseOnScroll || _dismissRegistered) return;
+        _selfRef ??= DotNetObjectReference.Create(this);
+        try
+        {
+            await JS.InvokeVoidAsync(""ShellUI.onDismissEvents"", _dismissHandle, _selfRef);
+            _dismissRegistered = true;
+        }
+        catch { }
+    }
+
+    private async Task UnregisterDismissAsync()
+    {
+        if (!_dismissRegistered) return;
+        try { await JS.InvokeVoidAsync(""ShellUI.offDismissEvents"", _dismissHandle); } catch { }
+        _dismissRegistered = false;
+    }
+
     private void PreviousMonth() => _currentMonth = _currentMonth.AddMonths(-1);
     private void NextMonth() => _currentMonth = _currentMonth.AddMonths(1);
     
@@ -206,8 +253,14 @@ public class DateRangePickerTemplate
         
         for (int i = 0; i < startDayOfWeek; i++) days.Add(null);
         for (int day = 1; day <= lastDay.Day; day++) days.Add(new DateTime(_currentMonth.Year, _currentMonth.Month, day));
-        
+
         return days;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await UnregisterDismissAsync();
+        _selfRef?.Dispose();
     }
 }
 ";

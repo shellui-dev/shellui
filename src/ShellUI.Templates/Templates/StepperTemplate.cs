@@ -18,7 +18,7 @@ public static class StepperTemplate
     public const string Content = """
 @namespace YourProjectNamespace.Components.UI
 
-<CascadingValue Value="this" IsFixed="true">
+<CascadingValue Value="this">
     <div class="@Shell.Cn("w-full", Class)">
         @ChildContent
         @if (ShowNavigation)
