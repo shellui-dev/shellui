@@ -83,7 +83,7 @@ Counts are top-level components users invoke directly via `shellui add <name>`. 
 | v0.3.0 stable (after testing) | 🎯 Next |
 | v1.0 - Full release | 🎯 Target Q2-Q3 2026 |
 
-*Note: Stepper active-state highlighting known issue; shipping as-is for alpha.*
+*Stepper active-state highlighting fixed in polish/component-quality — active step now wins over completed for both fill and icon.*
 
 ## How to Get Started with Development
 
