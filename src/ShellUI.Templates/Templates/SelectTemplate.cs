@@ -26,7 +26,10 @@ public static class SelectTemplate
         @attributes=""AdditionalAttributes"">
         @ChildContent
     </select>
-    <span class=""material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"">expand_more</span>
+    <svg class=""pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground""
+         xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+        <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M19 9l-7 7-7-7"" />
+    </svg>
 </div>
 
 @code {

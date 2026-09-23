@@ -38,6 +38,8 @@ public class TemplateCompileTests
     [InlineData("dashboard-02")]
     [InlineData("button")]
     [InlineData("dialog")]
+    [InlineData("tabs")]
+    [InlineData("select")]
     public void RazorTemplate_CodeBlockParses(string componentName)
     {
         var content = ComponentRegistry.GetComponentContent(componentName);
@@ -74,6 +76,44 @@ public class TemplateCompileTests
         Assert.True(errors.Count == 0,
             $"{componentName} @code block has {errors.Count} parse error(s):\n" +
             string.Join("\n", errors.Select(e => $"  {e.Location.GetLineSpan().StartLinePosition}: {e.GetMessage()}")));
+    }
+
+    /// Exhaustive sweep: parse the @code block of every installable .razor template
+    /// in the registry. This is the safety net for the class of bugs where a template
+    /// ships with an unescaped quote inside its verbatim string (Tabs, PieChart, etc.).
+    /// Kept separate from the targeted Theory above so a regression's failure point
+    /// lists just the offending component(s) rather than aborting on the first one.
+    [Fact]
+    public void EveryRazorTemplate_CodeBlockParses()
+    {
+        var failures = new List<string>();
+        foreach (var (name, metadata) in ComponentRegistry.Components)
+        {
+            if (!metadata.IsAvailable) continue;
+            if (!metadata.FilePath.EndsWith(".razor", System.StringComparison.OrdinalIgnoreCase)) continue;
+
+            var content = ComponentRegistry.GetComponentContent(name);
+            if (string.IsNullOrWhiteSpace(content)) continue;
+            if (!content.Contains("@code")) continue;
+
+            var codeBlock = ExtractCodeBlock(content!);
+            if (string.IsNullOrWhiteSpace(codeBlock))
+            {
+                failures.Add($"{name}: @code block could not be extracted (likely unterminated string literal)");
+                continue;
+            }
+
+            var wrapped = $"class __Probe {{ {codeBlock} }}";
+            var errors = CSharpSyntaxTree.ParseText(wrapped).GetDiagnostics()
+                .Where(d => d.Severity == DiagnosticSeverity.Error)
+                .Select(d => $"{d.Location.GetLineSpan().StartLinePosition}: {d.GetMessage()}")
+                .ToList();
+            if (errors.Count > 0)
+                failures.Add($"{name}: {errors.Count} parse error(s) — {errors[0]}");
+        }
+        Assert.True(failures.Count == 0,
+            "The following templates have parse errors in their @code block:\n  " +
+            string.Join("\n  ", failures));
     }
 
     /// Strips Razor markup directives so the remaining text can be best-effort

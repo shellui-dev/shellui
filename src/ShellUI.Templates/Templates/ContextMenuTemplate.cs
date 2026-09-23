@@ -12,7 +12,7 @@ public static class ContextMenuTemplate
         Category = ComponentCategory.Navigation,
         FilePath = "ContextMenu.razor",
         Tags = new List<string> { "menu", "context", "right-click", "dropdown" },
-        Dependencies = new List<string>()
+        Dependencies = new List<string> { "context-menu-models" }
     };
 
     public const string Content = """

@@ -28,7 +28,13 @@ public class FileUploadTemplate
      @ondragover:preventDefault=""true""
      @ondrop:preventDefault=""true"">
         <div class=""text-center pointer-events-none"">
-            <span class=""material-symbols-outlined mx-auto text-5xl text-muted-foreground block"">cloud_upload</span>
+            <svg class=""mx-auto h-12 w-12 text-muted-foreground block""
+                 xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""1.5""
+                      d=""M7 16a4 4 0 01-.88-7.9 5 5 0 019.9-1A5.5 5.5 0 0118.5 16H7z"" />
+                <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""1.5""
+                      d=""M12 12v6m0-6l-2 2m2-2l2 2"" />
+            </svg>
             <div class=""mt-4"">
                 <p class=""text-sm text-foreground font-medium"">@Text</p>
                 @if (Multiple && AllowedFileCount > 1)

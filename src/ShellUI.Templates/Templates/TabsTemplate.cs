@@ -32,7 +32,7 @@ public static class TabsTemplate
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private string _effectiveValue = "";
+    private string _effectiveValue = """";
 
     protected override void OnInitialized()
     {
