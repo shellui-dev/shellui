@@ -68,15 +68,7 @@ public static class CopyButtonTemplate
 
         try
         {
-            try
-            {
-                var module = await JSRuntime.InvokeAsync<IJSObjectReference>(""import"", ""./_content/ShellUI.Components/shellui.js"");
-                await module.InvokeVoidAsync(""copyToClipboard"", Text);
-            }
-            catch
-            {
-                await JSRuntime.InvokeVoidAsync(""ShellUI.copyToClipboard"", Text);
-            }
+            await JSRuntime.InvokeVoidAsync(""ShellUI.copyToClipboard"", Text);
             _copied = true;
             await OnCopied.InvokeAsync();
             _ = Task.Run(async () =>
