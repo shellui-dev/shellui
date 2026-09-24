@@ -40,6 +40,7 @@ public class TemplateCompileTests
     [InlineData("dialog")]
     [InlineData("tabs")]
     [InlineData("select")]
+    [InlineData("sidebar-provider")]
     public void RazorTemplate_CodeBlockParses(string componentName)
     {
         var content = ComponentRegistry.GetComponentContent(componentName);
