@@ -302,7 +302,7 @@ class Program
 
     static Command CreateUpdateCommand()
     {
-        var command = new Command("update", "Update component(s) to latest version");
+        var command = new Command("update", "Rewrite installed component(s) from the current CLI templates");
         
         var componentsArg = new Argument<string[]>(
             "components",

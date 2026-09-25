@@ -1,219 +1,218 @@
 # ShellUI CLI
 
-Command-line tool for managing ShellUI Blazor components. Install components as `.razor` source files you own, styled with Tailwind CSS.
+The ShellUI command-line tool initializes a .NET 10 Blazor project and copies ShellUI component templates into source files that the application owns.
 
-## Is this what I want?
+## Version scope
 
-This is the **CLI install path (Path C)** — best for **owning your component source and editing freely**. If that's not you, there are three other paths worth considering:
+This README documents the command surface in repository source `0.4.0-alpha.1`.
 
-- **[Path A — Precompiled bundle](https://www.nuget.org/packages/ShellUI.Components)** — one `<link>` tag, zero Tailwind setup. Best for quick starts.
-- **[Path B — Safelist](https://www.nuget.org/packages/ShellUI.Components)** — for projects that already run Tailwind. Tree-shaken CSS.
-- **[Path D — CDN](https://github.com/shellui-dev/shellui#path-d--cdn-no-nuget-static-html)** — one `<link>` tag from jsdelivr. Best for static HTML and prototypes.
+- Latest published stable CLI: `0.2.1`
+- Latest published prerelease CLI: `0.3.0-rc.1`
+- Current source: `0.4.0-alpha.1`, not currently published
 
-**Use this CLI (Path C) when you want:**
-- ✅ Source-level ownership of every component
-- ✅ To restyle by editing `.razor` files directly
-- ✅ Automatic host wiring (`shellui init` patches App.razor)
-- ✅ tweakcn output to paste straight into your `wwwroot/input.css`
-- ✅ Zero runtime CSS dependency on any package or CDN
+The theme commands, current registry inventory, and other source-only features are not implied by the published packages. The published prerelease targets .NET 9; the current source targets .NET 10. Run `shellui --help` with an installed package to inspect that package's command surface.
 
-## Installation
+## Install a published tool
+
+Install the latest published stable tool globally:
 
 ```bash
-dotnet tool install -g ShellUI.CLI
+dotnet tool install --global ShellUI.CLI --version 0.2.1
 ```
 
-## Quick Start
-
-### Initialize ShellUI in your project
+Or install the latest published prerelease:
 
 ```bash
-dotnet shellui init
+dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.1
 ```
 
-Or in one shot with a tweakcn theme baked in:
+A global tool uses the `shellui` command:
 
 ```bash
-dotnet shellui theme init https://tweakcn.com/themes/<id> --yes
+shellui --help
 ```
 
-`init` automatically:
-- ✅ Downloads Tailwind CSS CLI (standalone, no Node.js required) — or uses your npm install if you prefer
-- ✅ Writes the full default theme (`:root`, `.dark`, `@theme inline`) to `wwwroot/input.css`
-- ✅ Patches `Components/App.razor` with `@rendermode="InteractiveServer"`, a theme-bootstrap `<script>` (no light-flash on dark pages), and the `<script src="shellui.js">` tag
-- ✅ Patches `wwwroot/index.html` instead for Blazor WebAssembly standalone projects
-- ✅ Sets up MSBuild integration so Tailwind rebuilds on every `dotnet build`
-- ✅ Creates the `Components/UI/` folder structure
-- ✅ Idempotent — running it twice is a no-op
-
-### Add components
+A local .NET tool uses `dotnet shellui`:
 
 ```bash
-# Add a single component
-dotnet shellui add button
-
-# Add multiple components
-dotnet shellui add input card dialog table
-
-# List all available components
-dotnet shellui list
-
-# List installed components
-dotnet shellui list --installed
+dotnet new tool-manifest
+dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.1
+dotnet shellui --help
 ```
+
+`ShellUI.CLI` and `ShellUI.Components` are the only packable ShellUI projects. The current source CLI can be packed locally, but there is no published `0.4.0-alpha.1` tool package to install.
+
+## Current source quick start
+
+Run these commands from the root of the target Blazor project:
+
+```bash
+shellui init
+shellui add button card dialog
+shellui list
+shellui list --installed
+```
+
+For a local tool, prefix each command with `dotnet `, for example `dotnet shellui init`.
+
+`init` detects the Blazor project, creates the ShellUI folder and configuration structure, selects the Tailwind method, writes the default theme, wires the host, and adds the Tailwind MSBuild integration. It can use the standalone Tailwind executable or npm.
 
 ## Commands
 
 ### `init`
-Initialize ShellUI in your Blazor project.
+
+Initialize ShellUI in a Blazor project.
 
 ```bash
-dotnet shellui init
+shellui init
 ```
 
-**Options:**
-- `--force` - Overwrite existing files
-- `--style <style>` - Choose CSS style (default: default)
-- `--tailwind <method>` - Choose Tailwind method (standalone, npm) (default: standalone)
-- `--yes` - Run in non-interactive mode with default options
+Options:
 
-### `add <components>`
-Add one or more components to your project.
+- `--force` reinitialize a project that is already configured
+- `--style <default|new-york|minimal>` select a component style
+- `--tailwind <standalone|npm>` select the Tailwind build method
+- `--yes` accept the defaults without prompts
+
+### `add <components...>`
+
+Install one or more direct component targets and their dependencies.
 
 ```bash
-dotnet shellui add button input card
+shellui add button
+shellui add input card dialog table
+shellui add button,input,card
 ```
 
-**Options:**
-- `--force` - Overwrite existing components
+Options:
+
+- `--force` overwrite existing files
+
+Dependency-only registry entries are hidden from `list` but are installed recursively. Some templates also add required NuGet packages and stylesheet links.
 
 ### `list`
-List available or installed components.
+
+List direct component targets.
 
 ```bash
-# List all available components
-dotnet shellui list
-
-# List installed components
-dotnet shellui list --installed
-
-# List available components
-dotnet shellui list --available
+shellui list
+shellui list --installed
+shellui list --available
 ```
 
-### `remove <components>`
-Remove components from your project.
+### `remove <components...>`
+
+Remove one or more named installed components.
 
 ```bash
-dotnet shellui remove button input
+shellui remove button input
 ```
 
-**Options:**
-- `--all` - Remove all installed components
+The command accepts one or more component names. Review local changes before removing source files. Layout blocks such as `dashboard-01` and `dashboard-02` currently require manual removal from `Components/Layout` because remove is not yet layout-aware.
 
-### `theme` — bake tweakcn themes at build time
+### `update [components...]`
 
-Fetch a theme from [tweakcn.com](https://tweakcn.com) and write it into your project. No runtime fetch, works offline, exactly-what-you-see-is-what-ships.
+Reinstall named components from the current CLI templates. With no names, or with `--all`, it updates every installed component.
 
 ```bash
-# Fresh project — init + apply theme in one step
-dotnet shellui theme init https://tweakcn.com/themes/<id>
-
-# Existing project — apply theme to wwwroot/input.css
-dotnet shellui theme apply https://tweakcn.com/themes/<id>
-
-# Emit standalone override CSS (for Path A/D consumers who use the precompiled bundle)
-dotnet shellui theme apply https://tweakcn.com/themes/<id> --emit-override wwwroot/theme.css
-
-# Re-fetch the theme recorded in shellui.theme.lock
-dotnet shellui theme update
+shellui update button
+shellui update card input
+shellui update --all
 ```
 
-Each `apply` writes a `shellui.theme.lock` file (source URL + SHA-256) so `update` can refresh from the same source without you having to remember the URL. Re-applies are idempotent — user content outside the sentinel-marked region survives verbatim.
+`update` overwrites template files. Commit or otherwise preserve local customizations before running it.
 
-## Available Components
+### `theme init <url-or-id>`
 
-### Form Components
-- `button`, `input`, `textarea`, `select`, `checkbox`, `switch`, `radio-group`, `slider`, `combobox`, `date-picker`, `time-picker`, `date-range-picker`, `input-otp`, `form`
-
-### Layout Components
-- `card`, `dialog`, `sheet`, `drawer`, `popover`, `tooltip`, `separator`, `scroll-area`, `resizable`, `collapsible`
-
-### Navigation Components
-- `navbar`, `sidebar`, `app-sidebar`, `navigation-menu`, `menubar`, `breadcrumb`, `pagination`, `tabs`
-
-### Dashboard / Layout Blocks (shadcn-style)
-- `dashboard-01` - Sidebar + content layout. Header scrolls with page.
-- `dashboard-02` - Same layout with **sticky header** (breadcrumb bar stays fixed on scroll)
+Initialize a project and apply a public [tweakcn](https://tweakcn.com) theme in one operation.
 
 ```bash
-dotnet shellui add dashboard-01   # or dashboard-02
-# Installs: sidebar, breadcrumb, separator, theme-toggle, app-sidebar + layout to Components/Layout/
+shellui theme init https://tweakcn.com/themes/THEME_ID
+shellui theme init THEME_ID --yes
 ```
 
-### Data Display
-- `table`, `data-table`, `badge`, `avatar`, `alert`, `toast`, `sonner`, `skeleton`, `progress`, `loading`
+The URL argument also accepts a bare theme ID or a public `https://tweakcn.com/r/themes/THEME_ID` URL. Options match `init`: `--force`, `--style`, `--tailwind`, and `--yes`.
 
-**68 installable components total** (run `dotnet shellui list` for full list; sub-components, variants, models, and services auto-install as dependencies)
+### `theme apply <url-or-id>`
 
-### Interactive Components
-- `dropdown`, `accordion`, `toggle`, `theme-toggle`, `command`, `context-menu`, `hover-card`
-
-## Component Dependencies
-
-When you install a component, its dependencies are automatically installed:
+Apply a theme to an initialized project.
 
 ```bash
-dotnet shellui add dialog
-# Automatically installs: button (dependency)
+shellui theme apply https://tweakcn.com/themes/THEME_ID
+shellui theme apply THEME_ID --emit-override wwwroot/theme.css
 ```
 
-## Project Structure
+Without `--emit-override`, the command replaces the sentinel-marked region in `wwwroot/input.css` and leaves surrounding CSS intact. With `--emit-override`, it writes a standalone theme file that can be loaded after `shellui-all.css`.
 
-After running `init`, your project structure:
+### `theme update`
+
+Re-fetch the theme recorded in `shellui.theme.lock` and apply it again.
+
+```bash
+shellui theme update
+```
+
+The lock file stores the original source URL, theme name, timestamp, and SHA-256 of the fetched theme JSON.
+
+## Component inventory
+
+The current source registry contains **173 entries**:
+
+- **73 direct install targets**, shown by `list`
+- **100 hidden dependency entries**, resolved by `add` but omitted from the direct list
+
+The five current source additions are:
+
+```bash
+shellui add typed-select command-palette data-picker multi-select tag-input
+```
+
+Use `shellui list` for the complete direct-target inventory and descriptions.
+
+## Generated project structure
+
+A typical initialized project contains:
 
 | Path | Purpose |
-|------|---------|
-| `Components/UI/` | Components are installed here |
-| `wwwroot/input.css` | Tailwind input file |
-| `wwwroot/app.css` | Compiled CSS (auto-generated) |
-| `tailwind.config.js` | Tailwind configuration |
-| `shellui.json` | ShellUI configuration |
-| `Build/ShellUI.targets` | MSBuild integration |
+|---|---|
+| `Components/UI/` | Installed component source |
+| `Components/Layout/` | Dashboard layout blocks, when installed |
+| `wwwroot/input.css` | Tailwind input and ShellUI theme variables |
+| `wwwroot/app.css` | Compiled project CSS |
+| `wwwroot/shellui.js` | JavaScript interop used by ShellUI components |
+| `Build/ShellUI.targets` | MSBuild Tailwind integration |
+| `shellui.json` | Installed component and Tailwind configuration |
+| `shellui.theme.lock` | Theme source metadata, when a theme is applied |
 
-## Updating Components
+## Tailwind setup
 
-To update a component to the latest version:
+Current source uses Tailwind CSS `4.3.2`.
+
+- `shellui init --tailwind standalone` downloads the standalone executable and does not require Node.js.
+- `shellui init --tailwind npm --yes` installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm.
+
+Both methods compile `wwwroot/input.css` to `wwwroot/app.css` through the generated MSBuild target. The current CLI invokes npm through `cmd`; use standalone mode on non-Windows systems or run npm manually.
+
+## Development
+
+From the repository root:
 
 ```bash
-dotnet shellui add button --force
+dotnet restore ShellUI.slnx
+dotnet build ShellUI.slnx
+dotnet test ShellUI.slnx
 ```
 
-## Troubleshooting
-
-### Component not found
-Make sure you're using the correct component name. Use `dotnet shellui list` to see all available components.
-
-### Build errors
-Ensure Tailwind CSS is properly configured:
-1. Run `dotnet shellui init` if you haven't already
-2. Check that `tailwind.config.js` exists
-3. Verify `wwwroot/input.css` contains `@import "tailwindcss";`
-
-### CLI not found
-Reinstall the CLI tool:
-```bash
-dotnet tool uninstall -g ShellUI.CLI
-dotnet tool install -g ShellUI.CLI
-```
+The CLI project is `src/ShellUI.CLI/ShellUI.CLI.csproj`. `ShellUI.Core` and `ShellUI.Templates` are internal dependencies and are not packable.
 
 ## Documentation
 
-- [Full Documentation](https://shellui.dev/docs/cli)
-- [Component Reference](https://shellui.dev/components)
-- [GitHub Repository](https://github.com/shellui-dev/shellui)
+- [Repository README](https://github.com/shellui-dev/shellui/blob/main/README.md)
+- [Contributing guide](https://github.com/shellui-dev/shellui/blob/main/docs/CONTRIBUTING.md)
+- [Release notes](https://github.com/shellui-dev/shellui/blob/main/docs/RELEASE_NOTES.md)
+
+The release notes are historical records for published versions and do not replace this source-version command reference.
 
 ## License
 
-MIT License - see [LICENSE](https://github.com/shellui-dev/shellui/blob/main/LICENSE) for details.
-
+[MIT](https://github.com/shellui-dev/shellui/blob/main/LICENSE.txt)
