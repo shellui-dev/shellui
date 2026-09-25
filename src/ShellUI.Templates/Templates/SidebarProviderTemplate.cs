@@ -12,7 +12,7 @@ public static class SidebarProviderTemplate
         Category = ComponentCategory.Layout,
         FilePath = "SidebarProvider.razor",
         IsAvailable = false,
-        Dependencies = new List<string> { "sidebar-models", "sidebar-js" }
+        Dependencies = new List<string> { "sidebar-models", "shellui-js" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
@@ -29,9 +29,9 @@ public static class SidebarProviderTemplate
 </div>
 
 @code {
-    private IJSObjectReference? _module;
-    private IJSObjectReference? _handlers;
+    private readonly string _handle = Guid.NewGuid().ToString(""N"");
     private DotNetObjectReference<SidebarProvider>? _dotnetRef;
+    private bool _sidebarInteropReady;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public bool DefaultOpen { get; set; } = true;
@@ -70,17 +70,21 @@ public static class SidebarProviderTemplate
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (!firstRender || _sidebarInteropReady) return;
+
+        _dotnetRef ??= DotNetObjectReference.Create(this);
+        try
         {
-            _dotnetRef = DotNetObjectReference.Create(this);
-            try
-            {
-                _module = await JSRuntime.InvokeAsync<IJSObjectReference>(
-                    ""import"", ""./shellui-sidebar.js"");
-                _handlers = await _module.InvokeAsync<IJSObjectReference>(
-                    ""initSidebar"", _dotnetRef);
-            }
-            catch { /* Pre-render or JS not available */ }
+            await JSRuntime.InvokeVoidAsync(""ShellUI.initSidebar"", _handle, _dotnetRef);
+            _sidebarInteropReady = true;
+        }
+        catch (JSException ex)
+        {
+            Console.Error.WriteLine($""ShellUI sidebar interop failed: {ex.Message}"");
+        }
+        catch (InvalidOperationException ex)
+        {
+            Console.Error.WriteLine($""ShellUI sidebar interop is unavailable: {ex.Message}"");
         }
     }
 
@@ -121,16 +125,12 @@ public static class SidebarProviderTemplate
 
     public async ValueTask DisposeAsync()
     {
-        try
+        if (_sidebarInteropReady)
         {
-            if (_handlers != null)
-            {
-                await _handlers.InvokeVoidAsync(""dispose"");
-                await _handlers.DisposeAsync();
-            }
-            if (_module != null) await _module.DisposeAsync();
+            try { await JSRuntime.InvokeVoidAsync(""ShellUI.disposeSidebar"", _handle); }
+            catch (JSException) { }
         }
-        catch { }
+
         _dotnetRef?.Dispose();
     }
 }

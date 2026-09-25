@@ -8,14 +8,16 @@ public static class ShellUIJsTemplate
     {
         Name = "shellui-js",
         DisplayName = "ShellUI JS",
-        Description = "JavaScript utilities for CopyButton, FileUpload, Command (clipboard, drag-drop, openUrl)",
+        Description = "Global JavaScript utilities for ShellUI interactions and sidebar interop",
         Category = ComponentCategory.Utility,
         FilePath = "../../wwwroot/shellui.js",
         IsAvailable = false
     };
 
     public static string Content => """
-window.ShellUI = {
+window.ShellUI = window.ShellUI || {};
+
+Object.assign(window.ShellUI, {
     focusElement: function (elementId) {
         const element = document.getElementById(elementId);
         if (element) {
@@ -152,7 +154,51 @@ window.ShellUI = {
             window.removeEventListener("resize", listener);
             this._dismissHandlers.delete(handle);
         }
+    },
+
+    // Sidebar mobile detection + Ctrl/Cmd+B shortcut. Lives here (rather than a
+    // dynamically-imported shellui-sidebar.js) because a relative import resolves
+    // against the page URL, which breaks the moment SidebarProvider is compiled
+    // into a consumer's own Razor Class Library instead of installed straight into
+    // the host app — the file is then served from _content/<Library>/ and the
+    // import 404s silently (caught). shellui.js is already loaded globally via the
+    // host-controlled script tag, so no per-component import is needed.
+    _sidebarHandlers: new Map(),
+    initSidebar: function (handle, dotNetRef) {
+        this.disposeSidebar(handle);
+
+        const media = window.matchMedia("(max-width: 767px)");
+        const notify = (isMobile) => {
+            dotNetRef.invokeMethodAsync("OnMobileChanged", isMobile).catch(() => {});
+        };
+        const handleChange = () => notify(media.matches);
+        const handleKeydown = (e) => {
+            if ((e.key === "b" || e.key === "B") && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                dotNetRef.invokeMethodAsync("OnToggle").catch(() => {});
+            }
+        };
+
+        notify(media.matches);
+        if (media.addEventListener) {
+            media.addEventListener("change", handleChange);
+        } else {
+            media.addListener(handleChange);
+        }
+        document.addEventListener("keydown", handleKeydown);
+        this._sidebarHandlers.set(handle, { media, handleChange, handleKeydown });
+    },
+    disposeSidebar: function (handle) {
+        const h = this._sidebarHandlers.get(handle);
+        if (!h) return;
+        if (h.media.removeEventListener) {
+            h.media.removeEventListener("change", h.handleChange);
+        } else {
+            h.media.removeListener(h.handleChange);
+        }
+        document.removeEventListener("keydown", h.handleKeydown);
+        this._sidebarHandlers.delete(handle);
     }
-};
+});
 """;
 }
