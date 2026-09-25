@@ -129,6 +129,17 @@ public static class ComponentManager
                 continue;
             }
 
+            if (normalizedName == "sidebar-js")
+            {
+                var providerPath = Path.Combine(componentsPath, "SidebarProvider.razor");
+                if (File.Exists(providerPath) &&
+                    File.ReadAllText(providerPath).Contains("shellui-sidebar.js", StringComparison.Ordinal))
+                {
+                    AnsiConsole.MarkupLine("[yellow]Warning:[/] sidebar-js cannot be removed while SidebarProvider uses the legacy module");
+                    continue;
+                }
+            }
+
             var componentPath = Path.Combine(componentsPath, metadata.FilePath);
             
             if (File.Exists(componentPath))
@@ -187,6 +198,14 @@ public static class ComponentManager
             if (!installed.Contains(normalizedName))
             {
                 AnsiConsole.MarkupLine($"[yellow]Skipped:[/] Component '{metadata.DisplayName}' is not installed");
+                continue;
+            }
+
+            if (metadata.Dependencies.Contains("shellui-js") &&
+                !ComponentInstaller.IsShellUiJsCompatible() &&
+                !ComponentInstaller.EnsureShellUiJs())
+            {
+                AnsiConsole.MarkupLine($"[yellow]Skipped:[/] Component '{metadata.DisplayName}' requires a compatible wwwroot/shellui.js.");
                 continue;
             }
 
