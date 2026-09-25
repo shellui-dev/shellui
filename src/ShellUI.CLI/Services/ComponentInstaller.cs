@@ -16,7 +16,7 @@ public class ComponentInstaller
         if (!File.Exists(configPath))
         {
             AnsiConsole.MarkupLine("[red]ShellUI not initialized![/]");
-            AnsiConsole.MarkupLine("[yellow]Run 'dotnet shellui init' first[/]");
+            AnsiConsole.MarkupLine("[yellow]Run 'shellui init' first[/]");
             return;
         }
 

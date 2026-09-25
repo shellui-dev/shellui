@@ -88,7 +88,7 @@ public static class ComponentManager
         if (!showOnlyInstalled && !showOnlyAvailable)
         {
             AnsiConsole.WriteLine();
-            AnsiConsole.MarkupLine("[dim]Tip: Use 'dotnet shellui add <component>' to install a component[/]");
+            AnsiConsole.MarkupLine("[dim]Tip: Use 'shellui add <component>' to install a component[/]");
         }
     }
 
@@ -96,7 +96,7 @@ public static class ComponentManager
     {
         if (!File.Exists(ConfigFileName))
         {
-            AnsiConsole.MarkupLine("[red]Error:[/] ShellUI not initialized. Run 'dotnet shellui init' first.");
+            AnsiConsole.MarkupLine("[red]Error:[/] ShellUI not initialized. Run 'shellui init' first.");
             return;
         }
 
@@ -165,7 +165,7 @@ public static class ComponentManager
     {
         if (!File.Exists(ConfigFileName))
         {
-            AnsiConsole.MarkupLine("[red]Error:[/] ShellUI not initialized. Run 'dotnet shellui init' first.");
+            AnsiConsole.MarkupLine("[red]Error:[/] ShellUI not initialized. Run 'shellui init' first.");
             return;
         }
 
@@ -209,7 +209,7 @@ public static class ComponentManager
                 continue;
             }
 
-            ComponentInstaller.InstallComponent(normalizedName, metadata, force: true, skipConfig: true);
+            ComponentInstaller.InstallComponent(normalizedName, metadata, force: true, skipConfig: false);
             AnsiConsole.MarkupLine($"[green]Updated:[/] {metadata.DisplayName} to v{metadata.Version}");
         }
 
