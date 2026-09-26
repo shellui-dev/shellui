@@ -17,7 +17,7 @@ public class PaginationTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<nav class=""@(""flex items-center justify-center space-x-2 "" + ClassName)"" @attributes=""AdditionalAttributes"">
+<nav class=""@(""flex items-center justify-center space-x-2 "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
     <ul class=""flex items-center space-x-1 overflow-x-auto"">
         <li>
             <button type=""button""
@@ -67,6 +67,10 @@ public class PaginationTemplate
     [Parameter]
     public EventCallback<int> OnPageChange { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

@@ -1,6 +1,6 @@
 @namespace ShellUI.Components
 
-<nav class="@Shell.Cn("mx-auto flex w-full justify-center", ClassName)" @attributes="AdditionalAttributes">
+<nav class="@Shell.Cn("mx-auto flex w-full justify-center", ClassName, Class)" @attributes="AdditionalAttributes">
     <ul class="flex flex-row items-center gap-1">
         <li>
             <button type="button"
@@ -44,6 +44,8 @@
     [Parameter] public int CurrentPage { get; set; } = 1;
     [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
     [Parameter] public int TotalPages { get; set; } = 1;
+    [Parameter] public string? Class { get; set; }
+    // Deprecated: use Class.
     [Parameter] public string ClassName { get; set; } = "";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }

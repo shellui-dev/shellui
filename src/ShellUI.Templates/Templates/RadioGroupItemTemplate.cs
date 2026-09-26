@@ -17,7 +17,7 @@ public class RadioGroupItemTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""flex items-center space-x-2 @ClassName"" @attributes=""AdditionalAttributes"">
+<div class=""flex items-center space-x-2 @ClassName @Class"" @attributes=""AdditionalAttributes"">
     <button type=""button"" 
             @onclick=""OnClick""
             role=""radio""
@@ -50,6 +50,10 @@ public class RadioGroupItemTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

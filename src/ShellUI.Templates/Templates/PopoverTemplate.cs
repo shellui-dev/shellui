@@ -17,7 +17,7 @@ public class PopoverTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative inline-block @ClassName"" @attributes=""AdditionalAttributes"">
+<div class=""relative inline-block @ClassName @Class"" @attributes=""AdditionalAttributes"">
     <div @onclick=""Toggle"">
         @Trigger
     </div>
@@ -51,6 +51,10 @@ public class PopoverTemplate
     [Parameter]
     public string Placement { get; set; } = ""bottom"";
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

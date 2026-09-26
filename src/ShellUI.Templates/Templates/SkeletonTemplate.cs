@@ -17,12 +17,16 @@ public static class SkeletonTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""animate-pulse rounded-md bg-muted @(Variant == ""circle"" ? ""rounded-full"" : """") @(Variant == ""text"" ? ""h-4 w-full"" : """") @ClassName"" @attributes=""AdditionalAttributes""></div>
+<div class=""animate-pulse rounded-md bg-muted @(Variant == ""circle"" ? ""rounded-full"" : """") @(Variant == ""text"" ? ""h-4 w-full"" : """") @ClassName @Class"" @attributes=""AdditionalAttributes""></div>
 
 @code {
     [Parameter]
     public string Variant { get; set; } = ""default"";
 
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
 

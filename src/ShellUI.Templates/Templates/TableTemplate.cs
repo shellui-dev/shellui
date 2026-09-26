@@ -18,7 +18,7 @@ public class TableTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative w-full overflow-auto @ClassName"" @attributes=""AdditionalAttributes"">
+<div class=""relative w-full overflow-auto @ClassName @Class"" @attributes=""AdditionalAttributes"">
     <table class=""w-full caption-bottom text-sm"">
         @ChildContent
     </table>
@@ -28,6 +28,10 @@ public class TableTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

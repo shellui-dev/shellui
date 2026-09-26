@@ -233,11 +233,13 @@ class Program
         {
             try
             {
-                await ComponentInstaller.InstallComponents(components, force);
+                if (!await ComponentInstaller.InstallComponents(components, force))
+                    Environment.Exit(1);
             }
             catch (Exception ex)
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
+                Environment.Exit(1);
             }
         }, componentsArg, forceOption);
 

@@ -1,36 +1,54 @@
 # ShellUI Release Notes
 
-> [!IMPORTANT]
-> **Historical releases:** The `v0.3.0-rc.1` section and all older sections below are preserved as historical release records. They are not the current source snapshot. The current source baseline is `0.4.0-alpha.1`.
+# ShellUI v0.3.0-rc.2 🚦
 
-## Unreleased / Current Source: `0.4.0-alpha.1`
+> Second release candidate for v0.3.0. It moves ShellUI to .NET 10, adds new components, and fixes bugs found in real projects using rc.1. If nothing critical comes up during testing, v0.3.0 ships from this code with the suffix dropped. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
 
-This section describes the current working source; it is not a published stable-release announcement.
+## ⚠️ Breaking: .NET 10 required
 
-### Current baseline
+- `ShellUI.Components` now targets `net10.0` (rc.1 targeted `net9.0`). Projects on .NET 9 should stay on rc.1 until they upgrade.
+- The `shellui` CLI tool needs the .NET 10 runtime to run.
+- Tailwind CSS goes from `4.1.18` to `4.3.2`.
 
-- Version: `0.4.0-alpha.1`
-- Target framework: .NET 10
-- Tailwind CSS: `4.3.2`
-- Component inventory: **73 direct CLI targets**, **173 registry entries**, and **100 hidden entries**
-- Packaging: only `ShellUI.CLI` and `ShellUI.Components` are packable in the current project configuration. `ShellUI.Core` and `ShellUI.Templates` are internal/non-packable in this checkout; older release sections below record their historical publication state.
+## ✨ New
 
-### Current CLI surface
+- **Components:** `command-palette`, `data-picker`, `multi-select`, `tag-input`, `typed-select` (#25, #27)
+- **Charts:** new `donut-chart`, `radar-chart` and `radial-chart`, in both the CLI and the NuGet package. All charts are restyled to match shadcn (#26)
+- **DataTable:** server-side mode via `DataTableRequest` / `DataTableResponse` (#27)
+- **Sonner:** toast variants and per-toast duration (#27)
+- **Themes:** `shellui theme init | apply | update` bake a [tweakcn](https://tweakcn.com) theme into `wwwroot/input.css` and record it in `shellui.theme.lock` (#23, #24)
+- **NuGet package:** ships a precompiled `shellui-all.css` bundle and a Tailwind safelist, so it works without a Tailwind build step (#20, #22)
 
-```text
-shellui init
-shellui add <components>
-shellui list
-shellui remove <components>
-shellui update [components]
-shellui theme init <url>
-shellui theme apply <url>
-shellui theme update
+## 🐛 Fixes
+
+- `shellui add accordion` failed because `accordion-type` was not registered (#29)
+- `Tabs` generated an unterminated string and did not compile (#29)
+- `Select` and `FileUpload` showed icon names such as `expand_more` as text, because they relied on the Material Symbols font. Both now use inline SVG (#29)
+- `DashboardLayout01` breadcrumb code did not compile (#29)
+- `context-menu` referenced a `ContextMenuItem` model that was never installed (#29)
+- `SidebarInset`: wide content no longer pushes the page sideways (#29)
+- Sidebar mobile detection and Ctrl/Cmd+B now work when components are compiled into a Razor Class Library (#30)
+- `Class` is now accepted by the 30 templates and 8 package components that only took `ClassName`. Before, `Class="..."` could drop a component's base styling. `ClassName` still works but is deprecated
+- `shellui add` exits with 1 when any component, dependency or NuGet package fails. `init` fails loudly if its base files can't be written, and `update` records the new version in `shellui.json` (#30)
+- Chart tooltips: pie, donut and radial tooltips showed empty rows, radar charts showed none, and bar/line tooltips lost their x-axis label. CLI-installed charts also used an outdated copy of the chart options (palette, animations, legend). The CLI templates now match the NuGet package
+- Overlays close on dismiss, lock body scroll, and clean up asynchronously (#27)
+- Stepper highlights the active step correctly
+
+## 📦 Installation
+
+```bash
+# CLI (prerelease: the version is required)
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.2
+# or upgrade an existing install
+dotnet tool update -g ShellUI.CLI --version 0.3.0-rc.2
 ```
 
-`ComponentRegistry` metadata is authoritative for the current inventory and dependency graph. `IsAvailable` distinguishes the 73 public direct targets from the 100 hidden support entries; `Dependencies` and `NuGetDependencies` are separate metadata fields used by the installer. Hidden entries such as `button-variants`, card sub-components, and `shellui-js` are not standalone public components.
+```bash
+# NuGet package
+dotnet add package ShellUI.Components --version 0.3.0-rc.2
+```
 
-The current direct inventory includes `command-palette`, `data-picker`, `multi-select`, `tag-input`, and `typed-select` targets. New CLI sidebar installs use the host-loaded `shellui.js` and `ShellUI.initSidebar`; the legacy `sidebar-js` module remains only for older generated providers. See [COMPONENT_ROADMAP.md](COMPONENT_ROADMAP.md) and [COMPONENT_DEPENDENCIES.md](COMPONENT_DEPENDENCIES.md) for the current scope and registry-backed relationships.
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.3.0-rc.1...v0.3.0-rc.2
 
 ---
 

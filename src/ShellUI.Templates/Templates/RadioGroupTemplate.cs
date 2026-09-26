@@ -18,7 +18,7 @@ public class RadioGroupTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@ClassName"" @attributes=""AdditionalAttributes"">
+<div class=""@ClassName @Class"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </div>
 
@@ -32,6 +32,10 @@ public class RadioGroupTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

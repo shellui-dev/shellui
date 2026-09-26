@@ -17,7 +17,7 @@ public class ScrollAreaTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@(""relative overflow-hidden "" + ClassName)"" style=""max-height: @MaxHeight;"" @attributes=""AdditionalAttributes"">
+<div class=""@(""relative overflow-hidden "" + ClassName + "" "" + Class)"" style=""max-height: @MaxHeight;"" @attributes=""AdditionalAttributes"">
     <div class=""h-full w-full overflow-auto"">
         @ChildContent
     </div>
@@ -30,6 +30,10 @@ public class ScrollAreaTemplate
     [Parameter]
     public string MaxHeight { get; set; } = ""400px"";
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

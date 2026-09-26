@@ -20,7 +20,7 @@ public class DatePickerTemplate
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
-<div class=""@(""relative "" + ClassName)"" @attributes=""AdditionalAttributes"">
+<div class=""@(""relative "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
     <button type=""button""
             @onclick=""ToggleCalendar""
             disabled=""@Disabled""
@@ -111,6 +111,10 @@ public class DatePickerTemplate
     [Parameter]
     public bool CloseOnScroll { get; set; }
 
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

@@ -4,7 +4,7 @@
 
 ## Packaging status
 
-This project is part of the current `0.4.0-alpha.1` source and targets .NET 10.
+This project targets .NET 10.
 
 `ShellUI.Templates` sets `IsPackable` to `false` and is not published to NuGet. Do not run `dotnet add package ShellUI.Templates`. The only packable ShellUI projects are:
 
@@ -32,14 +32,14 @@ The global tool command is `shellui`; a local .NET tool is invoked as `dotnet sh
 
 ## Template inventory
 
-The current source registry contains **173 entries**:
+The registry contains **176 entries**:
 
-- **73 direct install targets** displayed by `shellui list`
+- **76 direct install targets** displayed by `shellui list`
 - **100 hidden dependency entries** installed recursively and omitted from the direct list
 
 Each entry provides content plus metadata used by the CLI, including its display name, category, description, target path, version, dependencies, and optional NuGet dependencies. The catalog also includes hidden subcomponents, variants, models, services, JavaScript, and stylesheet assets required by direct targets.
 
-The current source additions include the direct targets `typed-select`, `command-palette`, `data-picker`, `multi-select`, and `tag-input`.
+`0.3.0-rc.2` adds the direct targets `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
 
 ## Development
 

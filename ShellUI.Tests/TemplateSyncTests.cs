@@ -32,6 +32,9 @@ public class TemplateSyncTests
     [InlineData("multi-select", "MultiSelect.razor")]
     [InlineData("tag-input", "TagInput.razor")]
     [InlineData("command-palette", "CommandPalette.razor")]
+    [InlineData("donut-chart", "DonutChart.razor")]
+    [InlineData("radar-chart", "RadarChart.razor")]
+    [InlineData("radial-chart", "RadialChart.razor")]
     public void TemplateCodeBlock_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         if (AllowedDrift.ContainsKey(templateName)) return;
@@ -53,6 +56,19 @@ public class TemplateSyncTests
             $"This usually means someone updated one but not the other. Sync them, or add " +
             $"\"{templateName}\" to AllowedDrift in TemplateSyncTests with a reason.\n\n" +
             DiffSummary(normalizedLive, normalizedTemplate));
+    }
+
+    [Fact]
+    public void ChartVariantsTemplate_MatchesLiveLibrary()
+    {
+        var livePath = Path.Combine(Path.GetDirectoryName(GetLiveRazorPath("Chart.razor"))!, "..", "Variants", "ChartVariants.cs");
+        var template = ComponentRegistry.GetComponentContent("chart-variants")
+            ?? throw new InvalidOperationException("Template 'chart-variants' not found in registry");
+
+        var live = Normalize(File.ReadAllText(livePath));
+        var generated = Normalize(template.Replace("namespace YourProjectNamespace.Components.UI.Variants;", "namespace ShellUI.Components;"));
+
+        Assert.True(live == generated, "Drift detected between live ChartVariants.cs and template chart-variants.\n\n" + DiffSummary(live, generated));
     }
 
     // [CallerFilePath] captures the absolute path of this source file at compile time,

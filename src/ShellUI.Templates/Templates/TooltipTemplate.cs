@@ -17,7 +17,7 @@ public class TooltipTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative inline-block @ClassName"" 
+<div class=""relative inline-block @ClassName @Class"" 
      @onmouseenter=""Show"" 
      @onmouseleave=""Hide""
      @attributes=""AdditionalAttributes"">
@@ -41,6 +41,10 @@ public class TooltipTemplate
     [Parameter]
     public string Placement { get; set; } = ""top"";
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

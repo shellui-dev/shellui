@@ -17,7 +17,7 @@ public class TableBodyTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<tbody class=""[&_tr:last-child]:border-0 @ClassName"" @attributes=""AdditionalAttributes"">
+<tbody class=""[&_tr:last-child]:border-0 @ClassName @Class"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </tbody>
 
@@ -25,6 +25,10 @@ public class TableBodyTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

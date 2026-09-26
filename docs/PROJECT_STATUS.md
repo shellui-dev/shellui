@@ -1,23 +1,19 @@
 # ShellUI Project Status
 
-## Current source: `0.4.0-alpha.1`
-
-This page reports the checked-out source. A source version is not automatically the same as a published NuGet package or GitHub release.
+## Overview
 
 | Area | Current fact |
 |---|---|
-| Source version | `0.4.0-alpha.1` from `Directory.Build.props` |
+| Version | See `Directory.Build.props` |
 | Framework | .NET 10 (`net10.0`) |
 | Tailwind CSS | `4.3.2` |
 | Solution | `ShellUI.slnx` with six projects |
 | Demo | `NET10/BlazorInteractiveServer/BlazorInteractiveServer.csproj`, outside the solution |
 | Packable artifacts | `ShellUI.CLI` and `ShellUI.Components` only |
-| Latest tag present in this checkout | `v0.3.0-rc.1`, historical |
-| Published status | A matching `0.4.0-alpha.1` package is not implied by the source version; pin and verify the published channel explicitly. |
 
-The distinction matters when installing tools. An unversioned global-tool install can select a different channel from the source checkout. Use an explicit version for published artifacts, or pack and install the current source locally.
+An unversioned install only selects stable releases, so pin prereleases with `--version`.
 
-## Implemented in the Current Source
+## Implemented
 
 ### Solution and distribution
 
@@ -46,9 +42,9 @@ theme update
 
 ### Registry and components
 
-`ComponentRegistry` has 173 entries:
+`ComponentRegistry` has 176 entries:
 
-- 73 direct targets with `IsAvailable = true`.
+- 76 direct targets with `IsAvailable = true`.
 - 100 hidden entries with `IsAvailable = false`, generally installed as dependencies or assets.
 
 The direct-target count is the number shown by the normal public list. The hidden count is not a second public library; it represents the sub-components, variants, models, services, and assets needed to make the direct targets work.
@@ -71,10 +67,9 @@ CI restores `ShellUI.slnx`, regenerates the precompiled CSS bundle, builds the s
 
 ## Current Boundaries
 
-- The source is alpha and its APIs, templates, and generated output may change.
+- ShellUI is prerelease software and its APIs, templates, and generated output may change.
 - Only `ShellUI.CLI` and `ShellUI.Components` are packable in the current project configuration.
 - `ShellUI.Core` and `ShellUI.Templates` are internal; they are not consumer installation targets.
-- A local `0.4.0-alpha.1` build is not proof that the version is published.
 - No stable release date, adoption target, or guaranteed delivery schedule is stated here.
 - The current test stack does not provide a browser or rendered-component test harness.
 
@@ -126,18 +121,16 @@ dotnet tool install -g ShellUI.CLI --version <published-version>
 dotnet add package ShellUI.Components --version <published-version> --prerelease
 ```
 
-For the current checkout, build the CLI locally and install that package explicitly:
+To test a checkout, build the CLI locally and install that package with the version from `Directory.Build.props`:
 
 ```bash
 dotnet pack ShellUI.slnx --configuration Release
-dotnet tool install -g ShellUI.CLI --add-source "./src/ShellUI.CLI/bin/Release" --version 0.4.0-alpha.1
+dotnet tool install -g ShellUI.CLI --add-source "./src/ShellUI.CLI/bin/Release" --version <version>
 ```
-
-The exact published version must be checked independently; a source build is not a publication channel.
 
 ## Documentation and History
 
-The [historical release notes](RELEASE_NOTES.md) preserve records for older releases. They are useful for understanding prior changes, but headings and version claims in that file do not describe the current `0.4.0-alpha.1` source by default.
+The [release notes](RELEASE_NOTES.md) have one section per release.
 
 - [Project overview](../README.md)
 - [Architecture](ARCHITECTURE.md)

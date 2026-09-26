@@ -17,7 +17,7 @@ public class TableCellTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<td class=""p-4 align-middle [&:has([role=checkbox])]:pr-0 @ClassName"" @attributes=""AdditionalAttributes"">
+<td class=""p-4 align-middle [&:has([role=checkbox])]:pr-0 @ClassName @Class"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </td>
 
@@ -25,6 +25,10 @@ public class TableCellTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
     

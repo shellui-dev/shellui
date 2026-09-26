@@ -2,39 +2,23 @@
 
 `ShellUI.Components` is the .NET 10 Razor class library packaged as `ShellUI.Components`. It provides the component runtime, Tailwind classes, theme variables, JavaScript assets, and package build integration used by ShellUI.
 
-## Version scope
+## Install
 
-| Channel | Version | Notes |
-|---|---|---|
-| Repository source | `0.4.0-alpha.1` | Targets .NET 10 and Tailwind CSS `4.3.2` |
-| Latest published stable package | `0.2.1` | Available on NuGet |
-| Latest published prerelease package | `0.3.0-rc.1` | Available on NuGet; older than this source checkout |
-
-The precompiled CSS and safelist workflows below are current-source features. They are not implied by the published `0.2.1` or `0.3.0-rc.1` packages. The published prerelease targets .NET 9; the current source targets .NET 10.
-
-## Install a published package
-
-Pin the latest published stable version:
+Requires a .NET 10 project. Prereleases are not picked up by a plain install, so pass the version:
 
 ```bash
-dotnet add package ShellUI.Components --version 0.2.1
+dotnet add package ShellUI.Components --version 0.3.0-rc.2
 ```
 
-To select the published prerelease instead:
+Projects still on .NET 9 can use `0.3.0-rc.1`. Do not install `ShellUI.Core` or `ShellUI.Templates`; both are internal, non-packable projects.
 
-```bash
-dotnet add package ShellUI.Components --version 0.3.0-rc.1 --prerelease
-```
-
-The current `0.4.0-alpha.1` package is not published. To consume it, build `src/ShellUI.Components/ShellUI.Components.csproj` and use the resulting package from a local feed. Do not try to install `ShellUI.Core` or `ShellUI.Templates`; both are internal, non-packable projects.
-
-## Current-source CSS workflows
+## CSS workflows
 
 After building the current package, consumers can choose one of two CSS workflows.
 
 ### Precompiled bundle
 
-The release pipeline runs `scripts/rebuild-precompiled-css.sh` before packing. For a local current-source pack, run that script first; the generated `shellui-all.css` contains the ShellUI theme and safelisted utilities, so the consuming app does not need a Tailwind build for ShellUI styles.
+The release pipeline runs `scripts/rebuild-precompiled-css.sh` before packing. For a local pack, run that script first; the generated `shellui-all.css` contains the ShellUI theme and safelisted utilities, so the consuming app does not need a Tailwind build for ShellUI styles.
 
 ```razor
 <link href="_content/ShellUI.Components/shellui-all.css" rel="stylesheet" />
@@ -55,7 +39,7 @@ For an app that already compiles Tailwind, the package build target writes `wwwr
 @source "./shellui-classes.txt";
 ```
 
-Keep the theme variables used by ShellUI in the same Tailwind build. The current source baseline is Tailwind CSS `4.3.2`.
+Keep the theme variables used by ShellUI in the same Tailwind build. ShellUI uses Tailwind CSS `4.3.2`.
 
 ## Use a component
 
@@ -84,13 +68,13 @@ The package also serves static assets, including `shellui.js`, from `_content/Sh
 
 ## Component inventory
 
-The CLI registry backing the current source contains **173 entries**: **73 direct install targets** and **100 hidden dependency entries**. The CLI displays the 73 direct targets and resolves hidden entries recursively.
+The CLI registry contains **176 entries**: **76 direct install targets** and **100 hidden dependency entries**. The CLI displays the 76 direct targets and resolves hidden entries recursively.
 
-Current source additions include `typed-select`, `command-palette`, `data-picker`, `multi-select`, and `tag-input`. Use the current-source CLI's `list` command for the complete direct-target inventory.
+`0.3.0-rc.2` adds `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`. Use the CLI's `list` command for the complete direct-target inventory.
 
-## Theming with the current-source CLI
+## Theming with the CLI
 
-The current-source CLI can apply a public [tweakcn](https://tweakcn.com) theme:
+The CLI can apply a public [tweakcn](https://tweakcn.com) theme:
 
 ```bash
 shellui theme apply https://tweakcn.com/themes/THEME_ID
@@ -100,7 +84,7 @@ shellui theme update
 
 The first form updates the managed region in `wwwroot/input.css` for a Tailwind build. The override form writes standalone variables for an app using `shellui-all.css`; load that file after the precompiled stylesheet. The source URL and hash are stored in `shellui.theme.lock` for `theme update`.
 
-These commands require a build of the current CLI. They are not present in the published `0.2.1` or `0.3.0-rc.1` tools.
+These commands require CLI `0.3.0-rc.2` or later.
 
 ## Accessibility
 
