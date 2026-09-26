@@ -17,7 +17,7 @@ public static class DropdownTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative inline-block text-left @ClassName"" @attributes=""AdditionalAttributes"">
+<div class=""relative inline-block text-left @ClassName @Class"" @attributes=""AdditionalAttributes"">
     <button 
         @onclick=""ToggleOpen""
         type=""button""
@@ -46,6 +46,10 @@ public static class DropdownTemplate
     [Parameter]
     public EventCallback<bool> IsOpenChanged { get; set; }
 
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
 

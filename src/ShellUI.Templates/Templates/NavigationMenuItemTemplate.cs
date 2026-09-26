@@ -20,7 +20,7 @@ public class NavigationMenuItemTemplate
 @if (!string.IsNullOrEmpty(Href))
 {
     <a href=""@Href""
-       class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 "" + (IsActive ? ""bg-accent text-accent-foreground"" : ""hover:bg-accent hover:text-accent-foreground"") + "" "" + ClassName)""
+       class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 "" + (IsActive ? ""bg-accent text-accent-foreground"" : ""hover:bg-accent hover:text-accent-foreground"") + "" "" + ClassName + "" "" + Class)""
        @attributes=""AdditionalAttributes"">
         @ChildContent
     </a>
@@ -30,7 +30,7 @@ else
     <button type=""button""
             @onclick=""OnClick""
             disabled=""@Disabled""
-            class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 "" + (Disabled ? ""opacity-50 cursor-not-allowed"" : """") + "" "" + (IsActive ? ""bg-accent text-accent-foreground"" : ""hover:bg-accent hover:text-accent-foreground"") + "" "" + ClassName)""
+            class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 "" + (Disabled ? ""opacity-50 cursor-not-allowed"" : """") + "" "" + (IsActive ? ""bg-accent text-accent-foreground"" : ""hover:bg-accent hover:text-accent-foreground"") + "" "" + ClassName + "" "" + Class)""
             @attributes=""AdditionalAttributes"">
         @ChildContent
     </button>
@@ -52,6 +52,10 @@ else
     [Parameter]
     public EventCallback<MouseEventArgs> OnClick { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
     

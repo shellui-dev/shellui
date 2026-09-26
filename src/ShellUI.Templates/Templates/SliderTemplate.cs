@@ -17,7 +17,7 @@ public class SliderTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative flex w-full touch-none select-none items-center @ClassName"" @attributes=""AdditionalAttributes"">
+<div class=""relative flex w-full touch-none select-none items-center @ClassName @Class"" @attributes=""AdditionalAttributes"">
     <input type=""range""
            min=""@Min""
            max=""@Max""
@@ -47,6 +47,10 @@ public class SliderTemplate
     [Parameter]
     public bool Disabled { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
     

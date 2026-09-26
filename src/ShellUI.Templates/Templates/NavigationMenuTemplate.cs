@@ -18,7 +18,7 @@ public class NavigationMenuTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<nav class=""@(""flex items-center space-x-1 "" + ClassName)"" @attributes=""AdditionalAttributes"">
+<nav class=""@(""flex items-center space-x-1 "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </nav>
 
@@ -26,6 +26,10 @@ public class NavigationMenuTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
     

@@ -23,7 +23,7 @@ public static class CheckboxTemplate
     aria-checked=""@Checked""
     @onclick=""HandleClick""
     disabled=""@Disabled""
-    class=""peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 @(Checked ? ""bg-primary text-primary-foreground"" : ""bg-background"") @ClassName""
+    class=""peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 @(Checked ? ""bg-primary text-primary-foreground"" : ""bg-background"") @ClassName @Class""
     @attributes=""AdditionalAttributes"">
     @if (Checked)
     {
@@ -43,6 +43,10 @@ public static class CheckboxTemplate
     [Parameter]
     public bool Disabled { get; set; }
 
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
 

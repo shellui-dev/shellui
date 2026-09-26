@@ -17,7 +17,7 @@ public class TableHeadTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<th class=""h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 @ClassName"" @attributes=""AdditionalAttributes"">
+<th class=""h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 @ClassName @Class"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </th>
 
@@ -25,6 +25,10 @@ public class TableHeadTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
     

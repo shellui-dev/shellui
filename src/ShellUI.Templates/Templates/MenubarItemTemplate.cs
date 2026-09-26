@@ -20,7 +20,7 @@ public class MenubarItemTemplate
 <button type=""button""
         @onclick=""OnClick""
         disabled=""@Disabled""
-        class=""@(""inline-flex items-center rounded-sm px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring "" + (Disabled ? ""opacity-50 cursor-not-allowed"" : ""hover:bg-accent hover:text-accent-foreground"") + "" "" + ClassName)""
+        class=""@(""inline-flex items-center rounded-sm px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring "" + (Disabled ? ""opacity-50 cursor-not-allowed"" : ""hover:bg-accent hover:text-accent-foreground"") + "" "" + ClassName + "" "" + Class)""
         @attributes=""AdditionalAttributes"">
     @ChildContent
 </button>
@@ -35,6 +35,10 @@ public class MenubarItemTemplate
     [Parameter]
     public bool Disabled { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
     

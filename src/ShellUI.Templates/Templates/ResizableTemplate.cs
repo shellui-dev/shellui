@@ -17,7 +17,7 @@ public class ResizableTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@(""resize overflow-auto rounded-md border border-border bg-card p-4 "" + ClassName)"" @attributes=""AdditionalAttributes"">
+<div class=""@(""resize overflow-auto rounded-md border border-border bg-card p-4 "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </div>
 
@@ -25,6 +25,10 @@ public class ResizableTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
     

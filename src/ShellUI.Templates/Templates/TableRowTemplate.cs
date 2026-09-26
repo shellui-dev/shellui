@@ -17,7 +17,7 @@ public class TableRowTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<tr class=""border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted @ClassName"" @attributes=""AdditionalAttributes"">
+<tr class=""border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted @ClassName @Class"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </tr>
 
@@ -25,6 +25,10 @@ public class TableRowTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
     

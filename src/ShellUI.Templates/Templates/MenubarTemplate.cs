@@ -18,7 +18,7 @@ public class MenubarTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@(""flex h-10 items-center space-x-1 rounded-md border bg-background p-1 "" + ClassName)"" @attributes=""AdditionalAttributes"">
+<div class=""@(""flex h-10 items-center space-x-1 rounded-md border bg-background p-1 "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </div>
 
@@ -26,6 +26,10 @@ public class MenubarTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
     

@@ -19,7 +19,7 @@ public class FormTemplate
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using Microsoft.AspNetCore.Components.Forms
 
-<form @onsubmit=""HandleSubmit"" @attributes=""AdditionalAttributes"" class=""@ClassName"">
+<form @onsubmit=""HandleSubmit"" @attributes=""AdditionalAttributes"" class=""@ClassName @Class"">
     @ChildContent
 </form>
 
@@ -33,6 +33,10 @@ public class FormTemplate
     [Parameter]
     public EventCallback OnInvalidSubmit { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = ""space-y-6"";
     

@@ -17,7 +17,7 @@ public class TimePickerTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@(""relative "" + ClassName)"" @attributes=""AdditionalAttributes"">
+<div class=""@(""relative "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
     <button type=""button""
             @onclick=""TogglePicker""
             disabled=""@Disabled""
@@ -78,6 +78,10 @@ public class TimePickerTemplate
     [Parameter]
     public bool Disabled { get; set; }
     
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
     

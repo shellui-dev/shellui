@@ -22,7 +22,7 @@ public static class SelectTemplate
         value=""@Value""
         disabled=""@Disabled""
         @onchange=""HandleChange""
-        class=""flex h-10 w-full items-center appearance-none rounded-md border border-input bg-background px-3 pr-8 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 @ClassName""
+        class=""flex h-10 w-full items-center appearance-none rounded-md border border-input bg-background px-3 pr-8 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 @ClassName @Class""
         @attributes=""AdditionalAttributes"">
         @ChildContent
     </select>
@@ -45,6 +45,10 @@ public static class SelectTemplate
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    [Parameter]
+    public string? Class { get; set; }
+
+    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
     [Parameter]
     public string ClassName { get; set; } = """";
 
