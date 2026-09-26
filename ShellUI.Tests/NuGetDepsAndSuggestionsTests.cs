@@ -71,6 +71,9 @@ public class NuGetDependenciesTests
 
     [Theory]
     [InlineData("pie-chart")]
+    [InlineData("donut-chart")]
+    [InlineData("radar-chart")]
+    [InlineData("radial-chart")]
     [InlineData("bar-chart")]
     [InlineData("area-chart")]
     [InlineData("line-chart")]
