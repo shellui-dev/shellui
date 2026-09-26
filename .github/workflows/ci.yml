@@ -53,9 +53,8 @@ jobs:
         grep -Fq 'px-2\.5' "$BUNDLE" || (echo "ERROR: Badge padding class px-2.5 missing (variant .cs helpers not scanned?)"; exit 1)
         grep -Fq 'border-transparent' "$BUNDLE" || (echo "ERROR: border-transparent missing (variant .cs helpers not scanned?)"; exit 1)
 
-        # Size guard — well above the ~77KB current 68 components emit, tight
-        # enough to catch a runaway (someone disabling minify, dumping the whole
-        # tailwind base without tree-shake, etc.).
+        # Size guard — keep the threshold above the current component bundle,
+        # but below runaway output (for example, an unminified full Tailwind base).
         size=$(wc -c < "$BUNDLE")
         echo "precompiled bundle size: ${size} bytes"
         if [ "$size" -gt 150000 ]; then
@@ -91,7 +90,10 @@ jobs:
         grep -q 'Routes @rendermode="InteractiveServer"' Components/App.razor || (echo "init did not patch Routes @rendermode"; exit 1)
         grep -q 'ShellUI theme bootstrap' Components/App.razor || (echo "init did not inject theme bootstrap"; exit 1)
         grep -q '<script src="shellui.js"></script>' Components/App.razor || (echo "init did not inject shellui.js script tag"; exit 1)
-        grep -q 'shellui-sidebar.js' Components/App.razor && (echo "init incorrectly injected shellui-sidebar.js script tag (sidebar JS is dynamically imported)"; exit 1) || true
+        if grep -Fq 'shellui-sidebar.js' Components/App.razor; then
+          echo "init incorrectly injected a shellui-sidebar.js script tag (sidebar JS lives in the global shellui.js now)"
+          exit 1
+        fi
 
         # Assert input.css has the full theme, not just @import "tailwindcss";
         grep -q '@theme inline' wwwroot/input.css || (echo "init did not write full theme to input.css"; exit 1)
@@ -113,6 +115,22 @@ jobs:
         # Without it, hovering a chart shows invisible white-on-white text.
         test -f wwwroot/css/charts.css || (echo "shellui add chart did not install chart-styles CSS"; exit 1)
         grep -q '<link href="css/charts.css"' Components/App.razor || (echo "shellui add chart did not link charts.css in App.razor"; exit 1)
+
+        # SidebarProvider (pulled in transitively by dashboard-02) must call the
+        # global ShellUI.initSidebar helper, not dynamically import a separate
+        # shellui-sidebar.js module — that import resolves against the page URL and
+        # breaks silently when ShellUI is compiled into a consumer's own Razor Class
+        # Library, where the file is served from _content/<Library>/, not the root.
+        grep -q 'ShellUI.initSidebar' Components/UI/SidebarProvider.razor || (echo "SidebarProvider did not call ShellUI.initSidebar"; exit 1)
+        if grep -Fq 'shellui-sidebar.js' Components/UI/SidebarProvider.razor; then
+          echo "SidebarProvider still dynamically imports shellui-sidebar.js"
+          exit 1
+        fi
+
+        test -f wwwroot/shellui.js || (echo "shellui.js was not installed"; exit 1)
+        grep -Fq 'initSidebar: function (handle, dotNetRef)' wwwroot/shellui.js || (echo "shellui.js does not expose initSidebar"; exit 1)
+        grep -Fq 'disposeSidebar: function (handle)' wwwroot/shellui.js || (echo "shellui.js does not expose disposeSidebar"; exit 1)
+        test ! -e wwwroot/shellui-sidebar.js || (echo "legacy sidebar JS was installed for a fresh sidebar install"; exit 1)
 
         dotnet build -c Debug
 
