@@ -1,124 +1,102 @@
 # ShellUI Component Dependencies
 
-This document lists all components and their dependencies. When a user installs a component, all its dependencies are automatically installed (shadcn-style).
+`ComponentRegistry` metadata is the authoritative source for component names, availability, source dependencies, NuGet dependencies, and install paths. This document is a readable guide to that metadata; if it ever differs from [`ComponentRegistry.cs`](../src/ShellUI.Templates/ComponentRegistry.cs), the registry wins.
 
-## Components with Dependencies
+## Registry snapshot
 
-### Overlay Components
-- **alert-dialog** → `["dialog", "button"]`
-  - Uses Dialog component
-  - Uses Button for actions
-  
-- **sonner** → `["sonner-variants", "sonner-service"]`
-  - Uses SonnerVariants for positioning
-  - Uses SonnerService for toast state
+- **173** total registry entries
+- **73** direct CLI targets (`IsAvailable = true`)
+- **100** hidden entries (`IsAvailable = false`)
+- `shellui list` displays the 73 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
-- **dialog** → `["dialog-trigger", "dialog-content", "dialog-header", "dialog-footer", "dialog-title", "dialog-description", "dialog-close"]`
-  - Compositional overlay component
-  
-- **command** → `["dialog"]`
-  - Uses Dialog as container
+`Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
 
-### Form Components
-- **form** → `["label", "input", "button"]`
-  - Typically uses Label, Input, and Button
-  
-- **data-table** → `["data-table-models"]`
-  - Uses Table components
-  - Uses Input for filtering
-  - Uses Checkbox for selection
-  - Uses Select for pagination
-  - Uses Button for actions
-  - Uses Dropdown for row actions
+## Direct-target dependency map
 
-### Navigation Components
-- **stepper** → `["button"]`
-  - Uses Button for navigation
-  
-- **carousel** → `["carousel-item", "carousel-content", "carousel-previous", "carousel-next", "carousel-dots"]`
-  - Uses CarouselItem for slides
-  - Uses CarouselContent wrapper
-  - Uses CarouselPrevious/Next for navigation
-  - Uses CarouselDots for indicators
+The following table summarizes the non-empty `Dependencies` declared by the current direct targets. Empty dependency lists are intentionally not called “standalone” here; consult the registry for the current value.
 
-- **accordion** → `["accordion-item"]`
-  - Uses AccordionItem for sections
-  
-- **tabs** → (no dependencies - standalone)
-  
-- **breadcrumb** → `["breadcrumb-item"]`
-  - Uses BreadcrumbItem for links
-  
-- **radio-group** → `["radio-group-item"]`
-  - Uses RadioGroupItem for options
-  
-- **navigation-menu** → `["navigation-menu-item"]`
-  - Uses NavigationMenuItem for items
-  
-- **menubar** → `["menubar-item"]`
-  - Uses MenubarItem for items
+| Direct target | Declared source dependencies | Declared NuGet dependencies |
+|---|---|---|
+| `accordion` | `accordion-type`, `accordion-item` | — |
+| `alert` | `alert-variants` | — |
+| `alert-dialog` | `dialog`, `button` | — |
+| `area-chart` | `chart` | — |
+| `avatar` | `avatar-variants` | — |
+| `badge` | `badge-variants` | — |
+| `bar-chart` | `chart` | — |
+| `breadcrumb` | `breadcrumb-item` | — |
+| `button` | `button-variants` | — |
+| `callout` | `callout-variants` | — |
+| `card` | `card-header`, `card-title`, `card-description`, `card-content`, `card-footer` | — |
+| `carousel` | `carousel-item`, `carousel-content`, `carousel-previous`, `carousel-next`, `carousel-dots` | — |
+| `chart` | `chart-variants`, `chart-styles` | `Blazor-ApexCharts` `6.0.2` |
+| `collapsible` | `collapsible-trigger`, `collapsible-content` | — |
+| `command` | `dialog` | — |
+| `command-palette` | `command`, `shellui-js` | — |
+| `context-menu` | `context-menu-models` | — |
+| `copy-button` | `shellui-js` | — |
+| `dashboard-01` | `sidebar`, `breadcrumb`, `separator`, `theme-toggle`, `app-sidebar` | — |
+| `dashboard-02` | `sidebar`, `breadcrumb`, `separator`, `theme-toggle`, `app-sidebar` | — |
+| `data-table` | `data-table-models` | `System.Linq.Dynamic.Core` `1.7.1` |
+| `dialog` | `dialog-trigger`, `dialog-content`, `dialog-header`, `dialog-footer`, `dialog-title`, `dialog-description`, `dialog-close` | — |
+| `drawer` | `drawer-variants`, `drawer-trigger`, `drawer-content` | — |
+| `empty-state` | `button` | — |
+| `file-upload` | `shellui-js` | — |
+| `form` | `label`, `input`, `button` | — |
+| `input-otp` | `shellui-js` | — |
+| `line-chart` | `chart` | — |
+| `menubar` | `menubar-item` | — |
+| `multi-series-chart` | `chart`, `chart-series` | — |
+| `navigation-menu` | `navigation-menu-item` | — |
+| `pie-chart` | `chart` | — |
+| `radio-group` | `radio-group-item` | — |
+| `sheet` | `sheet-variants`, `sheet-trigger`, `sheet-content` | — |
+| `sidebar` | `shell`, `sidebar-models`, `sidebar-provider`, `sidebar-header`, `sidebar-content`, `sidebar-footer`, `sidebar-group`, `sidebar-group-label`, `sidebar-group-content`, `sidebar-menu`, `sidebar-menu-item`, `sidebar-menu-button`, `sidebar-menu-sub`, `sidebar-menu-sub-item`, `sidebar-menu-sub-button`, `sidebar-menu-action`, `sidebar-menu-badge`, `sidebar-separator`, `sidebar-trigger`, `sidebar-inset`, `sidebar-rail` | — |
+| `sonner` | `sonner-variants`, `sonner-service` | — |
+| `stepper` | `stepper-list`, `stepper-step`, `stepper-content` | — |
+| `table` | `table-header`, `table-body`, `table-row`, `table-cell`, `table-head` | — |
+| `tabs` | `tabs-list`, `tabs-trigger`, `tabs-content` | — |
+| `theme-toggle` | `shellui-js` | — |
+| `toggle` | `toggle-variants` | — |
 
-### Data Display Components
-- **table** → `["table-header", "table-body", "table-row", "table-cell", "table-head"]`
-  - Uses TableHeader, TableBody, TableRow, TableCell, TableHead
+The table is intentionally limited to the current direct targets. It does not replace the registry, and it should be regenerated when metadata changes. NuGet dependencies are shown where metadata declares them; chart-family targets inherit `chart`'s `Blazor-ApexCharts` dependency through recursive resolution.
 
-### Feedback Components
-- **empty-state** → `["button"]`
-  - Uses Button via Action RenderFragment
+## Hidden entries are support entries, not standalone claims
 
-### Standalone Components (No Dependencies)
-- button
-- input
-- label
-- textarea
-- select
-- checkbox
-- switch
-- slider
-- toggle
-- card
-- alert
-- badge
-- separator
-- progress
-- skeleton
-- theme-toggle
-- avatar
-- tooltip
-- popover
-- toast
-- loading
-- calendar
-- hover-card
-- context-menu
-- file-upload
-- combobox
-- date-picker
-- date-range-picker
-- time-picker
-- input-otp
-- pagination
-- scroll-area
-- resizable
-- sheet
-- drawer
-- collapsible
-- sidebar
-- navbar
-- dropdown
+Several entries are deliberately hidden from `shellui list` while remaining part of the dependency graph:
 
-## Dependency Resolution
+- `button-variants` is hidden and is required by `button`.
+- `card-header`, `card-title`, `card-description`, `card-content`, and `card-footer` are hidden card sub-components, not independent public card targets.
+- `shell` is a hidden utility installed during `shellui init` and used by the sidebar graph.
+- `shellui-js` is a hidden JavaScript support asset. It is used by `copy-button`, `file-upload`, `input-otp`, `theme-toggle`, `command-palette`, and the hidden `sidebar-provider`; it is not a standalone public component.
+- `data-table-models`, `chart-variants`, `chart-styles`, `context-menu-models`, and similar entries are hidden support templates used by their registered parents.
 
-When installing a component:
-1. All dependencies are automatically installed first
-2. Dependencies are installed recursively (if a dependency has dependencies, those are installed too)
-3. Already installed components are skipped (unless `--force` is used)
-4. User is notified of all dependencies being installed
+A hidden entry can have an empty `Dependencies` list while still being required by a parent. For example, the metadata for `shellui-js` describes the asset itself; it does not turn every component that uses the asset into a dependency of the asset.
 
-Example:
-```bash
-dotnet shellui add alert-dialog
-# Installs: dialog, button (dependencies)
-# Then installs: alert-dialog
+## Installation and resolution
+
+When `shellui add` installs a target, the CLI:
+
+1. Looks up the target in `ComponentRegistry`.
+2. Installs each declared `Dependencies` entry recursively before the target.
+3. Avoids duplicate work in the current batch and skips existing files unless `--force` is supplied.
+4. Collects declared `NuGetDependencies` and adds each unique package after source files are written.
+5. Wires registered `wwwroot` assets into the host when required by the installer.
+
+For example:
+
+```text
+shellui add alert-dialog
 ```
 
+`alert-dialog` resolves through its declared `dialog` and `button` dependencies, and each dependency is resolved recursively from the same registry. The exact installed set is therefore a registry behavior, not a hand-maintained standalone list.
+
+## Checking the current graph
+
+Use the CLI to inspect the public inventory:
+
+```text
+shellui list
+```
+
+For dependency changes, update `ComponentMetadata` in the registry and its template metadata together, then update this guide if a human-readable summary is useful. Do not add a dependency claim here unless it is represented by the registry metadata.

@@ -1,287 +1,151 @@
 # ShellUI Project Status
 
-## Current Status: v0.3.0-alpha.2 (Pre-release) 🎉
+## Current source: `0.4.0-alpha.1`
 
-**ShellUI alpha is available on NuGet!** Test before upgrading to stable.
+This page reports the checked-out source. A source version is not automatically the same as a published NuGet package or GitHub release.
 
-- ✅ **Version 0.3.0-alpha.3** - 68 installable components (top-level only; sub-components, variants, models, services auto-installed)
-- ✅ **68 Production-Ready Components** - Fully functional and tested
-- ✅ **CLI Tool Published** - `dotnet tool install -g ShellUI.CLI`
-- ✅ **NuGet Packages Published** - `ShellUI.Components`, `ShellUI.CLI`, `ShellUI.Templates`
-- ✅ **Hybrid Distribution** - CLI + NuGet packages (best of both worlds!)
-- ✅ **No Node.js Required** - Using Tailwind standalone CLI (zero JavaScript dependencies!)
-- ✅ **Tailwind CSS v4.3.1** - Latest version with standalone CLI support
+| Area | Current fact |
+|---|---|
+| Source version | `0.4.0-alpha.1` from `Directory.Build.props` |
+| Framework | .NET 10 (`net10.0`) |
+| Tailwind CSS | `4.3.2` |
+| Solution | `ShellUI.slnx` with six projects |
+| Demo | `NET10/BlazorInteractiveServer/BlazorInteractiveServer.csproj`, outside the solution |
+| Packable artifacts | `ShellUI.CLI` and `ShellUI.Components` only |
+| Latest tag present in this checkout | `v0.3.0-rc.1`, historical |
+| Published status | A matching `0.4.0-alpha.1` package is not implied by the source version; pin and verify the published channel explicitly. |
 
-## What's Complete ✅
+The distinction matters when installing tools. An unversioned global-tool install can select a different channel from the source checkout. Use an explicit version for published artifacts, or pack and install the current source locally.
 
-### Core Infrastructure
-- [x] CLI Tool (`ShellUI.CLI`) - Published to NuGet
-- [x] Components Package (`ShellUI.Components`) - Published to NuGet
-- [x] Templates Package (`ShellUI.Templates`) - Embedded in CLI
-- [x] Component Registry - 167 templates (68 installable; rest are sub-components/variants/models/services that auto-install)
-- [x] Tailwind CSS Integration - v4.3.1 standalone CLI support
-- [x] MSBuild Integration - Automatic CSS compilation
+## Implemented in the Current Source
 
-### Components (68 Installable)
+### Solution and distribution
 
-Counts are top-level components users invoke directly via `shellui add <name>`. Anything that auto-installs as a dependency (e.g. `SidebarTrigger`, `DialogContent`, `ButtonVariants`, `SonnerService`) is not counted.
+- `ShellUI.slnx` contains the CLI, Components, Core, Templates, SafelistGenerator, and Tests projects.
+- `ShellUI.CLI` references Core and Templates and is packed as a .NET global tool.
+- `ShellUI.Components` is an independent packable Razor class library; it has no project reference to the CLI, Core, or Templates.
+- Core, Templates, SafelistGenerator, and Tests are non-packable repository projects.
+- The demo is a separate consumer application and is not built as part of `ShellUI.slnx`.
 
-- [x] **Form (17)**: Button, Checkbox, Combobox, DatePicker, DateRangePicker, FileUpload, Form, Input, InputOTP, Label, RadioGroup, Select, Slider, Switch, Textarea, TimePicker, Toggle
-- [x] **Layout (12)**: Accordion, Breadcrumb, Card, Collapsible, DashboardLayout01, DashboardLayout02, LinkCard, Navbar, Resizable, ScrollArea, Separator, Sidebar
-- [x] **Navigation (7)**: ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs
-- [x] **Overlay (8)**: AlertDialog, Command, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
-- [x] **Data Display (13)**: AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, DataTable, LineChart, MultiSeriesChart, PieChart, Table
-- [x] **Feedback (9)**: Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
-- [x] **Utility (2)**: CopyButton, ThemeToggle
+### CLI
 
-### Documentation
-- [x] README.md - Project overview and quick start
-- [x] ARCHITECTURE.md - Technical architecture and design
-- [x] DEPLOYMENT.md - Release and deployment guide
-- [x] ReleaseNotes.md - Version history
-- [x] Component READMEs - Included in NuGet packages
+The implemented commands are:
 
-### Features
-- [x] CLI commands: `init`, `add`, `remove`, `list`
-- [x] Component dependency resolution
-- [x] Tailwind CSS standalone CLI integration
-- [x] Theme-aware components (light/dark mode)
-- [x] Responsive design
-- [x] Accessibility support (ARIA attributes, keyboard navigation)
+```text
+init
+add
+list
+remove
+update
+theme init
+theme apply
+theme update
+```
 
-## What's Next 🚀
+`init` configures a Blazor project, Tailwind, host bootstrap assets, `shellui.json`, and MSBuild integration. `add` installs direct targets and their dependencies. `list` exposes the public direct targets. `remove` and `update` operate on installed source. The theme commands fetch themes from tweakcn, update a managed CSS region or an override file, and record `shellui.theme.lock` for `theme update`.
 
-### Short Term (v0.0.3+)
-- [ ] More component variants
-- [ ] Enhanced documentation with examples
-- [ ] Component playground/demo site
-- [ ] Performance optimizations
-- [ ] Additional loading animations
-- [ ] More form validation helpers
+### Registry and components
 
-### Medium Term (v0.3.0+)
-- [ ] Component themes/presets
-- [ ] Visual component editor
-- [ ] Storybook-like playground
-- [ ] Advanced composition patterns
-- [ ] Additional components
+`ComponentRegistry` has 173 entries:
 
-### Long Term (v1.0.0+)
-- [ ] Full component library (100+ components)
-- [ ] Comprehensive documentation website
-- [ ] Video tutorials
-- [ ] Community contributions
-- [ ] Performance monitoring tools
+- 73 direct targets with `IsAvailable = true`.
+- 100 hidden entries with `IsAvailable = false`, generally installed as dependencies or assets.
 
-## Timeline
+The direct-target count is the number shown by the normal public list. The hidden count is not a second public library; it represents the sub-components, variants, models, services, and assets needed to make the direct targets work.
 
-| Milestone | Status |
-|-----------|--------|
-| v0.3.0-alpha - 68 installable components, CLI, NuGet | ✅ Done |
-| Tailwind v4.3.1 standalone | ✅ Done |
-| Alpha testing & validation | 🔄 In progress |
-| v0.3.0 stable (after testing) | 🎯 Next |
-| v1.0 - Full release | 🎯 Target Q2-Q3 2026 |
+### Tailwind and theming
 
-*Stepper active-state highlighting fixed in polish/component-quality — active step now wins over completed for both fill and icon.*
+- The current Tailwind constant is `4.3.2`.
+- Both standalone and npm Tailwind workflows are implemented.
+- The generated MSBuild integration rebuilds the configured CSS during a consumer build.
+- `theme init`, `theme apply`, and `theme update` are current commands, not planned features.
+- The CLI's npm setup currently invokes npm through `cmd`; standalone mode is the portable path for non-Windows contributors.
 
-## How to Get Started with Development
+### Tests and CI
 
-### Prerequisites
-- .NET 10.0 SDK or higher (components target .NET 10.0)
-- Git
-- Visual Studio 2022 or VS Code
-- Basic understanding of Blazor
-- Familiarity with Tailwind CSS
+`ShellUI.Tests` uses xUnit, `Microsoft.NET.Test.Sdk`, Roslyn through `Microsoft.CodeAnalysis.CSharp`, and `coverlet.collector`. The current suite covers registry/dependency checks, template parsing, template synchronization, initialization, chart assets, safelist drift, and related CLI behavior.
 
-**No Node.js required!** We use Tailwind standalone CLI.
+There is currently no bUnit, FluentAssertions, rendered-component, or browser-automation suite. Accessibility behavior should be reviewed in the relevant component and consumer context, but the project does not claim an automated accessibility-conformance level.
 
-### Installation
+CI restores `ShellUI.slnx`, regenerates the precompiled CSS bundle, builds the solution, runs tests, and performs CLI scaffolding and NuGet-only smoke checks. The demo remains outside that solution workflow.
 
-**Install CLI Tool:**
+## Current Boundaries
+
+- The source is alpha and its APIs, templates, and generated output may change.
+- Only `ShellUI.CLI` and `ShellUI.Components` are packable in the current project configuration.
+- `ShellUI.Core` and `ShellUI.Templates` are internal; they are not consumer installation targets.
+- A local `0.4.0-alpha.1` build is not proof that the version is published.
+- No stable release date, adoption target, or guaranteed delivery schedule is stated here.
+- The current test stack does not provide a browser or rendered-component test harness.
+
+## Unscheduled Proposals
+
+The following are discussion items, not current features or commitments:
+
+- Additional components and design variants beyond the current registry.
+- A larger documentation site, visual preview, or authoring experience.
+- Browser, end-to-end, and accessibility-focused test automation.
+- Further performance, packaging, migration, and distribution work.
+
+Proposals should be filed as issues with their scope and trade-offs. They must not be copied into current-status claims until implemented and verified.
+
+## Development Snapshot
+
+From the repository root:
+
 ```bash
-dotnet tool install -g ShellUI.CLI
+dotnet restore ShellUI.slnx
+dotnet build ShellUI.slnx --configuration Release
+dotnet test ShellUI.slnx --no-restore --no-build --configuration Release --verbosity normal
+dotnet pack ShellUI.slnx --no-build --configuration Release
 ```
 
-**Install Components Package:**
+Run the safelist generator when component CSS, variant helpers, or safelist inputs change, then build the bundle:
+
 ```bash
-dotnet add package ShellUI.Components
+dotnet run --project tools/ShellUI.SafelistGenerator -- src/ShellUI.Components/Components src/ShellUI.Components/wwwroot/shellui-classes.txt src/ShellUI.Components/build/ShellUI.Components.targets
+bash scripts/rebuild-precompiled-css.sh
 ```
 
-**Initialize in Your Project:**
+The CSS script consumes the generated safelist; it does not regenerate the safelist itself.
+
+The pack command produces the two packable artifacts, `ShellUI.CLI` and `ShellUI.Components`; it does not turn Core or Templates into consumer packages.
+
+Run the demo explicitly because it is outside the solution:
+
 ```bash
-dotnet shellui init
-dotnet shellui add button input card
+dotnet run --project NET10/BlazorInteractiveServer/BlazorInteractiveServer.csproj
 ```
 
-### Development Setup
+## Source and Published Usage
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/shellui-dev/shellui.git
-   cd shellui
-   ```
+For a published tool or package, select the version available in the intended channel and pin it:
 
-2. **Build the solution**
-   ```bash
-   dotnet build ShellUI.sln
-   ```
-
-3. **Run the demo**
-   ```bash
-   cd NET10/BlazorInteractiveServer
-   dotnet run
-   ```
-
-4. **Test CLI locally**
-   ```bash
-   cd src/ShellUI.CLI
-   dotnet pack -c Release
-   dotnet tool install -g ShellUI.CLI --add-source ./bin/Release
-   ```
-
-## Key Decisions Made
-
-### 1. CLI-First Approach
-**Decision:** Use CLI to copy components instead of NuGet packages  
-**Rationale:** Gives users full control, better customization, transparent code  
-**Inspired by:** shadcn/ui for React
-
-### 2. Tailwind CSS v4
-**Decision:** Use Tailwind v4 as the styling framework  
-**Rationale:** Modern, popular, utility-first, great for component libraries  
-**Alternative considered:** Custom CSS (like original Sysinfocus)
-
-### 3. Component Ownership Model
-**Decision:** Components live in user's codebase  
-**Rationale:** Full customization, no version lock-in, better debugging  
-**Trade-off:** Users manage updates manually
-
-### 4. .NET 10.0 Target
-**Decision:** Target .NET 10.0 (LTS)
-**Rationale:** Long-term support through Nov 2028, latest C# 14 features, modern Blazor capabilities including the asset-fingerprinting `@Assets[...]` helper that init now patches
-**Impact:** Requires .NET 10.0 SDK or higher. Users on .NET 8 LTS can stay on `ShellUI 0.3.x` until they upgrade — we can multi-target `net8.0;net10.0` later if enterprise demand justifies it.
-
-### 5. Accessibility First
-**Decision:** WCAG 2.1 AA compliance required for all components  
-**Rationale:** Accessibility is not optional, better for everyone  
-**Implementation:** Built into component templates
-
-## Success Criteria
-
-### v0.3.0-alpha Success ✅
-- [x] CLI tool published to NuGet
-- [x] NuGet packages published (Components, CLI, Templates)
-- [x] Can initialize projects (no Node.js!)
-- [x] 68 installable components working (both CLI and NuGet)
-- [x] Basic documentation live
-- [ ] 50+ GitHub stars (in progress)
-
-### Beta Success (Q2 2026)
-- [x] 68 installable components available
-- [ ] Component registry operational
-- [ ] Hybrid workflow proven
-- [ ] 500+ GitHub stars
-- [ ] 50+ projects using ShellUI
-- [ ] Active community feedback
-
-### v1.0 Success (Q3 2026)
-- [ ] All milestones complete
-- [ ] 1000+ GitHub stars
-- [ ] 500+ projects using ShellUI
-- [ ] Documentation website live
-- [ ] Featured on Awesome Blazor
-- [ ] Active community (100+ members)
-
-## Resources
-
-### Documentation Files
-- [README.md](README.md) - Start here
-- [MILESTONES.md](MILESTONES.md) - Detailed tasks
-- [ROADMAP.md](ROADMAP.md) - Timeline and progress
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Technical design
-- [QUICKSTART.md](QUICKSTART.md) - Future user guide
-- [COMPARISON.md](COMPARISON.md) - vs other libraries
-
-### External Resources
-- [shadcn/ui](https://ui.shadcn.com/) - Inspiration
-- [Tailwind CSS v4](https://tailwindcss.com/) - CSS framework
-- [Blazor Docs](https://learn.microsoft.com/aspnet/core/blazor/) - Framework docs
-- [WCAG 2.1](https://www.w3.org/WAI/WCAG21/quickref/) - Accessibility guidelines
-
-## Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-**Ways to contribute:**
-- Report bugs via GitHub Issues
-- Suggest new components or features
-- Improve documentation
-- Submit pull requests
-- Share feedback and ideas
-
-## Questions?
-
-- GitHub Issues: [Report bugs or ask questions](https://github.com/shellui-dev/shellui/issues)
-- NuGet: [ShellUI.Components](https://www.nuget.org/packages/ShellUI.Components/)
-- Documentation: See [docs/](../docs/) folder
-
-## Contact
-
-- GitHub: [@shellui-dev/shellui](https://github.com/shellui-dev/shellui)
-- NuGet: [ShellUI Packages](https://www.nuget.org/packages?q=shellui)
-- Issues: [GitHub Issues](https://github.com/shellui-dev/shellui/issues)
-
----
-
-**Last Updated:** February 2026  
-**Current Version:** v0.3.0-alpha.2  
-**Status:** Alpha (pre-release; test and validate before stable release)
-
----
-
-## Quick Reference: Using ShellUI Today
-
-### Installation
 ```bash
-# Install CLI globally
-dotnet tool install -g ShellUI.CLI
-
-# Or install components package
-dotnet add package ShellUI.Components
+dotnet tool install -g ShellUI.CLI --version <published-version>
+dotnet add package ShellUI.Components --version <published-version> --prerelease
 ```
 
-### Initialize Project
+For the current checkout, build the CLI locally and install that package explicitly:
+
 ```bash
-dotnet shellui init
+dotnet pack ShellUI.slnx --configuration Release
+dotnet tool install -g ShellUI.CLI --add-source "./src/ShellUI.CLI/bin/Release" --version 0.4.0-alpha.1
 ```
 
-### Add Components
-```bash
-dotnet shellui add button card alert dialog
-```
+The exact published version must be checked independently; a source build is not a publication channel.
 
-### Use Components
-```razor
-@using ShellUI.Components
+## Documentation and History
 
-<Card>
-    <CardHeader>
-        <CardTitle>Hello ShellUI</CardTitle>
-    </CardHeader>
-    <CardContent>
-        <Input Placeholder="Enter text" />
-    </CardContent>
-    <CardFooter>
-        <Button>Submit</Button>
-    </CardFooter>
-</Card>
-```
+The [historical release notes](RELEASE_NOTES.md) preserve records for older releases. They are useful for understanding prior changes, but headings and version claims in that file do not describe the current `0.4.0-alpha.1` source by default.
 
-### Customize
-Just edit `Components/UI/Button.razor` - it's your code!
-
----
-
-**Ready to use ShellUI?** Check the [README.md](../README.md) for complete getting started guide!
-
+- [Project overview](../README.md)
+- [Architecture](ARCHITECTURE.md)
+- [Contributing](CONTRIBUTING.md)
+- [Quick start](QUICKSTART.md)
+- [CLI syntax](CLI_SYNTAX.md)
+- [CLI installation](CLI_INSTALLATION.md)
+- [Component dependencies](COMPONENT_DEPENDENCIES.md)
+- [Tailwind setup](tailwind-setup.md)
+- [Versioning strategy](../VERSIONING_STRATEGY.md)
+- [GitHub issues](https://github.com/shellui-dev/shellui/issues)

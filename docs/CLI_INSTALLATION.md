@@ -1,47 +1,54 @@
-# ShellUI CLI Installation Guide
+# ShellUI CLI Installation
 
-This guide covers different ways to install and manage the ShellUI CLI tool.
+This guide covers the current source and the packages that are currently published.
 
-## Installation Methods
+## Version guide
 
-### Option 1: Global Installation (Recommended for Most Users)
+| Context | Version |
+|---|---|
+| Current source | `0.4.0-alpha.1`, targeting .NET 10 |
+| Published stable package | `0.2.1` |
+| Published prerelease package | `0.3.0-rc.1` |
+| Tailwind used by current source | `4.3.2` |
 
-Global installation makes the `shellui` command available system-wide.
+The current source is not available as a `0.4.0-alpha.1` NuGet tool. A plain tool install resolves the published stable `0.2.1`; the prerelease must be selected explicitly. The published `0.3.0-rc.1` tool targets .NET 9, while the current source targets .NET 10.
+
+## Global installation
+
+A global tool is available as `shellui`:
 
 ```bash
-# Install globally
 dotnet tool install -g ShellUI.CLI
-
-# Use without dotnet prefix
-shellui init
-shellui add button input card
-shellui list
+shellui --version
 ```
 
-**Best for:**
-- Individual developers
-- Quick prototyping
-- Personal projects
-- Trying out ShellUI
-
-### Option 2: Local Tool Installation (Recommended for Teams)
-
-Local installation locks the CLI version per-project and shares it via source control.
+To pin the published stable version:
 
 ```bash
-# Step 1: Create tool manifest (one-time, in project root)
-dotnet new tool-manifest
-
-# Step 2: Install as local tool
-dotnet tool install ShellUI.CLI
-
-# Step 3: Use with dotnet prefix (required for local tools)
-dotnet shellui init
-dotnet shellui add button input card
-dotnet shellui list
+dotnet tool install -g ShellUI.CLI --version 0.2.1
+shellui --version
 ```
 
-This creates a `.config/dotnet-tools.json` file:
+To install the published prerelease:
+
+```bash
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.1 --prerelease
+shellui --version
+```
+
+If a global tool is already installed, use `dotnet tool update -g ShellUI.CLI` for the stable channel or specify the published prerelease version with `--version 0.3.0-rc.1 --prerelease`.
+
+## Local installation
+
+A local tool is recorded in the repository and invoked as `dotnet shellui` after the manifest exists.
+
+```bash
+dotnet new tool-manifest
+dotnet tool install ShellUI.CLI --version 0.2.1
+dotnet shellui --version
+```
+
+The manifest is `.config/dotnet-tools.json` and uses the installed package version:
 
 ```json
 {
@@ -49,213 +56,153 @@ This creates a `.config/dotnet-tools.json` file:
   "isRoot": true,
   "tools": {
     "shellui.cli": {
-      "version": "0.3.0",
+      "version": "0.2.1",
       "commands": ["shellui"]
     }
   }
 }
 ```
 
-**Best for:**
-- Team projects (everyone uses the same version)
-- CI/CD pipelines (reproducible builds)
-- Version-controlled environments
-- Enterprise projects
+To select the prerelease for a local tool, install `ShellUI.CLI` with `--version 0.3.0-rc.1 --prerelease` and commit the resulting manifest. Commit the manifest so every developer and CI job uses the same tool version.
 
-### Comparison
+## Global or local?
 
-| Aspect | Global (`-g`) | Local (manifest) |
-|--------|--------------|------------------|
-| **Command** | `shellui init` | `dotnet shellui init` |
-| **Install location** | User profile | Project directory |
-| **Sharing** | Each dev installs | Auto-restored via manifest |
-| **Version lock** | Latest (unless pinned) | Locked in manifest |
-| **CI/CD** | Requires explicit install | `dotnet tool restore` |
-| **Best for** | Individual devs | Teams |
+| Aspect | Global | Local manifest |
+|---|---|---|
+| Command | `shellui` | `dotnet shellui` |
+| Version selection | User profile install | `.config/dotnet-tools.json` |
+| Team consistency | Each developer chooses | Manifest and restore |
+| CI setup | Install the tool in each job | `dotnet tool restore` |
+| Best fit | Personal projects and quick trials | Teams and reproducible builds |
 
----
+## Working with the current source
 
-## Version Management
-
-### Check Current Version
+The repository source is `0.4.0-alpha.1` and targets `net10.0`. Build it from the repository with the .NET 10 SDK:
 
 ```bash
-# Global tool
-shellui --version
-
-# Or list all global tools
-dotnet tool list -g | findstr ShellUI
-
-# Local tool
-dotnet tool list | findstr ShellUI
+dotnet --version
+dotnet build ShellUI.slnx -c Release
 ```
 
-### Update to Latest Version
+To install the source build as a local tool package, generate the precompiled bundle first when packaging `ShellUI.Components`, then pack and install the CLI explicitly:
 
 ```bash
-# Update global tool
+bash scripts/rebuild-precompiled-css.sh
+dotnet pack ShellUI.slnx --configuration Release
+dotnet tool install -g ShellUI.CLI --add-source "./src/ShellUI.CLI/bin/Release" --version 0.4.0-alpha.1
+```
+
+Do not use `0.4.0-alpha.1` as a NuGet package version until it is published. The published `0.2.1` and `0.3.0-rc.1` packages are separate installations.
+
+## Updating and removing tools
+
+```bash
 dotnet tool update -g ShellUI.CLI
+dotnet tool uninstall -g ShellUI.CLI
+```
 
-# Update local tool
+For a local tool, run these commands from the directory containing the manifest:
+
+```bash
 dotnet tool update ShellUI.CLI
-```
-
-### Install Specific Version
-
-```bash
-# Global - specific version
-dotnet tool install -g ShellUI.CLI --version 0.3.0
-
-# Local - specific version
-dotnet tool install ShellUI.CLI --version 0.3.0
-
-# Update to specific version
-dotnet tool update -g ShellUI.CLI --version 0.3.0
-```
-
-### Downgrade to Previous Version
-
-```bash
-# Uninstall current, install specific version
-dotnet tool uninstall -g ShellUI.CLI
-dotnet tool install -g ShellUI.CLI --version 0.3.0
-```
-
----
-
-## Uninstallation
-
-```bash
-# Uninstall global tool
-dotnet tool uninstall -g ShellUI.CLI
-
-# Uninstall local tool
 dotnet tool uninstall ShellUI.CLI
-```
-
----
-
-## CI/CD Setup
-
-### GitHub Actions (Global Tool)
-
-```yaml
-- name: Install ShellUI CLI
-  run: dotnet tool install -g ShellUI.CLI
-
-- name: Initialize ShellUI
-  run: shellui init --yes
-
-- name: Add components
-  run: shellui add button input card
-```
-
-### GitHub Actions (Local Tool - Recommended)
-
-```yaml
-- name: Restore tools
-  run: dotnet tool restore
-
-- name: Initialize ShellUI
-  run: dotnet shellui init --yes
-
-- name: Add components
-  run: dotnet shellui add button input card
-```
-
-### Azure DevOps
-
-```yaml
-- script: dotnet tool install -g ShellUI.CLI
-  displayName: 'Install ShellUI CLI'
-
-- script: shellui init --yes
-  displayName: 'Initialize ShellUI'
-```
-
----
-
-## Troubleshooting
-
-### Command Not Found (Global Installation)
-
-If `shellui` command is not recognized after global installation:
-
-**Windows:**
-```powershell
-# Add to PATH (PowerShell)
-$env:PATH += ";$env:USERPROFILE\.dotnet\tools"
-
-# Or restart your terminal
-```
-
-**macOS/Linux:**
-```bash
-# Add to PATH
-export PATH="$PATH:$HOME/.dotnet/tools"
-
-# Add to .bashrc or .zshrc for persistence
-echo 'export PATH="$PATH:$HOME/.dotnet/tools"' >> ~/.bashrc
-```
-
-### Tool Restore Fails (Local Installation)
-
-```bash
-# Clear NuGet cache and retry
-dotnet nuget locals all --clear
 dotnet tool restore
 ```
 
-### Version Conflicts
+## CI/CD
 
-```bash
-# Check what's installed
-dotnet tool list -g
+### Global tool
 
-# Uninstall and reinstall
-dotnet tool uninstall -g ShellUI.CLI
-dotnet tool install -g ShellUI.CLI
+The following workflow uses the published stable package and .NET 10:
+
+```yaml
+name: shellui
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet tool install -g ShellUI.CLI --version 0.2.1
+      - run: dotnet new blazor -n App
+      - working-directory: App
+        run: shellui init --yes --tailwind standalone
+      - working-directory: App
+        run: shellui add button input card
+      - working-directory: App
+        run: dotnet build
 ```
 
----
+### Local manifest
 
-## Best Practices
+Commit `.config/dotnet-tools.json`, then restore it in CI:
 
-### For Individual Developers
-1. Use global installation for convenience
-2. Update regularly: `dotnet tool update -g ShellUI.CLI`
-3. Check for updates before starting new projects
+```yaml
+name: shellui
+on: [push]
 
-### For Teams
-1. Use local tool installation with manifest
-2. Commit `.config/dotnet-tools.json` to source control
-3. Add `dotnet tool restore` to your README setup instructions
-4. Pin to specific versions for stability
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet tool restore
+      - run: dotnet new blazor -n App
+      - working-directory: App
+        run: dotnet shellui init --yes --tailwind standalone
+      - working-directory: App
+        run: dotnet shellui add button input card
+      - working-directory: App
+        run: dotnet build
+```
 
-### For CI/CD
-1. Prefer local tools for reproducibility
-2. Always use `--yes` flag for non-interactive mode
-3. Cache the .dotnet/tools directory if using global installation
+## Troubleshooting
 
----
+### `shellui` is not recognized
 
-## Quick Reference
+Check the global tools directory on `PATH`.
 
-| Task | Command |
-|------|---------|
-| Install (global) | `dotnet tool install -g ShellUI.CLI` |
-| Install (local) | `dotnet tool install ShellUI.CLI` |
-| Update (global) | `dotnet tool update -g ShellUI.CLI` |
-| Update (local) | `dotnet tool update ShellUI.CLI` |
-| Uninstall (global) | `dotnet tool uninstall -g ShellUI.CLI` |
-| Check version | `shellui --version` |
-| List tools | `dotnet tool list -g` |
-| Restore local tools | `dotnet tool restore` |
+PowerShell:
 
----
+```powershell
+$env:PATH += ";$env:USERPROFILE\.dotnet\tools"
+```
 
-## Related Documentation
+macOS/Linux:
 
-- [README.md](../README.md) - Main documentation
-- [VERSIONING_STRATEGY.md](../VERSIONING_STRATEGY.md) - Version management
-- [ShellUI Website](https://shellui.dev) - Official documentation
+```bash
+export PATH="$PATH:$HOME/.dotnet/tools"
+```
+
+Restart the terminal after changing the environment.
+
+### `dotnet shellui` is not recognized
+
+Run `dotnet tool restore` from the directory containing `.config/dotnet-tools.json`. A local tool is not available until the manifest has been created and the tool has been restored.
+
+### The installed version is not the expected version
+
+```bash
+dotnet tool list -g
+shellui --version
+```
+
+A plain install selects stable `0.2.1`. Use an explicit `--version 0.3.0-rc.1 --prerelease` when the published prerelease is required.
+
+## Related documentation
+
+- [CLI syntax](CLI_SYNTAX.md)
+- [Quick start](QUICKSTART.md)
+- [FAQ](FAQ.md)
+- [Versioning strategy](../VERSIONING_STRATEGY.md)
+- [GitHub repository](https://github.com/shellui-dev/shellui)
+- [CLI package](https://www.nuget.org/packages/ShellUI.CLI)
+- [Component package](https://www.nuget.org/packages/ShellUI.Components)
+- [MIT license](../LICENSE.txt)

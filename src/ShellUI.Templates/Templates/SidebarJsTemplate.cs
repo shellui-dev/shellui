@@ -7,8 +7,8 @@ public static class SidebarJsTemplate
     public static ComponentMetadata Metadata => new()
     {
         Name = "sidebar-js",
-        DisplayName = "Sidebar JS",
-        Description = "JavaScript interop module for Sidebar (mobile detection, keyboard shortcuts)",
+        DisplayName = "Sidebar JS (legacy)",
+        Description = "Legacy JavaScript interop module retained for existing Sidebar projects",
         Category = ComponentCategory.Layout,
         FilePath = "../../wwwroot/shellui-sidebar.js",
         IsAvailable = false
@@ -21,10 +21,8 @@ export function initSidebar(dotnetRef) {
     const MOBILE_BREAKPOINT = 768;
     const checkMobile = () => window.innerWidth < MOBILE_BREAKPOINT;
 
-    // Initial mobile check
     dotnetRef.invokeMethodAsync('OnMobileChanged', checkMobile());
 
-    // Debounced resize handler
     let resizeTimer;
     const handleResize = () => {
         clearTimeout(resizeTimer);
@@ -33,7 +31,6 @@ export function initSidebar(dotnetRef) {
         }, 50);
     };
 
-    // Keyboard shortcut: Ctrl/Cmd + B to toggle sidebar
     const handleKeydown = (e) => {
         if (e.key === 'b' && (e.metaKey || e.ctrlKey)) {
             e.preventDefault();

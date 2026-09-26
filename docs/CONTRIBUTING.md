@@ -1,304 +1,162 @@
 # Contributing to ShellUI
 
-Thank you for your interest in contributing to ShellUI! This document provides guidelines and information for contributors.
+This guide applies to the current source version `0.4.0-alpha.1`, which targets .NET 10 and Tailwind CSS `4.3.2`. It describes the current contribution and verification workflow rather than a planned release process.
 
-## Current Status
+## Contribution Policy
 
-ShellUI is currently in active development working towards v1.0. The project is not yet accepting external contributions, but we welcome feedback and suggestions through GitHub Issues.
+ShellUI is an active alpha project. Focused bug fixes, documentation corrections, tests, and component or CLI improvements are welcome through GitHub issues and pull requests.
 
-### When Can I Contribute?
+Before starting a substantial new component, a new distribution path, or a change to the registry contract:
 
-We will open up contributions after:
-- Alpha release (CLI + Core Components)
-- Contribution guidelines are finalized
-- Component architecture is stabilized
+1. Search existing issues and pull requests.
+2. Open an issue describing the problem, intended behavior, and affected projects.
+3. Agree on the smallest useful scope before implementing a large change.
+4. Keep the change compatible with the current architecture unless the proposal explicitly changes that architecture.
 
-For now, you can:
-- Star the repository to show support
-- Watch for updates
-- Open issues for bug reports or feature suggestions (will be labeled for future consideration)
-- Join discussions about the project direction
+Alpha software can change its APIs and generated source. An issue or pull request is not a promise that a feature will be accepted, scheduled, or released. There is no response-time or adoption target in this policy.
 
-## Development Roadmap
+Implemented features should be described as implemented. Ideas that have no implementation or release assignment belong in an issue or in the unscheduled section below, not in current-status documentation.
 
-See [MILESTONES.md](MILESTONES.md) for the detailed development roadmap and current progress.
+## Repository Scope
 
-## Future Contribution Areas
+The solution file is `ShellUI.slnx`. It contains six projects:
 
-Once we open up contributions, we'll need help with:
+- `src/ShellUI.CLI/ShellUI.CLI.csproj` — packable .NET global tool.
+- `src/ShellUI.Components/ShellUI.Components.csproj` — packable independent Razor class library.
+- `src/ShellUI.Core/ShellUI.Core.csproj` — internal models, configuration, and Tailwind constants.
+- `src/ShellUI.Templates/ShellUI.Templates.csproj` — internal registry and source templates.
+- `tools/ShellUI.SafelistGenerator/ShellUI.SafelistGenerator.csproj` — internal CSS safelist utility.
+- `ShellUI.Tests/ShellUI.Tests.csproj` — test project.
 
-### 1. Components
-- New component development
-- Component enhancements
-- Bug fixes
-- Accessibility improvements
-- Test coverage
+The runnable demo at `NET10/BlazorInteractiveServer/BlazorInteractiveServer.csproj` is outside `ShellUI.slnx` and must be built or run explicitly. Only `ShellUI.CLI` and `ShellUI.Components` are packable. `ShellUI.Core` and `ShellUI.Templates` are internal implementation projects, not consumer packages.
 
-### 2. Documentation
-- Component documentation
-- Usage examples
-- Tutorials and guides
-- API documentation
-- Video tutorials
+## Prerequisites
 
-### 3. CLI Tool
-- New commands
-- Command enhancements
-- Cross-platform testing
-- Bug fixes
+- .NET 10 SDK. `global.json` requests SDK `10.0.100` with feature-band roll-forward.
+- Git.
+- Node.js and npm only when using the npm Tailwind method. The standalone method does not require Node.js.
 
-### 4. Testing
-- Unit tests
-- Integration tests
-- E2E tests
-- Accessibility tests
-- Browser compatibility tests
+## Local Setup
 
-### 5. Design
-- Component designs
-- Documentation website design
-- Marketing materials
-- Demo applications
+From the repository root:
 
-## Code Style Guidelines (Future)
-
-When contributions are accepted, we'll follow these guidelines:
-
-### C# Code Style
-- Follow Microsoft's C# coding conventions
-- Use meaningful variable and method names
-- Add XML documentation comments for public APIs
-- Keep methods focused and concise
-- Use LINQ where appropriate
-
-### Razor Component Style
-```razor
-@* Component documentation *@
-<div class="@CssClass">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public string Variant { get; set; } = "default";
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
-    private string CssClass => BuildCssClass();
-    
-    private string BuildCssClass()
-    {
-        // Class building logic
-        return "base-classes variant-classes";
-    }
-}
-```
-
-### Tailwind CSS Guidelines
-- Use Tailwind utility classes (no custom CSS)
-- Follow mobile-first responsive design
-- Use design tokens from theme
-- Maintain dark mode compatibility
-- Keep specificity low
-
-### Testing Guidelines
-- Write unit tests for all components
-- Include accessibility tests
-- Test keyboard navigation
-- Test screen reader compatibility
-- Test on multiple browsers
-
-## Git Workflow (Future)
-
-When contributions are accepted:
-
-1. Fork the repository
-2. Create a feature branch
-   - `feature/component-name` for new components
-   - `fix/issue-description` for bug fixes
-   - `docs/what-changed` for documentation
-3. Make your changes
-4. Write/update tests
-5. Ensure all tests pass
-6. Update documentation
-7. Submit a pull request
-
-### Commit Message Convention
-```
-type(scope): brief description
-
-Detailed description if needed
-
-Fixes #issue-number
-```
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-
-Examples:
-```
-feat(button): add loading state
-fix(input): resolve validation styling issue
-docs(readme): update installation instructions
-```
-
-## Component Development Guidelines (Future)
-
-When developing components:
-
-### Component Structure
-
-- `ComponentName.razor` - Main component
-- `ComponentName.razor.cs` - Code-behind (optional)
-- `ComponentName.tests.cs` - Unit tests
-- `metadata.json` - Component metadata
-- `README.md` - Documentation
-- `examples/` - basic.razor, variants.razor, composition.razor
-
-### Component Checklist
-- [ ] Implements common parameters (Variant, Size, Disabled, etc.)
-- [ ] Supports `AdditionalAttributes` for extensibility
-- [ ] Fully accessible (ARIA attributes, keyboard nav)
-- [ ] Works in dark mode
-- [ ] Responsive design
-- [ ] Has comprehensive tests
-- [ ] Has documentation
-- [ ] Has usage examples
-- [ ] Follows naming conventions
-- [ ] Uses Tailwind utilities only
-
-### Accessibility Requirements
-Every component must:
-- Be keyboard accessible
-- Have proper ARIA attributes
-- Have focus indicators
-- Work with screen readers
-- Have proper color contrast
-- Support reduced motion preferences
-- Be tested with accessibility tools
-
-## Documentation Guidelines (Future)
-
-When writing documentation:
-
-### Component Documentation
-Each component needs:
-1. Description - What is it?
-2. When to use - Use cases
-3. API reference - All parameters, events, methods
-4. Examples - Multiple usage examples
-5. Accessibility notes - How it's accessible
-6. Customization guide - How to customize it
-7. Composition examples - Using with other components
-
-### Code Examples
-- Should be complete and runnable
-- Should demonstrate best practices
-- Should include comments for clarity
-- Should show common use cases
-
-## Testing Guidelines (Future)
-
-### Unit Tests
-```csharp
-[Fact]
-public void Button_RendersWithCorrectVariant()
-{
-    // Arrange
-    var cut = RenderComponent<Button>(parameters => parameters
-        .Add(p => p.Variant, "outline")
-        .Add(p => p.ChildContent, "Click Me"));
-    
-    // Act
-    var button = cut.Find("button");
-    
-    // Assert
-    button.ClassList.Should().Contain("button-outline");
-    button.TextContent.Should().Be("Click Me");
-}
-```
-
-### Accessibility Tests
-```csharp
-[Fact]
-public void Button_HasProperAriaAttributes()
-{
-    var cut = RenderComponent<Button>(parameters => parameters
-        .Add(p => p.Disabled, true));
-    
-    var button = cut.Find("button");
-    button.GetAttribute("aria-disabled").Should().Be("true");
-}
-```
-
-## Building and Running Locally (Future)
-
-### Prerequisites
-- .NET 8.0 SDK or higher
-- Node.js 18+ (for Tailwind CSS)
-- Git
-
-### Setup
 ```bash
-# Clone your fork
-git clone https://github.com/shellui-dev/shellui.git
-cd shellui
-
-# Restore packages
-dotnet restore
-
-# Install npm dependencies
-npm install
-
-# Build the solution
-dotnet build
-
-# Run tests
-dotnet test
-
-# Run example project
-cd examples/BlazorServer
-dotnet run
+dotnet restore ShellUI.slnx
+dotnet build ShellUI.slnx --configuration Release
 ```
 
-## Questions?
+The CLI supports the implemented commands `init`, `add`, `list`, `remove`, `update`, `theme init`, `theme apply`, and `theme update`. Use the current source build when testing local changes; do not substitute an older published CLI merely because it is easier to install.
 
-For now, open an issue with your question and we'll respond as soon as possible.
+The precompiled CSS and safelist are generated as part of the CI workflow. When changing component CSS, variant helpers, or safelist inputs, regenerate the safelist and then build the bundle:
 
-Once we open contributions, we'll set up:
-- Discord server for real-time chat
-- GitHub Discussions for longer conversations
-- Regular contributor calls
+```bash
+dotnet run --project tools/ShellUI.SafelistGenerator -- src/ShellUI.Components/Components src/ShellUI.Components/wwwroot/shellui-classes.txt src/ShellUI.Components/build/ShellUI.Components.targets
+bash scripts/rebuild-precompiled-css.sh
+```
 
-## Code of Conduct
+The safelist generator updates `shellui-classes.txt` and the package targets; the CSS script consumes those files and does not regenerate the safelist.
 
-We are committed to providing a welcoming and inclusive environment. We will publish a full Code of Conduct before accepting contributions.
+## Tests and Verification
 
-Expected behavior:
-- Be respectful and considerate
-- Welcome newcomers
-- Focus on constructive feedback
-- Respect differing opinions
-- Prioritize community safety
+The normal local sequence is:
 
-Unacceptable behavior:
-- Harassment of any kind
-- Discriminatory language or actions
-- Personal attacks
-- Trolling or inflammatory comments
-- Any form of abuse
+```bash
+dotnet build ShellUI.slnx --configuration Release
+dotnet test ShellUI.slnx --no-restore --no-build --configuration Release --verbosity normal
+```
 
-## License
+The current `ShellUI.Tests` project uses:
 
-By contributing to ShellUI, you agree that your contributions will be licensed under the MIT License.
+- xUnit with the Visual Studio runner.
+- `Microsoft.NET.Test.Sdk`.
+- Roslyn through `Microsoft.CodeAnalysis.CSharp`.
+- `coverlet.collector`.
 
----
+The current tests cover registry and dependency integrity, template parsing, template-to-RCL synchronization, initialization and host bootstrap, chart assets, safelist drift, and related CLI behavior. There is currently no bUnit, FluentAssertions, rendered-component, or browser-automation suite. Do not add examples or tests that assume those packages or a browser runner. If rendered UI coverage is needed, propose the harness and its dependencies as part of the change.
 
-## Stay Updated
+The CI workflow additionally packs the CLI, scaffolds a fresh Blazor application, runs `init` and `add`, builds the result, and verifies the NuGet-only package path. A local change should be considered ready when the solution build and test commands pass and any affected CLI smoke scenario has been checked.
 
-- Star the repository
-- Watch for release announcements
-- Check [MILESTONES.md](MILESTONES.md) for progress
-- Follow discussions
+To exercise the demo outside the solution:
 
-Thank you for your interest in ShellUI!
+```bash
+dotnet run --project NET10/BlazorInteractiveServer/BlazorInteractiveServer.csproj
+```
 
+## Component Changes
+
+Component work has two representations that must remain synchronized:
+
+- The live Razor class library under `src/ShellUI.Components/Components/`.
+- The CLI source templates and registry under `src/ShellUI.Templates/`.
+
+For a component change:
+
+1. Update the live component and its generated template together.
+2. Update registry metadata, dependencies, `FilePath`, variants, and NuGet dependencies when the public contract changes.
+3. Preserve the distinction between direct targets and hidden dependency entries. The current registry has 173 entries, including 73 direct targets and 100 hidden entries.
+4. Use the Tailwind `4.3.2` variable and utility conventions already used by the project.
+5. Add or update tests that exercise the changed registry, template, or CLI behavior.
+6. Review keyboard and assistive-technology behavior without claiming a blanket accessibility conformance level that the repository does not test.
+
+Do not edit the demo as a substitute for updating the source library or template. The demo is a consumer fixture outside the solution.
+
+## CLI Changes
+
+CLI changes should preserve the implemented command tree and its actual options. Document a command only when its handler and user-facing help are implemented in the same change; do not list speculative commands or options.
+
+For a new command or option:
+
+- Add its handler and user-facing help text.
+- Add or update tests for success, failure, and relevant project-state behavior.
+- Update the command reference and examples in the same pull request.
+- Check that generated files, `shellui.json`, and host bootstrap behavior remain consistent.
+
+## Documentation Changes
+
+Documentation in this repository should be verifiable against the checkout:
+
+- Use `0.4.0-alpha.1` for the current source and identify published releases separately.
+- Use `ShellUI.slnx` and the six solution project paths; do not point contributors at paths that are not in the checkout.
+- Distinguish the demo at `NET10/BlazorInteractiveServer` from solution membership.
+- Use the actual CLI command names and current test packages.
+- Link only to files that exist in the repository.
+- Treat `RELEASE_NOTES.md` as historical release information when it is referenced; do not rewrite historical entries to describe the current source.
+- Label unimplemented ideas as unscheduled proposals. Do not add dates, adoption targets, performance promises, or unsupported accessibility compliance claims.
+
+## Style and Review Expectations
+
+- Follow the existing C# and Razor conventions in neighboring files.
+- Keep public behavior covered by the narrowest useful test.
+- Avoid introducing a new runtime or test dependency without explaining why the existing stack is insufficient.
+- Keep generated component source readable so a consumer can edit and own it.
+- Keep changes focused and describe known gaps in the pull request.
+
+A useful pull request explains the problem, lists the projects and tests changed, records the commands run, and calls out any behavior that remains intentionally unaddressed.
+
+## Unscheduled Proposals
+
+The following are possible areas for discussion, not current features or commitments:
+
+- Additional components beyond the current registry.
+- A larger documentation site or visual preview experience.
+- Browser, end-to-end, and accessibility-focused automated test infrastructure.
+- Further performance, packaging, and migration work.
+
+Propose these through the issue tracker so their status and scope are explicit. They should not be presented as shipped functionality or tied to an invented release date.
+
+## Communication and License
+
+Use issue and pull-request discussions to make technical feedback specific, respectful, and actionable. Contributions are made under the repository's MIT license terms.
+
+## Related Documentation
+
+- [Project overview](../README.md)
+- [Architecture](ARCHITECTURE.md)
+- [Project status](PROJECT_STATUS.md)
+- [CLI syntax](CLI_SYNTAX.md)
+- [CLI installation](CLI_INSTALLATION.md)
+- [Component dependencies](COMPONENT_DEPENDENCIES.md)
+- [Tailwind setup](tailwind-setup.md)
+- [Versioning strategy](../VERSIONING_STRATEGY.md)
+- [Historical release notes](RELEASE_NOTES.md)
+- [GitHub issues](https://github.com/shellui-dev/shellui/issues)

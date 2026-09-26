@@ -1,3 +1,39 @@
+# ShellUI Release Notes
+
+> [!IMPORTANT]
+> **Historical releases:** The `v0.3.0-rc.1` section and all older sections below are preserved as historical release records. They are not the current source snapshot. The current source baseline is `0.4.0-alpha.1`.
+
+## Unreleased / Current Source: `0.4.0-alpha.1`
+
+This section describes the current working source; it is not a published stable-release announcement.
+
+### Current baseline
+
+- Version: `0.4.0-alpha.1`
+- Target framework: .NET 10
+- Tailwind CSS: `4.3.2`
+- Component inventory: **73 direct CLI targets**, **173 registry entries**, and **100 hidden entries**
+- Packaging: only `ShellUI.CLI` and `ShellUI.Components` are packable in the current project configuration. `ShellUI.Core` and `ShellUI.Templates` are internal/non-packable in this checkout; older release sections below record their historical publication state.
+
+### Current CLI surface
+
+```text
+shellui init
+shellui add <components>
+shellui list
+shellui remove <components>
+shellui update [components]
+shellui theme init <url>
+shellui theme apply <url>
+shellui theme update
+```
+
+`ComponentRegistry` metadata is authoritative for the current inventory and dependency graph. `IsAvailable` distinguishes the 73 public direct targets from the 100 hidden support entries; `Dependencies` and `NuGetDependencies` are separate metadata fields used by the installer. Hidden entries such as `button-variants`, card sub-components, and `shellui-js` are not standalone public components.
+
+The current direct inventory includes `command-palette`, `data-picker`, `multi-select`, `tag-input`, and `typed-select` targets. New CLI sidebar installs use the host-loaded `shellui.js` and `ShellUI.initSidebar`; the legacy `sidebar-js` module remains only for older generated providers. See [COMPONENT_ROADMAP.md](COMPONENT_ROADMAP.md) and [COMPONENT_DEPENDENCIES.md](COMPONENT_DEPENDENCIES.md) for the current scope and registry-backed relationships.
+
+---
+
 # ShellUI v0.3.0-rc.1 🚦
 
 > Release candidate for v0.3.0. Five branches of integration-tested fixes against the alpha series, surfaced from real-world Blazor Server consumer use. If no critical reports come in during the soak window, this code ships as `v0.3.0` stable with the suffix dropped — no further code changes. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).

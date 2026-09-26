@@ -1,165 +1,134 @@
 # Tailwind CSS Setup Guide for Blazor
 
-This guide shows you how to set up Tailwind CSS for a new Blazor project using the same approach as the ShellUI CLI tool.
+This guide targets **Tailwind CSS 4.3.2**, the version used by the current ShellUI `0.4.0-alpha.1` source.
 
-## Installation Methods Comparison
+## Installation methods
 
-| Method | Setup Speed | Build Speed | Production Ready | Node.js Required |
-|--------|-------------|-------------|------------------|-------------------|
-| **Play CDN** | ⚡ Fastest (instant) | None | ❌ No | No |
-| **Standalone** | Fast (one-time download) | Fast | ✅ Yes | No |
-| **npm** | Medium (npm install) | Fast | ✅ Yes | Yes |
+| Method | Setup | Build integration | Node.js | Use for |
+|---|---|---|---|---|
+| **Play CDN** | One browser package | No local build | No | Prototypes and demos only |
+| **Standalone** | One platform-specific CLI binary | MSBuild target | No | A .NET/Blazor project without Node.js |
+| **npm** | `tailwindcss` plus `@tailwindcss/cli` | npm or MSBuild | Yes | Projects that already use Node.js or plugins |
 
-- **Play CDN** — Add one script tag, zero build step. **Dev/demo only** — serves full Tailwind (~500KB+), not optimized for production.
-- **Standalone** — Downloads a single binary (~10MB) once. No Node.js. **Recommended for Blazor** — fast builds, production-ready.
-- **npm** — Full Node.js workflow. Best if you already use npm or need plugins.
+The standalone CLI is cached inside the project at `.shellui/bin`. On Windows the executable is `.shellui/bin/tailwindcss.exe`; on macOS and Linux it is `.shellui/bin/tailwindcss`. The project-local `.shellui/bin` directory is the cache location.
 
-**TL;DR:** Standalone is the fastest *production* option for .NET/Blazor. Use CDN only for quick prototypes.
+For a production Blazor application, use either the standalone or npm workflow and build the CSS as part of the project. The Play CDN is a prototyping convenience and does not provide the same production build and caching behavior.
 
 ## Prerequisites
 
 - .NET 10.0 SDK
-- A Blazor project (new or existing)
+- A Blazor project
+- Node.js and npm only when using the npm method
 
-## Method 1: Using ShellUI CLI (Recommended)
+## Method 1: Use the ShellUI CLI
 
-The easiest way to set up Tailwind CSS in a Blazor project is using the ShellUI CLI tool, which handles everything automatically.
+### Install the CLI
 
-### Step 1: Install ShellUI CLI
-
-```bash
-# Install globally
+```text
 dotnet tool install -g ShellUI.CLI
-
-# Or install from local source (if testing locally)
-dotnet tool install -g ShellUI.CLI --add-source ./src/ShellUI.CLI/bin/Release
 ```
 
-### Step 2: Initialize in your project
+For a local build, run the pack command from the ShellUI repository root, then install that package explicitly. A plain global install resolves the published stable `0.2.1`; the current `0.4.0-alpha.1` source is not published.
 
-```bash
-# Navigate to your Blazor project
-cd path/to/your/blazor-project
-
-# Initialize ShellUI (this sets up Tailwind automatically)
-dotnet shellui init
+```text
+dotnet pack ShellUI.slnx --configuration Release
+dotnet tool install -g ShellUI.CLI --add-source ./src/ShellUI.CLI/bin/Release --version 0.4.0-alpha.1
 ```
 
-This command automatically:
-- ✅ Downloads Tailwind CSS CLI (standalone, no Node.js required)
-- ✅ Creates CSS files with design tokens
-- ✅ Sets up MSBuild integration for auto-building
-- ✅ Creates component folders
-- ✅ Builds Tailwind CSS
+### Initialize a project
 
-### Step 3: Add components (optional)
+Run this from the project directory:
 
-```bash
-# Add specific components
-dotnet shellui add button input card
-
-# List all available components
-dotnet shellui list
+```text
+shellui init
 ```
 
-## Method 2: Manual Setup (Alternative)
+The default standalone method downloads the Tailwind 4.3.2 standalone executable into `.shellui/bin`, creates the CSS entry point and output file, wires an MSBuild target, and creates the ShellUI component folders. To choose npm explicitly:
 
-If you prefer to set up Tailwind CSS manually or want to understand the process:
-
-### Step 1: Download Tailwind CSS CLI
-
-```bash
-# Download Tailwind CLI (standalone, no Node.js required)
-# Windows
-curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-windows-x64.exe
-
-# Linux
-curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64
-
-# macOS
-curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-x64
-
-# Make executable (Linux/macOS)
-chmod +x tailwindcss-*
+```text
+shellui init --tailwind npm --yes
 ```
 
-### Step 2: Create CSS files
+Other initialization options include `--style`, `--force`, and `--yes`. The current CLI's npm setup invokes npm through `cmd`; use standalone mode on non-Windows systems or run the npm commands manually.
+
+### Add and manage components
+
+The current CLI command surface is:
+
+```text
+shellui init
+shellui add <components>
+shellui list
+shellui remove <components>
+shellui update [components]
+shellui theme init <url>
+shellui theme apply <url>
+shellui theme update
+```
+
+Examples:
+
+```text
+shellui add button input card
+shellui list
+shellui remove card
+shellui update
+```
+
+`list` shows the direct targets in the registry. Dependencies are resolved recursively from `ComponentRegistry`; hidden support entries are not separate public choices in the list.
+
+## Method 2: Manual standalone setup
+
+### Create the CSS entry point
 
 Create `wwwroot/input.css`:
+
 ```css
 @import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
 ```
 
-*Note: This creates a minimal Tailwind setup. Add your custom CSS variables, colors, and design tokens as needed.*
+Tailwind v4 uses the CSS entry point above. The older v3 layer-import sequence is not part of this setup.
 
-Create `wwwroot/app.css` (placeholder, will be generated):
-```css
-/* This file will be generated by Tailwind CSS */
+Create `wwwroot/app.css` as the generated output placeholder. Edit `input.css`, not the generated output.
+
+### Download the version-pinned standalone CLI
+
+Create the project-local cache directory first.
+
+Windows PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force ".shellui/bin" | Out-Null
+curl.exe -fL -o ".shellui/bin/tailwindcss.exe" "https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.2/tailwindcss-windows-x64.exe"
 ```
 
-### Step 3: Create Tailwind configuration
+Linux:
 
-Create `tailwind.config.js`:
-```javascript
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    './Components/**/*.{razor,html,cshtml}',
-    './Pages/**/*.{razor,html,cshtml}',
-    './wwwroot/**/*.html',
-  ],
-  darkMode: 'class',
-  theme: {
-    extend: {
-      colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
-        },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
-      },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
-      },
-    },
-  },
-  plugins: [],
-}
+```text
+mkdir -p .shellui/bin
+curl -fL -o .shellui/bin/tailwindcss https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.2/tailwindcss-linux-x64
+chmod +x .shellui/bin/tailwindcss
 ```
 
-### Step 4: Set up MSBuild integration
+macOS:
+
+```text
+mkdir -p .shellui/bin
+curl -fL -o .shellui/bin/tailwindcss https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.2/tailwindcss-macos-x64
+chmod +x .shellui/bin/tailwindcss
+```
+
+The correct project-local cache paths are:
+
+- Windows: `.shellui/bin/tailwindcss.exe`
+- Linux: `.shellui/bin/tailwindcss`
+- macOS: `.shellui/bin/tailwindcss`
+
+### Add the MSBuild target
 
 Create `Build/ShellUI.targets`:
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
@@ -186,245 +155,201 @@ Create `Build/ShellUI.targets`:
 </Project>
 ```
 
-### Step 5: Update project file
+Import it from the project file:
 
-Add to your `.csproj` file:
 ```xml
 <Project Sdk="Microsoft.NET.Sdk.Web">
-  <!-- ... existing content ... -->
-  
   <Import Project="Build\ShellUI.targets" />
 </Project>
 ```
 
-### Step 6: Build Tailwind CSS
+The target points at `.shellui/bin`, matching the download location above. Keep the executable in that project-local directory so the target and the downloaded binary agree.
 
-```bash
-# Build CSS manually
-./tailwindcss -i wwwroot/input.css -o wwwroot/app.css
+### Build and link the output
 
-# Or build the project (MSBuild will handle it automatically)
-dotnet build
+Build manually with the project-local executable:
+
+```text
+.shellui/bin/tailwindcss -i wwwroot/input.css -o wwwroot/app.css
 ```
 
-### Step 7: Add CSS to your layout
+On Windows PowerShell:
 
-In your `MainLayout.razor` or `App.razor`:
+```powershell
+& ".\.shellui\bin\tailwindcss.exe" -i "wwwroot/input.css" -o "wwwroot/app.css"
+```
+
+`dotnet build` runs the MSBuild target. Link the generated stylesheet from the Blazor host:
+
 ```html
 <link href="~/app.css" rel="stylesheet" />
 ```
 
-## Method 3: Play CDN (Prototyping Only)
+## Method 3: npm and `@tailwindcss/cli`
 
-The **fastest** way to try Tailwind — no build step, no install. Add one script to your HTML:
+Use npm when the project already has a Node.js toolchain or needs npm-based Tailwind integrations.
+
+### Install the packages
+
+```text
+npm install -D tailwindcss@4.3.2 @tailwindcss/cli@4.3.2
+```
+
+Tailwind v4 does not require a separate initialization command. Create or edit `wwwroot/input.css` directly:
+
+```css
+@import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
+```
+
+Tailwind v4 can discover source files from the project. If a JavaScript config is required for compatibility or plugins, load it explicitly from the CSS entry point:
+
+```css
+@import "tailwindcss";
+@config "../tailwind.config.js";
+```
+
+Place a JavaScript config at the project root when using that example. Keep the theme variables and `@theme inline` mappings in the CSS entry point.
+
+### Build with `@tailwindcss/cli`
+
+```text
+npx @tailwindcss/cli -i wwwroot/input.css -o wwwroot/app.css
+```
+
+Minify release output with:
+
+```text
+npx @tailwindcss/cli -i wwwroot/input.css -o wwwroot/app.css --minify
+```
+
+For MSBuild, create a target that invokes the package:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <NpmExecutable>npx</NpmExecutable>
+    <TailwindInputCss Condition="'$(TailwindInputCss)' == ''">$(MSBuildProjectDirectory)\wwwroot\input.css</TailwindInputCss>
+    <TailwindOutputCss Condition="'$(TailwindOutputCss)' == ''">$(MSBuildProjectDirectory)\wwwroot\app.css</TailwindOutputCss>
+    <TailwindMinify Condition="'$(Configuration)' == 'Release'">--minify</TailwindMinify>
+    <TailwindMinify Condition="'$(Configuration)' != 'Release'"></TailwindMinify>
+  </PropertyGroup>
+
+  <Target Name="BuildTailwindCSS" BeforeTargets="BeforeBuild" Condition="Exists('$(TailwindInputCss)')">
+    <Message Importance="high" Text="Building Tailwind CSS with @tailwindcss/cli..." />
+    <Exec Command="$(NpmExecutable) @tailwindcss/cli -i &quot;$(TailwindInputCss)&quot; -o &quot;$(TailwindOutputCss)&quot; $(TailwindMinify)" />
+    <Message Importance="high" Text="Tailwind CSS built successfully!" />
+  </Target>
+</Project>
+```
+
+Use one Tailwind build path per project: either the standalone target or the npm target. Running both can produce competing writes to `wwwroot/app.css`.
+
+## Method 4: Play CDN for prototypes
+
+The browser build is useful for a quick prototype only:
 
 ```html
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.2"></script>
 </head>
 ```
 
-**Pros:** Instant setup, zero config.  
-**Cons:** Full Tailwind (~500KB+), no purging, **not for production**. Use for demos, prototypes, or Playground-style apps only.
-
-For Blazor, add this to `App.razor` or your HTML host. Note: Design tokens (CSS variables) still need to be in your CSS for components to look correct.
-
-## Method 4: Using npm (Alternative)
-
-If you prefer using npm and Node.js:
-
-### Step 1: Install Tailwind CSS
-
-```bash
-npm install -D tailwindcss
-npx tailwindcss init
-```
-
-### Step 2: Update tailwind.config.js
-
-```javascript
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    './Components/**/*.{razor,html,cshtml}',
-    './Pages/**/*.{razor,html,cshtml}',
-    './wwwroot/**/*.html',
-  ],
-  darkMode: 'class',
-  theme: {
-    extend: {
-      // ... same theme configuration as above
-    },
-  },
-  plugins: [],
-}
-```
-
-### Step 3: Create input.css
-
-```css
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-```
-
-*Note: This creates a minimal Tailwind setup. Add your custom CSS variables, colors, and design tokens as needed.*
-
-### Step 4: Build CSS
-
-```bash
-npx tailwindcss -i wwwroot/input.css -o wwwroot/app.css
-```
+It does not replace a version-pinned local build for production. Keep the application's theme variables and component CSS available when testing a prototype.
 
 ## Verification
 
-After setup, verify everything works:
+After setup:
 
-1. **Build the project:**
-   ```bash
-   dotnet build
-   ```
+```text
+dotnet build
+```
 
-2. **Check for Tailwind CSS output:**
-   - `wwwroot/app.css` should contain generated CSS
-   - Look for Tailwind utility classes in the output
+Check that:
 
-3. **Test in browser:**
-   - Add some Tailwind classes to your components
-   - Verify they're styled correctly
+- `wwwroot/app.css` contains generated utilities.
+- The host includes the generated stylesheet.
+- A Razor component using a ShellUI utility is styled in the browser.
+- The standalone executable is at `.shellui/bin/tailwindcss.exe` on Windows or `.shellui/bin/tailwindcss` on macOS/Linux.
+- The npm project can run `npx @tailwindcss/cli -i wwwroot/input.css -o wwwroot/app.css`.
 
 ## Troubleshooting
 
-### Common Issues:
+### Tailwind CSS is not building
 
-1. **Tailwind CSS not building:**
-   - Check that `tailwind.config.js` exists
-   - Verify content paths include your Razor files
-   - Ensure MSBuild targets are imported
+- Confirm `wwwroot/input.css` contains `@import "tailwindcss";`.
+- Confirm the standalone executable is in the project-local `.shellui/bin` directory.
+- Confirm `Build/ShellUI.targets` is imported by the project.
+- Confirm the input and output paths exist.
+- For npm, confirm `tailwindcss@4.3.2` and `@tailwindcss/cli@4.3.2` are installed and run `npx @tailwindcss/cli --help`.
 
-2. **Styles not applying:**
-   - Check that `app.css` is linked in your layout
-   - Verify the CSS file is being generated
-   - Clear browser cache
+### Styles are not applying
 
-3. **Build errors:**
-   - Ensure Tailwind CLI is executable
-   - Check file paths in configuration
-   - Verify MSBuild targets syntax
+- Confirm `app.css` is linked from the Blazor host.
+- Rebuild after changing `input.css` or Razor markup.
+- Clear the browser cache while testing.
+- Check the browser console for missing JavaScript assets separately from CSS generation.
 
-### Getting Help:
+### Version or syntax errors
 
-- Check the [Tailwind CSS documentation](https://tailwindcss.com/docs)
-- Review the [ShellUI documentation](https://shellui.dev)
-- Open an issue on [GitHub](https://github.com/shellui-dev/shellui/issues)
+- Use Tailwind `4.3.2` for both the standalone download and the npm packages.
+- Use `@import "tailwindcss";`, not the v3 layer imports.
+- Use `npx @tailwindcss/cli` with the version-pinned packages and CSS entry point.
 
-## Custom Themes & Fonts
+## Custom themes and fonts
 
-### 🎨 Using Custom Themes from tweakcn
+Tailwind v4 themes are CSS-first. Keep the color variables in `input.css`, then map them into Tailwind with `@theme inline`:
 
-You can customize your theme similar to shadcn/ui. Copy theme configurations from [tweakcn](https://tweakcn.com/) or similar tools and paste them into your `wwwroot/input.css`.
-
-**Example - Adding a custom theme:**
-
-1. Visit [tweakcn](https://tweakcn.com/)
-2. Customize colors, fonts, radius, etc.
-3. Copy the generated CSS
-4. Paste it into your `wwwroot/input.css` (replace the existing `:root` and `.dark` sections)
-
-### 🔤 Installing Custom Fonts
-
-To use custom fonts in your theme:
-
-#### Method 1: Google Fonts (Recommended)
-```html
-<!-- Add to your _Layout.cshtml or index.html -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-```
-
-Then update your `input.css`:
 ```css
-:root {
-  --font-sans: 'Kode Mono', ui-monospace, monospace;
-  /* ... other variables ... */
-}
-```
-
-
-#### Method 2: Local Font Files
-```css
-/* Add to your input.css */
-@import url('./fonts/kode-mono.css'); /* Your local font CSS */
+@import "tailwindcss";
 
 :root {
-  --font-sans: 'Kode Mono', ui-monospace, monospace;
-  /* ... other variables ... */
-}
-```
-
-#### Method 3: Font CDN
-```html
-<!-- Add to your layout -->
-<link href="https://cdn.jsdelivr.net/npm/@fontsource/kode-mono@5.0.0/index.css" rel="stylesheet">
-```
-
-### 📝 Font Fallbacks
-
-Always include fallbacks in your font definitions:
-```css
-:root {
-  --font-sans: 'Custom Font', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'Custom Mono', ui-monospace, 'SF Mono', monospace;
-  --font-serif: 'Custom Serif', ui-serif, serif;
-}
-```
-
-This ensures your design looks good even if the custom font fails to load.
-
-### 🎯 Theme Examples
-
-**Dark Theme with Custom Colors:**
-```css
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  /* ... customize all colors ... */
+  --background: oklch(0.99 0 0);
+  --foreground: oklch(0 0 0);
+  --primary: oklch(0.55 0.22 264.53);
+  --primary-foreground: oklch(1 0 0);
+  --radius: 0.5rem;
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  /* ... dark mode colors ... */
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --primary: oklch(0.81 0.17 75.35);
+  --primary-foreground: oklch(0 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --radius-lg: var(--radius);
 }
 ```
 
-**Custom Border Radius:**
+A theme tool such as tweakcn can provide a replacement `:root` and `.dark` block. Paste the generated variables into `input.css`, then rebuild Tailwind.
+
+For fonts, use a project-local stylesheet or a font provider and retain fallbacks:
+
 ```css
 :root {
-  --radius: 0.75rem; /* More rounded */
+  --font-sans: 'Custom Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Custom Mono', ui-monospace, monospace;
 }
 ```
 
-**Custom Shadows:**
-```css
-:root {
-  --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-```
+## Next steps
 
-## Next Steps
+1. Initialize the project with `shellui init`.
+2. Choose the standalone or npm Tailwind method.
+3. Add components with `shellui add`.
+4. Customize the variables in `wwwroot/input.css`.
+5. Build the project and verify the generated stylesheet.
 
-Once Tailwind CSS is set up:
+Useful references:
 
-1. **Add ShellUI components** (if using ShellUI) using `dotnet shellui add`
-2. **Customize the design system** in `input.css` (use tweakcn for themes!)
-3. **Install custom fonts** for the perfect look
-4. **Build your Blazor app** with beautiful components
-5. **Deploy** using your preferred hosting solution
-
-Happy coding! 🚀
+- [Tailwind CSS documentation](https://tailwindcss.com/docs)
+- [Tailwind CSS v4 upgrade guide](https://tailwindcss.com/docs/upgrade-guide)
+- [ShellUI documentation](https://shellui.dev)
+- [ShellUI GitHub repository](https://github.com/shellui-dev/shellui)

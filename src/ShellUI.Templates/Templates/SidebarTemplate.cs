@@ -14,7 +14,7 @@ public static class SidebarTemplate
         FilePath = "Sidebar.razor",
         Dependencies = new List<string>
         {
-            "shell", "sidebar-models", "sidebar-js", "sidebar-provider",
+            "shell", "sidebar-models", "sidebar-provider",
             "sidebar-header", "sidebar-content", "sidebar-footer",
             "sidebar-group", "sidebar-group-label", "sidebar-group-content",
             "sidebar-menu", "sidebar-menu-item", "sidebar-menu-button",

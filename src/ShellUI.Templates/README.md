@@ -1,68 +1,67 @@
 # ShellUI Templates
 
-Component templates for ShellUI CLI tool. This package contains the template definitions used by the ShellUI CLI when installing components.
+`ShellUI.Templates` is the internal component-template catalog used by `ShellUI.CLI`. It supplies the source content and metadata that the CLI copies into a consumer's Blazor project.
 
-## Overview
+## Packaging status
 
-This package is an internal dependency of `ShellUI.CLI`. It provides the component templates that are copied to your project when you run `dotnet shellui add <component>`.
+This project is part of the current `0.4.0-alpha.1` source and targets .NET 10.
 
-## Installation
+`ShellUI.Templates` sets `IsPackable` to `false` and is not published to NuGet. Do not run `dotnet add package ShellUI.Templates`. The only packable ShellUI projects are:
 
-This package is automatically installed as a dependency when you install `ShellUI.CLI`:
+- `ShellUI.CLI`
+- `ShellUI.Components`
 
-```bash
-dotnet tool install -g ShellUI.CLI
-```
+`ShellUI.Templates` and `ShellUI.Core` are compiled project dependencies of the CLI tool; consumers do not reference them directly.
 
-You typically don't need to install this package directly.
+## How the CLI uses the templates
 
-## Usage
-
-When you use the ShellUI CLI to add components, this package provides the templates:
+After the CLI is installed as a global or local tool, it resolves a component from its registry and writes the selected templates into the target project:
 
 ```bash
-# The CLI uses templates from this package
-dotnet shellui add button
-dotnet shellui add card dialog
+shellui add button
+shellui add typed-select command-palette data-picker multi-select tag-input
 ```
 
-## What's Included
-
-This package contains:
-- **68 Installable Component Templates** - Top-level components (167 templates total; sub-components, variants, models, services auto-install as dependencies)
-- **Metadata** - Component metadata including dependencies, categories, and descriptions
-- **Registry** - Component registry for CLI discovery
-
-## For Developers
-
-If you're developing ShellUI or creating custom components:
+A local tool uses:
 
 ```bash
-dotnet add package ShellUI.Templates
+dotnet shellui list
 ```
 
-Then access templates programmatically:
+The global tool command is `shellui`; a local .NET tool is invoked as `dotnet shellui`.
 
-```csharp
-using ShellUI.Templates;
+## Template inventory
 
-var buttonTemplate = ButtonTemplate.Content;
-var metadata = ButtonTemplate.Metadata;
+The current source registry contains **173 entries**:
+
+- **73 direct install targets** displayed by `shellui list`
+- **100 hidden dependency entries** installed recursively and omitted from the direct list
+
+Each entry provides content plus metadata used by the CLI, including its display name, category, description, target path, version, dependencies, and optional NuGet dependencies. The catalog also includes hidden subcomponents, variants, models, services, JavaScript, and stylesheet assets required by direct targets.
+
+The current source additions include the direct targets `typed-select`, `command-palette`, `data-picker`, `multi-select`, and `tag-input`.
+
+## Development
+
+Build and test the repository solution from the repository root:
+
+```bash
+dotnet restore ShellUI.slnx
+dotnet build ShellUI.slnx
+dotnet test ShellUI.slnx
 ```
 
-## Related Packages
-
-- **ShellUI.CLI** - Command-line tool that uses these templates
-- **ShellUI.Components** - Pre-built component library (alternative to CLI)
-- **ShellUI.Core** - Core models and utilities
+Template changes should keep the catalog, generated files, and component runtime in sync. The repository's test suite covers template compilation, synchronization, safelist drift, and CLI integration behavior.
 
 ## Documentation
 
-- [ShellUI Documentation](https://shellui.dev)
-- [CLI Usage Guide](https://shellui.dev/docs/cli)
-- [Component Development](https://shellui.dev/docs/components)
+- [Repository README](https://github.com/shellui-dev/shellui/blob/main/README.md)
+- [CLI reference](https://github.com/shellui-dev/shellui/blob/main/docs/CLI_SYNTAX.md)
+- [Contributing guide](https://github.com/shellui-dev/shellui/blob/main/docs/CONTRIBUTING.md)
+- [Historical release notes](https://github.com/shellui-dev/shellui/blob/main/docs/RELEASE_NOTES.md)
+
+Historical component counts in old release sections describe those releases, not the current registry.
 
 ## License
 
-MIT License - see [LICENSE](https://github.com/shellui-dev/shellui/blob/main/LICENSE) for details.
-
+[MIT](https://github.com/shellui-dev/shellui/blob/main/LICENSE.txt)

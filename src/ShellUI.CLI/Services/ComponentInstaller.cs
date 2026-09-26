@@ -7,6 +7,8 @@ namespace ShellUI.CLI.Services;
 
 public class ComponentInstaller
 {
+    private const string ShellUiJsSidebarApiMarker = "initSidebar: function (handle, dotNetRef)";
+
     public static async Task InstallComponents(string[] components, bool force)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
@@ -14,7 +16,7 @@ public class ComponentInstaller
         if (!File.Exists(configPath))
         {
             AnsiConsole.MarkupLine("[red]ShellUI not initialized![/]");
-            AnsiConsole.MarkupLine("[yellow]Run 'dotnet shellui init' first[/]");
+            AnsiConsole.MarkupLine("[yellow]Run 'shellui init' first[/]");
             return;
         }
 
@@ -108,26 +110,33 @@ public class ComponentInstaller
             AnsiConsole.MarkupLine($"[red]Failed: {string.Join(", ", failedComponents)}[/]");
     }
 
-    public static Task InstallComponentForInitAsync(string componentName, ProjectInfo projectInfo)
+    public static Task<bool> InstallComponentForInitAsync(
+        string componentName,
+        ProjectInfo projectInfo,
+        ShellUIConfig? config = null)
     {
         var metadata = ComponentRegistry.Components.GetValueOrDefault(componentName.ToLower());
-        if (metadata == null) return Task.CompletedTask;
+        if (metadata == null) return Task.FromResult(false);
 
-        var config = new ShellUIConfig
+        var installConfig = config ?? new ShellUIConfig
         {
             ComponentsPath = "Components/UI",
             ProjectType = projectInfo.ProjectType,
             Style = "default"
         };
 
-        var result = InstallComponentInternal(componentName, config, projectInfo, false);
+        var result = InstallComponentInternal(componentName, installConfig, projectInfo, false);
 
         if (result == InstallResult.Success)
         {
             AnsiConsole.MarkupLine($"[green]✅ Installed:[/] {componentName}");
         }
+        else if (result == InstallResult.Failed)
+        {
+            AnsiConsole.MarkupLine($"[red]Failed to install:[/] {componentName}");
+        }
 
-        return Task.CompletedTask;
+        return Task.FromResult(result != InstallResult.Failed);
     }
 
     public static void InstallComponent(string componentName, ComponentMetadata metadata, bool force, bool skipConfig = false)
@@ -135,22 +144,36 @@ public class ComponentInstaller
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
         var configJson = File.ReadAllText(configPath);
         var config = JsonSerializer.Deserialize<ShellUIConfig>(configJson);
-        
+
         if (config == null) return;
-        
+
         var projectInfo = ProjectDetector.DetectProject();
         var result = InstallComponentInternal(componentName, config, projectInfo, force);
-        
-        if (!skipConfig && result == InstallResult.Success)
+
+        if (!skipConfig && result != InstallResult.Failed)
         {
             var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(configPath, updatedJson);
         }
     }
 
-    private static InstallResult InstallComponent(string componentName, ShellUIConfig config, ProjectInfo projectInfo, bool force)
+    public static bool EnsureShellUiJs()
     {
-        return InstallComponentInternal(componentName, config, projectInfo, force);
+        var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
+        if (!File.Exists(configPath)) return false;
+
+        var config = JsonSerializer.Deserialize<ShellUIConfig>(File.ReadAllText(configPath));
+        if (config == null) return false;
+
+        var metadata = ComponentRegistry.GetMetadata("shellui-js");
+        if (metadata == null) return false;
+
+        var result = InstallComponentInternal("shellui-js", config, ProjectDetector.DetectProject(), force: false);
+        if (result == InstallResult.Failed) return false;
+
+        var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(configPath, updatedJson);
+        return true;
     }
 
     private static InstallResult InstallComponentInternal(string componentName, ShellUIConfig config, ProjectInfo projectInfo, bool force)
@@ -168,19 +191,6 @@ public class ComponentInstaller
             return InstallResult.Failed;
         }
 
-        var basePath = metadata.IsLayoutBlock
-            ? Path.Combine(Directory.GetCurrentDirectory(), config.LayoutPath ?? "Components/Layout")
-            : Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath);
-        var componentPath = Path.GetFullPath(Path.Combine(basePath, metadata.FilePath));
-        
-        // Check if already exists
-        if (File.Exists(componentPath) && !force)
-        {
-            AnsiConsole.MarkupLine($"[yellow]Skipped '{componentName}' (already exists)[/]");
-            return InstallResult.Skipped;
-        }
-
-        // Get component content
         var content = ComponentRegistry.GetComponentContent(componentName);
         if (content == null)
         {
@@ -188,46 +198,85 @@ public class ComponentInstaller
             return InstallResult.Failed;
         }
 
-        // Replace namespace placeholder
+        var basePath = metadata.IsLayoutBlock
+            ? Path.Combine(Directory.GetCurrentDirectory(), config.LayoutPath ?? "Components/Layout")
+            : Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath);
+        var componentPath = Path.GetFullPath(Path.Combine(basePath, metadata.FilePath));
+        var existing = config.InstalledComponents.FirstOrDefault(c => c.Name == componentName);
+
+        if (File.Exists(componentPath) && !force)
+        {
+            if (componentName.Equals("shellui-js", StringComparison.OrdinalIgnoreCase) &&
+                !File.ReadAllText(componentPath).Contains(ShellUiJsSidebarApiMarker, StringComparison.Ordinal))
+            {
+                if (existing?.IsCustomized == true)
+                {
+                    AnsiConsole.MarkupLine("[yellow]shellui.js is customized and does not expose the sidebar API; update it before installing Sidebar.[/]");
+                    return InstallResult.Failed;
+                }
+
+                content = content.Replace("YourProjectNamespace", projectInfo.RootNamespace);
+                File.WriteAllText(componentPath, content);
+                RecordInstalledComponent(config, metadata, componentName, resetCustomization: true);
+                AnsiConsole.MarkupLine($"[green]Updated '{componentName}'[/] [dim](added sidebar interop)[/]");
+                return InstallResult.Success;
+            }
+
+            RecordInstalledComponent(config, metadata, componentName, resetCustomization: false);
+            AnsiConsole.MarkupLine($"[yellow]Skipped '{componentName}' (already exists)[/]");
+            return InstallResult.Skipped;
+        }
+
         content = content.Replace("YourProjectNamespace", projectInfo.RootNamespace);
 
-        // Ensure directory exists
         var directory = Path.GetDirectoryName(componentPath);
         if (directory != null)
         {
             Directory.CreateDirectory(directory);
         }
 
-        // Write file
         File.WriteAllText(componentPath, content);
-
-        // Update config
-        var existing = config.InstalledComponents.FirstOrDefault(c => c.Name == componentName);
-        if (existing != null)
-        {
-            existing.Version = metadata.Version;
-            existing.InstalledAt = DateTime.UtcNow;
-            existing.IsCustomized = false;
-        }
-        else
-        {
-            config.InstalledComponents.Add(new InstalledComponent
-            {
-                Name = componentName,
-                Version = metadata.Version,
-                InstalledAt = DateTime.UtcNow,
-                IsCustomized = false
-            });
-        }
-
+        RecordInstalledComponent(config, metadata, componentName, resetCustomization: true);
         AnsiConsole.MarkupLine($"[green]Installed '{componentName}'[/] [dim]({metadata.FilePath})[/]");
         return InstallResult.Success;
     }
 
-    private static void InstallComponentWithDependencies(string componentName, ShellUIConfig config, ProjectInfo projectInfo, bool force, HashSet<string> installedSet, HashSet<string> requestedPackages, List<NuGetDependency> pendingNuGetDeps, ref int successCount, ref int skippedCount, List<string> failedComponents)
+    private static void RecordInstalledComponent(
+        ShellUIConfig config,
+        ComponentMetadata metadata,
+        string componentName,
+        bool resetCustomization)
     {
-        if (installedSet.Contains(componentName))
-            return; // Already processed
+        var existing = config.InstalledComponents.FirstOrDefault(c => c.Name == componentName);
+        if (existing != null)
+        {
+            existing.Version = metadata.Version;
+            if (resetCustomization) existing.IsCustomized = false;
+            return;
+        }
+
+        config.InstalledComponents.Add(new InstalledComponent
+        {
+            Name = componentName,
+            Version = metadata.Version,
+            InstalledAt = DateTime.UtcNow,
+            IsCustomized = false
+        });
+    }
+
+    private static bool InstallComponentWithDependencies(
+        string componentName,
+        ShellUIConfig config,
+        ProjectInfo projectInfo,
+        bool force,
+        HashSet<string> installedSet,
+        HashSet<string> requestedPackages,
+        List<NuGetDependency> pendingNuGetDeps,
+        ref int successCount,
+        ref int skippedCount,
+        List<string> failedComponents)
+    {
+        if (installedSet.Contains(componentName)) return true;
 
         if (!ComponentRegistry.Exists(componentName))
         {
@@ -238,7 +287,7 @@ public class ComponentInstaller
                 AnsiConsole.MarkupLine($"[yellow]Did you mean '[bold]{suggestion}[/]'?[/]");
             }
             failedComponents.Add(componentName);
-            return;
+            return false;
         }
 
         var metadata = ComponentRegistry.GetMetadata(componentName);
@@ -246,25 +295,34 @@ public class ComponentInstaller
         {
             AnsiConsole.MarkupLine($"[red]Failed to get metadata for '{componentName}'[/]");
             failedComponents.Add(componentName);
-            return;
+            return false;
         }
 
-        // Install dependencies first
         if (metadata.Dependencies?.Any() == true)
         {
             AnsiConsole.MarkupLine($"[dim]Installing dependencies for [bold]{componentName}[/]: {string.Join(", ", metadata.Dependencies)}[/]");
             foreach (var dep in metadata.Dependencies)
             {
-                if (!installedSet.Contains(dep))
+                if (!installedSet.Contains(dep) &&
+                    !InstallComponentWithDependencies(
+                        dep,
+                        config,
+                        projectInfo,
+                        force,
+                        installedSet,
+                        requestedPackages,
+                        pendingNuGetDeps,
+                        ref successCount,
+                        ref skippedCount,
+                        failedComponents))
                 {
-                    InstallComponentWithDependencies(dep, config, projectInfo, force, installedSet, requestedPackages, pendingNuGetDeps, ref successCount, ref skippedCount, failedComponents);
+                    failedComponents.Add(componentName);
+                    return false;
                 }
             }
         }
 
-        // Install the component itself
         var result = InstallComponentInternal(componentName, config, projectInfo, force);
-
         if (result == InstallResult.Success)
         {
             successCount++;
@@ -278,11 +336,10 @@ public class ComponentInstaller
         else
         {
             failedComponents.Add(componentName);
+            return false;
         }
 
-        // Collect NuGet deps regardless of source-file install result — even a `Skipped`
-        // file still requires its NuGet packages to compile.
-        if (result != InstallResult.Failed && metadata.NuGetDependencies?.Any() == true)
+        if (metadata.NuGetDependencies?.Any() == true)
         {
             foreach (var pkg in metadata.NuGetDependencies)
             {
@@ -292,6 +349,8 @@ public class ComponentInstaller
                 }
             }
         }
+
+        return true;
     }
 
     private static async Task InstallNuGetDependenciesAsync(ProjectInfo projectInfo, List<NuGetDependency> deps)
@@ -338,6 +397,28 @@ public class ComponentInstaller
             {
                 AnsiConsole.MarkupLine($"[yellow]Warning:[/] could not add {dep.PackageId}: {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
             }
+        }
+    }
+
+    internal static bool IsShellUiJsCompatible()
+    {
+        var metadata = ComponentRegistry.GetMetadata("shellui-js");
+        var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
+        if (metadata == null || !File.Exists(configPath)) return false;
+
+        try
+        {
+            var config = JsonSerializer.Deserialize<ShellUIConfig>(File.ReadAllText(configPath));
+            if (config == null) return false;
+
+            var basePath = Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath);
+            var shellUiPath = Path.GetFullPath(Path.Combine(basePath, metadata.FilePath));
+            return File.Exists(shellUiPath) &&
+                File.ReadAllText(shellUiPath).Contains(ShellUiJsSidebarApiMarker, StringComparison.Ordinal);
+        }
+        catch
+        {
+            return false;
         }
     }
 

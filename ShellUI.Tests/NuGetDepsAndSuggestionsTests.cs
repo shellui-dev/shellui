@@ -1,4 +1,6 @@
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ShellUI.Templates;
 using Xunit;
 
@@ -157,6 +159,102 @@ public class HiddenNetworkDependencyTests
         Assert.True(offenders.Count == 0,
             $"The following templates reference `{cssClass}` (external icon font, not shipped by ShellUI):\n  " +
             string.Join("\n  ", offenders));
+    }
+}
+
+public class RelativeJsModuleImportTests
+{
+    // A component whose C# does JSRuntime.InvokeAsync("import", "./foo.js") resolves that
+    // path against the current page URL. That only works when ShellUI is installed straight
+    // into the host app; the moment the generated component is compiled into a consumer's
+    // own Razor Class Library, the asset is served from _content/<Library>/ instead and the
+    // import 404s — silently, since every one of these calls is wrapped in try/catch.
+    // ShellUI's established fix for this shape of bug (see ThemeToggle, InputOTP,
+    // CommandPalette, Combobox, ...) is to route through the already-loaded global
+    // `window.ShellUI` object (shellui.js, loaded via one host-controlled <script> tag)
+    // instead of a per-component dynamic import. Fail loudly if a template reintroduces it.
+    [Fact]
+    public void NoTemplate_DynamicallyImportsARelativeJsModule()
+    {
+        var offenders = new List<string>();
+        foreach (var (name, _) in ComponentRegistry.Components)
+        {
+            if (name == "sidebar-js") continue;
+
+            var content = ComponentRegistry.GetComponentContent(name);
+            if (content is not null && Regex.IsMatch(content, @"""import""\s*,\s*""\.{1,2}/"))
+                offenders.Add(name);
+        }
+        Assert.True(offenders.Count == 0,
+            "The following templates dynamically import a relative JS module (breaks when " +
+            "compiled into a consumer's own Razor Class Library — route through window.ShellUI " +
+            "in shellui.js instead):\n  " + string.Join("\n  ", offenders));
+    }
+}
+
+public class SidebarInteropTests
+{
+    [Fact]
+    public void CliSidebarProvider_UsesGlobalLifecycleInterop()
+    {
+        var content = ComponentRegistry.GetComponentContent("sidebar-provider");
+
+        Assert.NotNull(content);
+        Assert.Contains("ShellUI.initSidebar", content!);
+        Assert.Contains("ShellUI.disposeSidebar", content!);
+        Assert.DoesNotContain("shellui-sidebar.js", content!);
+    }
+
+    [Fact]
+    public void ShellUiJs_ProvidesSidebarLifecycleInterop()
+    {
+        var content = ComponentRegistry.GetComponentContent("shellui-js");
+
+        Assert.NotNull(content);
+        Assert.Contains("initSidebar: function (handle, dotNetRef)", content!);
+        Assert.Contains("disposeSidebar: function (handle)", content!);
+        Assert.Contains("this._sidebarHandlers.delete(handle)", content!);
+    }
+
+    [Fact]
+    public void SidebarJs_IsRetainedOnlyAsAHiddenLegacyAlias()
+    {
+        var metadata = ComponentRegistry.GetMetadata("sidebar-js");
+        var sidebar = ComponentRegistry.GetMetadata("sidebar");
+        var provider = ComponentRegistry.GetMetadata("sidebar-provider");
+
+        Assert.NotNull(metadata);
+        Assert.False(metadata!.IsAvailable);
+        Assert.Equal("../../wwwroot/shellui-sidebar.js", metadata.FilePath);
+        Assert.DoesNotContain("sidebar-js", sidebar!.Dependencies);
+        Assert.DoesNotContain("sidebar-js", provider!.Dependencies);
+        Assert.Contains("shellui-js", provider.Dependencies);
+    }
+
+    [Fact]
+    public void PackageSidebarProvider_RetainsItsRclStaticAsset()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var providerPath = Path.Combine(repositoryRoot, "src", "ShellUI.Components", "Components", "SidebarProvider.razor");
+        var assetPath = Path.Combine(repositoryRoot, "src", "ShellUI.Components", "wwwroot", "shellui-sidebar.js");
+
+        var provider = File.ReadAllText(providerPath);
+        var asset = File.ReadAllText(assetPath);
+
+        Assert.Contains("./_content/ShellUI.Components/shellui-sidebar.js", provider);
+        Assert.DoesNotContain("\"./shellui-sidebar.js\"", provider);
+        Assert.Contains("export function initSidebar", asset);
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory != null && !File.Exists(Path.Combine(directory.FullName, "ShellUI.slnx")))
+        {
+            directory = directory.Parent;
+        }
+
+        return directory?.FullName ?? throw new InvalidOperationException("Repository root not found.");
     }
 }
 

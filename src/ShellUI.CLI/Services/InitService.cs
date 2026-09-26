@@ -85,8 +85,23 @@ public class InitService
             return;
         }
 
+        var config = new ShellUIConfig
+        {
+            Style = style,
+            ComponentsPath = "Components/UI",
+            LayoutPath = "Components/Layout",
+            ProjectType = projectInfo.ProjectType,
+            Tailwind = new TailwindConfig
+            {
+                Enabled = true,
+                Version = TailwindConstants.Version,
+                Method = method,
+                CssPath = "wwwroot/app.css"
+            }
+        };
+
         await AnsiConsole.Status()
-            .StartAsync("Installing ShellUI components...", async ctx => 
+            .StartAsync("Installing ShellUI components...", async ctx =>
             {
                 // Step 3: Create Components/UI folder
                 ctx.Status("Creating component folders...");
@@ -96,32 +111,14 @@ public class InitService
 
                 // Step 3.5: Install Shell utilities and shellui.js (required for CopyButton, FileUpload, Command)
                 ctx.Status("Installing Shell utilities...");
-                await ComponentInstaller.InstallComponentForInitAsync("shell", projectInfo);
-                await ComponentInstaller.InstallComponentForInitAsync("shellui-js", projectInfo);
+                if (!await ComponentInstaller.InstallComponentForInitAsync("shell", projectInfo, config))
+                    throw new InvalidOperationException("Shell could not be installed.");
+                if (!await ComponentInstaller.InstallComponentForInitAsync("shellui-js", projectInfo, config))
+                    throw new InvalidOperationException("shellui.js could not be installed.");
 
                 // Step 4: Create shellui.json
-                ctx.Status("Creating configuration...");
-                var config = new ShellUIConfig
-                {
-                    Style = style,
-                    ComponentsPath = "Components/UI",
-                    LayoutPath = "Components/Layout",
-                    ProjectType = projectInfo.ProjectType,
-                    Tailwind = new TailwindConfig
-                    {
-                        Enabled = true,
-                        Version = TailwindConstants.Version,
-                        Method = method,
-                        CssPath = "wwwroot/app.css"
-                    }
-                };
-
-                var json = JsonSerializer.Serialize(config, new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
-                File.WriteAllText(configPath, json);
-                AnsiConsole.MarkupLine($"[green]✅ Created:[/] shellui.json");
+                ctx.Status("Preparing configuration...");
+                AnsiConsole.MarkupLine("[green]Configuration prepared[/]");
 
                 // Step 5: Create _Imports.razor if it doesn't exist
                 ctx.Status("Setting up imports...");
@@ -183,10 +180,17 @@ public class InitService
                 AnsiConsole.MarkupLine($"[green]Built:[/] Tailwind CSS");
             });
 
+        var json = JsonSerializer.Serialize(config, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+        File.WriteAllText(configPath, json);
+        AnsiConsole.MarkupLine("[green]✅ Created:[/] shellui.json");
+
         AnsiConsole.MarkupLine("\n[green]✅ ShellUI initialized successfully![/]");
         AnsiConsole.MarkupLine("\n[blue]Next steps:[/]");
-        AnsiConsole.MarkupLine("  [dim]1. Add components:[/] dotnet shellui add button");
-        AnsiConsole.MarkupLine("  [dim]2. Browse all:[/] dotnet shellui list");
+        AnsiConsole.MarkupLine("  [dim]1. Add components:[/] shellui add button");
+        AnsiConsole.MarkupLine("  [dim]2. Browse all:[/] shellui list");
     }
 
     private static async Task SetupTailwindNpmAsync()
@@ -315,7 +319,7 @@ public class InitService
         var startInfo = new System.Diagnostics.ProcessStartInfo
         {
             FileName = "cmd",
-            Arguments = $"/c npx tailwindcss -i \"{inputCssPath}\" -o \"{outputCssPath}\" --minify",
+            Arguments = $"/c npx @tailwindcss/cli -i \"{inputCssPath}\" -o \"{outputCssPath}\" --minify",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -333,7 +337,7 @@ public class InitService
         if (process.ExitCode != 0)
         {
             var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"npx tailwindcss failed: {error}");
+            throw new Exception($"npx @tailwindcss/cli failed: {error}");
         }
     }
 

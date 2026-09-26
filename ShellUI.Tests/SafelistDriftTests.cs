@@ -88,7 +88,7 @@ public class SafelistDriftTests
     private static string BuildDiffMessage(System.Collections.Generic.List<string> added, System.Collections.Generic.List<string> removed)
     {
         var msg = "Safelist is out of date.\n";
-        msg += "Regenerate with:\n  dotnet run --project tools/ShellUI.SafelistGenerator -- src/ShellUI.Components/Components src/ShellUI.Components/wwwroot/shellui-classes.txt\n\n";
+        msg += "Regenerate with:\n  dotnet run --project tools/ShellUI.SafelistGenerator -- src/ShellUI.Components/Components src/ShellUI.Components/wwwroot/shellui-classes.txt src/ShellUI.Components/build/ShellUI.Components.targets\n\n";
         if (added.Count > 0)
         {
             msg += $"New classes in razor sources missing from safelist (first {added.Count}):\n";

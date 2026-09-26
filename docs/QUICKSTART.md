@@ -1,512 +1,173 @@
-# ShellUI Quick Start Guide
+# ShellUI Quick Start
 
-**Note:** ShellUI is in alpha with 68 installable components. Test and provide feedback!
-
-## What is ShellUI?
-
-ShellUI is a CLI-first Blazor component library inspired by shadcn/ui. Instead of installing a NuGet package, you use a CLI tool to copy components directly into your project, giving you full control and customization capabilities.
+This quick start follows the current source: `0.4.0-alpha.1`, .NET 10, Tailwind CSS `4.3.2`, and 73 direct component targets. The source is not published as `0.4.0-alpha.1`; the published stable package is `0.2.1` and the published prerelease is `0.3.0-rc.1`. The published prerelease targets .NET 9; use the matching SDK/runtime when following a published package instead.
 
 ## Prerequisites
 
-- .NET 8.0 or 9.0 SDK or higher
-- **No Node.js required** (Tailwind standalone CLI)
-- A Blazor project (Server, WASM, or SSR)
+- .NET 10 SDK
+- A Blazor project
+- The `ShellUI.CLI` tool
+- Node.js and npm only when choosing `--tailwind npm`
 
-## Installation
+Check the SDK with:
 
-### Step 1: Install the CLI globally
+```bash
+dotnet --version
+```
+
+## Install the CLI
+
+A global tool is invoked as `shellui`:
 
 ```bash
 dotnet tool install -g ShellUI.CLI
+shellui --version
 ```
 
-### Step 2: Initialize ShellUI in your project
-
-Navigate to your Blazor project directory:
+The plain install selects the published stable `0.2.1`. To use the published prerelease, select it explicitly:
 
 ```bash
-cd YourBlazorProject
-dotnet shellui init
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.1 --prerelease
 ```
 
-This will:
-- Detect your project type (Server/WASM/SSR)
-- Create `Components/UI/` folder structure
-- Set up Tailwind CSS v4
-- Create `shellui.json` configuration
-- Update necessary files
+The workflow below follows the current source. Published `0.2.1` and `0.3.0-rc.1` tools are older packages and may not expose source-only commands; check `shellui --help` or build the current source when using the syntax in this guide.
 
-You'll see output like:
-```
-✓ Detected project type: Blazor Server
-✓ Created Components/UI/ directory
-✓ Initialized Tailwind CSS v4
-✓ Created shellui.json configuration
-✓ Updated _Imports.razor
+If the project has a .NET tool manifest, use `dotnet shellui` instead. See [CLI installation](CLI_INSTALLATION.md).
 
-ShellUI is ready! Add your first component:
-  dotnet shellui add button
-```
-
-## Adding Components
-
-### Add a single component
+## Create and initialize a project
 
 ```bash
-dotnet shellui add button
+dotnet new blazor -n MyBlazorApp
+cd MyBlazorApp
+shellui init --yes --tailwind standalone
 ```
 
-This copies the Button component to `Components/UI/Button.razor` in your project.
+The current source detects the project type and sets up:
 
-### Add multiple components
+- `Components/UI/`
+- `wwwroot/input.css` and `wwwroot/app.css`
+- `tailwind.config.js`
+- `Build/ShellUI.targets`
+- `shellui.json`
+- `Components/_Imports.razor` when it is present
+- The host file used by the project
+
+Standalone mode downloads Tailwind `4.3.2` into `.shellui/bin/` and does not require Node.js. To use npm instead:
 
 ```bash
-# Space-separated
-dotnet shellui add button card alert dialog
-
-# Comma-separated
-dotnet shellui add button,card,alert,dialog
-
-# Mix both (why not!)
-dotnet shellui add button,card alert dialog
-
-# Add many at once
-dotnet shellui add button,input,label,card,alert,badge,skeleton,separator
+shellui init --yes --tailwind npm
 ```
 
-### Add with dependencies
+npm mode requires Node.js and npm. The current CLI invokes npm through `cmd`, so use standalone mode on non-Windows systems or run the npm commands manually.
 
-ShellUI automatically resolves and installs dependencies:
+## Add components
+
+Add one target, several space-separated targets, or comma-separated targets:
 
 ```bash
-dotnet shellui add dialog
-# Also installs: button (dependency)
+shellui add button
+shellui add button input card
+shellui add button,input,card
 ```
 
-## Using Components
+Dependencies are copied automatically. Use `--force` to overwrite an existing component source file:
 
-After adding components, use them in your Razor pages:
+```bash
+shellui add button --force
+```
+
+Use the exact names shown by `shellui list`. The current source exposes 73 direct targets; dependency-only registry entries are not direct targets.
+
+## Use a component
+
+After `init`, the project imports `YourProject.Components.UI`. For a project named `MyBlazorApp`:
 
 ```razor
-@page "/example"
+@using MyBlazorApp.Components.UI
 
-<div class="container mx-auto p-4">
-    <Card>
-        <CardHeader>
-            <CardTitle>Welcome to ShellUI</CardTitle>
-            <CardDescription>
-                Build beautiful Blazor apps with ease
-            </CardDescription>
-        </CardHeader>
-        <CardContent>
-            <p class="mb-4">ShellUI provides production-ready components that you own.</p>
-            <Input Placeholder="Enter your email" Type="email" />
-        </CardContent>
-        <CardFooter>
-            <Button OnClick="HandleSubscribe">Subscribe</Button>
-        </CardFooter>
-    </Card>
-</div>
-
-@code {
-    private void HandleSubscribe()
-    {
-        // Your logic here
-    }
-}
+<Card Class="max-w-md">
+    <h2 class="text-lg font-semibold">Welcome</h2>
+    <Input Placeholder="Enter your email" Type="email" />
+    <Button>Click me</Button>
+</Card>
 ```
 
-## Customizing Components
+`card` installs its component parts automatically. `button` and `input` are separate targets, so add them explicitly when using them.
 
-Since components are copied to your project, you can customize them freely:
+## Tailwind CSS v4
 
-1. Open `Components/UI/Button.razor`
-2. Modify the Tailwind classes
-3. Add new variants
-4. Change behavior
-5. It's YOUR code!
-
-Example customization:
-
-```razor
-@* Components/UI/Button.razor *@
-
-@code {
-    // Add a new "neon" variant
-    private string BuildCssClass()
-    {
-        var classes = new List<string> { /* ... base classes ... */ };
-        
-        classes.Add(Variant switch
-        {
-            "default" => "bg-primary text-primary-foreground",
-            "neon" => "bg-gradient-to-r from-pink-500 to-purple-500 text-white shadow-neon",
-            // ... other variants
-            _ => "bg-primary text-primary-foreground"
-        });
-        
-        return string.Join(" ", classes);
-    }
-}
-```
-
-Then use it:
-
-```razor
-<Button Variant="neon">Neon Button</Button>
-```
-
-## Managing Components
-
-### List all available components
-
-```bash
-dotnet shellui list
-```
-
-Output: A table showing component name, status (installed/available), version, category, and description. Run `dotnet shellui list` to see all 68 installable components.
-
-### List only installed components
-
-```bash
-dotnet shellui list --installed
-```
-
-### Update components
-
-```bash
-# Update a specific component
-dotnet shellui update button
-
-# Update all components
-dotnet shellui update --all
-```
-
-Note: If you've customized a component, you'll be warned before updating.
-
-### Show differences
-
-```bash
-dotnet shellui diff button
-```
-
-Shows what's different between your version and the latest version.
-
-### Remove components
-
-```bash
-dotnet shellui remove button
-```
-
-Removes the component file. You'll be warned if other components depend on it.
-
-## Theming
-
-ShellUI uses Tailwind CSS v4 with CSS variables for theming.
-
-### Customize colors
-
-Edit `wwwroot/styles/input.css`:
+Edit `wwwroot/input.css`, not the generated `wwwroot/app.css`. The current v4 input begins with:
 
 ```css
-@layer base {
-  :root {
-    --primary: 262 83% 58%;        /* Change primary color */
-    --primary-foreground: 0 0% 100%;
-    /* ... other colors ... */
-  }
+@import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
 
-  .dark {
-    --primary: 263 70% 50%;        /* Dark mode primary */
-    --primary-foreground: 0 0% 100%;
-    /* ... other colors ... */
-  }
+:root {
+  --primary: oklch(0.55 0.22 264.53);
+  --primary-foreground: oklch(1 0 0);
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
 }
 ```
 
-### Dark mode
-
-ShellUI includes automatic dark mode support. Toggle via:
-
-```razor
-@inject IThemeService Theme
-
-<Button OnClick="() => Theme.ToggleThemeAsync()">
-    Toggle Theme
-</Button>
-```
-
-Or manually set:
-
-```razor
-await Theme.SetThemeAsync("dark");
-await Theme.SetThemeAsync("light");
-await Theme.SetThemeAsync("system"); // Follow system preference
-```
-
-## Project Types
-
-### Blazor Server
+For an npm-based Tailwind workflow, use the v4 CLI package:
 
 ```bash
-dotnet new blazor -o MyApp
-cd MyApp
-dotnet shellui init
-dotnet shellui add button card
-dotnet run
+npm install -D tailwindcss@^4.3.2 @tailwindcss/cli@^4.3.2
+npx @tailwindcss/cli -i ./wwwroot/input.css -o ./wwwroot/app.css --watch
 ```
 
-### Blazor WebAssembly
+`shellui init --tailwind npm --yes` performs the package installation and creates the build integration. A normal build also runs Tailwind:
 
 ```bash
-dotnet new blazorwasm -o MyApp
-cd MyApp
-dotnet shellui init
-dotnet shellui add button card
-dotnet run
+dotnet build
 ```
 
-### Blazor SSR (Server-Side Rendering)
+## Manage installed components
 
 ```bash
-dotnet new blazor -o MyApp --interactivity None
-cd MyApp
-dotnet shellui init
-dotnet shellui add button card
-dotnet run
+shellui list
+shellui list --installed
+shellui list --available
+shellui update button
+shellui update button card
+shellui update --all
+shellui remove button card
 ```
 
-## Common Patterns
+`update` overwrites the selected source files directly. It has no comparison, merge, or force step. Commit or back up custom changes before running it.
 
-### Form with validation
+`remove` accepts component names separated by spaces and has no options. It removes the named files, but it does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-01` and `dashboard-02` currently require manual removal from `Components/Layout`. Check references before removing a component that another component may use.
 
-```razor
-@page "/register"
+## Apply a theme
 
-<Card class="max-w-md mx-auto">
-    <CardHeader>
-        <CardTitle>Create Account</CardTitle>
-    </CardHeader>
-    <CardContent>
-        <EditForm Model="@model" OnValidSubmit="HandleRegister">
-            <DataAnnotationsValidator />
-            
-            <div class="space-y-4">
-                <div>
-                    <Label For="email">Email</Label>
-                    <Input @bind-Value="model.Email" Type="email" Id="email" />
-                    <ValidationMessage For="() => model.Email" />
-                </div>
-                
-                <div>
-                    <Label For="password">Password</Label>
-                    <Input @bind-Value="model.Password" Type="password" Id="password" />
-                    <ValidationMessage For="() => model.Password" />
-                </div>
-                
-                <Button Type="submit" IsLoading="@isSubmitting">
-                    Register
-                </Button>
-            </div>
-        </EditForm>
-    </CardContent>
-</Card>
+The current source supports tweakcn themes:
 
-@code {
-    private RegisterModel model = new();
-    private bool isSubmitting;
-    
-    private async Task HandleRegister()
-    {
-        isSubmitting = true;
-        try
-        {
-            // Your registration logic
-            await Task.Delay(1000); // Simulate API call
-        }
-        finally
-        {
-            isSubmitting = false;
-        }
-    }
-    
-    public class RegisterModel
-    {
-        [Required, EmailAddress]
-        public string Email { get; set; } = "";
-        
-        [Required, MinLength(8)]
-        public string Password { get; set; } = "";
-    }
-}
-```
-
-### Dialog/Modal
-
-```razor
-<Button OnClick="() => showDialog = true">Open Dialog</Button>
-
-<Dialog Open="@showDialog" OnOpenChange="(open) => showDialog = open">
-    <DialogContent>
-        <DialogHeader>
-            <DialogTitle>Are you sure?</DialogTitle>
-            <DialogDescription>
-                This action cannot be undone.
-            </DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-            <Button Variant="outline" OnClick="() => showDialog = false">
-                Cancel
-            </Button>
-            <Button Variant="destructive" OnClick="HandleConfirm">
-                Confirm
-            </Button>
-        </DialogFooter>
-    </DialogContent>
-</Dialog>
-
-@code {
-    private bool showDialog;
-    
-    private void HandleConfirm()
-    {
-        // Your logic
-        showDialog = false;
-    }
-}
-```
-
-### Data table with actions
-
-```razor
-<Card>
-    <CardHeader>
-        <CardTitle>Users</CardTitle>
-    </CardHeader>
-    <CardContent>
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Actions</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                @foreach (var user in users)
-                {
-                    <TableRow>
-                        <TableCell>@user.Name</TableCell>
-                        <TableCell>@user.Email</TableCell>
-                        <TableCell>
-                            <Badge>@user.Role</Badge>
-                        </TableCell>
-                        <TableCell>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    <Button Variant="ghost" Size="sm">•••</Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem OnClick="() => EditUser(user)">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem OnClick="() => DeleteUser(user)">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </TableCell>
-                    </TableRow>
-                }
-            </TableBody>
-        </Table>
-    </CardContent>
-</Card>
-```
-
-## Tips & Best Practices
-
-### 1. Start with essential components
 ```bash
-dotnet shellui add button input label card alert
+shellui theme init <url-or-id> --yes --tailwind standalone
+shellui theme apply <url-or-id>
+shellui theme apply <url-or-id> --emit-override wwwroot/theme.css
+shellui theme update
 ```
 
-### 2. Use composition
-Build complex UIs by composing simple components together.
-
-### 3. Customize freely
-Don't be afraid to modify components - they're yours!
-
-### 4. Keep Tailwind running in watch mode
-During development:
-```bash
-npm run css:watch
-```
-
-### 5. Use variants consistently
-Stick to the default variants (default, outline, ghost, etc.) for consistency.
-
-### 6. Follow accessibility guidelines
-Components are accessible by default - keep it that way when customizing.
-
-### 7. Test across browsers
-Especially if you've customized components significantly.
-
-### 8. Update regularly
-```bash
-dotnet shellui update --all
-```
+`theme apply` updates `wwwroot/input.css` by default and writes `shellui.theme.lock`. Use `--emit-override` for a separate CSS file. Run `theme update` from the project root to re-fetch the recorded theme.
 
 ## Troubleshooting
 
-### Tailwind CSS not updating
+- Use `shellui` for a global tool and `dotnet shellui` for a local manifest.
+- Run `shellui list` to verify a target name.
+- Check that `wwwroot/input.css` contains `@import "tailwindcss";`.
+- Check `.shellui/bin/` for standalone mode or run `npm install` for npm mode.
+- Run `dotnet build` to invoke the generated Tailwind target.
 
-```bash
-# Rebuild Tailwind CSS
-npm run css:build
+## Related documentation
 
-# Or in watch mode
-npm run css:watch
-```
-
-### Component not found
-
-```bash
-# Make sure you're in the project directory
-cd YourBlazorProject
-
-# List available components
-dotnet shellui list
-```
-
-### Import errors
-
-Make sure `_Imports.razor` includes:
-```razor
-@using YourProject.Components.UI
-```
-
-### Dark mode not working
-
-1. Check `wwwroot/styles/input.css` has dark mode variables
-2. Ensure theme toggle component is implemented
-3. Verify `<html>` or `<body>` tag gets `dark` class applied
-
-## Getting Help
-
-- Documentation: https://shellui.dev/docs (Coming soon)
-- GitHub Issues: https://github.com/shellui-dev/shellui/issues
-- Discussions: https://github.com/shellui-dev/shellui/discussions
-
-## Next Steps
-
-- Explore all available components: `dotnet shellui list`
-- Check out examples: https://shellui.dev/examples (Coming soon)
-- Join the community: Discord link (Coming soon)
-- Star the repo: https://github.com/shellui-dev/shellui
-
----
-
-**Remember:** ShellUI is currently in development. This guide represents the planned developer experience for v1.0. Star the repo to follow progress!
-
+- [CLI syntax](CLI_SYNTAX.md)
+- [CLI installation](CLI_INSTALLATION.md)
+- [FAQ](FAQ.md)
+- [GitHub repository](https://github.com/shellui-dev/shellui)
+- [CLI package](https://www.nuget.org/packages/ShellUI.CLI)
+- [Component package](https://www.nuget.org/packages/ShellUI.Components)
