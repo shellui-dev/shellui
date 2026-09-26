@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
-# Prints the section of docs/RELEASE_NOTES.md for one version, used as the GitHub
-# release body. A section runs from its "# ShellUI v<version>" heading to the next
-# release heading. "# ..." lines inside fenced code blocks (shell comments in install
-# snippets) are not headings. Trailing blank lines and "---" separators are dropped.
-#
-# Exits 1 when the version has no section, so a tag can't publish without notes.
-#
 # Usage: scripts/extract-release-notes.sh <version> [notes-file]
-#   e.g. scripts/extract-release-notes.sh 0.3.0-rc.2
 set -euo pipefail
 
 version="${1:?usage: extract-release-notes.sh <version> [notes-file]}"

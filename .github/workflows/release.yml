@@ -24,9 +24,6 @@ jobs:
       id: version
       run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
-    # Runs before anything is built or pushed: a tag without a matching
-    # "# ShellUI v<version>" section in docs/RELEASE_NOTES.md fails here instead of
-    # publishing packages under a release body that describes some other version.
     - name: Extract release notes for this version
       run: bash scripts/extract-release-notes.sh "${{ steps.version.outputs.VERSION }}" > "$RUNNER_TEMP/release-body.md"
 

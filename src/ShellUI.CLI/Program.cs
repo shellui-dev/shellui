@@ -233,7 +233,6 @@ class Program
         {
             try
             {
-                // Non-zero exit so scripts and CI notice a partial install.
                 if (!await ComponentInstaller.InstallComponents(components, force))
                     Environment.Exit(1);
             }

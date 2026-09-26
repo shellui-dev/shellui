@@ -18,7 +18,7 @@
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
-    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
+    // Deprecated: use Class.
     [Parameter] public string ClassName { get; set; } = "";
     [Parameter] public bool UseNavList { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]

@@ -2,8 +2,6 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
-
-# Shell scripts run under bash (CI and Git Bash); a CRLF checkout breaks them.
 *.sh text eol=lf
 
 ###############################################################################

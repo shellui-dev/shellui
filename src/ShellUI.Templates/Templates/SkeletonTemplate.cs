@@ -26,7 +26,7 @@ public static class SkeletonTemplate
     [Parameter]
     public string? Class { get; set; }
 
-    // Deprecated alias for Class; kept so markup written against older ShellUI versions still applies.
+    // Deprecated: use Class.
     [Parameter]
     public string ClassName { get; set; } = """";
 

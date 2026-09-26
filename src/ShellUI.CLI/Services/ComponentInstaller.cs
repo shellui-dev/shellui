@@ -9,8 +9,6 @@ public class ComponentInstaller
 {
     private const string ShellUiJsSidebarApiMarker = "initSidebar: function (handle, dotNetRef)";
 
-    // Returns false when anything the consumer needs to compile is missing: an unknown or
-    // failed component (including a dependency) or a NuGet package that could not be added.
     public static async Task<bool> InstallComponents(string[] components, bool force)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
@@ -359,7 +357,6 @@ public class ComponentInstaller
         return true;
     }
 
-    // Returns the packages that could not be added.
     private static async Task<List<NuGetDependency>> InstallNuGetDependenciesAsync(ProjectInfo projectInfo, List<NuGetDependency> deps)
     {
         var failed = new List<NuGetDependency>();

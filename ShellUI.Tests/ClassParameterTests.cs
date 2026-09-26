@@ -7,16 +7,10 @@ using Xunit;
 
 namespace ShellUI.Tests;
 
-/// `Class` is the library-wide parameter for extra CSS classes. Components that only
-/// declared `ClassName` silently dropped `Class="..."`: Blazor routed it into
-/// AdditionalAttributes, where it could replace the component's own class attribute
-/// and strip its base styling (reported against Skeleton). `ClassName` remains as a
-/// deprecated alias, but it must never be the only way in.
 public class ClassParameterTests
 {
     private static readonly Regex DeclaresClassName = new(@"public string\?? ClassName\b");
     private static readonly Regex DeclaresClass = new(@"public string\? Class \{");
-    // Markup `@Class`, a Shell.Cn argument `, Class)` or a concatenation `+ Class)`.
     private static readonly Regex RendersClass = new(@"@Class\b|[,+]\s*Class\)");
 
     [Fact]
