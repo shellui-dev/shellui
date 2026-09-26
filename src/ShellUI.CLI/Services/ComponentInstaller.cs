@@ -9,7 +9,9 @@ public class ComponentInstaller
 {
     private const string ShellUiJsSidebarApiMarker = "initSidebar: function (handle, dotNetRef)";
 
-    public static async Task InstallComponents(string[] components, bool force)
+    // Returns false when anything the consumer needs to compile is missing: an unknown or
+    // failed component (including a dependency) or a NuGet package that could not be added.
+    public static async Task<bool> InstallComponents(string[] components, bool force)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
 
@@ -17,7 +19,7 @@ public class ComponentInstaller
         {
             AnsiConsole.MarkupLine("[red]ShellUI not initialized![/]");
             AnsiConsole.MarkupLine("[yellow]Run 'shellui init' first[/]");
-            return;
+            return false;
         }
 
         // Load config
@@ -27,7 +29,7 @@ public class ComponentInstaller
         if (config == null)
         {
             AnsiConsole.MarkupLine("[red]Failed to read shellui.json[/]");
-            return;
+            return false;
         }
 
         // Detect project for namespace
@@ -77,7 +79,7 @@ public class ComponentInstaller
 
         // Install collected NuGet dependencies once, after all source files are in place
         // (so `dotnet add package` doesn't restore between every component).
-        await InstallNuGetDependenciesAsync(projectInfo, pendingNuGetDeps);
+        var failedPackages = await InstallNuGetDependenciesAsync(projectInfo, pendingNuGetDeps);
 
         // Wire any installed wwwroot/ stylesheets into the host so the user doesn't
         // have to add <link> tags by hand. Detected via FilePath, which uses the
@@ -108,6 +110,10 @@ public class ComponentInstaller
             AnsiConsole.MarkupLine($"[yellow]Skipped {skippedCount} component(s) (already exists, use --force to overwrite)[/]");
         if (failedComponents.Count > 0)
             AnsiConsole.MarkupLine($"[red]Failed: {string.Join(", ", failedComponents)}[/]");
+        foreach (var pkg in failedPackages)
+            AnsiConsole.MarkupLine($"[red]Missing NuGet package:[/] {pkg.PackageId} — run `dotnet add package {pkg.PackageId} --version {pkg.Version}`");
+
+        return failedComponents.Count == 0 && failedPackages.Count == 0;
     }
 
     public static Task<bool> InstallComponentForInitAsync(
@@ -353,9 +359,11 @@ public class ComponentInstaller
         return true;
     }
 
-    private static async Task InstallNuGetDependenciesAsync(ProjectInfo projectInfo, List<NuGetDependency> deps)
+    // Returns the packages that could not be added.
+    private static async Task<List<NuGetDependency>> InstallNuGetDependenciesAsync(ProjectInfo projectInfo, List<NuGetDependency> deps)
     {
-        if (deps.Count == 0) return;
+        var failed = new List<NuGetDependency>();
+        if (deps.Count == 0) return failed;
 
         AnsiConsole.MarkupLine("");
         AnsiConsole.MarkupLine($"[cyan]Adding {deps.Count} NuGet package reference(s)...[/]");
@@ -378,6 +386,7 @@ public class ComponentInstaller
                 if (process == null)
                 {
                     AnsiConsole.MarkupLine($"[yellow]Warning:[/] could not start `dotnet add package` for {dep.PackageId}");
+                    failed.Add(dep);
                     continue;
                 }
 
@@ -391,13 +400,17 @@ public class ComponentInstaller
                 {
                     var err = (await process.StandardError.ReadToEndAsync()).Trim();
                     AnsiConsole.MarkupLine($"[yellow]Warning:[/] failed to add {dep.PackageId}: {err.Replace("[", "[[").Replace("]", "]]")}");
+                    failed.Add(dep);
                 }
             }
             catch (Exception ex)
             {
                 AnsiConsole.MarkupLine($"[yellow]Warning:[/] could not add {dep.PackageId}: {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
+                failed.Add(dep);
             }
         }
+
+        return failed;
     }
 
     internal static bool IsShellUiJsCompatible()
