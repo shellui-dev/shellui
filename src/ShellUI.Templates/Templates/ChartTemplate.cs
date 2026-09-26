@@ -42,6 +42,8 @@ public class ChartTemplate
     [Parameter] public string? Class { get; set; }
     [Parameter] public string? Height { get; set; } = ""400px"";
     [Parameter] public string? Width { get; set; } = ""100%"";
+    [Parameter] public bool ShowToolbar { get; set; }
+    [Parameter] public bool ShowLegend { get; set; } = true;
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     private ApexCharts.ApexChartOptions<TItem>? _chartOptions;
@@ -52,7 +54,7 @@ public class ChartTemplate
         {
             if (_chartOptions == null)
             {
-                _chartOptions = ChartVariants.GetOptions<TItem>(Theme);
+                _chartOptions = ChartVariants.GetOptions<TItem>(Theme, ShowToolbar, ShowLegend);
                 
                 // Apply title if provided
                 if (!string.IsNullOrEmpty(Title))
