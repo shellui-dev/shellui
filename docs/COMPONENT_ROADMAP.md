@@ -1,126 +1,110 @@
 # ShellUI Component Roadmap
 
-**Goal:** Build ALL components from shadcn/ui + extras needed for ShellDocs (Blazor fumadocs equivalent)
+**Goal:** Build the components and tooling needed for a Tailwind-first Blazor design system, including the foundations for ShellDocs.
 
-## Current Status: 68 Installable Components - v0.3.0-alpha
+**Current source:** `0.4.0-alpha.1` · .NET 10 · Tailwind CSS `4.3.2`
 
-### Completed (68 install targets; sub-components, variants, models, services auto-installed)
+## Current inventory
 
-Counts are top-level components users invoke directly via `shellui add <name>`. Anything that auto-installs as a dependency (e.g. `SidebarTrigger`, `DialogContent`, `ButtonVariants`, `SonnerService`) is not counted here.
+`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **173 entries**:
 
-**Form (17):** Button, Checkbox, Combobox, DatePicker, DateRangePicker, FileUpload, Form, Input, InputOTP, Label, RadioGroup, Select, Slider, Switch, Textarea, TimePicker, Toggle
+- **73 direct CLI targets** shown by `shellui list`
+- **100 hidden entries** for sub-components, variants, models, services, and support assets
+- **Packable projects:** `ShellUI.CLI` and `ShellUI.Components`
 
-**Layout (12):** Accordion, Breadcrumb, Card, Collapsible, DashboardLayout01, DashboardLayout02, LinkCard, Navbar, Resizable, ScrollArea, Separator, Sidebar
+Hidden entries are not counted as direct targets. They can still be installed recursively when a parent target declares them.
 
-**Navigation (7):** ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs
+### Implemented direct targets (73)
 
-**Overlay (8):** AlertDialog, Command, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
+The following categories describe the direct targets in the current registry, not a promise about future scope.
 
-**Data Display (13):** AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, DataTable, LineChart, MultiSeriesChart, PieChart, Table
+- [x] **Form (21):** Button, Checkbox, Combobox, DataPicker, DatePicker, DateRangePicker, FileUpload, Form, Input, InputOTP, Label, MultiSelect, RadioGroup, Select, Slider, Switch, TagInput, Textarea, TimePicker, Toggle, TypedSelect
+- [x] **Layout (12):** Accordion, Breadcrumb, Card, Collapsible, DashboardLayout01, DashboardLayout02, LinkCard, Navbar, Resizable, ScrollArea, Separator, Sidebar
+- [x] **Feedback (9):** Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
+- [x] **Overlay (9):** AlertDialog, Command, CommandPalette, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
+- [x] **Navigation (7):** ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs
+- [x] **Data Display (13):** AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, DataTable, LineChart, MultiSeriesChart, PieChart, Table
+- [x] **Utility (2):** CopyButton, ThemeToggle
 
-**Feedback (9):** Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
+### Implemented ShellDocs building blocks
 
-**Utility (2):** CopyButton, ThemeToggle
+- [x] **Callout** — information, warning, danger, and tip callouts
+- [x] **CopyButton** — clipboard copy interaction
+- [x] **LinkCard** — card-style related links
+- [x] **PrevNextNav** — previous/next page navigation
+- [x] **Breadcrumb** — route and section breadcrumbs
+- [x] **Tabs** — value-based tab navigation
+- [x] **Steps / Stepper** — step-by-step UI is available as `stepper`; there is no separate `steps` registry target
+- [x] **Command and CommandPalette** — command overlay and global hotkey wrapper
+- [x] **Sidebar, Navbar, ThemeToggle, and Table** — building blocks for a documentation shell and API reference
 
----
+The components above are implemented foundations. Dedicated documentation-site wrappers, content rendering, and search infrastructure are tracked separately below.
 
-## Compositional Upgrades (shadcn-style)
+## Compositional upgrades (done)
 
-Components upgraded to shadcn-style compositional API (explicit sub-components, no heavy ChildContent, explicit Value/Title props):
+The current registry provides explicit sub-components for these parent components. Where a parent declares them, the installer resolves them recursively; other parents may expose parts through a separate composition path.
 
-### ✅ Done
-- **Tabs** → TabsList, TabsTrigger, TabsContent (Value-based)
-- **Stepper** → StepperList, StepperStep, StepperContent (Value-based, Confirm on last)
-- **Collapsible** → CollapsibleTrigger, CollapsibleContent
-- **Dialog** → DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose
-- **Card** → CardHeader, CardTitle, CardDescription, CardContent, CardFooter
-- **Accordion** → AccordionTrigger, AccordionContent (Value optional; legacy Title + ChildContent still supported)
+- [x] **Tabs** — `TabsList`, `TabsTrigger`, `TabsContent`, value-based state
+- [x] **Stepper** — `StepperList`, `StepperStep`, `StepperContent`, optional confirmation on the last step
+- [x] **Collapsible** — `CollapsibleTrigger`, `CollapsibleContent`
+- [x] **Dialog** — `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`, `DialogClose`
+- [x] **Card** — `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`
+- [x] **Accordion** — `AccordionItem`, `AccordionTrigger`, `AccordionContent`
+- [x] **Dropdown** — `DropdownTrigger`, `DropdownContent`, `DropdownItem`
+- [x] **Popover** — `PopoverTrigger`, `PopoverContent`
+- [x] **HoverCard** — `HoverCardTrigger`, `HoverCardContent`
+- [x] **Carousel** — `CarouselList`, `CarouselSlide`, and navigation parts
+- [x] **ContextMenu** — `ContextMenuTrigger`, `ContextMenuContent`, `ContextMenuOption`
+- [x] **NavigationMenu** — `NavList`, `NavItem`, `NavTrigger`, `NavContent`
+- [x] **Select** — `SelectTrigger`, `SelectContent`, `SelectItem`; the native select remains the default path
+- [x] **Drawer and Sheet** — explicit trigger/content and variant support
 
-- **Dropdown** → DropdownTrigger, DropdownContent, DropdownItem (legacy Trigger/ChildContent supported)
-- **Popover** → PopoverTrigger, PopoverContent (legacy Trigger/ChildContent supported)
-- **HoverCard** → HoverCardTrigger, HoverCardContent (legacy ChildContent/CardContent supported)
+The intended pattern is explicit child components, cascaded state and callbacks, value/label parameters, and Tailwind utility classes matching the shadcn-style API.
 
-- **Carousel** → CarouselList, CarouselSlide (Value-based; UseCarouselList=true)
-- **ContextMenu** → ContextMenuTrigger, ContextMenuContent, ContextMenuOption (legacy Items supported)
-- **NavigationMenu** → NavList, NavItem, NavTrigger, NavContent (UseNavList=true)
-- **Select** → SelectTrigger, SelectContent, SelectItem (UseCustomSelect=true; native select default)
+## Unscheduled ideas
 
-### 🔲 Candidates for upgrade
+These are genuinely unscheduled ideas. They are not current registry targets, and no date or release commitment is implied.
 
-### Pattern
-- Root component cascades context (state, callbacks)
-- Sub-components use `Value` for selection, `Title`/`Description` for labels
-- No monolithic `ChildContent` with implicit structure
-- Styling via Tailwind classes matching shadcn defaults
+### ShellDocs-specific components and infrastructure
 
----
+- [ ] **CodeBlock** — syntax highlighting, copy action, line numbers, highlighting, and filename tabs
+- [ ] **MDX / MarkdownRenderer** — Markdown or MDX parsing and component embedding
+- [ ] **FileTree** — file and folder navigation with icons
+- [ ] **Full-text SearchDialog** — a searchable documentation index; `CommandPalette` currently provides the command overlay, not a full-text index
+- [ ] **TableOfContents** — heading extraction and scroll-spy state
+- [ ] **DocsSidebar wrapper** — documentation-specific navigation assembled from the existing `Sidebar`
+- [ ] **DocsHeader wrapper** — documentation header composed from existing navigation, search, and theme pieces
+- [ ] **DocsBreadcrumb wrapper** — route-aware breadcrumb generation using the existing `Breadcrumb`
+- [ ] **TypeTable** — generated API and props reference table
+- [ ] **Tabs (Docs variant)** — a documentation-specific code-tab presentation built on the existing `Tabs`
+- [ ] **ShellDocs pipeline** — frontmatter parsing, file-based routing, search-index generation, syntax highlighting, and live component previews
 
-## Remaining Components
+### UI enhancements
 
-### Priority 1: ShellDocs Essentials (Required for documentation site)
-These components are needed to build ShellDocs - the Blazor equivalent of fumadocs.
+- [ ] **TreeView** — hierarchical tree with expansion, selection, and drag-and-drop
+- [ ] **Timeline** — vertical event timeline with icons and content
+- [ ] **AspectRatio** — constrained aspect-ratio container
+- [ ] **ColorPicker** — swatches and HEX/RGB input
+- [ ] **Toggle Group** — single- or multi-select toggle groups
+- [ ] **Number Input** — increment and decrement number input
 
-- [ ] **CodeBlock** - Syntax highlighted code with copy button, line numbers, line highlighting, filename tab
-- [ ] **MDX / MarkdownRenderer** - Render MDX/Markdown content with component support
-- [ ] **Callout** - Info/warning/danger/tip callout boxes (like Docusaurus admonitions)
-- [ ] **Steps** - Numbered step-by-step instructions (vertical)
-- [ ] **FileTree** - Display file/folder structure with icons
-- [ ] **Tabs (Docs variant)** - Code tabs for multi-language examples (npm/yarn/pnpm)
-- [ ] **SearchDialog** - Full-text search overlay (Cmd+K style, extends Command)
-- [ ] **CopyButton** - One-click copy to clipboard
-- [ ] **TableOfContents** - Auto-generated from headings, scroll-spy active state
-- [ ] **DocsSidebar** - Collapsible docs navigation with sections/groups
-- [ ] **DocsHeader** - Top nav with search, theme toggle, github link
-- [ ] **DocsBreadcrumb** - Auto-generated from route hierarchy
-- [ ] **PrevNextNav** - Previous/Next page navigation at bottom of docs
-- [ ] **TypeTable** - API/Props reference table (component name, type, default, description)
-- [ ] **LinkCard** - Card-style links for related pages
+### Rich content
 
-### Priority 2: UI Enhancements
-- [ ] **TreeView** - Hierarchical tree with expand/collapse, selection, drag-drop
-- [ ] **Timeline** - Vertical event timeline with icons and content
-- [ ] **AspectRatio** - Constrained aspect ratio container
-- [ ] **ColorPicker** - Color selection with swatches, hex/rgb input
-- [ ] **Toggle Group** - Group of toggles (single/multi select)
-- [ ] **Number Input** - Increment/decrement number input
+- [ ] **RichTextEditor** — WYSIWYG editor
+- [ ] **KanbanBoard** — drag-and-drop columns and cards
+- [ ] **VirtualScroll** — virtualized list for large datasets
+- [ ] **InfiniteScroll** — load more on scroll
 
-### Priority 3: Rich Content
-- [ ] **RichTextEditor** - WYSIWYG editor (consider Quill or ProseMirror)
-- [ ] **KanbanBoard** - Drag-and-drop columns and cards
-- [ ] **VirtualScroll** - Virtualized list for large datasets
-- [ ] **InfiniteScroll** - Load more on scroll
+### Media and utilities
 
-### Priority 4: Media & Utilities
-- [ ] **ImageViewer** - Lightbox with zoom/pan
-- [ ] **VideoPlayer** - Video playback controls
-- [ ] **QRCode** - QR code generator
-- [ ] **Barcode** - Barcode display
+- [ ] **ImageViewer** — lightbox with zoom and pan
+- [ ] **VideoPlayer** — video playback controls
+- [ ] **QRCode** — QR code generation
+- [ ] **Barcode** — barcode display
 
----
+## Roadmap maintenance
 
-## ShellDocs Architecture Notes
-
-ShellDocs will need:
-1. **MDX Pipeline** - Parse .mdx files, extract frontmatter, render with Blazor components
-2. **File-based routing** - Docs pages from folder structure (like fumadocs/Nextra)
-3. **Search index** - Build-time index generation for full-text search
-4. **Syntax highlighting** - Prism.js or Shiki via JS interop
-5. **Component embedding** - Render ShellUI components inline in docs (live preview)
-
-### Key ShellDocs Pages:
-- Landing page (hero, features grid, code example)
-- Component docs (props table, live preview, code examples)
-- Getting started guide (steps, code blocks)
-- API reference (type tables, method signatures)
-- Changelog (timeline)
-
----
-
-## Timeline
-
-- v0.1.0 (Dec 2025) - 73 components, CLI + NuGet
-- v0.1.1 (Dec 2025) - Hotfix, package publishing
-- **v0.3.0-alpha (Feb 2026) - Current alpha: Charts, 68 installable components, Tailwind 4.3.1**
-- v0.3.0 (Q1 2026) - ShellDocs components (CodeBlock, MDX, Callout, Steps, etc.)
-- v0.4.0 (Q2 2026) - ShellDocs site launch
-- v1.0.0 (Q2-Q3 2026) - .NET 10, stable API, comprehensive docs
+- Derive direct counts, names, categories, availability, and dependencies from `ComponentRegistry`.
+- Move an idea into the implemented section only when it has a registered target and a working CLI installation path.
+- Do not infer that a component is standalone from a prose list; use the dependency metadata described in [COMPONENT_DEPENDENCIES.md](COMPONENT_DEPENDENCIES.md).
+- Keep future ideas explicitly unscheduled until a release owner assigns a scope and date.

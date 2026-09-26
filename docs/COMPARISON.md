@@ -1,429 +1,136 @@
 # ShellUI vs Other Blazor UI Libraries
 
-A comprehensive comparison of ShellUI with other popular Blazor component libraries.
-
-## Quick Comparison Table
-
-| Feature | ShellUI | MudBlazor | Radzen | Blazorise | Ant Design Blazor | Sysinfocus |
-|---------|---------|-----------|--------|-----------|-------------------|------------|
-| **Distribution** | CLI (Copy) | NuGet | NuGet | NuGet | NuGet | NuGet |
-| **Customization** | Full Source | Limited | Limited | Limited | Limited | Limited |
-| **CSS Framework** | Tailwind v4 | Custom | Bootstrap | Bootstrap/Custom | Ant Design | Custom |
-| **Component Count** | 68 | 50+ | 90+ | 80+ | 60+ | 60+ |
-| **Open Source** | Yes (MIT) | Yes (MIT) | Partial | Yes (MIT) | Yes (MIT) | Yes (MIT) |
-| **Commercial License** | Free | Free | Paid Plans | Free | Free | Free |
-| **Dark Mode** | Built-in | Built-in | Built-in | Built-in | Built-in | Built-in |
-| **Accessibility** | WCAG 2.1 AA | Good | Good | Good | Good | Good |
-| **Bundle Size** | Minimal | Medium | Large | Medium | Large | Medium |
-| **Learning Curve** | Easy | Medium | Easy | Medium | Medium | Easy |
-| **Code Ownership** | Yes | No | No | No | No | No |
-| **CLI Tool** | Yes | No | No | No | No | No |
-| **Server Support** | Yes | Yes | Yes | Yes | Yes | Yes |
-| **WASM Support** | Yes | Yes | Yes | Yes | Yes | Yes |
-| **SSR Support** | Yes | Yes | Limited | Yes | Yes | Yes |
-
-## Detailed Comparisons
-
-### ShellUI vs MudBlazor
-
-#### MudBlazor Strengths
-- **Mature ecosystem:** Established library with years of development
-- **More components:** 50+ components out of the box
-- **Material Design:** Follows Material Design guidelines
-- **Active community:** Large community and extensive examples
-- **Grid system:** Built-in responsive grid system
-- **Rich documentation:** Comprehensive docs and examples
-
-#### ShellUI Advantages
-- **Full customization:** Edit component source code directly
-- **Modern tooling:** CLI-based workflow like modern web frameworks
-- **Tailwind CSS:** Use the most popular utility-first framework
-- **Smaller bundle:** Include only what you use
-- **No lock-in:** Not tied to package versions
-- **Better debugging:** See full component source in your project
-- **Latest CSS:** Tailwind v4 with modern features
-- **Component variants:** Multiple style options per component
-
-#### When to Choose MudBlazor
-- You want Material Design aesthetics
-- You need a mature, battle-tested solution
-- You prefer NuGet package distribution
-- You need advanced components (Charts, DataGrid, etc.)
-- You want to get started quickly without setup
-
-#### When to Choose ShellUI
-- You want full control over component code
-- You prefer Tailwind CSS for styling
-- You need to customize components heavily
-- You want minimal bundle size
-- You like CLI-based workflows
-- You want to learn component internals
-
----
-
-### ShellUI vs Radzen
-
-#### Radzen Strengths
-- **Component count:** 90+ components
-- **DataGrid:** Powerful, feature-rich data grid
-- **Charts:** Built-in charting components
-- **Free tier:** Many components available free
-- **Visual builder:** Radzen Studio for visual development
-- **Database integration:** Built-in data access features
-- **Templates:** Ready-made application templates
-
-#### ShellUI Advantages
-- **Fully free:** All components free, no paid tiers
-- **Customization:** Edit any component source
-- **Modern CSS:** Tailwind v4 instead of Bootstrap
-- **Lighter weight:** No heavy framework dependencies
-- **CLI workflow:** Modern developer experience
-- **Transparent code:** See exactly how components work
-- **Community-driven:** Open development process
-
-#### When to Choose Radzen
-- You need a comprehensive RAD tool
-- You want visual development capabilities
-- You need advanced data components
-- You're building line-of-business apps quickly
-- You prefer Bootstrap styling
-
-#### When to Choose ShellUI
-- You want lightweight, focused components
-- You prefer code-first approach
-- You need full customization capabilities
-- You want Tailwind CSS styling
-- You're building modern, custom UIs
-- Budget is a concern (all free)
-
----
-
-### ShellUI vs Blazorise
-
-#### Blazorise Strengths
-- **CSS framework flexibility:** Supports Bootstrap, Tailwind, Bulma, etc.
-- **Provider model:** Switch CSS frameworks easily
-- **80+ components:** Comprehensive component library
-- **Commercial features:** Advanced components in paid tier
-- **Extensive docs:** Well-documented with examples
-- **Community:** Active Discord community
-
-#### ShellUI Advantages
-- **Native Tailwind:** Built for Tailwind from ground up
-- **No abstraction layer:** Direct Tailwind usage
-- **Source code access:** Edit components directly
-- **CLI installation:** Modern installation workflow
-- **Fully free:** No paid tiers
-- **Simpler architecture:** No provider abstraction
-- **Better DX:** Copy-paste components into your project
-
-#### When to Choose Blazorise
-- You want flexibility to switch CSS frameworks
-- You need components not yet in ShellUI
-- You want a mature, stable solution
-- You need commercial support
-
-#### When to Choose ShellUI
-- You're committed to Tailwind CSS
-- You want simpler, more transparent components
-- You need to customize heavily
-- You prefer CLI-based workflows
-- You want to avoid subscription costs
-
----
-
-### ShellUI vs Ant Design Blazor
-
-#### Ant Design Blazor Strengths
-- **Ant Design system:** Follows popular Ant Design guidelines
-- **Enterprise features:** Built for enterprise applications
-- **60+ components:** Comprehensive component set
-- **Chinese market:** Strong presence in Chinese market
-- **Forms:** Advanced form handling
-- **Pro components:** Premium enterprise templates
-
-#### ShellUI Advantages
-- **Western design:** Follows Western design patterns
-- **Tailwind flexibility:** More flexible than Ant Design system
-- **Customization:** Edit component source directly
-- **Smaller footprint:** Lighter than Ant Design
-- **Modern approach:** CLI-first, copy-paste workflow
-- **No design lock-in:** Not tied to specific design language
-
-#### When to Choose Ant Design Blazor
-- You like Ant Design aesthetics
-- You need enterprise components
-- You're building for Chinese market
-- You want a complete design system
-
-#### When to Choose ShellUI
-- You want design flexibility
-- You prefer Western design patterns
-- You need lightweight components
-- You want full customization control
-- You prefer Tailwind CSS
-
----
-
-### ShellUI vs Sysinfocus simple/ui
-
-#### Sysinfocus simple/ui Strengths
-- **Original foundation:** ShellUI is forked from this
-- **60+ components:** Mature component collection
-- **Works today:** Production-ready now
-- **Simple setup:** Straightforward NuGet installation
-- **Free:** Completely free to use
-
-#### ShellUI Advantages
-- **Modern architecture:** CLI-first approach
-- **Tailwind CSS:** Modern utility framework
-- **Full control:** Source code in your project
-- **Better DX:** Improved developer experience
-- **Active development:** Ongoing modernization
-- **Component ownership:** You own the code
-- **Future-proof:** Modern patterns and tools
-
-#### When to Choose Sysinfocus simple/ui
-- You need a solution today
-- You prefer traditional NuGet packages
-- You don't need Tailwind CSS
-- You want proven stability
-
-#### When to Choose ShellUI
-- You want the modern evolution
-- You need Tailwind CSS support
-- You want CLI workflow
-- You need full customization
-- You're starting a new project
-- You can wait for v1.0 release
-
----
-
-## Philosophy Comparison
-
-### Traditional Libraries (MudBlazor, Radzen, etc.)
-
-Package Manager (NuGet) → Install Complete Library → Import Components → Limited Customization → Update via Package Manager
-
-**Pros:**
-- Quick setup
-- Batteries included
-- Stable versions
-- Easy updates
-
-**Cons:**
-- Large bundle sizes
-- Limited customization
-- Version lock-in
-- Hidden implementation
-
-### ShellUI Approach
-
-CLI Tool → Choose Components → Copy to Your Project → Full Customization → You Control Updates
-
-**Pros:**
-- Minimal bundle size
-- Full customization
-- No lock-in
-- Transparent code
-- Modern DX
-
-**Cons:**
-- More setup initially
-- You manage updates
-- Component code visible (could be messy)
-
----
-
-## Use Case Recommendations
-
-### Choose ShellUI if you:
-- Want to learn how components work
-- Need heavy customization
-- Prefer Tailwind CSS
-- Like modern CLI tools (similar to shadcn/ui)
-- Want minimal bundle size
-- Value code ownership
-- Are building a custom design system
-- Want to avoid package dependencies
-
-### Choose MudBlazor if you:
-- Want Material Design
-- Need a mature, proven solution
-- Prefer comprehensive out-of-the-box features
-- Want minimal setup
-- Need production-ready now
-- Value stability over flexibility
-
-### Choose Radzen if you:
-- Need a visual builder
-- Want comprehensive components immediately
-- Are building LOB apps quickly
-- Need advanced data components
-- Budget for professional tier
-
-### Choose Blazorise if you:
-- Want CSS framework flexibility
-- Need to switch frameworks later
-- Want abstraction from CSS details
-- Need commercial support options
-
-### Choose Ant Design Blazor if you:
-- Like Ant Design aesthetics
-- Need enterprise features
-- Are building for Asian markets
-- Want a complete design language
-
----
-
-## Migration Paths
-
-### From MudBlazor to ShellUI
-1. Component mapping mostly straightforward
-2. Replace Material Design classes with Tailwind
-3. Adjust to prop naming differences
-4. Test accessibility features
-5. Update form validation approach
-
-### From Radzen to ShellUI
-1. Replace Bootstrap classes with Tailwind
-2. Simplify complex components
-3. Implement data features separately
-4. Adjust event handling patterns
-
-### From Blazorise to ShellUI
-1. Remove provider layer
-2. Replace CSS framework classes
-3. Update component APIs
-4. Simplify component hierarchy
-
-### From Sysinfocus to ShellUI
-1. Use CLI instead of NuGet
-2. Copy components to project
-3. Update to Tailwind classes
-4. Adjust API changes
-5. See [ReleaseNotes.md](ReleaseNotes.md) for detailed migration
-
----
-
-## Performance Comparison
-
-**Note:** These are estimates for v1.0. Actual benchmarks will be published.
-
-### Bundle Size (Typical App with 10 Components)
-
-| Library | Blazor Server | Blazor WASM |
-|---------|---------------|-------------|
-| ShellUI | ~50 KB | ~150 KB |
-| MudBlazor | ~200 KB | ~500 KB |
-| Radzen | ~300 KB | ~800 KB |
-| Blazorise | ~150 KB | ~400 KB |
-| Ant Design | ~250 KB | ~700 KB |
-
-**Why ShellUI is smaller:**
-- Only includes used components
-- No framework overhead
-- Tailwind purges unused CSS
-- No compiled DLL
-
-### First Paint Time
-
-| Library | Server | WASM |
-|---------|--------|------|
-| ShellUI | Fast | Fast |
-| MudBlazor | Fast | Medium |
-| Radzen | Medium | Slow |
-| Blazorise | Fast | Medium |
-| Ant Design | Medium | Slow |
-
-### Runtime Performance
-
-All libraries perform similarly at runtime. Differences are negligible for most applications.
-
----
-
-## Community Comparison
-
-### Community Size (Estimated)
-
-| Library | GitHub Stars | Discord/Community |
-|---------|--------------|-------------------|
-| MudBlazor | 7k+ | 5k+ members |
-| Radzen | 3k+ | Active forums |
-| Blazorise | 3k+ | 2k+ members |
-| Ant Design | 5k+ | Active (Chinese) |
-| ShellUI | Starting | Building |
-
-**Note:** ShellUI is new. Community will grow with v1.0 release.
-
----
-
-## Decision Matrix
-
-Answer these questions to choose:
-
-1. **Do you need it production-ready today?**
-   - Yes → MudBlazor, Radzen, Blazorise
-   - No/Can wait → ShellUI
-
-2. **How important is customization?**
-   - Critical → ShellUI
-   - Important → Blazorise
-   - Nice to have → MudBlazor, Radzen
-
-3. **What's your CSS preference?**
-   - Tailwind → ShellUI
-   - Bootstrap → Blazorise, Radzen
-   - Material → MudBlazor
-   - Ant Design → Ant Design Blazor
-   - Don't care → Any
-
-4. **How important is bundle size?**
-   - Critical → ShellUI
-   - Important → Blazorise
-   - Not concerned → Radzen
-
-5. **What's your budget?**
-   - Free only → ShellUI, MudBlazor, Blazorise, Ant Design
-   - Can pay → Radzen (professional tier)
-
-6. **Developer experience preference?**
-   - Modern CLI → ShellUI
-   - Traditional NuGet → Others
-   - Visual tools → Radzen
-
----
-
-## Conclusion
-
-**ShellUI is best for developers who:**
-- Value code ownership and customization
-- Prefer modern, CLI-based workflows
-- Love Tailwind CSS
-- Want minimal dependencies
-- Are building custom design systems
-- Prioritize learning and understanding
-
-**Traditional libraries are best for developers who:**
-- Need production-ready solutions immediately
-- Prefer comprehensive, batteries-included approaches
-- Want established communities
-- Don't need heavy customization
-- Prioritize quick delivery
-
-Both approaches are valid. Choose based on your project needs, team preferences, and timeline.
-
----
-
-**Want to try ShellUI?**
-
-Follow development: [GitHub Repository](https://github.com/shellui-dev/shellui)
-
-**Currently using another library?**
-
-Migration guides will be available at v1.0 release.
-
-**Questions?**
-
-Open a GitHub Discussion to compare use cases with the community.
+This is a qualitative comparison, not a benchmark report. Library features, package contents, licensing, and community activity change independently; verify the current project documentation before making a production decision.
 
+## Current ShellUI snapshot
+
+- **Source version:** `0.4.0-alpha.1`
+- **Target framework:** .NET 10
+- **Tailwind CSS:** `4.3.2`
+- **CLI inventory:** 73 direct targets, 173 registry entries, and 100 hidden entries
+- **Distribution:** the CLI copies source into an application; the repository also contains the packable `ShellUI.Components` package
+- **Packaging boundary:** only `ShellUI.CLI` and `ShellUI.Components` are packable. `ShellUI.Core` and `ShellUI.Templates` are internal/non-packable projects.
+
+The direct-target count is the number users invoke with `shellui add`. It is not directly comparable to a package's total file or sub-component count.
+
+## Quick comparison
+
+| Area | ShellUI | MudBlazor | Radzen | Blazorise | Ant Design Blazor | Sysinfocus simple/ui |
+|---|---|---|---|---|---|---|
+| Distribution | CLI source-copy workflow; `ShellUI.Components` is packable | NuGet package | NuGet package | NuGet package | NuGet package | NuGet package |
+| CSS model | Tailwind CSS `4.3.2` | Material-oriented component styling | Project-specific component styling | Provider-based CSS options | Ant Design styling | Project-specific styling |
+| Direct component count | 73 CLI targets; 173 registry entries; 100 hidden | Not audited here | Not audited here | Not audited here | Not audited here | Not audited here |
+| Source customization | Copied component source can be edited | Package/API customization | Package/API customization | Package/API customization | Package/API customization | Package/API customization |
+| CLI workflow | Yes | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison |
+| Accessibility status | Semantic markup is used; no current WCAG conformance claim | Not audited here | Not audited here | Not audited here | Not audited here | Not audited here |
+| Bundle/performance status | No current reproducible benchmark published | No current benchmark published here | No current benchmark published here | No current benchmark published here | No current benchmark published here | No current benchmark published here |
+| Community status | Current project is an alpha snapshot; no comparable size claim | See the current project community | See the current project community | See the current project community | See the current project community | See the current project community |
+
+The “not audited here” cells are intentional. They avoid presenting stale component counts, community metrics, or performance estimates as if they were current facts.
+
+## ShellUI's differentiators
+
+### CLI-first source ownership
+
+`shellui init` creates the project integration and `shellui add` writes the selected component source into the application. That makes the generated code inspectable and editable. It also means the application owns the installed code and must manage updates to customized files.
+
+### Tailwind-first composition
+
+ShellUI templates use Tailwind utility classes and CSS variables. The current source pins Tailwind CSS `4.3.2`; the generated Tailwind setup uses the v4 CSS entry point rather than the older v3 `@import` layer sequence.
+
+### Registry-driven dependencies
+
+`ComponentRegistry` is authoritative for the 73 direct targets, 100 hidden support entries, source dependencies, and NuGet dependencies. A component's visible sub-components or support files do not imply that it is a standalone package.
+
+### Compositional APIs
+
+Dialog, Card, Tabs, Stepper, Select, Sidebar, Carousel, Dropdown, Popover, ContextMenu, NavigationMenu, Drawer, and Sheet have explicit registry-managed sub-components where supported. See the [component roadmap](COMPONENT_ROADMAP.md) and [dependency guide](COMPONENT_DEPENDENCIES.md) for the current scope.
+
+## When ShellUI may fit
+
+Choose ShellUI when the project benefits from:
+
+- Direct ownership and editing of copied Blazor component source
+- Tailwind CSS as the styling foundation
+- A CLI workflow similar to copy-based component libraries
+- A .NET 10 component source that can be adapted for a particular application
+- Explicit control over generated code and dependencies
+
+These are workflow and architecture characteristics, not a claim that ShellUI has more features, better performance, or broader compatibility than every packaged library.
+
+## When another library may fit
+
+Consider a packaged library when the project values a maintained package update path, a vendor-provided visual builder, or a complete pre-integrated design system. The right choice depends on the exact components, render mode, accessibility testing, support requirements, and release cadence required by the application.
+
+| Library | Characteristic to evaluate in its current documentation |
+|---|---|
+| MudBlazor | Material-oriented component set and package-based delivery |
+| Radzen | Data-heavy components, visual tooling, and commercial offerings |
+| Blazorise | Provider choices and CSS-framework flexibility |
+| Ant Design Blazor | Ant Design conventions and enterprise-oriented components |
+| Sysinfocus simple/ui | The package-based foundation and its current feature set |
+
+Descriptions here are orientation points, not a current feature audit.
+
+## Accessibility
+
+ShellUI components use semantic HTML and accessibility-oriented attributes where appropriate, but the repository does not publish a current WCAG 2.1 AA conformance audit. Do not treat the project as certified or universally accessible without testing the rendered application.
+
+For an application using ShellUI or another library, test at least:
+
+- Keyboard navigation and visible focus
+- Screen-reader names, roles, and state changes
+- Dialogs, menus, tabs, comboboxes, and other focus-managed overlays
+- Color contrast and reduced-motion behavior
+- Validation and error announcements
+- The target browser, render mode, and assistive-technology combination
+
+## Performance and bundle size
+
+No reproducible ShellUI-versus-library benchmark is published in this repository, so the old estimated bundle-size and first-paint tables should not be used as evidence. Actual output depends on the selected components, Tailwind scanning, compression, hosting model, render mode, and browser cache state.
+
+A useful comparison should use the same .NET 10 application, release configuration, component set, theme, and host. Measure the generated CSS and application payload, then record the exact build and runtime conditions.
+
+The CLI's copy-based model can avoid installing unused component source, but it is not a guarantee of a smaller final application. Conversely, a NuGet package is not automatically larger or smaller for every consumer.
+
+## Community and support
+
+Community size is not a stable, comparable metric. Stars, forum activity, Discord membership, and commercial support change over time, and no current comparable dataset is maintained here. Check the official project repositories and support channels directly.
+
+ShellUI is currently an alpha snapshot (`0.4.0-alpha.1`). Treat the current source as an actively changing implementation and validate the specific release or commit you plan to use.
+
+## Migration considerations
+
+### From a packaged Blazor library
+
+1. Inventory the components and behavior actually used.
+2. Map package components to ShellUI direct targets where an equivalent exists.
+3. Replace package imports and provider configuration with the ShellUI initialization and Tailwind setup.
+4. Review event names, parameter types, validation, and JavaScript requirements.
+5. Test accessibility, rendering mode, and browser behavior before shipping.
+
+### From Sysinfocus simple/ui
+
+1. Initialize the project with the ShellUI CLI.
+2. Add the direct targets that replace the components in use.
+3. Review the generated Tailwind variables and CSS.
+4. Adjust API differences and test the resulting application.
+5. Consult the [release notes](RELEASE_NOTES.md) for historical migration context.
+
+## Decision checklist
+
+- **Need source-level control?** ShellUI is designed around copied, editable source.
+- **Prefer a package update path?** Evaluate the current support and release model of a packaged library.
+- **Need Tailwind?** ShellUI's current templates target Tailwind CSS `4.3.2`.
+- **Need a specific advanced component?** Confirm that the exact component is in the current registry before choosing a library.
+- **Need accessibility or performance guarantees?** Run project-specific audits and benchmarks; this document does not provide either guarantee.
+
+## Current ShellUI references
+
+- [Component roadmap](COMPONENT_ROADMAP.md)
+- [Component dependency metadata guide](COMPONENT_DEPENDENCIES.md)
+- [Tailwind setup guide](tailwind-setup.md)
+- [Release notes](RELEASE_NOTES.md)
+- [GitHub repository](https://github.com/shellui-dev/shellui)
+- [ShellUI.Components on NuGet](https://www.nuget.org/packages/ShellUI.Components)
+- [ShellUI documentation](https://shellui.dev)
