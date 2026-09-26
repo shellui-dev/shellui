@@ -1,6 +1,6 @@
 # Contributing to ShellUI
 
-This guide applies to the current source version `0.4.0-alpha.1`, which targets .NET 10 and Tailwind CSS `4.3.2`. It describes the current contribution and verification workflow rather than a planned release process.
+ShellUI targets .NET 10 and Tailwind CSS `4.3.2`. This guide describes the contribution and verification workflow; releases are covered in [VERSIONING_STRATEGY.md](../VERSIONING_STRATEGY.md).
 
 ## Contribution Policy
 
@@ -45,7 +45,7 @@ dotnet restore ShellUI.slnx
 dotnet build ShellUI.slnx --configuration Release
 ```
 
-The CLI supports the implemented commands `init`, `add`, `list`, `remove`, `update`, `theme init`, `theme apply`, and `theme update`. Use the current source build when testing local changes; do not substitute an older published CLI merely because it is easier to install.
+The CLI supports the implemented commands `init`, `add`, `list`, `remove`, `update`, `theme init`, `theme apply`, and `theme update`. Use a local build when testing changes; do not substitute an older published CLI merely because it is easier to install.
 
 The precompiled CSS and safelist are generated as part of the CI workflow. When changing component CSS, variant helpers, or safelist inputs, regenerate the safelist and then build the bundle:
 
@@ -93,7 +93,7 @@ For a component change:
 
 1. Update the live component and its generated template together.
 2. Update registry metadata, dependencies, `FilePath`, variants, and NuGet dependencies when the public contract changes.
-3. Preserve the distinction between direct targets and hidden dependency entries. The current registry has 173 entries, including 73 direct targets and 100 hidden entries.
+3. Preserve the distinction between direct targets and hidden dependency entries. The current registry has 176 entries, including 76 direct targets and 100 hidden entries.
 4. Use the Tailwind `4.3.2` variable and utility conventions already used by the project.
 5. Add or update tests that exercise the changed registry, template, or CLI behavior.
 6. Review keyboard and assistive-technology behavior without claiming a blanket accessibility conformance level that the repository does not test.
@@ -115,12 +115,12 @@ For a new command or option:
 
 Documentation in this repository should be verifiable against the checkout:
 
-- Use `0.4.0-alpha.1` for the current source and identify published releases separately.
+- Refer to `Directory.Build.props` for the version instead of repeating it; install commands may pin the latest release.
 - Use `ShellUI.slnx` and the six solution project paths; do not point contributors at paths that are not in the checkout.
 - Distinguish the demo at `NET10/BlazorInteractiveServer` from solution membership.
 - Use the actual CLI command names and current test packages.
 - Link only to files that exist in the repository.
-- Treat `RELEASE_NOTES.md` as historical release information when it is referenced; do not rewrite historical entries to describe the current source.
+- Add a `# ShellUI v<version>` section to `RELEASE_NOTES.md` for each release; do not rewrite earlier sections.
 - Label unimplemented ideas as unscheduled proposals. Do not add dates, adoption targets, performance promises, or unsupported accessibility compliance claims.
 
 ## Style and Review Expectations

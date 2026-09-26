@@ -4,10 +4,10 @@
 
 ## Registry snapshot
 
-- **173** total registry entries
-- **73** direct CLI targets (`IsAvailable = true`)
+- **176** total registry entries
+- **76** direct CLI targets (`IsAvailable = true`)
 - **100** hidden entries (`IsAvailable = false`)
-- `shellui list` displays the 73 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
+- `shellui list` displays the 76 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
 `Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
 
@@ -39,6 +39,7 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `dashboard-02` | `sidebar`, `breadcrumb`, `separator`, `theme-toggle`, `app-sidebar` | — |
 | `data-table` | `data-table-models` | `System.Linq.Dynamic.Core` `1.7.1` |
 | `dialog` | `dialog-trigger`, `dialog-content`, `dialog-header`, `dialog-footer`, `dialog-title`, `dialog-description`, `dialog-close` | — |
+| `donut-chart` | `chart` | — |
 | `drawer` | `drawer-variants`, `drawer-trigger`, `drawer-content` | — |
 | `empty-state` | `button` | — |
 | `file-upload` | `shellui-js` | — |
@@ -49,6 +50,8 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `multi-series-chart` | `chart`, `chart-series` | — |
 | `navigation-menu` | `navigation-menu-item` | — |
 | `pie-chart` | `chart` | — |
+| `radar-chart` | `chart` | — |
+| `radial-chart` | `chart` | — |
 | `radio-group` | `radio-group-item` | — |
 | `sheet` | `sheet-variants`, `sheet-trigger`, `sheet-content` | — |
 | `sidebar` | `shell`, `sidebar-models`, `sidebar-provider`, `sidebar-header`, `sidebar-content`, `sidebar-footer`, `sidebar-group`, `sidebar-group-label`, `sidebar-group-content`, `sidebar-menu`, `sidebar-menu-item`, `sidebar-menu-button`, `sidebar-menu-sub`, `sidebar-menu-sub-item`, `sidebar-menu-sub-button`, `sidebar-menu-action`, `sidebar-menu-badge`, `sidebar-separator`, `sidebar-trigger`, `sidebar-inset`, `sidebar-rail` | — |

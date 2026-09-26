@@ -2,19 +2,19 @@
 
 **Goal:** Build the components and tooling needed for a Tailwind-first Blazor design system, including the foundations for ShellDocs.
 
-**Current source:** `0.4.0-alpha.1` · .NET 10 · Tailwind CSS `4.3.2`
+.NET 10 · Tailwind CSS `4.3.2`
 
 ## Current inventory
 
-`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **173 entries**:
+`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **176 entries**:
 
-- **73 direct CLI targets** shown by `shellui list`
+- **76 direct CLI targets** shown by `shellui list`
 - **100 hidden entries** for sub-components, variants, models, services, and support assets
 - **Packable projects:** `ShellUI.CLI` and `ShellUI.Components`
 
 Hidden entries are not counted as direct targets. They can still be installed recursively when a parent target declares them.
 
-### Implemented direct targets (73)
+### Implemented direct targets (76)
 
 The following categories describe the direct targets in the current registry, not a promise about future scope.
 
@@ -23,7 +23,7 @@ The following categories describe the direct targets in the current registry, no
 - [x] **Feedback (9):** Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
 - [x] **Overlay (9):** AlertDialog, Command, CommandPalette, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
 - [x] **Navigation (7):** ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs
-- [x] **Data Display (13):** AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, DataTable, LineChart, MultiSeriesChart, PieChart, Table
+- [x] **Data Display (16):** AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, DataTable, DonutChart, LineChart, MultiSeriesChart, PieChart, RadarChart, RadialChart, Table
 - [x] **Utility (2):** CopyButton, ThemeToggle
 
 ### Implemented ShellDocs building blocks

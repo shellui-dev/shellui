@@ -6,15 +6,13 @@ Answers for the current ShellUI source and the currently published packages.
 
 ### Which version should I use?
 
-The current source is `0.4.0-alpha.1`, targets `net10.0`, uses Tailwind CSS `4.3.2`, and exposes 73 direct component targets.
-
-The published packages are stable `0.2.1` and prerelease `0.3.0-rc.1`. A plain install selects stable `0.2.1`; select the prerelease explicitly:
+Use `0.3.0-rc.2`. It targets `net10.0`, uses Tailwind CSS `4.3.2`, and exposes 76 direct component targets. A plain install selects the older stable `0.2.1`, so select the prerelease explicitly:
 
 ```bash
-dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.1 --prerelease
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.2
 ```
 
-The current source is not a published `0.4.0-alpha.1` package. The command examples in this FAQ describe the current source; check the installed package's `--help` output when using a published tool.
+Projects still on .NET 9 can use `0.3.0-rc.1`, the last release targeting .NET 9.
 
 ### Which command prefix should I use?
 
@@ -51,7 +49,7 @@ shellui add button,input,card
 shellui add button,card dialog
 ```
 
-Use the exact names printed by `shellui list`. Dependency-only entries are installed automatically and are not counted among the 73 direct targets.
+Use the exact names printed by `shellui list`. Dependency-only entries are installed automatically and are not counted among the 76 direct targets.
 
 ### Which names should I use?
 
@@ -89,7 +87,7 @@ shellui list --installed
 shellui list --available
 ```
 
-The current source has 73 direct targets. Use the command output as the authoritative name list.
+There are 76 direct targets. Use the command output as the authoritative name list.
 
 ### What happens when I update a component?
 
@@ -147,7 +145,7 @@ A representative Tailwind and component record is:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.4.0-alpha.1",
+      "Version": "0.3.0-rc.2",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
@@ -235,14 +233,13 @@ For standalone mode, check `.shellui/bin/`. For npm mode, run `npm install`.
 
 ### How do I update the NuGet package?
 
-Use the published package version explicitly when needed:
+Pass the version explicitly:
 
 ```bash
-dotnet add package ShellUI.Components --version 0.2.1
-dotnet add package ShellUI.Components --version 0.3.0-rc.1 --prerelease
+dotnet add package ShellUI.Components --version 0.3.0-rc.2
 ```
 
-Then restore and build the project. The current source version `0.4.0-alpha.1` should not be used as a package version until it is published.
+Then restore and build the project.
 
 ### What license does ShellUI use?
 

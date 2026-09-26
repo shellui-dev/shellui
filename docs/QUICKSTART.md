@@ -1,6 +1,6 @@
 # ShellUI Quick Start
 
-This quick start follows the current source: `0.4.0-alpha.1`, .NET 10, Tailwind CSS `4.3.2`, and 73 direct component targets. The source is not published as `0.4.0-alpha.1`; the published stable package is `0.2.1` and the published prerelease is `0.3.0-rc.1`. The published prerelease targets .NET 9; use the matching SDK/runtime when following a published package instead.
+This quick start uses ShellUI `0.3.0-rc.2`: .NET 10, Tailwind CSS `4.3.2`, and 76 direct component targets.
 
 ## Prerequisites
 
@@ -20,17 +20,11 @@ dotnet --version
 A global tool is invoked as `shellui`:
 
 ```bash
-dotnet tool install -g ShellUI.CLI
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.2
 shellui --version
 ```
 
-The plain install selects the published stable `0.2.1`. To use the published prerelease, select it explicitly:
-
-```bash
-dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.1 --prerelease
-```
-
-The workflow below follows the current source. Published `0.2.1` and `0.3.0-rc.1` tools are older packages and may not expose source-only commands; check `shellui --help` or build the current source when using the syntax in this guide.
+A plain install without `--version` selects the older stable `0.2.1`, which lacks several commands in this guide.
 
 If the project has a .NET tool manifest, use `dotnet shellui` instead. See [CLI installation](CLI_INSTALLATION.md).
 
@@ -42,7 +36,7 @@ cd MyBlazorApp
 shellui init --yes --tailwind standalone
 ```
 
-The current source detects the project type and sets up:
+`init` detects the project type and sets up:
 
 - `Components/UI/`
 - `wwwroot/input.css` and `wwwroot/app.css`
@@ -76,7 +70,7 @@ Dependencies are copied automatically. Use `--force` to overwrite an existing co
 shellui add button --force
 ```
 
-Use the exact names shown by `shellui list`. The current source exposes 73 direct targets; dependency-only registry entries are not direct targets.
+Use the exact names shown by `shellui list`. There are 76 direct targets; dependency-only registry entries are not direct targets.
 
 ## Use a component
 
@@ -144,7 +138,7 @@ shellui remove button card
 
 ## Apply a theme
 
-The current source supports tweakcn themes:
+The CLI supports tweakcn themes:
 
 ```bash
 shellui theme init <url-or-id> --yes --tailwind standalone

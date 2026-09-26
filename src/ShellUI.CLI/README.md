@@ -2,28 +2,12 @@
 
 The ShellUI command-line tool initializes a .NET 10 Blazor project and copies ShellUI component templates into source files that the application owns.
 
-## Version scope
+## Install
 
-This README documents the command surface in repository source `0.4.0-alpha.1`.
-
-- Latest published stable CLI: `0.2.1`
-- Latest published prerelease CLI: `0.3.0-rc.1`
-- Current source: `0.4.0-alpha.1`, not currently published
-
-The theme commands, current registry inventory, and other source-only features are not implied by the published packages. The published prerelease targets .NET 9; the current source targets .NET 10. Run `shellui --help` with an installed package to inspect that package's command surface.
-
-## Install a published tool
-
-Install the latest published stable tool globally:
+The tool needs the .NET 10 runtime. Prereleases are not picked up by a plain install, so pass the version:
 
 ```bash
-dotnet tool install --global ShellUI.CLI --version 0.2.1
-```
-
-Or install the latest published prerelease:
-
-```bash
-dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.1
+dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.2
 ```
 
 A global tool uses the `shellui` command:
@@ -36,13 +20,11 @@ A local .NET tool uses `dotnet shellui`:
 
 ```bash
 dotnet new tool-manifest
-dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.1
+dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.2
 dotnet shellui --help
 ```
 
-`ShellUI.CLI` and `ShellUI.Components` are the only packable ShellUI projects. The current source CLI can be packed locally, but there is no published `0.4.0-alpha.1` tool package to install.
-
-## Current source quick start
+## Quick start
 
 Run these commands from the root of the target Blazor project:
 
@@ -156,15 +138,15 @@ The lock file stores the original source URL, theme name, timestamp, and SHA-256
 
 ## Component inventory
 
-The current source registry contains **173 entries**:
+The registry contains **176 entries**:
 
-- **73 direct install targets**, shown by `list`
+- **76 direct install targets**, shown by `list`
 - **100 hidden dependency entries**, resolved by `add` but omitted from the direct list
 
-The five current source additions are:
+The targets added in `0.3.0-rc.2` are:
 
 ```bash
-shellui add typed-select command-palette data-picker multi-select tag-input
+shellui add typed-select command-palette data-picker multi-select tag-input donut-chart radar-chart radial-chart
 ```
 
 Use `shellui list` for the complete direct-target inventory and descriptions.
@@ -186,7 +168,7 @@ A typical initialized project contains:
 
 ## Tailwind setup
 
-Current source uses Tailwind CSS `4.3.2`.
+ShellUI uses Tailwind CSS `4.3.2`.
 
 - `shellui init --tailwind standalone` downloads the standalone executable and does not require Node.js.
 - `shellui init --tailwind npm --yes` installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm.

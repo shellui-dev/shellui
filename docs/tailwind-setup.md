@@ -1,6 +1,6 @@
 # Tailwind CSS Setup Guide for Blazor
 
-This guide targets **Tailwind CSS 4.3.2**, the version used by the current ShellUI `0.4.0-alpha.1` source.
+This guide targets **Tailwind CSS 4.3.2**, the version ShellUI uses.
 
 ## Installation methods
 
@@ -25,15 +25,10 @@ For a production Blazor application, use either the standalone or npm workflow a
 ### Install the CLI
 
 ```text
-dotnet tool install -g ShellUI.CLI
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.2
 ```
 
-For a local build, run the pack command from the ShellUI repository root, then install that package explicitly. A plain global install resolves the published stable `0.2.1`; the current `0.4.0-alpha.1` source is not published.
-
-```text
-dotnet pack ShellUI.slnx --configuration Release
-dotnet tool install -g ShellUI.CLI --add-source ./src/ShellUI.CLI/bin/Release --version 0.4.0-alpha.1
-```
+A plain install without `--version` selects the older stable `0.2.1`.
 
 ### Initialize a project
 

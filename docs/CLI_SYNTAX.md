@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference follows the current source: `0.4.0-alpha.1`, `net10.0`, Tailwind CSS `4.3.2`, and 73 direct component targets. The current source is not a published package. The published CLI versions are stable `0.2.1` and prerelease `0.3.0-rc.1`; their command surface may differ from the source described here.
+This reference covers CLI `0.3.0-rc.2`: `net10.0`, Tailwind CSS `4.3.2`, and 76 direct component targets. Older versions, including the stable `0.2.1`, lack some of these commands.
 
 ## Command prefix
 
@@ -78,7 +78,7 @@ shellui add button --force
 
 ## `list`
 
-Lists the direct targets in the current source and their installation status.
+Lists the direct targets and their installation status.
 
 ```bash
 shellui list
@@ -86,7 +86,7 @@ shellui list --installed
 shellui list --available
 ```
 
-The current source has 73 direct targets. Registry entries used only as dependencies are not counted as direct targets. Choose either `--installed` or `--available` to filter the output.
+There are 76 direct targets. Registry entries used only as dependencies are not counted as direct targets. Choose either `--installed` or `--available` to filter the output.
 
 ## `remove`
 
@@ -205,7 +205,7 @@ Representative fields look like this:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.4.0-alpha.1",
+      "Version": "0.3.0-rc.2",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
@@ -214,7 +214,7 @@ Representative fields look like this:
 }
 ```
 
-`ProjectType` is serialized as the enum value; `1` is `BlazorServer` in the current source. `IsCustomized` is metadata, not a merge mechanism. `update` still overwrites the file.
+`ProjectType` is serialized as the enum value; `1` is `BlazorServer`. `IsCustomized` is metadata, not a merge mechanism. `update` still overwrites the file.
 
 ## Common workflow
 

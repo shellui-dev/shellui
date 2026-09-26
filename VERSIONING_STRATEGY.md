@@ -1,20 +1,16 @@
 # ShellUI Versioning Strategy
 
-## Current Version and Publication Boundary
+## Current Version
 
 ShellUI uses one centralized version for the source templates, CLI tool, and packable runtime components.
 
-| Scope | Current fact |
+| Scope | Value |
 |---|---|
-| Current source | `0.4.0-alpha.1` |
-| Base version in `Directory.Build.props` | `0.4.0` |
-| Prerelease suffix | `alpha.1` |
-| Current target framework | .NET 10 |
-| Current Tailwind version | `4.3.2` |
-| Latest tag present in this checkout | `v0.3.0-rc.1` (historical) |
-| Published package status | Not implied by the current source version; verify the package channel and pin an explicit version |
+| Version | `0.3.0-rc.2` |
+| Target framework | .NET 10 |
+| Tailwind version | `4.3.2` |
 
-`0.4.0-alpha.1` describes this checkout. It must not be described as a published NuGet or GitHub release unless a matching release has actually been published. The historical `v0.3.0-rc.1` tag is retained as release history, not as the current source version. The published prerelease targets .NET 9; the current source targets .NET 10.
+`0.3.0-rc.1` was the last release targeting .NET 9.
 
 ## Single Source of Truth
 
@@ -22,15 +18,15 @@ The root `Directory.Build.props` supplies the version:
 
 ```xml
 <PropertyGroup>
-  <ShellUIVersion>0.4.0</ShellUIVersion>
-  <ShellUIVersionSuffix>alpha.1</ShellUIVersionSuffix>
+  <ShellUIVersion>0.3.0</ShellUIVersion>
+  <ShellUIVersionSuffix>rc.2</ShellUIVersionSuffix>
 </PropertyGroup>
 ```
 
 `Directory.Build.props` composes the package and assembly metadata:
 
-- `Version` becomes `0.4.0-alpha.1` when a suffix is present.
-- `AssemblyVersion` and `FileVersion` use the numeric base `0.4.0`.
+- `Version` becomes `0.3.0-rc.2` when a suffix is present.
+- `AssemblyVersion` and `FileVersion` use the numeric base `0.3.0`.
 - `InformationalVersion` includes the prerelease suffix.
 - Component metadata reads the centralized properties when running from the repository. `VersionHelper` uses assembly metadata as a fallback when its repository search does not find the solution file.
 
@@ -61,7 +57,7 @@ The CLI writes the computed version into `shellui.json` for each installed entry
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.4.0-alpha.1",
+      "Version": "0.3.0-rc.2",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
@@ -85,7 +81,7 @@ dotnet tool install -g ShellUI.CLI --version <published-version>
 dotnet tool update -g ShellUI.CLI --version <published-version>
 ```
 
-A local tool manifest can pin the same version for a team. The current source version is not automatically selected by an unversioned global install.
+A local tool manifest can pin the same version for a team. An unversioned install only selects stable releases, never a prerelease.
 
 ### Published Components package
 
@@ -95,32 +91,29 @@ A local tool manifest can pin the same version for a team. The current source ve
 dotnet add package ShellUI.Components --version <published-version> --prerelease
 ```
 
-Do not add `ShellUI.Core` or `ShellUI.Templates` to a consumer project. They are internal implementation projects in the current source.
+Do not add `ShellUI.Core` or `ShellUI.Templates` to a consumer project. They are internal implementation projects.
 
-### Current source checkout
+### Local checkout
 
-To test the checkout itself, pack the solution and install the locally produced CLI package:
+To test a checkout, pack the solution and install the locally produced CLI package with the version from `Directory.Build.props`:
 
 ```bash
 dotnet pack ShellUI.slnx --configuration Release
-dotnet tool install -g ShellUI.CLI --add-source "./src/ShellUI.CLI/bin/Release" --version 0.4.0-alpha.1
+dotnet tool install -g ShellUI.CLI --add-source "./src/ShellUI.CLI/bin/Release" --version <version>
 ```
 
-This local package is a build artifact, not evidence of publication to NuGet.
+### Tags
 
-### Source tags and documentation
+Release tags use the `v` prefix, for example `v0.3.0-rc.2`. Pushing a `v*` tag runs the release workflow, which publishes to NuGet and creates the GitHub release. [RELEASE_NOTES.md](docs/RELEASE_NOTES.md) has one section per release.
 
-Release tags use the `v` prefix, for example `v0.4.0-alpha.1`. A tag is a source-control reference; publication is performed separately by the release workflow. Current documentation describes the checkout, while [RELEASE_NOTES.md](docs/RELEASE_NOTES.md) preserves historical release records. There are no versioned documentation directories in this repository to maintain.
+## Release Workflow
 
-## Version Update Workflow
+1. In a pull request, edit `ShellUIVersion` and `ShellUIVersionSuffix` in `Directory.Build.props` and add a `# ShellUI v<version>` section to `docs/RELEASE_NOTES.md`.
+2. Regenerate the precompiled CSS and safelist when the change affects component CSS.
+3. Merge, then on an up-to-date `main` run `pwsh ./prepare-release.ps1 -Version <base> -Suffix <suffix> -DryRun` (builds, tests and checks the notes section).
+4. Tag the merged commit and push the tag: `git tag v<version>` then `git push origin v<version>`.
 
-For a maintainer changing the version:
-
-1. Edit `ShellUIVersion` and `ShellUIVersionSuffix` in `Directory.Build.props`.
-2. Run the repository build and tests against `ShellUI.slnx`.
-3. Regenerate the precompiled CSS and safelist when the change affects component CSS.
-4. Pack the solution and verify that only the CLI and Components packages are produced.
-5. Create a matching `v<version>` tag and let the release workflow publish the packable artifacts.
+The release workflow fails before publishing when the tag does not match the version in `Directory.Build.props` or when the notes section is missing. NuGet versions cannot be deleted, only unlisted, so the version must be merged before tagging.
 
 The verification commands are:
 
@@ -149,7 +142,7 @@ ShellUI versions use:
 MAJOR.MINOR.PATCH[-PRERELEASE]
 ```
 
-Examples in the current version line are `0.4.0-alpha.1` and a numeric `0.4.0` value only if the suffix is removed for a stable release. The suffix communicates prerelease status; it is not a component-specific version.
+For example, `0.3.0-rc.2` is a prerelease and `0.3.0` is the stable release with the suffix removed. The suffix communicates prerelease status; it is not a component-specific version.
 
 - Increase the major version for a deliberate breaking version boundary.
 - Increase the minor version for compatible feature work within the current version line.
@@ -166,10 +159,6 @@ The unified version applies to the source system and the two packable artifacts.
 - CLI-installed files are copied into the consumer project and remain subject to the consumer's own edits. Updating them is an explicit CLI operation, not an automatic package update.
 - Theme lock files track theme sources, not package versions.
 
-## Historical Release Information
-
-The [historical release notes](docs/RELEASE_NOTES.md) contain older release headings, fixes, and install examples. They are preserved as history and should be read with the version they describe. They do not override the current source facts in this document.
-
 ## Summary
 
-The current source is `0.4.0-alpha.1`, centralized in `Directory.Build.props`, targeting .NET 10 and Tailwind CSS `4.3.2`. `ShellUI.CLI` and `ShellUI.Components` are the only packable artifacts. Published versions must be selected explicitly; the source version and the latest historical tag are not interchangeable.
+The version is centralized in `Directory.Build.props`, targeting .NET 10 and Tailwind CSS `4.3.2`. `ShellUI.CLI` and `ShellUI.Components` are the only packable artifacts. Prerelease versions must be selected explicitly.

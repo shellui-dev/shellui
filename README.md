@@ -24,26 +24,25 @@
 
 | Channel | Version | Notes |
 |---|---|---|
-| Repository source | `0.4.0-alpha.1` | Current source; targets .NET 10 and Tailwind CSS `4.3.2` |
-| Latest published stable packages | `0.2.1` | Stable CLI and components packages on NuGet |
-| Latest published prerelease packages | `0.3.0-rc.1` | Published release candidate; older than this source checkout |
+| Latest prerelease (recommended) | `0.3.0-rc.2` | .NET 10, Tailwind CSS `4.3.2` |
+| Latest stable | `0.2.1` | Older release; superseded once `0.3.0` ships |
 
-The repository is ahead of NuGet. Features described as **current source** require a local build or package and are not present in the published `0.2.1` or `0.3.0-rc.1` packages. The published prerelease targets .NET 9; the current source targets .NET 10.
+Prereleases are not picked up by a plain install, so pass `--version 0.3.0-rc.2` explicitly. Projects still on .NET 9 can use `0.3.0-rc.1`, the last release that targets .NET 9.
 
-ShellUI is alpha software. Validate it in your target Blazor and hosting environments before relying on it.
+ShellUI is prerelease software. Validate it in your target Blazor and hosting environments before relying on it.
 
-## Current source capabilities
+## Capabilities
 
 - The CLI commands are `init`, `add`, `list`, `remove`, and `update`, plus `theme init`, `theme apply`, and `theme update`.
-- The component registry has **173 entries**: **73 direct install targets** and **100 hidden dependency entries**. `list` shows direct targets; `add` resolves hidden dependencies.
-- Current additions include `typed-select`, `command-palette`, `data-picker`, `multi-select`, and `tag-input`.
+- The component registry has **176 entries**: **76 direct install targets** and **100 hidden dependency entries**. `list` shows direct targets; `add` resolves hidden dependencies.
+- `0.3.0-rc.2` adds `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
 - `ShellUI.Components` supports a release-generated precompiled CSS bundle and a generated safelist for existing Tailwind builds.
 - The CLI can install source with Tailwind's standalone executable or an npm-based build. The current Tailwind baseline is `4.3.2`.
 - The repository and demo have migrated to .NET 10. The demo is `NET10/BlazorInteractiveServer`.
 
 ## Requirements
 
-- .NET 10 SDK for the current source
+- .NET 10 SDK
 - A .NET 10 Blazor project
 - Tailwind CSS `4.3.2` via either:
   - the standalone CLI, which does not require Node.js; or
@@ -54,25 +53,19 @@ ShellUI is alpha software. Validate it in your target Blazor and hosting environ
 The published global tool is named `shellui`:
 
 ```bash
-dotnet tool install --global ShellUI.CLI --version 0.2.1
+dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.2
 shellui --help
-```
-
-To select the published prerelease instead:
-
-```bash
-dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.1
 ```
 
 A local .NET tool is invoked as `dotnet shellui`:
 
 ```bash
 dotnet new tool-manifest
-dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.1
+dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.2
 dotnet shellui --help
 ```
 
-After building or installing the current source tool, its workflow is:
+The workflow is:
 
 ```bash
 shellui init
@@ -99,29 +92,21 @@ New CLI sidebar installs use the host-loaded `shellui.js`; the legacy `sidebar-j
 | `theme apply <url-or-id>` | Apply a theme to `wwwroot/input.css` or emit override CSS |
 | `theme update` | Re-fetch the source recorded in `shellui.theme.lock` |
 
-The five current source targets can be installed together:
+The targets added in `0.3.0-rc.2` can be installed together:
 
 ```bash
-shellui add typed-select command-palette data-picker multi-select tag-input
+shellui add typed-select command-palette data-picker multi-select tag-input donut-chart radar-chart radial-chart
 ```
 
 ## Components package
 
-Published versions can be installed explicitly:
-
 ```bash
-dotnet add package ShellUI.Components --version 0.2.1
+dotnet add package ShellUI.Components --version 0.3.0-rc.2
 ```
 
-To select the published prerelease instead:
+`ShellUI.Core` and `ShellUI.Templates` are internal projects and must not be installed by consumers.
 
-```bash
-dotnet add package ShellUI.Components --version 0.3.0-rc.1 --prerelease
-```
-
-`0.4.0-alpha.1` is not currently published. To consume that source version, pack `src/ShellUI.Components/ShellUI.Components.csproj` and use it from a local package feed. `ShellUI.Core` and `ShellUI.Templates` are internal projects and must not be installed by consumers.
-
-The current-source package supports two CSS workflows.
+The package supports two CSS workflows.
 
 ### Precompiled bundle
 
@@ -135,7 +120,7 @@ Release packaging generates `shellui-all.css`, so the consuming project does not
 @using ShellUI.Components
 ```
 
-The generated bundle is not checked into the repository. Before packing the current source locally, run `bash scripts/rebuild-precompiled-css.sh`; the release pipeline runs the same script automatically.
+The generated bundle is not checked into the repository. Before packing locally, run `bash scripts/rebuild-precompiled-css.sh`; the release pipeline runs the same script automatically.
 
 ### Tailwind safelist
 
@@ -150,7 +135,7 @@ The safelist lets Tailwind emit the classes used by ShellUI components even when
 
 ## Theme commands
 
-The current-source CLI can fetch public themes from [tweakcn](https://tweakcn.com):
+The CLI can fetch public themes from [tweakcn](https://tweakcn.com):
 
 ```bash
 shellui theme init https://tweakcn.com/themes/THEME_ID
@@ -177,7 +162,7 @@ The .NET 10 Blazor Interactive Server demo is outside that solution:
 dotnet run --project NET10/BlazorInteractiveServer/BlazorInteractiveServer.csproj
 ```
 
-`Directory.Build.props` is the source of the centralized version, currently `0.4.0-alpha.1`. Only `ShellUI.CLI` and `ShellUI.Components` are packable; `ShellUI.Core`, `ShellUI.Templates`, the test project, and the safelist generator are not published packages.
+`Directory.Build.props` holds the single version used by every project. Only `ShellUI.CLI` and `ShellUI.Components` are packable; `ShellUI.Core`, `ShellUI.Templates`, the test project, and the safelist generator are not published packages.
 
 ShellUI uses semantic Blazor and Tailwind patterns, but accessibility depends on the component, configuration, and host application. Test keyboard use, focus behavior, contrast, and assistive-technology output in the consuming application.
 
@@ -189,7 +174,7 @@ ShellUI uses semantic Blazor and Tailwind patterns, but accessibility depends on
 - [Contributing](docs/CONTRIBUTING.md)
 - [Release notes](docs/RELEASE_NOTES.md)
 
-Release notes contain historical release records plus a separate current-source section for `0.4.0-alpha.1`; older version sections describe only the release they document.
+Each section of the release notes describes only the release it is named after.
 
 ## License
 
