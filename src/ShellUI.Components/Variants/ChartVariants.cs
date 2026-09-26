@@ -133,10 +133,11 @@ public static class ChartVariants
                     // Resolve x-axis label from the first source that has a real string.
                     // ApexCharts stashes category names in different globals depending on axis type.
                     function xLabelAt(i) {
-                        const cats = (w.globals.categoryLabels && w.globals.categoryLabels.length ? w.globals.categoryLabels
-                            : (w.config.xaxis && w.config.xaxis.categories) || w.globals.labels || []);
-                        const v = cats[i];
-                        return v !== undefined && v !== null ? String(v) : '';
+                        const sources = [w.globals.categoryLabels, w.config.xaxis && w.config.xaxis.categories, w.globals.labels];
+                        for (const s of sources) {
+                            if (s && s[i] !== undefined && s[i] !== null && s[i] !== '') return String(s[i]);
+                        }
+                        return '';
                     }
 
                     let html = '<div class=""shellui-chart-tooltip"">';
