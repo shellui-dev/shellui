@@ -67,6 +67,16 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "✅ All tests passed" -ForegroundColor Green
 
+# The release workflow publishes only this version's section of the notes (see
+# scripts/extract-release-notes.sh) and fails without one — check before tagging.
+$fullVersion = if ($Suffix) { "$Version-$Suffix" } else { $Version }
+$notesHeading = "^# ShellUI v$([regex]::Escape($fullVersion))(\s|$)"
+if (-not (Select-String -Path "docs/RELEASE_NOTES.md" -Pattern $notesHeading -Quiet)) {
+    Write-Host "❌ docs/RELEASE_NOTES.md has no '# ShellUI v$fullVersion' section" -ForegroundColor Red
+    exit 1
+}
+Write-Host "✅ Release notes section found for v$fullVersion" -ForegroundColor Green
+
 if ($DryRun) {
     Write-Host "`n🔍 DRY RUN COMPLETE" -ForegroundColor Cyan
     Write-Host "Run without -DryRun to apply changes" -ForegroundColor Yellow
