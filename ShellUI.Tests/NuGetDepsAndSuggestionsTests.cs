@@ -220,6 +220,17 @@ public class SidebarInteropTests
     }
 
     [Fact]
+    public void Shortcuts_AcceptCtrlOrMetaRatherThanBoth()
+    {
+        const string either = "(ctrl && e.ctrlKey) || (meta && e.metaKey)";
+        var template = ComponentRegistry.GetComponentContent("shellui-js");
+        var package = File.ReadAllText(Path.Combine(FindRepositoryRoot(), "src", "ShellUI.Components", "wwwroot", "shellui.js"));
+
+        Assert.Contains(either, template!);
+        Assert.Contains(either, package);
+    }
+
+    [Fact]
     public void SidebarJs_IsRetainedOnlyAsAHiddenLegacyAlias()
     {
         var metadata = ComponentRegistry.GetMetadata("sidebar-js");

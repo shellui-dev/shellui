@@ -132,3 +132,30 @@ public class InitBootstrapTests
         Assert.Equal(once, twice);
     }
 }
+
+public class RequiredImportsTests
+{
+    [Fact]
+    public void VariantsAndModelsFiles_AddTheirNamespaces()
+    {
+        var imports = ComponentInstaller.RequiredImports("App", new[] { "Button.razor", "Variants/ButtonVariants.cs", "Models/CommandModels.cs" }).ToList();
+
+        Assert.Equal(new[] { "@using App.Components.UI.Variants", "@using App.Components.Models" }, imports);
+    }
+
+    [Fact]
+    public void PlainComponents_AddNothing()
+    {
+        Assert.Empty(ComponentInstaller.RequiredImports("App", new[] { "Kbd.razor", "../../wwwroot/shellui.js" }));
+    }
+}
+
+public class InputCssTests
+{
+    [Fact]
+    public void BaseLayer_HidesFocusOutlineOnNavigatedHeading()
+    {
+        // FocusOnNavigate focuses the page h1; the stock app.css rule that hides its outline is overwritten by init.
+        Assert.Contains("h1:focus {\n    outline: none;", ShellUI.Templates.CssTemplates.InputCss.Replace("\r\n", "\n"));
+    }
+}
