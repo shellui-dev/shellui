@@ -1,6 +1,6 @@
 # ShellUI Quick Start
 
-This quick start uses ShellUI `0.3.0-rc.2`: .NET 10, Tailwind CSS `4.3.2`, and 76 direct component targets.
+This quick start uses ShellUI `0.3.0-rc.2`: .NET 10, Tailwind CSS `4.3.2`, and 90 direct component targets.
 
 ## Prerequisites
 
@@ -70,7 +70,7 @@ Dependencies are copied automatically. Use `--force` to overwrite an existing co
 shellui add button --force
 ```
 
-Use the exact names shown by `shellui list`. There are 76 direct targets; dependency-only registry entries are not direct targets.
+Use the exact names shown by `shellui list`. There are 90 direct targets; dependency-only registry entries are not direct targets.
 
 ## Use a component
 

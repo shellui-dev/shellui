@@ -4,10 +4,10 @@
 
 ## Registry snapshot
 
-- **176** total registry entries
-- **76** direct CLI targets (`IsAvailable = true`)
-- **100** hidden entries (`IsAvailable = false`)
-- `shellui list` displays the 76 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
+- **194** total registry entries
+- **90** direct CLI targets (`IsAvailable = true`)
+- **104** hidden entries (`IsAvailable = false`)
+- `shellui list` displays the 90 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
 `Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
 
@@ -30,8 +30,9 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `card` | `card-header`, `card-title`, `card-description`, `card-content`, `card-footer` | — |
 | `carousel` | `carousel-item`, `carousel-content`, `carousel-previous`, `carousel-next`, `carousel-dots` | — |
 | `chart` | `chart-variants`, `chart-styles` | `Blazor-ApexCharts` `6.0.2` |
+| `chat` | `chat-message`, `chat-input` | — |
 | `collapsible` | `collapsible-trigger`, `collapsible-content` | — |
-| `command` | `dialog` | — |
+| `command` | `command-models` | — |
 | `command-palette` | `command`, `shellui-js` | — |
 | `context-menu` | `context-menu-models` | — |
 | `copy-button` | `shellui-js` | — |
@@ -50,6 +51,7 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `multi-series-chart` | `chart`, `chart-series` | — |
 | `navigation-menu` | `navigation-menu-item` | — |
 | `pie-chart` | `chart` | — |
+| `qr-code` | — | `QRCoder` `1.8.0` |
 | `radar-chart` | `chart` | — |
 | `radial-chart` | `chart` | — |
 | `radio-group` | `radio-group-item` | — |
@@ -60,7 +62,10 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `table` | `table-header`, `table-body`, `table-row`, `table-cell`, `table-head` | — |
 | `tabs` | `tabs-list`, `tabs-trigger`, `tabs-content` | — |
 | `theme-toggle` | `shellui-js` | — |
+| `timeline` | `timeline-item` | — |
 | `toggle` | `toggle-variants` | — |
+| `toggle-group` | `toggle-group-item` | — |
+| `tree-view` | `tree-view-item` | — |
 
 The table is intentionally limited to the current direct targets. It does not replace the registry, and it should be regenerated when metadata changes. NuGet dependencies are shown where metadata declares them; chart-family targets inherit `chart`'s `Blazor-ApexCharts` dependency through recursive resolution.
 

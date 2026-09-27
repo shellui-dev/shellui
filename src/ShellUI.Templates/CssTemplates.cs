@@ -209,6 +209,9 @@ module.exports = {
     background-color: var(--background);
     color: var(--foreground);
   }
+  h1:focus {
+    outline: none;
+  }
 }
 
 html, body, :host {

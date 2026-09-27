@@ -68,7 +68,7 @@ The package also serves static assets, including `shellui.js`, from `_content/Sh
 
 ## Component inventory
 
-The CLI registry contains **176 entries**: **76 direct install targets** and **100 hidden dependency entries**. The CLI displays the 76 direct targets and resolves hidden entries recursively.
+The CLI registry contains **194 entries**: **90 direct install targets** and **104 hidden dependency entries**. The CLI displays the 90 direct targets and resolves hidden entries recursively.
 
 `0.3.0-rc.2` adds `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`. Use the CLI's `list` command for the complete direct-target inventory.
 

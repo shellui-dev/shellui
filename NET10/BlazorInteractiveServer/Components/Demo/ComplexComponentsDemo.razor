@@ -41,47 +41,24 @@
         <!-- Loading Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Loading Components</h3>
-            <div class="flex flex-wrap gap-8 items-center">
-                <div class="text-center">
-                    <Loading Variant="spinner" Size="sm" />
-                    <p class="text-xs mt-2">Spinner SM</p>
-                </div>
-                <div class="text-center">
-                    <Loading Variant="spinner" />
-                    <p class="text-xs mt-2">Spinner</p>
-                </div>
-                <div class="text-center">
-                    <Loading Variant="dots" />
-                    <p class="text-xs mt-2">Dots</p>
-                </div>
-                <div class="text-center">
-                    <Loading Variant="ring" />
-                    <p class="text-xs mt-2">Ring</p>
-                </div>
-                <div class="text-center">
-                    <Loading Variant="pulse" />
-                    <p class="text-xs mt-2">Pulse</p>
-                </div>
-                <div class="text-center">
-                    <Loading Variant="bars" />
-                    <p class="text-xs mt-2">Bars</p>
-                </div>
-                <div class="text-center">
-                    <Loading Variant="bars-vertical" />
-                    <p class="text-xs mt-2">Bars Vertical</p>
-                </div>
-                <div class="text-center">
-                    <Loading Variant="bars-pulse" />
-                    <p class="text-xs mt-2">Bars Pulse</p>
-                </div>
-                <div class="text-center">
-                    <Loading Variant="grid" />
-                    <p class="text-xs mt-2">Grid</p>
-                </div>
-                <div class="text-center">
-                    <Loading Variant="orbit" />
-                    <p class="text-xs mt-2">Orbit</p>
-                </div>
+            <div class="grid grid-cols-3 gap-3 sm:grid-cols-5">
+                @foreach (var (variant, label) in _loadingVariants)
+                {
+                    <div class="flex h-24 flex-col items-center justify-between rounded-lg border border-border bg-background p-3">
+                        <div class="flex h-12 w-full items-center justify-center">
+                            <Loading Variant="@variant" Text="@(variant == "shimmer" ? "Thinking..." : null)" />
+                        </div>
+                        <p class="text-xs text-muted-foreground">@label</p>
+                    </div>
+                }
+            </div>
+            <div class="mt-4 flex flex-wrap items-center gap-6">
+                <Loading Variant="logo" Size="lg" />
+                <Loading Variant="rows" Size="lg" />
+                <Loading Variant="sequence" Size="lg" />
+                <Loading Variant="snake" Size="lg" />
+                <Loading Variant="ring" Size="lg" Class="text-emerald-500" />
+                <Loading Variant="wave" Class="text-muted-foreground" />
             </div>
         </div>
 
@@ -189,7 +166,12 @@
                 Title="No files found" 
                 Description="Get started by uploading your first file.">
                 <Action>
-                    <Button>Upload File</Button>
+                    <label for="empty-state-upload" class="inline-flex h-10 cursor-pointer items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">Upload File</label>
+                    <InputFile id="empty-state-upload" class="hidden" OnChange="OnEmptyStateFileSelected" />
+                    @if (_emptyStateFile != null)
+                    {
+                        <p class="mt-2 text-sm text-muted-foreground">Selected: @_emptyStateFile</p>
+                    }
                 </Action>
             </EmptyState>
         </div>
@@ -374,6 +356,15 @@
 </section>
 
 @code {
+    private readonly (string Variant, string Label)[] _loadingVariants =
+    {
+        ("logo", "ShellUI Logo"), ("spinner", "Spinner"), ("ring", "Ring"), ("dual-ring", "Dual Ring"), ("activity", "Activity"), ("chase", "Chase"),
+        ("orbit", "Orbit"), ("ripple", "Ripple"), ("dots", "Dots"), ("typing", "Typing"), ("wave", "Wave"),
+        ("bars", "Bars"), ("bars-vertical", "Bars Vertical"), ("bars-pulse", "Bars Pulse"), ("grid", "Grid"), ("snake", "Snake"),
+        ("rows", "Rows"), ("columns", "Columns"), ("sequence", "Sequence"), ("twinkle", "Twinkle"), ("pulse", "Pulse"),
+        ("progress", "Progress"), ("shimmer", "Shimmer")
+    };
+
     private bool _showCommand = false;
     private bool _collapsibleOpen = false;
     private bool _stepperSubmitted = false;
@@ -436,6 +427,10 @@
         _showCommand = value;
         await ShowCommandChanged.InvokeAsync(value);
     }
+
+    private string? _emptyStateFile;
+
+    private void OnEmptyStateFileSelected(InputFileChangeEventArgs e) => _emptyStateFile = e.File.Name;
 
     private async Task HandleCommandSelected(CommandItem command)
     {

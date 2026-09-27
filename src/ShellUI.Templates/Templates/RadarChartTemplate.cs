@@ -44,11 +44,12 @@ public class RadarChartTemplate
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        // Radar tooltips only trigger per point, not in shared mode.
+        // Radar tooltips only trigger per point, and without FollowCursor they are pinned to the top of the chart.
         if (ChartOptions.Tooltip != null)
         {
             ChartOptions.Tooltip.Shared = false;
             ChartOptions.Tooltip.Intersect = true;
+            ChartOptions.Tooltip.FollowCursor = true;
         }
     }
 }

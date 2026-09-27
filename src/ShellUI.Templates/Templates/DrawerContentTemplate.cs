@@ -25,7 +25,7 @@ public class DrawerContentTemplate
 @if (Parent?.Open == true)
 {
     <div class=""fixed inset-0 z-50 bg-black/80 animate-in fade-in-0"" @onclick=""Close""></div>
-    <div class=""@DrawerVariants.Get(Parent.Side, Class)"" @onclick:stopPropagation=""true"" @attributes=""AdditionalAttributes"">
+    <div @ref=""_content"" tabindex=""-1"" role=""dialog"" aria-modal=""true"" @onkeydown=""OnKeyDownAsync"" class=""outline-none @DrawerVariants.Get(Parent.Side, Class)"" @onclick:stopPropagation=""true"" @attributes=""AdditionalAttributes"">
         <div class=""mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted""></div>
         <div class=""flex flex-col gap-4 p-4"">
             @ChildContent
@@ -41,14 +41,29 @@ public class DrawerContentTemplate
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
     private bool _isLocked;
+    private bool _focused;
+    private ElementReference _content;
 
     private async Task Close()
     {
         if (Parent != null) await Parent.SetOpen(false);
     }
 
+    private async Task OnKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (e.Key == ""Escape"") await Close();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        var isOpen = Parent?.Open == true;
+        if (isOpen && !_focused)
+        {
+            _focused = true;
+            try { await _content.FocusAsync(); } catch (InvalidOperationException) { }
+        }
+        else if (!isOpen) _focused = false;
+
         var shouldBeLocked = Parent?.Open == true;
         if (shouldBeLocked && !_isLocked)
         {

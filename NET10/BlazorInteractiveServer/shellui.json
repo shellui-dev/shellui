@@ -2,6 +2,7 @@
   "Schema": "https://shellui.dev/schema.json",
   "Style": "default",
   "ComponentsPath": "Components/UI",
+  "LayoutPath": "Components/Layout",
   "Tailwind": {
     "Enabled": true,
     "Version": "4.1.0",
@@ -270,13 +271,13 @@
     },
     {
       "Name": "chart-variants",
-      "Version": "0.1.1",
+      "Version": "0.3.0-rc.2",
       "InstalledAt": "2026-01-17T01:41:18.8862813Z",
       "IsCustomized": false
     },
     {
       "Name": "chart",
-      "Version": "0.1.1",
+      "Version": "0.3.0-rc.2",
       "InstalledAt": "2026-01-17T01:41:18.9171276Z",
       "IsCustomized": false
     },
@@ -314,6 +315,162 @@
       "Name": "multi-series-chart",
       "Version": "0.1.1",
       "InstalledAt": "2026-01-17T01:19:53.3598418Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "kbd",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.0902662Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "aspect-ratio",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.0951949Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "button-group",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.0969264Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "toggle-group-item",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.0986154Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "toggle-group",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1005892Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "input-group",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1022617Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "number-input",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1038171Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "stat-card",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1053252Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "timeline-item",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1076949Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "timeline",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1093788Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "tree-view-item",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1124648Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "tree-view",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1142978Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "qr-code",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1158551Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "image-viewer",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1176989Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "chat-message",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1194393Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "chat-input",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1209127Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "chat",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T16:31:58.1221956Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "command-models",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T17:01:28.0577661Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "command",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T17:01:28.0621235Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "shellui-js",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T17:01:28.0644172Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "command-palette",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T17:01:28.0665166Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "loading",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T17:01:28.0689161Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "sidebar-models",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T17:01:28.0768459Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "sidebar-provider",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T17:01:28.0791313Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "chart-styles",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T18:08:10.2910456Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "radar-chart",
+      "Version": "0.3.0-rc.2",
+      "InstalledAt": "2026-09-26T18:08:10.295392Z",
       "IsCustomized": false
     }
   ],

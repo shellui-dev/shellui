@@ -1,0 +1,113 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public static class ChatInputTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "chat-input",
+        DisplayName = "Chat Input",
+        Description = "Prompt input that sends on Enter and adds a newline on Shift+Enter",
+        Category = ComponentCategory.Form,
+        FilePath = "ChatInput.razor",
+        Dependencies = new List<string>(),
+        Tags = new List<string> { "chat", "ai", "prompt", "input" }
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+
+<form @onsubmit=""SubmitAsync""
+      class=""@Shell.Cn(""flex w-full items-end gap-2 rounded-lg border border-input bg-background p-2 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"", Class)""
+      @attributes=""AdditionalAttributes"">
+    @if (Actions != null)
+    {
+        <div class=""flex shrink-0 items-center gap-1 pb-0.5"">@Actions</div>
+    }
+    <textarea @key=""_inputKey""
+              @ref=""_textarea""
+              rows=""@Rows""
+              value=""@Value""
+              placeholder=""@Placeholder""
+              aria-label=""@Placeholder""
+              disabled=""@Disabled""
+              @oninput=""HandleInputAsync""
+              @onkeydown=""HandleKeyDownAsync""
+              class=""max-h-48 min-h-10 flex-1 resize-none bg-transparent px-2 py-2 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50""></textarea>
+    <button type=""submit"" aria-label=""Send"" disabled=""@(!CanSubmit)""
+            class=""inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"">
+        @if (IsLoading)
+        {
+            <svg class=""h-4 w-4 animate-spin"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"">
+                <circle class=""opacity-25"" cx=""12"" cy=""12"" r=""10"" stroke=""currentColor"" stroke-width=""4""></circle>
+                <path class=""opacity-75"" fill=""currentColor"" d=""M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z""></path>
+            </svg>
+        }
+        else
+        {
+            <svg class=""h-4 w-4"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M5 12h14M12 5l7 7-7 7"" />
+            </svg>
+        }
+    </button>
+</form>
+
+@code {
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public EventCallback<string> OnSubmit { get; set; }
+    [Parameter] public string Placeholder { get; set; } = ""Send a message..."";
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool IsLoading { get; set; }
+    [Parameter] public int Rows { get; set; } = 1;
+    [Parameter] public RenderFragment? Actions { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private ElementReference _textarea;
+    private int _inputKey;
+    private bool _ignoreNextInput;
+    private bool _refocus;
+
+    private bool CanSubmit => !Disabled && !IsLoading && !string.IsNullOrWhiteSpace(Value);
+
+    // Enter sends; the browser's newline still arrives as the next input event, so it is dropped and the textarea re-created.
+    private async Task HandleKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (e.Key != ""Enter"" || e.ShiftKey) return;
+        _ignoreNextInput = true;
+        await SubmitAsync();
+    }
+
+    private async Task HandleInputAsync(ChangeEventArgs e)
+    {
+        if (_ignoreNextInput)
+        {
+            _ignoreNextInput = false;
+            _inputKey++;
+            _refocus = true;
+            return;
+        }
+        Value = e.Value?.ToString();
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (!CanSubmit) return;
+        var text = Value!.Trim();
+        Value = """";
+        await ValueChanged.InvokeAsync(Value);
+        await OnSubmit.InvokeAsync(text);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!_refocus) return;
+        _refocus = false;
+        await _textarea.FocusAsync();
+    }
+}
+";
+}

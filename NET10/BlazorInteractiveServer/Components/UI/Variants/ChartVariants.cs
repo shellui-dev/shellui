@@ -15,7 +15,7 @@ public enum ChartTheme
 /* ApexCharts configuration tuned to the shadcn/ui chart aesthetic.
    ApexCharts accepts colors as JS strings only, so palettes use oklch literals
    mirroring the theme's --chart-N tokens. Grid, axis, tooltip, and legend chrome
-   is styled via companion CSS (shellui-theme.css / chart-styles). */
+   is styled via companion CSS (charts.css). */
 public static class ChartVariants
 {
     public static ApexCharts.ApexChartOptions<TItem> GetOptions<TItem>(ChartTheme theme = ChartTheme.Default, bool showToolbar = false, bool showLegend = true) where TItem : class

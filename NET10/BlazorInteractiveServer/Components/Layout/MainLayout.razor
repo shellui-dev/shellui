@@ -4,7 +4,7 @@
 @using BlazorInteractiveServer.Components.Models
 @using BlazorInteractiveServer.Components.UI
 
-<div class="min-h-screen bg-background text-foreground" @onkeydown="HandleKeyDown" tabindex="0">
+<div class="min-h-screen bg-background text-foreground">
     <Navbar ClassName="flex items-center justify-center">
         <div class="flex items-center justify-center w-full px-5">
             <!-- Centered Content Group with Side Spacing -->
@@ -136,10 +136,9 @@
 <Sonner />
 
 <!-- Command Palette -->
-<Command IsOpen="_isCommandPaletteOpen" 
-         IsOpenChanged="OnCommandPaletteChanged" 
-         Commands="_commandItems"
-         CommandSelected="HandleCommandSelected" />
+<CommandPalette @bind-IsOpen="_isCommandPaletteOpen"
+                Commands="_commandItems"
+                CommandSelected="HandleCommandSelected" />
 
 @code {
     private bool _isMobileMenuOpen = false;
@@ -153,45 +152,52 @@
         {
             new CommandItem 
             { 
-                Title = "Home", 
+                Title = "Home",
+                Group = "Navigation", 
                 Description = "Go to homepage",
                 Shortcut = "Ctrl+H",
                 Action = async () => { NavigationManager.NavigateTo("/"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
-                Title = "Dashboard", 
+                Title = "Dashboard",
+                Group = "Navigation", 
                 Description = "View dashboard",
                 Shortcut = "Ctrl+D",
                 Action = async () => { NavigationManager.NavigateTo("/dashboard"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
-                Title = "Documentation", 
+                Title = "Documentation",
+                Group = "Resources", 
                 Description = "View ShellUI documentation",
                 Action = async () => { NavigationManager.NavigateTo("/docs"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
-                Title = "Blog", 
+                Title = "Blog",
+                Group = "Resources", 
                 Description = "Read our latest blog posts",
                 Action = async () => { NavigationManager.NavigateTo("/blog"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
-                Title = "Showcase", 
+                Title = "Showcase",
+                Group = "Community", 
                 Description = "See ShellUI in action",
                 Action = async () => { NavigationManager.NavigateTo("/showcase"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
-                Title = "Sponsors", 
+                Title = "Sponsors",
+                Group = "Community", 
                 Description = "Support ShellUI development",
                 Action = async () => { NavigationManager.NavigateTo("/sponsors"); await Task.CompletedTask; }
             },
             new CommandItem 
             { 
-                Title = "GitHub", 
+                Title = "GitHub",
+                Group = "Community", 
                 Description = "View source code on GitHub",
                 Action = async () => await JSRuntime.InvokeVoidAsync("ShellUI.openUrl", "https://github.com/shellui-dev/shellui", "_blank")
             }
@@ -213,10 +219,6 @@
         _isCommandPaletteOpen = true;
     }
 
-    private void OnCommandPaletteChanged(bool isOpen)
-    {
-        _isCommandPaletteOpen = isOpen;
-    }
 
     private async Task HandleCommandSelected(CommandItem command)
     {
@@ -224,16 +226,6 @@
         if (command.Action != null)
         {
             await command.Action();
-        }
-    }
-
-    private void HandleKeyDown(KeyboardEventArgs e)
-    {
-        // Ctrl+K to open command palette
-        if (e.CtrlKey && e.Key == "k")
-        {
-            _isCommandPaletteOpen = !_isCommandPaletteOpen;
-            StateHasChanged();
         }
     }
 }

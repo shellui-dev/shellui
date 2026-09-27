@@ -1,0 +1,45 @@
+@namespace BlazorInteractiveServer.Components.UI
+
+<CascadingValue Value="this" IsFixed="true">
+    <div role="@(Multiple ? "group" : "radiogroup")" class="@Shell.Cn("inline-flex items-center gap-1", Class)" @attributes="AdditionalAttributes">
+        @ChildContent
+    </div>
+</CascadingValue>
+
+@code {
+    [Parameter] public bool Multiple { get; set; }
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public List<string> Values { get; set; } = new();
+    [Parameter] public EventCallback<List<string>> ValuesChanged { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private readonly List<ToggleGroupItem> _items = new();
+
+    internal void Register(ToggleGroupItem item) => _items.Add(item);
+    internal void Unregister(ToggleGroupItem item) => _items.Remove(item);
+
+    public bool IsPressed(string value) => Multiple ? Values.Contains(value) : Value == value;
+
+    public async Task ToggleAsync(string value)
+    {
+        if (Multiple)
+        {
+            var next = new List<string>(Values);
+            if (!next.Remove(value)) next.Add(value);
+            Values = next;
+            await ValuesChanged.InvokeAsync(next);
+        }
+        else
+        {
+            Value = Value == value ? null : value;
+            await ValueChanged.InvokeAsync(Value);
+        }
+
+        foreach (var item in _items.ToArray()) item.Refresh();
+    }
+}
