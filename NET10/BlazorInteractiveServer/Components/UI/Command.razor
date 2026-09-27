@@ -12,6 +12,7 @@
                 @ref="_searchInput"
                 @bind-value="_searchQuery"
                 @bind-value:event="oninput"
+                @bind-value:after="UpdateFilteredCommands"
                 @onkeydown="OnKeyDown"
                 type="text"
                 placeholder="@Placeholder"
