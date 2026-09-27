@@ -93,6 +93,8 @@ public class ComponentInstaller
             }
         }
 
+        EnsureImports(projectInfo, installedSet);
+
         // Update config
         var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions
         {
@@ -408,6 +410,36 @@ public class ComponentInstaller
         }
 
         return failed;
+    }
+
+    // Consumer pages reference helper types such as ButtonVariant and CommandItem, which live in
+    // sub-namespaces; the imports are only added once a file in that namespace exists.
+    public static IEnumerable<string> RequiredImports(string rootNamespace, IEnumerable<string> filePaths)
+    {
+        var paths = filePaths.Select(p => p.Replace('\\', '/')).ToList();
+        if (paths.Any(p => p.StartsWith("Variants/", StringComparison.Ordinal)))
+            yield return $"@using {rootNamespace}.Components.UI.Variants";
+        if (paths.Any(p => p.Contains("Models/", StringComparison.Ordinal)))
+            yield return $"@using {rootNamespace}.Components.Models";
+    }
+
+    private static void EnsureImports(ProjectInfo projectInfo, IEnumerable<string> installed)
+    {
+        var importsPath = new[] { Path.Combine("Components", "_Imports.razor"), "_Imports.razor" }
+            .Select(p => Path.Combine(Directory.GetCurrentDirectory(), p))
+            .FirstOrDefault(File.Exists);
+        if (importsPath == null) return;
+
+        var existing = File.ReadAllLines(importsPath).Select(l => l.Trim()).ToHashSet();
+        var filePaths = installed
+            .Select(ComponentRegistry.GetMetadata)
+            .Where(m => m != null && !m.IsLayoutBlock)
+            .Select(m => m!.FilePath);
+        var missing = RequiredImports(projectInfo.RootNamespace, filePaths).Where(u => !existing.Contains(u)).ToList();
+        if (missing.Count == 0) return;
+
+        File.AppendAllText(importsPath, Environment.NewLine + string.Join(Environment.NewLine, missing) + Environment.NewLine);
+        AnsiConsole.MarkupLine($"[green]Updated:[/] {Path.GetRelativePath(Directory.GetCurrentDirectory(), importsPath)} ({string.Join(", ", missing)})");
     }
 
     internal static bool IsShellUiJsCompatible()
