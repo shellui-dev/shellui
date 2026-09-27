@@ -16,6 +16,7 @@ public static class CommandPaletteTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using Microsoft.JSInterop
+@using YourProjectNamespace.Components.Models
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 

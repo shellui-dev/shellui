@@ -16,6 +16,7 @@ public static class AlertDialogTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
 
 <Dialog Open=""IsOpen"" OpenChanged=""IsOpenChanged"">
     <DialogContent>

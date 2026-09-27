@@ -94,7 +94,7 @@ else if (Variant == ""grid"")
     <div class=""@($""grid grid-cols-3 gap-1 {(Size == ""sm"" ? ""w-4 h-4"" : Size == ""lg"" ? ""w-8 h-8"" : ""w-6 h-6"")} {Class}"")"">
         @for (int i = 0; i < 9; i++)
         {
-            <div class=""bg-primary rounded-sm animate-pulse"" style=""animation-delay: @(i * 0.1)s; animation-duration: 1.2s;""></div>
+            <div class=""bg-primary rounded-sm animate-pulse"" style=""animation-delay: @((i * 0.1).ToString(System.Globalization.CultureInfo.InvariantCulture))s; animation-duration: 1.2s;""></div>
         }
     </div>
 }
@@ -105,6 +105,12 @@ else if (Variant == ""orbit"")
         <div class=""@($""absolute top-0 left-1/2 -translate-x-1/2 rounded-full bg-primary animate-spin {(Size == ""sm"" ? ""h-1.5 w-1.5"" : Size == ""lg"" ? ""h-3 w-3"" : ""h-2 w-2"")}"")"" style=""transform-origin: center calc(50% + @(Size == ""sm"" ? ""0.75rem"" : Size == ""lg"" ? ""1.5rem"" : ""1rem""));""></div>
     </div>
 }
+
+<style>
+    @@keyframes bars { 0%, 100% { transform: scaleY(0.4); opacity: 0.7; } 50% { transform: scaleY(1); opacity: 1; } }
+    @@keyframes bars-vertical { 0%, 100% { transform: scaleY(0.4); opacity: 0.7; } 50% { transform: scaleY(1); opacity: 1; } }
+    @@keyframes bars-pulse { 0%, 100% { transform: scaleY(0.3); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
+</style>
 
 @code {
     [Parameter]

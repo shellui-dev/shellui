@@ -23,7 +23,7 @@ public static class DialogContentTemplate
 @if (Dialog?.Open == true)
 {
     <div class=""fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"" @onclick=""Close""></div>
-    <div class=""@Shell.Cn(""fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg"", Class)"" @attributes=""AdditionalAttributes"">
+    <div @ref=""_content"" tabindex=""-1"" role=""dialog"" aria-modal=""true"" @onkeydown=""OnKeyDownAsync"" class=""outline-none @Shell.Cn(""fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg"", Class)"" @attributes=""AdditionalAttributes"">
         @ChildContent
         <button type=""button"" class=""absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"" @onclick=""Close"">
             <svg xmlns=""http://www.w3.org/2000/svg"" width=""24"" height=""24"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round"" class=""h-4 w-4""><path d=""M18 6 6 18""/><path d=""m6 6 12 12""/></svg>
@@ -40,6 +40,8 @@ public static class DialogContentTemplate
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
     private bool _isLocked;
+    private bool _focused;
+    private ElementReference _content;
 
     private async Task Close()
     {
@@ -49,8 +51,21 @@ public static class DialogContentTemplate
         }
     }
 
+    private async Task OnKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (e.Key == ""Escape"") await Close();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        var isOpen = Dialog?.Open == true;
+        if (isOpen && !_focused)
+        {
+            _focused = true;
+            try { await _content.FocusAsync(); } catch (InvalidOperationException) { }
+        }
+        else if (!isOpen) _focused = false;
+
         var shouldBeLocked = Dialog?.Open == true;
         if (shouldBeLocked && !_isLocked)
         {

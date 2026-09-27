@@ -11,11 +11,12 @@ public static class CommandTemplate
         Description = "Command palette component for quick actions",
         Category = ComponentCategory.Overlay,
         FilePath = "Command.razor",
-        Dependencies = new List<string> { "dialog" }
+        Dependencies = new List<string> { "dialog", "command-models" }
     };
 
     public static string Content => @"
 @using Microsoft.JSInterop
+@using YourProjectNamespace.Components.Models
 
 @if (IsOpen)
 {
@@ -30,6 +31,7 @@ public static class CommandTemplate
                 @ref=""_searchInput""
                 @bind-value=""_searchQuery""
                 @bind-value:event=""oninput""
+                @bind-value:after=""UpdateFilteredCommands""
                 @onkeydown=""OnKeyDown""
                 type=""text""
                 placeholder=""@Placeholder""
@@ -136,15 +138,15 @@ public static class CommandTemplate
         await IsOpenChanged.InvokeAsync(IsOpen);
     }
 
-    private void OnKeyDown(KeyboardEventArgs e)
+    private async Task OnKeyDown(KeyboardEventArgs e)
     {
         if (e.Key == ""Escape"")
         {
-            CloseCommand();
+            await CloseCommand();
         }
         else if (e.Key == ""Enter"" && _filteredCommands.Any())
         {
-            SelectCommand(_filteredCommands.First());
+            await SelectCommand(_filteredCommands.First());
         }
         else if (e.Key == ""ArrowDown"" && _filteredCommands.Count > 1)
         {
@@ -157,13 +159,6 @@ public static class CommandTemplate
     }
 }
 
-public class CommandItem
-{
-    public string Title { get; set; } = """";
-    public string? Description { get; set; }
-    public string? Icon { get; set; }
-    public string? Shortcut { get; set; }
-    public Action? Action { get; set; }
-}";
+";
 }
 
