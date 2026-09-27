@@ -90,7 +90,6 @@ public class TemplateCompileTests
         var failures = new List<string>();
         foreach (var (name, metadata) in ComponentRegistry.Components)
         {
-            if (!metadata.IsAvailable) continue;
             if (!metadata.FilePath.EndsWith(".razor", System.StringComparison.OrdinalIgnoreCase)) continue;
 
             var content = ComponentRegistry.GetComponentContent(name);
@@ -115,6 +114,32 @@ public class TemplateCompileTests
         Assert.True(failures.Count == 0,
             "The following templates have parse errors in their @code block:\n  " +
             string.Join("\n  ", failures));
+    }
+
+    [Fact]
+    public void EveryRegistryEntry_HasContent()
+    {
+        var empty = ComponentRegistry.Components.Keys
+            .Where(name => string.IsNullOrWhiteSpace(ComponentRegistry.GetComponentContent(name)))
+            .ToList();
+        Assert.True(empty.Count == 0, "Registry entries with empty content:\n  " + string.Join("\n  ", empty));
+    }
+
+    [Fact]
+    public void EveryHiddenEntry_IsReachableFromAnInstallableTarget()
+    {
+        var reachable = new HashSet<string>();
+        var stack = new Stack<string>(ComponentRegistry.Components.Where(c => c.Value.IsAvailable).Select(c => c.Key));
+        while (stack.Count > 0)
+        {
+            var name = stack.Pop();
+            if (!reachable.Add(name)) continue;
+            foreach (var dep in ComponentRegistry.Components[name].Dependencies ?? new List<string>())
+                stack.Push(dep);
+        }
+        // sidebar-js: legacy, kept for projects that still load shellui-sidebar.js.
+        var orphans = ComponentRegistry.Components.Keys.Where(k => !reachable.Contains(k) && k != "sidebar-js").ToList();
+        Assert.True(orphans.Count == 0, "Hidden entries no installable target depends on:\n  " + string.Join("\n  ", orphans));
     }
 
     /// Strips Razor markup directives so the remaining text can be best-effort
