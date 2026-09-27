@@ -103,9 +103,8 @@ Object.assign(window.ShellUI, {
     registerShortcut: function (handle, key, ctrl, meta, shift, alt, dotNetRef) {
         const listener = (e) => {
             if (e.key.toLowerCase() !== key.toLowerCase()) return;
-            if (ctrl && !e.ctrlKey) return;
-            if (meta && !e.metaKey) return;
-            if (!ctrl && !meta && (e.ctrlKey || e.metaKey)) return;
+            const hasModifier = (ctrl && e.ctrlKey) || (meta && e.metaKey);
+            if ((ctrl || meta) ? !hasModifier : (e.ctrlKey || e.metaKey)) return;
             if (shift !== e.shiftKey) return;
             if (alt !== e.altKey) return;
             e.preventDefault();

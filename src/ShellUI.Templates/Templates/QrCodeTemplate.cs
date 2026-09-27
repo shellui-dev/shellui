@@ -1,0 +1,95 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public static class QrCodeTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "qr-code",
+        DisplayName = "QR Code",
+        Description = "QR code rendered as SVG",
+        Category = ComponentCategory.DataDisplay,
+        FilePath = "QrCode.razor",
+        Dependencies = new List<string>(),
+        NuGetDependencies = new List<NuGetDependency>
+        {
+            new() { PackageId = "QRCoder", Version = "1.8.0" }
+        },
+        Tags = new List<string> { "qr", "code", "share" }
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using System.Text
+@using QRCoder
+
+@if (_moduleCount > 0)
+{
+    <svg xmlns=""http://www.w3.org/2000/svg""
+         viewBox=""0 0 @_moduleCount @_moduleCount""
+         width=""@Size""
+         height=""@Size""
+         shape-rendering=""crispEdges""
+         role=""img""
+         aria-label=""@(Label ?? Value)""
+         class=""@Shell.Cn(""rounded-md"", Class)""
+         @attributes=""AdditionalAttributes"">
+        <rect width=""100%"" height=""100%"" fill=""@Background"" />
+        <path d=""@_path"" fill=""@Foreground"" />
+    </svg>
+}
+
+@code {
+    [Parameter] public string Value { get; set; } = """";
+    [Parameter] public int Size { get; set; } = 160;
+    [Parameter] public string ErrorCorrection { get; set; } = ""M"";
+    [Parameter] public string Foreground { get; set; } = ""#000000"";
+    [Parameter] public string Background { get; set; } = ""#ffffff"";
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string _path = """";
+    private int _moduleCount;
+    private string? _renderedKey;
+
+    protected override void OnParametersSet()
+    {
+        var key = ErrorCorrection + ""|"" + Value;
+        if (key == _renderedKey) return;
+        _renderedKey = key;
+
+        if (string.IsNullOrEmpty(Value))
+        {
+            _moduleCount = 0;
+            _path = """";
+            return;
+        }
+
+        var level = ErrorCorrection.ToUpperInvariant() switch
+        {
+            ""L"" => QRCodeGenerator.ECCLevel.L,
+            ""Q"" => QRCodeGenerator.ECCLevel.Q,
+            ""H"" => QRCodeGenerator.ECCLevel.H,
+            _ => QRCodeGenerator.ECCLevel.M
+        };
+
+        using var generator = new QRCodeGenerator();
+        using var data = generator.CreateQrCode(Value, level);
+        var matrix = data.ModuleMatrix;
+        _moduleCount = matrix.Count;
+
+        var path = new StringBuilder();
+        for (var y = 0; y < matrix.Count; y++)
+        {
+            for (var x = 0; x < matrix[y].Count; x++)
+            {
+                if (matrix[y][x]) path.Append('M').Append(x).Append(',').Append(y).Append(""h1v1h-1z"");
+            }
+        }
+        _path = path.ToString();
+    }
+}
+";
+}

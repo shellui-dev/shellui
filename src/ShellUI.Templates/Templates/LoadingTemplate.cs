@@ -14,107 +14,233 @@ public static class LoadingTemplate
         Dependencies = new List<string>()
     };
 
-    public static string Content => @"
-@* 
- * IMPORTANT: For bars, bars-vertical, bars-pulse, and orbit variants to work,
- * add these CSS keyframes to your input.css file:
- *
- * @keyframes bars {
- *   0%, 100% { transform: scaleY(0.4); opacity: 0.7; }
- *   50% { transform: scaleY(1); opacity: 1; }
- * }
- *
- * @keyframes bars-vertical {
- *   0%, 100% { transform: scaleY(0.4); opacity: 0.7; }
- *   50% { transform: scaleY(1); opacity: 1; }
- * }
- *
- * @keyframes bars-pulse {
- *   0%, 100% { transform: scaleY(0.3); opacity: 0.5; }
- *   50% { transform: scaleY(1); opacity: 1; }
- * }
- *
- * @keyframes orbit {
- *   0% { transform: translate(-50%, 0) rotate(0deg) translateX(calc((var(--size, 1rem) - 0.5rem) / 2)) rotate(0deg); }
- *   100% { transform: translate(-50%, 0) rotate(360deg) translateX(calc((var(--size, 1rem) - 0.5rem) / 2)) rotate(-360deg); }
- * }
- *@
-@if (Variant == ""spinner"")
-{
-    <div class=""@($""animate-spin rounded-full border-2 border-muted border-t-primary {(Size == ""sm"" ? ""h-4 w-4"" : Size == ""lg"" ? ""h-8 w-8"" : ""h-6 w-6"")} {Class}"")""></div>
-}
-else if (Variant == ""dots"")
-{
-    <div class=""flex space-x-1"">
-        <div class=""@($""animate-bounce rounded-full bg-primary {(Size == ""sm"" ? ""h-2 w-2"" : Size == ""lg"" ? ""h-4 w-4"" : ""h-3 w-3"")} {Class}"")"" style=""animation-delay: 0ms""></div>
-        <div class=""@($""animate-bounce rounded-full bg-primary {(Size == ""sm"" ? ""h-2 w-2"" : Size == ""lg"" ? ""h-4 w-4"" : ""h-3 w-3"")} {Class}"")"" style=""animation-delay: 150ms""></div>
-        <div class=""@($""animate-bounce rounded-full bg-primary {(Size == ""sm"" ? ""h-2 w-2"" : Size == ""lg"" ? ""h-4 w-4"" : ""h-3 w-3"")} {Class}"")"" style=""animation-delay: 300ms""></div>
-    </div>
-}
-else if (Variant == ""pulse"")
-{
-    <div class=""@($""animate-pulse rounded-md bg-muted {(Size == ""sm"" ? ""h-4 w-16"" : Size == ""lg"" ? ""h-6 w-24"" : ""h-5 w-20"")} {Class}"")""></div>
-}
-else if (Variant == ""ring"")
-{
-    <div class=""@($""animate-spin rounded-full border-4 border-muted border-t-primary border-r-primary/50 {(Size == ""sm"" ? ""h-6 w-6"" : Size == ""lg"" ? ""h-12 w-12"" : ""h-8 w-8"")} {Class}"")""></div>
-}
-else if (Variant == ""bars"")
-{
-    <div class=""flex items-end gap-1"">
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-3 w-1"" : Size == ""lg"" ? ""h-6 w-2"" : ""h-4 w-1.5"")} {Class}"")"" style=""animation: bars 1.2s ease-in-out infinite; animation-delay: 0s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-4 w-1"" : Size == ""lg"" ? ""h-8 w-2"" : ""h-6 w-1.5"")} {Class}"")"" style=""animation: bars 1.2s ease-in-out infinite; animation-delay: 0.15s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-5 w-1"" : Size == ""lg"" ? ""h-10 w-2"" : ""h-8 w-1.5"")} {Class}"")"" style=""animation: bars 1.2s ease-in-out infinite; animation-delay: 0.3s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-4 w-1"" : Size == ""lg"" ? ""h-8 w-2"" : ""h-6 w-1.5"")} {Class}"")"" style=""animation: bars 1.2s ease-in-out infinite; animation-delay: 0.45s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-3 w-1"" : Size == ""lg"" ? ""h-6 w-2"" : ""h-4 w-1.5"")} {Class}"")"" style=""animation: bars 1.2s ease-in-out infinite; animation-delay: 0.6s;""></div>
-    </div>
-}
-else if (Variant == ""bars-vertical"")
-{
-    <div class=""flex items-center gap-1"">
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-3 w-1"" : Size == ""lg"" ? ""h-6 w-2"" : ""h-4 w-1.5"")} {Class}"")"" style=""animation: bars-vertical 1.2s ease-in-out infinite; animation-delay: 0s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-4 w-1"" : Size == ""lg"" ? ""h-8 w-2"" : ""h-6 w-1.5"")} {Class}"")"" style=""animation: bars-vertical 1.2s ease-in-out infinite; animation-delay: 0.15s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-5 w-1"" : Size == ""lg"" ? ""h-10 w-2"" : ""h-8 w-1.5"")} {Class}"")"" style=""animation: bars-vertical 1.2s ease-in-out infinite; animation-delay: 0.3s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-4 w-1"" : Size == ""lg"" ? ""h-8 w-2"" : ""h-6 w-1.5"")} {Class}"")"" style=""animation: bars-vertical 1.2s ease-in-out infinite; animation-delay: 0.45s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-3 w-1"" : Size == ""lg"" ? ""h-6 w-2"" : ""h-4 w-1.5"")} {Class}"")"" style=""animation: bars-vertical 1.2s ease-in-out infinite; animation-delay: 0.6s;""></div>
-    </div>
-}
-else if (Variant == ""bars-pulse"")
-{
-    <div class=""flex items-center gap-1"">
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-3 w-1"" : Size == ""lg"" ? ""h-6 w-2"" : ""h-4 w-1.5"")} {Class}"")"" style=""animation: bars-pulse 1.2s ease-in-out infinite; animation-delay: 0s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-4 w-1"" : Size == ""lg"" ? ""h-8 w-2"" : ""h-6 w-1.5"")} {Class}"")"" style=""animation: bars-pulse 1.2s ease-in-out infinite; animation-delay: 0.15s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-5 w-1"" : Size == ""lg"" ? ""h-10 w-2"" : ""h-8 w-1.5"")} {Class}"")"" style=""animation: bars-pulse 1.2s ease-in-out infinite; animation-delay: 0.3s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-4 w-1"" : Size == ""lg"" ? ""h-8 w-2"" : ""h-6 w-1.5"")} {Class}"")"" style=""animation: bars-pulse 1.2s ease-in-out infinite; animation-delay: 0.45s;""></div>
-        <div class=""@($""bg-primary rounded-sm {(Size == ""sm"" ? ""h-3 w-1"" : Size == ""lg"" ? ""h-6 w-2"" : ""h-4 w-1.5"")} {Class}"")"" style=""animation: bars-pulse 1.2s ease-in-out infinite; animation-delay: 0.6s;""></div>
-    </div>
-}
-else if (Variant == ""grid"")
-{
-    <div class=""@($""grid grid-cols-3 gap-1 {(Size == ""sm"" ? ""w-4 h-4"" : Size == ""lg"" ? ""w-8 h-8"" : ""w-6 h-6"")} {Class}"")"">
-        @for (int i = 0; i < 9; i++)
-        {
-            <div class=""bg-primary rounded-sm animate-pulse"" style=""animation-delay: @(i * 0.1)s; animation-duration: 1.2s;""></div>
-        }
-    </div>
-}
-else if (Variant == ""orbit"")
-{
-    <div class=""@($""relative {(Size == ""sm"" ? ""h-6 w-6"" : Size == ""lg"" ? ""h-12 w-12"" : ""h-8 w-8"")} {Class}"")"">
-        <div class=""absolute inset-0 rounded-full border-2 border-primary/20""></div>
-        <div class=""@($""absolute top-0 left-1/2 -translate-x-1/2 rounded-full bg-primary animate-spin {(Size == ""sm"" ? ""h-1.5 w-1.5"" : Size == ""lg"" ? ""h-3 w-3"" : ""h-2 w-2"")}"")"" style=""transform-origin: center calc(50% + @(Size == ""sm"" ? ""0.75rem"" : Size == ""lg"" ? ""1.5rem"" : ""1rem""));""></div>
-    </div>
-}
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using System.Globalization
+
+<span role=""status"" aria-label=""@Label""
+      class=""@Shell.Cn(""shellui-loading inline-flex shrink-0 items-center justify-center"", Variant is ""shimmer"" or ""logo"" ? ""text-foreground"" : ""text-primary"", Variant == ""progress"" ? ""w-full"" : """", Class)""
+      @attributes=""AdditionalAttributes"">
+    @switch (Variant)
+    {
+        case ""dots"":
+        case ""typing"":
+        case ""wave"":
+            <span class=""flex items-center"" style=""height:@Px(S);gap:@Px(U * 0.5)"">
+                @for (var i = 0; i < (Variant == ""wave"" ? 5 : 3); i++)
+                {
+                    <span class=""block rounded-full bg-current"" style=""width:@Px(U);height:@Px(U);animation:@DotAnimation(i)""></span>
+                }
+            </span>
+            break;
+
+        case ""pulse"":
+            <span class=""block rounded-md bg-muted"" style=""width:@Px(S * 3.5);height:@Px(S * 0.75);animation:shellui-loading-fade 1.6s ease-in-out infinite""></span>
+            break;
+
+        case ""ring"":
+            <svg viewBox=""0 0 50 50"" style=""width:@Px(S);height:@Px(S);animation:shellui-loading-spin 1.4s linear infinite"">
+                <circle cx=""25"" cy=""25"" r=""20"" fill=""none"" stroke=""currentColor"" stroke-opacity=""0.15"" stroke-width=""5"" />
+                <circle cx=""25"" cy=""25"" r=""20"" fill=""none"" stroke=""currentColor"" stroke-width=""5"" stroke-linecap=""round"" style=""animation:shellui-loading-arc 1.4s ease-in-out infinite"" />
+            </svg>
+            break;
+
+        case ""bars"":
+        case ""bars-vertical"":
+        case ""bars-pulse"":
+            <span class=""flex items-center"" style=""height:@Px(S);gap:@Px(S / 10)"">
+                @for (var i = 0; i < 5; i++)
+                {
+                    <span class=""block h-full rounded-full bg-current"" style=""width:@Px(S / 8);@BarStyle(i)""></span>
+                }
+            </span>
+            break;
+
+        case ""grid"":
+        case ""snake"":
+        case ""rows"":
+        case ""columns"":
+        case ""sequence"":
+        case ""twinkle"":
+            <span class=""grid grid-cols-3"" style=""width:@Px(S);height:@Px(S);gap:@Px(S / 12)"">
+                @for (var i = 0; i < 9; i++)
+                {
+                    <span class=""block rounded-[2px] bg-current"" style=""@CellStyle(i)""></span>
+                }
+            </span>
+            break;
+
+        case ""logo"":
+            <span class=""grid grid-cols-5"" style=""width:@Px(S * 1.25);height:@Px(S * 1.25);gap:@Px(S / 16)"">
+                @for (var i = 0; i < 25; i++)
+                {
+                    <span class=""block rounded-full bg-current"" style=""@LogoCellStyle(i)""></span>
+                }
+            </span>
+            break;
+
+        case ""orbit"":
+            <svg viewBox=""0 0 24 24"" style=""width:@Px(S);height:@Px(S);animation:shellui-loading-spin 1s linear infinite"">
+                <circle cx=""12"" cy=""12"" r=""9"" fill=""none"" stroke=""currentColor"" stroke-opacity=""0.15"" stroke-width=""2"" />
+                <circle cx=""12"" cy=""12"" r=""9"" fill=""none"" stroke=""currentColor"" stroke-opacity=""0.45"" stroke-width=""2"" stroke-linecap=""round"" stroke-dasharray=""14 42.55"" stroke-dashoffset=""-28.3"" />
+                <circle cx=""12"" cy=""3"" r=""2.5"" fill=""currentColor"" />
+            </svg>
+            break;
+
+        case ""activity"":
+            <span class=""relative block"" style=""width:@Px(S);height:@Px(S)"">
+                @for (var i = 0; i < 12; i++)
+                {
+                    <span class=""absolute left-1/2 top-0 block rounded-full bg-current""
+                          style=""width:@Px(Math.Max(1.5, S * 0.08));height:@Px(S * 0.28);margin-left:@Px(-Math.Max(1.5, S * 0.08) / 2);transform:rotate(@(i * 30)deg);transform-origin:50% @Px(S / 2);animation:shellui-loading-spoke 1s linear @Sec(i / 12.0 - 1) infinite""></span>
+                }
+            </span>
+            break;
+
+        case ""chase"":
+            <span class=""relative block"" style=""width:@Px(S);height:@Px(S)"">
+                @for (var i = 0; i < 8; i++)
+                {
+                    <span class=""absolute inset-0 block"" style=""transform:rotate(@(i * 45)deg)"">
+                        <span class=""absolute left-1/2 top-0 block rounded-full bg-current""
+                              style=""width:@Px(S * 0.2);height:@Px(S * 0.2);margin-left:@Px(-S * 0.1);animation:shellui-loading-chase 1s ease-in-out @Sec(i / 8.0 - 1) infinite""></span>
+                    </span>
+                }
+            </span>
+            break;
+
+        case ""dual-ring"":
+            <span class=""relative block"" style=""width:@Px(S);height:@Px(S)"">
+                <svg viewBox=""0 0 50 50"" class=""absolute inset-0"" style=""width:100%;height:100%;animation:shellui-loading-spin 1.2s linear infinite"">
+                    <circle cx=""25"" cy=""25"" r=""21"" fill=""none"" stroke=""currentColor"" stroke-width=""4"" stroke-linecap=""round"" stroke-dasharray=""66 132"" />
+                </svg>
+                <svg viewBox=""0 0 50 50"" class=""absolute"" style=""inset:25%;width:50%;height:50%;animation:shellui-loading-spin 0.9s linear infinite reverse"">
+                    <circle cx=""25"" cy=""25"" r=""19"" fill=""none"" stroke=""currentColor"" stroke-opacity=""0.6"" stroke-width=""7"" stroke-linecap=""round"" stroke-dasharray=""60 120"" />
+                </svg>
+            </span>
+            break;
+
+        case ""ripple"":
+            <span class=""relative block"" style=""width:@Px(S);height:@Px(S)"">
+                <span class=""absolute inset-0 rounded-full"" style=""border:@Px(Border) solid currentColor;animation:shellui-loading-ripple 1.4s cubic-bezier(0,0.2,0.8,1) infinite""></span>
+                <span class=""absolute inset-0 rounded-full"" style=""border:@Px(Border) solid currentColor;animation:shellui-loading-ripple 1.4s cubic-bezier(0,0.2,0.8,1) -0.7s infinite""></span>
+            </span>
+            break;
+
+        case ""progress"":
+            <span class=""relative block w-full overflow-hidden rounded-full"" style=""height:@Px(Size == ""sm"" ? 2 : Size == ""lg"" ? 6 : 4);background:color-mix(in oklab, currentColor 15%, transparent)"">
+                <span class=""absolute inset-y-0 left-0 block w-2/5 rounded-full bg-current"" style=""animation:shellui-loading-progress 1.4s cubic-bezier(0.65,0.05,0.36,1) infinite""></span>
+            </span>
+            break;
+
+        case ""shimmer"":
+            <span class=""@Shell.Cn(""font-medium"", Size == ""sm"" ? ""text-xs"" : Size == ""lg"" ? ""text-base"" : ""text-sm"")""
+                  style=""background-image:linear-gradient(90deg, color-mix(in oklab, currentColor 35%, transparent) 25%, currentColor 50%, color-mix(in oklab, currentColor 35%, transparent) 75%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shellui-loading-shimmer 2s linear infinite"">@(Text ?? ""Loading..."")</span>
+            break;
+
+        default:
+            <span class=""block rounded-full"" style=""width:@Px(S);height:@Px(S);border:@Px(Border) solid color-mix(in oklab, currentColor 20%, transparent);border-top-color:currentColor;animation:shellui-loading-spin 0.75s linear infinite""></span>
+            break;
+    }
+</span>
+
+<style>
+    @@keyframes shellui-loading-spin { to { transform: rotate(360deg); } }
+    @@keyframes shellui-loading-arc { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; } }
+    @@keyframes shellui-loading-bounce { 0%, 80%, 100% { transform: translateY(0); opacity: .45; } 40% { transform: translateY(-80%); opacity: 1; } }
+    @@keyframes shellui-loading-typing { 0%, 60%, 100% { transform: scale(.75); opacity: .25; } 30% { transform: scale(1); opacity: 1; } }
+    @@keyframes shellui-loading-wave { 0%, 100% { transform: translateY(70%); } 50% { transform: translateY(-70%); } }
+    @@keyframes shellui-loading-fade { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+    @@keyframes shellui-loading-bars { 0%, 100% { transform: scaleY(.35); } 50% { transform: scaleY(1); } }
+    @@keyframes shellui-loading-bars-fade { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+    @@keyframes shellui-loading-grid { 0%, 70%, 100% { transform: scale(1); opacity: 1; } 35% { transform: scale(.35); opacity: .35; } }
+    @@keyframes shellui-loading-trail { 0% { opacity: 1; } 75%, 100% { opacity: .12; } }
+    @@keyframes shellui-loading-logo-on { 0%, 35%, 100% { opacity: 1; } 50%, 85% { opacity: .1; } }
+    @@keyframes shellui-loading-logo-off { 0%, 35%, 100% { opacity: .1; } 50%, 85% { opacity: 1; } }
+    @@keyframes shellui-loading-spoke { 0% { opacity: 1; } 100% { opacity: .15; } }
+    @@keyframes shellui-loading-chase { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(.35); opacity: .2; } }
+    @@keyframes shellui-loading-twinkle { 0%, 100% { opacity: .15; } 50% { opacity: 1; } }
+    @@keyframes shellui-loading-ripple { 0% { transform: scale(.1); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+    @@keyframes shellui-loading-progress { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+    @@keyframes shellui-loading-shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+    @@media (prefers-reduced-motion: reduce) { .shellui-loading * { animation-duration: 2.5s !important; } }
+</style>
 
 @code {
-    [Parameter]
-    public string Variant { get; set; } = ""spinner"";
+    [Parameter] public string Variant { get; set; } = ""spinner"";
+    [Parameter] public string Size { get; set; } = ""default"";
+    [Parameter] public string Label { get; set; } = ""Loading"";
+    [Parameter] public string? Text { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    [Parameter]
-    public string Size { get; set; } = ""default"";
+    // Clockwise path around the 3x3 grid; the centre cell stays dim.
+    private static readonly int[] SnakePath = { 0, 1, 2, 5, 8, 7, 6, 3 };
+    private static readonly double[] TwinkleDelays = { 0.2, 0.9, 0.5, 1.2, 0.1, 0.7, 1.4, 0.3, 1.0 };
 
-    [Parameter]
-    public string Class { get; set; } = """";
-}";
+    // The ShellUI mark: a prompt chevron beside a cursor bar.
+    private static readonly bool[] LogoPattern =
+    {
+        true,  false, false, false, true,
+        false, true,  false, false, true,
+        false, false, true,  false, true,
+        false, true,  false, false, true,
+        true,  false, false, false, true,
+    };
+
+    private double S => Size switch { ""sm"" => 16, ""lg"" => 40, _ => 24 };
+    private double U => S / 4;
+    private double Border => Math.Max(2, Math.Round(S / 10));
+
+    private static string Px(double value) => value.ToString(""0.##"", CultureInfo.InvariantCulture) + ""px"";
+    private static string Sec(double value) => value.ToString(""0.###"", CultureInfo.InvariantCulture) + ""s"";
+
+    private string DotAnimation(int i) => Variant switch
+    {
+        ""typing"" => $""shellui-loading-typing 1.4s ease-in-out {Sec(i * 0.2)} infinite"",
+        ""wave"" => $""shellui-loading-wave 1s ease-in-out {Sec(i * 0.1 - 1)} infinite"",
+        _ => $""shellui-loading-bounce 1.2s ease-in-out {Sec(i * 0.16)} infinite""
+    };
+
+    private string BarStyle(int i) => Variant switch
+    {
+        ""bars-pulse"" => $""animation:shellui-loading-bars-fade 1s ease-in-out {Sec(i * 0.12)} infinite"",
+        ""bars-vertical"" => $""transform-origin:center;animation:shellui-loading-bars 1s ease-in-out {Sec(i * 0.12)} infinite"",
+        _ => $""transform-origin:bottom;animation:shellui-loading-bars 1s ease-in-out {Sec(i * 0.12)} infinite""
+    };
+
+    private string CellStyle(int i)
+    {
+        int row = i / 3, column = i % 3;
+        switch (Variant)
+        {
+            case ""grid"":
+                return $""animation:shellui-loading-grid 1.3s ease-in-out {Sec((row + column) * 0.1)} infinite"";
+            case ""rows"":
+                return Trail(row, 3, 1.2);
+            case ""columns"":
+                return Trail(column, 3, 1.2);
+            case ""sequence"":
+                return Trail(i, 9, 1.35);
+            case ""twinkle"":
+                return $""animation:shellui-loading-twinkle 1.6s ease-in-out {Sec(TwinkleDelays[i] - 1.6)} infinite"";
+            default:
+                var step = Array.IndexOf(SnakePath, i);
+                return step < 0 ? ""opacity:.12"" : Trail(step, 8, 1);
+        }
+    }
+
+    private static string LogoCellStyle(int i)
+    {
+        var on = LogoPattern[i];
+        var delay = ((i / 5) + (i % 5)) * 0.05;
+        return $""opacity:{(on ? ""1"" : "".1"")};animation:shellui-loading-logo-{(on ? ""on"" : ""off"")} 2.4s ease-in-out {Sec(delay)} infinite"";
+    }
+
+    // Each step lights up in turn and fades while the next one brightens.
+    private static string Trail(int step, int steps, double duration) =>
+        $""animation:shellui-loading-trail {Sec(duration)} linear {Sec(step * duration / steps - duration)} infinite"";
+}
+";
 }
 

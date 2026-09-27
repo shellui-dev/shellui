@@ -16,6 +16,7 @@ public static class CommandPaletteTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using Microsoft.JSInterop
+@using YourProjectNamespace.Components.Models
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
@@ -35,10 +36,20 @@ public static class CommandPaletteTemplate
     [Parameter] public bool UseMeta { get; set; } = true;
     [Parameter] public bool UseShift { get; set; }
     [Parameter] public bool UseAlt { get; set; }
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
 
     private bool _isOpen;
     private DotNetObjectReference<CommandPalette>? _selfRef;
     private readonly string _handle = Guid.NewGuid().ToString(""N"");
+    private bool _lastIsOpen;
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen == _lastIsOpen) return;
+        _lastIsOpen = IsOpen;
+        _isOpen = IsOpen;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -52,17 +63,17 @@ public static class CommandPaletteTemplate
     }
 
     [JSInvokable]
-    public Task OnShortcut()
+    public async Task OnShortcut()
     {
         _isOpen = !_isOpen;
+        await IsOpenChanged.InvokeAsync(_isOpen);
         StateHasChanged();
-        return Task.CompletedTask;
     }
 
-    private Task OnIsOpenChanged(bool open)
+    private async Task OnIsOpenChanged(bool open)
     {
         _isOpen = open;
-        return Task.CompletedTask;
+        await IsOpenChanged.InvokeAsync(open);
     }
 
     private async Task OnCommandSelected(CommandItem item)
