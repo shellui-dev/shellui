@@ -12,21 +12,63 @@ public static class TabsTemplate
         Category = ComponentCategory.Navigation,
 
         FilePath = "Tabs.razor",
-        Dependencies = new List<string> { "tabs-list", "tabs-trigger", "tabs-content" }
+        Dependencies = new List<string> { "tabs-list", "tabs-trigger", "tabs-content", "tab-models" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.Models
 
 <CascadingValue Value=""this"" IsFixed=""true"">
-    <div class=""@Shell.Cn(""w-full"", Class)"" @attributes=""AdditionalAttributes"">
-        @ChildContent
-    </div>
+    @if (TabItems != null && TabItems.Any() || Items != null && Items.Any())
+    {
+        var tabs = TabItems ?? Items;
+        var effectiveValue = CurrentValue;
+        if (string.IsNullOrEmpty(effectiveValue))
+            effectiveValue = tabs!.FirstOrDefault()?.Id ?? """";
+        <div class=""@Shell.Cn(""w-full"", Class)"" @attributes=""AdditionalAttributes"">
+            <div class=""inline-flex h-9 w-fit items-center justify-center rounded-lg bg-muted p-[3px] text-muted-foreground"">
+                @foreach (var item in tabs!)
+                {
+                    var isActive = effectiveValue == item.Id;
+                    <button type=""button""
+                            @onclick=""() => SetValueAsync(item.Id)""
+                            disabled=""@item.Disabled""
+                            class=""@Shell.Cn(""inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"", isActive ? ""bg-background text-foreground shadow-sm"" : ""hover:text-foreground"")"">
+                        @if (!string.IsNullOrEmpty(item.Icon))
+                        {
+                            <span class=""mr-2"">@((MarkupString)item.Icon)</span>
+                        }
+                        @item.Label
+                    </button>
+                }
+            </div>
+            <div class=""mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"">
+                @{
+                    var activeItem = tabs!.FirstOrDefault(x => x.Id == effectiveValue);
+                    if (activeItem != null && activeItem.Content != null)
+                    {
+                        @activeItem.Content
+                    }
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class=""@Shell.Cn(""w-full"", Class)"" @attributes=""AdditionalAttributes"">
+            @ChildContent
+        </div>
+    }
 </CascadingValue>
 
 @code {
+    [Parameter] public IEnumerable<TabItem>? Items { get; set; }
+    [Parameter] public IEnumerable<TabItem>? TabItems { get; set; }
     [Parameter] public string Value { get; set; } = """";
     [Parameter] public string DefaultValue { get; set; } = """";
+    [Parameter] public string ActiveTab { get; set; } = """";
     [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public EventCallback<string> ActiveTabChanged { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
@@ -36,25 +78,34 @@ public static class TabsTemplate
 
     protected override void OnInitialized()
     {
-        _effectiveValue = !string.IsNullOrEmpty(Value) ? Value : DefaultValue;
+        _effectiveValue = !string.IsNullOrEmpty(Value) ? Value : !string.IsNullOrEmpty(ActiveTab) ? ActiveTab : DefaultValue;
     }
 
     protected override void OnParametersSet()
     {
-        if (!string.IsNullOrEmpty(Value))
-            _effectiveValue = Value;
-        else if (string.IsNullOrEmpty(_effectiveValue) && !string.IsNullOrEmpty(DefaultValue))
+        var controlled = !string.IsNullOrEmpty(Value) || !string.IsNullOrEmpty(ActiveTab);
+        if (controlled)
+            _effectiveValue = !string.IsNullOrEmpty(Value) ? Value : ActiveTab;
+        else if (string.IsNullOrEmpty(_effectiveValue))
+        {
             _effectiveValue = DefaultValue;
+            if (string.IsNullOrEmpty(_effectiveValue))
+            {
+                var tabs = TabItems ?? Items;
+                _effectiveValue = tabs?.FirstOrDefault()?.Id ?? """";
+            }
+        }
     }
 
-    public string CurrentValue => !string.IsNullOrEmpty(Value) ? Value : _effectiveValue;
+    public string CurrentValue => !string.IsNullOrEmpty(Value) ? Value : !string.IsNullOrEmpty(ActiveTab) ? ActiveTab : _effectiveValue;
 
     public async Task SetValueAsync(string newValue)
     {
         if (_effectiveValue == newValue) return;
         _effectiveValue = newValue;
         await ValueChanged.InvokeAsync(newValue);
-        if (string.IsNullOrEmpty(Value))
+        await ActiveTabChanged.InvokeAsync(newValue);
+        if (string.IsNullOrEmpty(Value) && string.IsNullOrEmpty(ActiveTab))
             StateHasChanged();
     }
 }

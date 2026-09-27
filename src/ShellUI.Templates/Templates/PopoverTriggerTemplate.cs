@@ -11,7 +11,6 @@ public static class PopoverTriggerTemplate
         Description = "Trigger for Popover (shadcn-style)",
         Category = ComponentCategory.Overlay,
         FilePath = "PopoverTrigger.razor",
-        Dependencies = new List<string> { "popover" },
         IsAvailable = false,
         Tags = new List<string> { "overlay", "popover", "trigger" }
     };

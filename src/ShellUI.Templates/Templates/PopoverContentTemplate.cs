@@ -11,7 +11,6 @@ public static class PopoverContentTemplate
         Description = "Content panel for Popover (shadcn-style)",
         Category = ComponentCategory.Overlay,
         FilePath = "PopoverContent.razor",
-        Dependencies = new List<string> { "popover" },
         IsAvailable = false,
         Tags = new List<string> { "overlay", "popover", "content" }
     };

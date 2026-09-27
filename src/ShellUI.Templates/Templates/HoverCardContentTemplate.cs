@@ -11,7 +11,6 @@ public static class HoverCardContentTemplate
         Description = "Content panel for HoverCard (shadcn-style)",
         Category = ComponentCategory.Overlay,
         FilePath = "HoverCardContent.razor",
-        Dependencies = new List<string> { "hover-card" },
         IsAvailable = false,
         Tags = new List<string> { "overlay", "hover-card", "content" }
     };
@@ -20,7 +19,7 @@ public static class HoverCardContentTemplate
 
 @if (Parent?.IsVisible == true)
 {
-    <div class=""@Shell.Cn(""absolute z-50 w-64 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95"", Parent.PositionClasses)"" @attributes=""AdditionalAttributes"">
+    <div class=""@Shell.Cn(""absolute z-50 w-64 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95"", Parent.PositionClasses, Parent.Class)"" @onmouseover=""() => Parent.Show()"" @onmouseout=""() => Parent.Hide()"" @attributes=""AdditionalAttributes"">
         @ChildContent
     </div>
 }
