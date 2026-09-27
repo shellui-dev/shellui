@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers CLI `0.3.0-rc.2`: `net10.0`, Tailwind CSS `4.3.2`, and 76 direct component targets. Older versions, including the stable `0.2.1`, lack some of these commands.
+This reference covers CLI `0.3.0-rc.2`: `net10.0`, Tailwind CSS `4.3.2`, and 90 direct component targets. Older versions, including the stable `0.2.1`, lack some of these commands.
 
 ## Command prefix
 
@@ -86,7 +86,7 @@ shellui list --installed
 shellui list --available
 ```
 
-There are 76 direct targets. Registry entries used only as dependencies are not counted as direct targets. Choose either `--installed` or `--available` to filter the output.
+There are 90 direct targets. Registry entries used only as dependencies are not counted as direct targets. Choose either `--installed` or `--available` to filter the output.
 
 ## `remove`
 

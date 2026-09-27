@@ -6,7 +6,7 @@ Answers for the current ShellUI source and the currently published packages.
 
 ### Which version should I use?
 
-Use `0.3.0-rc.2`. It targets `net10.0`, uses Tailwind CSS `4.3.2`, and exposes 76 direct component targets. A plain install selects the older stable `0.2.1`, so select the prerelease explicitly:
+Use `0.3.0-rc.2`. It targets `net10.0`, uses Tailwind CSS `4.3.2`, and exposes 90 direct component targets. A plain install selects the older stable `0.2.1`, so select the prerelease explicitly:
 
 ```bash
 dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.2
@@ -49,7 +49,7 @@ shellui add button,input,card
 shellui add button,card dialog
 ```
 
-Use the exact names printed by `shellui list`. Dependency-only entries are installed automatically and are not counted among the 76 direct targets.
+Use the exact names printed by `shellui list`. Dependency-only entries are installed automatically and are not counted among the 90 direct targets.
 
 ### Which names should I use?
 
@@ -87,7 +87,7 @@ shellui list --installed
 shellui list --available
 ```
 
-There are 76 direct targets. Use the command output as the authoritative name list.
+There are 90 direct targets. Use the command output as the authoritative name list.
 
 ### What happens when I update a component?
 

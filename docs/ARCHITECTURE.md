@@ -11,7 +11,7 @@ This document describes the ShellUI source tree.
 | Tailwind CSS | `4.3.2` |
 | Solution | `ShellUI.slnx` |
 | Solution projects | 6 |
-| Registry | 176 entries: 76 direct targets and 100 hidden dependency entries |
+| Registry | 194 entries: 90 direct targets and 104 hidden dependency entries |
 
 ShellUI is a CLI-first Blazor component library. The CLI copies source into a consumer project, while `ShellUI.Components` is an independent Razor class library (RCL) for consumers who prefer NuGet.
 
@@ -89,13 +89,13 @@ The implemented command tree is:
 
 ## Registry Model and Counts
 
-`ComponentRegistry` contains 176 metadata entries:
+`ComponentRegistry` contains 194 metadata entries:
 
 | Registry classification | Count | Meaning |
 |---|---:|---|
-| Direct targets | 76 | Entries with `IsAvailable = true`; these are the normal targets shown by `shellui list`. |
-| Hidden entries | 100 | Entries with `IsAvailable = false`; these are generally installed through a parent target. |
-| **Total** | **176** | All registered templates, sub-components, variants, models, services, and assets. |
+| Direct targets | 90 | Entries with `IsAvailable = true`; these are the normal targets shown by `shellui list`. |
+| Hidden entries | 104 | Entries with `IsAvailable = false`; these are generally installed through a parent target. |
+| **Total** | **194** | All registered templates, sub-components, variants, models, services, and assets. |
 
 A dependency entry is still real source and is written to the consumer project when the dependency walk reaches it. The two counts describe registry visibility, not two different component libraries.
 

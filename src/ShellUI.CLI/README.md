@@ -138,10 +138,10 @@ The lock file stores the original source URL, theme name, timestamp, and SHA-256
 
 ## Component inventory
 
-The registry contains **176 entries**:
+The registry contains **194 entries**:
 
-- **76 direct install targets**, shown by `list`
-- **100 hidden dependency entries**, resolved by `add` but omitted from the direct list
+- **90 direct install targets**, shown by `list`
+- **104 hidden dependency entries**, resolved by `add` but omitted from the direct list
 
 The targets added in `0.3.0-rc.2` are:
 
