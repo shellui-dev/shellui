@@ -1,0 +1,68 @@
+@namespace BlazorInteractiveServer.Components.UI
+@implements IDisposable
+
+<li role="treeitem"
+    aria-expanded="@(HasChildren ? (_expanded ? "true" : "false") : null)"
+    aria-selected="@(IsSelected ? "true" : "false")"
+    class="@Shell.Cn(Class)"
+    @attributes="AdditionalAttributes">
+    <button type="button" disabled="@Disabled" @onclick="HandleClickAsync"
+            class="@Shell.Cn("flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50", IsSelected ? "bg-accent font-medium text-accent-foreground" : "text-foreground hover:bg-muted")">
+        @if (HasChildren)
+        {
+            <svg class="@Shell.Cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200", _expanded ? "rotate-90" : "")" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        }
+        else
+        {
+            <span class="w-4 shrink-0"></span>
+        }
+        @if (Icon != null)
+        {
+            <span class="flex shrink-0 text-muted-foreground [&>svg]:size-4">@Icon</span>
+        }
+        <span class="truncate">@Label</span>
+    </button>
+    @if (HasChildren && _expanded)
+    {
+        <ul role="group" class="ml-4 mt-0.5 space-y-0.5 border-l border-border pl-2">
+            @ChildContent
+        </ul>
+    }
+</li>
+
+@code {
+    [CascadingParameter] public TreeView? Tree { get; set; }
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public bool DefaultExpanded { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? Icon { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _expanded;
+
+    private string EffectiveValue => Value ?? Label;
+    private bool HasChildren => ChildContent != null;
+    private bool IsSelected => Tree?.SelectedValue == EffectiveValue;
+
+    protected override void OnInitialized()
+    {
+        _expanded = DefaultExpanded;
+        Tree?.Register(this);
+    }
+
+    internal void Refresh() => InvokeAsync(StateHasChanged);
+
+    private async Task HandleClickAsync()
+    {
+        if (HasChildren) _expanded = !_expanded;
+        if (Tree != null) await Tree.SelectAsync(EffectiveValue);
+    }
+
+    public void Dispose() => Tree?.Unregister(this);
+}

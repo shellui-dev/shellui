@@ -1,172 +1,198 @@
-@using Microsoft.JSInterop
 @using BlazorInteractiveServer.Components.Models
 
-<Dialog Open="IsOpen" OpenChanged="HandleOpenChanged">
-    <DialogContent Class="overflow-hidden p-0">
-        <!-- Search Input -->
-        <div class="flex items-center border-b border-border px-3 py-2">
-            <svg class="mr-2 h-4 w-4 text-foreground/70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+@if (IsOpen)
+{
+    <div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity duration-150 starting:opacity-0" @onclick="CloseAsync"></div>
+    <div role="dialog" aria-modal="true" aria-label="Command menu"
+         class="fixed left-1/2 top-[15vh] z-50 w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl transition duration-150 ease-out starting:scale-95 starting:opacity-0">
+        <div class="flex items-center gap-3 border-b border-border px-4">
+            <svg class="h-4 w-4 shrink-0 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
             </svg>
-            <input
-                @ref="_searchInput"
-                @bind-value="_searchQuery"
-                @bind-value:event="oninput"
-                @onkeydown="OnKeyDown"
-                type="text"
-                placeholder="@Placeholder"
-                class="flex h-10 w-full rounded-md bg-transparent py-2 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50" />
+            <input @ref="_input"
+                   value="@_query"
+                   @oninput="OnInput"
+                   @onkeydown="OnKeyDownAsync"
+                   type="text"
+                   role="combobox"
+                   aria-expanded="true"
+                   aria-controls="@_listId"
+                   aria-activedescendant="@(_filtered.Count > 0 ? ItemId(_active) : null)"
+                   autocomplete="off"
+                   spellcheck="false"
+                   placeholder="@Placeholder"
+                   class="h-12 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
+            <kbd class="hidden h-5 shrink-0 items-center rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground sm:inline-flex">Esc</kbd>
         </div>
 
-        <!-- Results -->
-        <div class="max-h-[300px] overflow-y-auto p-2">
-            @if (_filteredCommands.Any())
+        <div id="@_listId" role="listbox" class="max-h-[min(360px,55vh)] overflow-y-auto overscroll-contain p-1.5">
+            @if (_filtered.Count == 0)
             {
-                @foreach (var command in _filteredCommands)
+                <p class="py-10 text-center text-sm text-muted-foreground">No results for "@_query"</p>
+            }
+            else
+            {
+                string? group = null;
+                for (var i = 0; i < _filtered.Count; i++)
                 {
-                    <button
-                        @onclick="() => SelectCommand(command)"
-                        class="flex w-full items-center rounded-md px-2 py-2 text-sm text-left hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none">
+                    var index = i;
+                    var command = _filtered[i];
+                    if (!string.IsNullOrEmpty(command.Group) && command.Group != group)
+                    {
+                        group = command.Group;
+                        <div class="px-2.5 pb-1 pt-3 text-xs font-medium text-muted-foreground first:pt-1.5">@group</div>
+                    }
+                    <div id="@ItemId(index)"
+                         @ref="_itemRefs[index]"
+                         role="option"
+                         tabindex="-1"
+                         aria-selected="@(index == _active ? "true" : "false")"
+                         @onclick="() => SelectAsync(command)"
+                         @onmousemove="() => SetActive(index)"
+                         class="@Shell.Cn("flex cursor-pointer select-none items-center gap-3 rounded-lg px-2.5 py-2 text-sm outline-none", index == _active ? "bg-accent text-accent-foreground" : "text-foreground")">
                         @if (!string.IsNullOrEmpty(command.Icon))
                         {
-                            <div class="mr-3 flex h-4 w-4 items-center justify-center text-muted-foreground">
-                                @((MarkupString)command.Icon)
-                            </div>
+                            <span class="flex h-4 w-4 shrink-0 items-center justify-center text-muted-foreground [&>svg]:size-4">@((MarkupString)command.Icon)</span>
                         }
-                        <div class="flex-1">
-                            <div class="font-medium text-foreground">@command.Title</div>
+                        <div class="min-w-0 flex-1">
+                            <div class="truncate font-medium">@command.Title</div>
                             @if (!string.IsNullOrEmpty(command.Description))
                             {
-                                <div class="text-xs text-muted-foreground">@command.Description</div>
+                                <div class="truncate text-xs text-muted-foreground">@command.Description</div>
                             }
                         </div>
                         @if (!string.IsNullOrEmpty(command.Shortcut))
                         {
-                            <div class="ml-3 flex items-center gap-0.5">
+                            <span class="ml-auto flex shrink-0 items-center gap-1">
                                 @foreach (var key in command.Shortcut.Split('+'))
                                 {
-                                    <kbd class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-                                        <span class="text-xs">@key</span>
-                                    </kbd>
+                                    <kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground">@key</kbd>
                                 }
-                            </div>
+                            </span>
                         }
-                    </button>
+                    </div>
                 }
             }
-            else
-            {
-                <div class="p-6 text-center text-sm text-muted-foreground">
-                    No results found.
-                </div>
-            }
         </div>
-    </DialogContent>
-</Dialog>
+
+        <div class="flex items-center gap-4 border-t border-border bg-muted/40 px-4 py-2 text-xs text-muted-foreground">
+            <span class="flex items-center gap-1">
+                <kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-background px-1 font-mono text-[10px]">&uarr;</kbd>
+                <kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-background px-1 font-mono text-[10px]">&darr;</kbd>
+                Navigate
+            </span>
+            <span class="flex items-center gap-1">
+                <kbd class="inline-flex h-5 min-w-5 items-center justify-center rounded border border-border bg-background px-1 font-mono text-[10px]">&crarr;</kbd>
+                Select
+            </span>
+            <span class="ml-auto tabular-nums">@_filtered.Count @(_filtered.Count == 1 ? "result" : "results")</span>
+        </div>
+    </div>
+}
 
 @code {
-    [Parameter]
-    public bool IsOpen { get; set; }
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+    [Parameter] public List<CommandItem> Commands { get; set; } = new();
+    [Parameter] public EventCallback<CommandItem> CommandSelected { get; set; }
+    [Parameter] public string Placeholder { get; set; } = "Type a command or search...";
 
-    [Parameter]
-    public string Placeholder { get; set; } = "Type a command or search...";
+    private readonly string _listId = $"command-list-{Guid.NewGuid():N}";
+    private readonly Dictionary<int, ElementReference> _itemRefs = new();
+    private ElementReference _input;
+    private List<CommandItem> _filtered = new();
+    private string _query = "";
+    private int _active;
+    private bool _wasOpen;
+    private bool _focusInput;
+    private bool _scrollToActive;
 
-    [Parameter]
-    public List<CommandItem> Commands { get; set; } = new();
-
-    [Parameter]
-    public EventCallback<bool> IsOpenChanged { get; set; }
-
-    [Parameter]
-    public EventCallback<CommandItem> CommandSelected { get; set; }
-
-    private string _searchQuery = "";
-    private List<CommandItem> _filteredCommands = new();
-    private ElementReference _searchInput;
-    private bool _shouldFocus;
+    private string ItemId(int index) => $"{_listId}-{index}";
 
     protected override void OnParametersSet()
     {
-        UpdateFilteredCommands();
-        if (IsOpen)
+        if (IsOpen && !_wasOpen)
         {
-            _shouldFocus = true;
+            _query = "";
+            _active = 0;
+            _focusInput = true;
+        }
+        _wasOpen = IsOpen;
+        Filter();
+    }
+
+    private void OnInput(ChangeEventArgs e)
+    {
+        _query = e.Value?.ToString() ?? "";
+        _active = 0;
+        Filter();
+    }
+
+    private void Filter()
+    {
+        var query = _query.Trim();
+        _filtered = query.Length == 0
+            ? Commands.ToList()
+            : Commands
+                .Where(c => c.Title.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    || c.Description?.Contains(query, StringComparison.OrdinalIgnoreCase) == true
+                    || c.Group?.Contains(query, StringComparison.OrdinalIgnoreCase) == true)
+                .OrderBy(c => c.Title.StartsWith(query, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+                .ToList();
+        if (_active >= _filtered.Count) _active = Math.Max(0, _filtered.Count - 1);
+    }
+
+    private void SetActive(int index) => _active = index;
+
+    private void Move(int index)
+    {
+        if (_filtered.Count == 0) return;
+        _active = (index + _filtered.Count) % _filtered.Count;
+        _scrollToActive = true;
+    }
+
+    private async Task OnKeyDownAsync(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowDown": Move(_active + 1); break;
+            case "ArrowUp": Move(_active - 1); break;
+            case "Home": Move(0); break;
+            case "End": Move(_filtered.Count - 1); break;
+            case "Enter":
+                if (_filtered.Count > 0) await SelectAsync(_filtered[_active]);
+                break;
+            case "Escape": await CloseAsync(); break;
         }
     }
 
-    private void UpdateFilteredCommands()
+    private async Task SelectAsync(CommandItem command)
     {
-        if (string.IsNullOrWhiteSpace(_searchQuery))
-        {
-            _filteredCommands = Commands.ToList();
-        }
-        else
-        {
-            _filteredCommands = Commands
-                .Where(c =>
-                    c.Title.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                    (c.Description?.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) == true))
-                .ToList();
-        }
+        await CloseAsync();
+        await CommandSelected.InvokeAsync(command);
+    }
+
+    private async Task CloseAsync()
+    {
+        IsOpen = false;
+        _wasOpen = false;
+        await IsOpenChanged.InvokeAsync(false);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (_shouldFocus)
+        if (!IsOpen) return;
+        if (_focusInput)
         {
-            _shouldFocus = false;
-            try
-            {
-                await _searchInput.FocusAsync();
-            }
-            catch { }
+            _focusInput = false;
+            await _input.FocusAsync();
         }
-    }
-
-    private async Task SelectCommand(CommandItem command)
-    {
-        await CommandSelected.InvokeAsync(command);
-        await CloseCommand();
-    }
-
-    private async Task CloseCommand()
-    {
-        IsOpen = false;
-        _searchQuery = "";
-        await IsOpenChanged.InvokeAsync(IsOpen);
-    }
-    
-    private async Task HandleOpenChanged(bool isOpen)
-    {
-        if (!isOpen)
+        if (_scrollToActive && _itemRefs.TryGetValue(_active, out var item))
         {
-            await CloseCommand();
-        }
-        else 
-        {
-             IsOpen = isOpen;
-             await IsOpenChanged.InvokeAsync(isOpen);
-        }
-    }
-
-    private async Task OnKeyDown(KeyboardEventArgs e)
-    {
-        if (e.Key == "Escape")
-        {
-            await CloseCommand();
-        }
-        else if (e.Key == "Enter" && _filteredCommands.Any())
-        {
-            await SelectCommand(_filteredCommands.First());
-        }
-        else if (e.Key == "ArrowDown" && _filteredCommands.Count > 1)
-        {
-            // Could implement keyboard navigation here
-        }
-        else if (e.Key == "ArrowUp" && _filteredCommands.Count > 1)
-        {
-            // Could implement keyboard navigation here
+            // Focusing the row scrolls it into view without custom JS; focus then returns to the input.
+            _scrollToActive = false;
+            await item.FocusAsync(preventScroll: false);
+            await _input.FocusAsync(preventScroll: true);
         }
     }
 }
-

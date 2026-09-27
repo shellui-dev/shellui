@@ -1,0 +1,65 @@
+@namespace ShellUI.Components
+
+<div class="@Shell.Cn("flex w-full gap-3", IsUser ? "flex-row-reverse" : "flex-row", Class)" @attributes="AdditionalAttributes">
+    @if (Avatar != null)
+    {
+        <div class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-xs font-medium">@Avatar</div>
+    }
+    <div class="@Shell.Cn("flex max-w-[80%] flex-col gap-1", IsUser ? "items-end" : "items-start")">
+        @if (!string.IsNullOrEmpty(Name) || !string.IsNullOrEmpty(Timestamp))
+        {
+            <div class="flex items-center gap-2 text-xs text-muted-foreground">
+                @if (!string.IsNullOrEmpty(Name))
+                {
+                    <span class="font-medium text-foreground">@Name</span>
+                }
+                @if (!string.IsNullOrEmpty(Timestamp))
+                {
+                    <span>@Timestamp</span>
+                }
+            </div>
+        }
+        <div class="@Shell.Cn("break-words rounded-lg px-3 py-2 text-sm leading-relaxed", BubbleClass)">
+            @if (Text != null)
+            {
+                <span class="whitespace-pre-line">@Text</span>
+            }
+            @ChildContent
+            @if (IsStreaming)
+            {
+                <span class="ml-1 inline-flex items-center gap-0.5 align-middle" aria-label="Typing">
+                    <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.3s]"></span>
+                    <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.15s]"></span>
+                    <span class="h-1.5 w-1.5 animate-bounce rounded-full bg-current"></span>
+                </span>
+            }
+        </div>
+        @if (Actions != null)
+        {
+            <div class="flex items-center gap-1 text-muted-foreground">@Actions</div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Role { get; set; } = "assistant";
+    [Parameter] public string? Text { get; set; }
+    [Parameter] public string? Name { get; set; }
+    [Parameter] public string? Timestamp { get; set; }
+    [Parameter] public bool IsStreaming { get; set; }
+    [Parameter] public RenderFragment? Avatar { get; set; }
+    [Parameter] public RenderFragment? Actions { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool IsUser => string.Equals(Role, "user", StringComparison.OrdinalIgnoreCase);
+
+    private string BubbleClass => Role.ToLowerInvariant() switch
+    {
+        "user" => "bg-primary text-primary-foreground",
+        "system" => "border border-border bg-background italic text-muted-foreground",
+        _ => "bg-muted text-foreground"
+    };
+}

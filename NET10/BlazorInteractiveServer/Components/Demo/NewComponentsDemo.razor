@@ -1,0 +1,168 @@
+<section class="border border-border rounded-lg p-6 bg-card">
+    <h2 class="text-2xl font-semibold mb-1 text-card-foreground">Stat Card</h2>
+    <p class="text-sm text-muted-foreground mb-4">KPI tiles with a trend badge.</p>
+    <div class="grid gap-4 sm:grid-cols-3">
+        <StatCard Title="Revenue" Value="$45,231" Change="+20.1%" Trend="up" Description="vs last month" />
+        <StatCard Title="Error rate" Value="0.42%" Change="-0.8%" Trend="down" Description="last 24 hours" />
+        <StatCard Title="Active users" Value="2,350" Description="right now" />
+    </div>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-1 text-card-foreground">Chat</h2>
+    <p class="text-sm text-muted-foreground mb-4">Enter sends, Shift+Enter adds a new line. Replies are simulated.</p>
+    <Chat Height="380px">
+        <Header>
+            <div class="flex items-center justify-between">
+                <span class="text-sm font-medium text-foreground">Assistant</span>
+                <span class="text-xs text-muted-foreground">@_messages.Count messages</span>
+            </div>
+        </Header>
+        <ChildContent>
+            @foreach (var message in _messages)
+            {
+                <ChatMessage Role="@message.Role" Name="@(message.Role == "user" ? "You" : "ShellUI")" Text="@message.Text" />
+            }
+            @if (_thinking)
+            {
+                <ChatMessage Role="assistant" Name="ShellUI" IsStreaming="true" />
+            }
+        </ChildContent>
+        <Footer>
+            <ChatInput @bind-Value="_draft" OnSubmit="SendAsync" IsLoading="_thinking" />
+        </Footer>
+    </Chat>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Toggle Group &amp; Button Group</h2>
+    <div class="space-y-4">
+        <div class="flex flex-wrap items-center gap-4">
+            <ToggleGroup @bind-Value="_align">
+                <ToggleGroupItem Value="left">Left</ToggleGroupItem>
+                <ToggleGroupItem Value="center">Center</ToggleGroupItem>
+                <ToggleGroupItem Value="right">Right</ToggleGroupItem>
+            </ToggleGroup>
+            <span class="text-sm text-muted-foreground">Single: @(_align ?? "none")</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-4">
+            <ToggleGroup Multiple="true" @bind-Values="_formats">
+                <ToggleGroupItem Value="bold"><span class="font-bold">B</span></ToggleGroupItem>
+                <ToggleGroupItem Value="italic"><span class="italic">I</span></ToggleGroupItem>
+                <ToggleGroupItem Value="underline"><span class="underline">U</span></ToggleGroupItem>
+            </ToggleGroup>
+            <span class="text-sm text-muted-foreground">Multiple: @(_formats.Count == 0 ? "none" : string.Join(", ", _formats))</span>
+        </div>
+        <div class="flex flex-wrap items-start gap-6">
+            <ButtonGroup>
+                <Button Variant="ButtonVariant.Outline">Day</Button>
+                <Button Variant="ButtonVariant.Outline">Week</Button>
+                <Button Variant="ButtonVariant.Outline">Month</Button>
+            </ButtonGroup>
+            <ButtonGroup Orientation="vertical">
+                <Button Variant="ButtonVariant.Outline">Top</Button>
+                <Button Variant="ButtonVariant.Outline">Middle</Button>
+                <Button Variant="ButtonVariant.Outline">Bottom</Button>
+            </ButtonGroup>
+        </div>
+    </div>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Input Group &amp; Number Input</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+        <div class="space-y-2">
+            <InputGroup @bind-Value="_website" Placeholder="example">
+                <Prefix>https://</Prefix>
+                <Suffix>.com</Suffix>
+            </InputGroup>
+            <InputGroup @bind-Value="_price" Placeholder="0.00" Type="number">
+                <Prefix>$</Prefix>
+                <Suffix>USD</Suffix>
+            </InputGroup>
+        </div>
+        <div class="space-y-2">
+            <NumberInput @bind-Value="_quantity" Min="0" Max="10" />
+            <p class="text-sm text-muted-foreground">Quantity: @_quantity (0 to 10)</p>
+        </div>
+    </div>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Tree View &amp; Timeline</h2>
+    <div class="grid gap-8 sm:grid-cols-2">
+        <div>
+            <TreeView @bind-SelectedValue="_selectedFile">
+                <TreeViewItem Label="src" DefaultExpanded="true">
+                    <TreeViewItem Label="Components" DefaultExpanded="true">
+                        <TreeViewItem Label="Button.razor" />
+                        <TreeViewItem Label="Chat.razor" />
+                    </TreeViewItem>
+                    <TreeViewItem Label="Program.cs" />
+                </TreeViewItem>
+                <TreeViewItem Label="README.md" />
+            </TreeView>
+            <p class="mt-2 text-sm text-muted-foreground">Selected: @(_selectedFile ?? "none")</p>
+        </div>
+        <Timeline>
+            <TimelineItem Title="v0.3.0-rc.2 released" Time="Today" Active="true">Published to NuGet and GitHub.</TimelineItem>
+            <TimelineItem Title="Charts restyled" Time="2 weeks ago">Donut, radar and radial charts added.</TimelineItem>
+            <TimelineItem Title="Moved to .NET 10" Time="1 month ago" />
+        </Timeline>
+    </div>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">QR Code, Image Viewer &amp; Aspect Ratio</h2>
+    <div class="grid items-start gap-6 sm:grid-cols-3">
+        <div class="space-y-2">
+            <QrCode Value="https://github.com/shellui-dev/shellui" Size="140" />
+            <p class="text-xs text-muted-foreground">Scan to open the repo</p>
+        </div>
+        <div class="space-y-2">
+            <ImageViewer Src="@SampleImage" Alt="Sample landscape" Class="h-32 w-full" />
+            <p class="text-xs text-muted-foreground">Click to open, then zoom</p>
+        </div>
+        <div class="space-y-2">
+            <AspectRatio Ratio="1.7777" Class="rounded-md bg-muted">
+                <div class="flex items-center justify-center text-sm text-muted-foreground">16 : 9</div>
+            </AspectRatio>
+            <p class="text-xs text-muted-foreground">Keeps its ratio at any width</p>
+        </div>
+    </div>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Kbd</h2>
+    <p class="text-sm text-muted-foreground">
+        Open the command palette with <Kbd>Ctrl</Kbd> <Kbd>K</Kbd>, or toggle the sidebar with <Kbd>Ctrl</Kbd> <Kbd>B</Kbd>.
+    </p>
+</section>
+
+@code {
+    private readonly List<(string Role, string Text)> _messages = new()
+    {
+        ("assistant", "Hi! I'm a ShellUI chat demo. Ask me anything."),
+    };
+
+    private string? _draft;
+    private bool _thinking;
+    private string? _align = "center";
+    private List<string> _formats = new() { "bold" };
+    private string? _website;
+    private string? _price;
+    private decimal? _quantity = 1;
+    private string? _selectedFile = "Chat.razor";
+
+    private const string SampleImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500'><defs><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%2393c5fd'/><stop offset='1' stop-color='%23fde68a'/></linearGradient></defs><rect width='800' height='500' fill='url(%23s)'/><circle cx='620' cy='140' r='60' fill='%23fbbf24'/><path d='M0 380 L200 220 L360 360 L520 240 L800 400 L800 500 L0 500 Z' fill='%2334d399'/><path d='M0 430 L260 300 L460 440 L800 330 L800 500 L0 500 Z' fill='%23059669'/></svg>";
+
+    private async Task SendAsync(string text)
+    {
+        _messages.Add(("user", text));
+        _thinking = true;
+        StateHasChanged();
+        await Task.Delay(800);
+        _messages.Add(("assistant", $"You said:\n{text}"));
+        _thinking = false;
+    }
+}
