@@ -1,5 +1,51 @@
 # ShellUI Release Notes
 
+# ShellUI v0.3.0-rc.3 🚦
+
+> Third release candidate for v0.3.0. It contains only fixes, mostly to what `shellui add` installs. There are no new components and no breaking changes. If nothing critical comes up during testing, v0.3.0 ships from this code with the suffix dropped. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
+
+## 🐛 Fixes
+
+### Components that installed incomplete or didn't compile
+- **Composable parts are installed.** `SelectTrigger`, `SelectContent`, `SelectItem`, `ContextMenuTrigger`, `ContextMenuContent`, `ContextMenuOption`, `NavList`, `NavItem`, `NavTrigger`, `NavContent`, `CarouselList` and `CarouselSlide` were empty templates, so composable markup failed to compile after `shellui add`. They now ship with their parent component.
+- The Dropdown, Popover, HoverCard and Accordion parts (`*Trigger`, `*Content`, `DropdownItem`) were never pulled in by their parent, and the Dropdown, Popover and HoverCard CLI templates didn't support composable use. The CLI templates now match the NuGet package.
+- `Tabs` supports `Items` / `TabItems` and `ActiveTab` as in the package. Its `TabModels.cs` now installs to `Components/UI/Models/` instead of a nested `Components/UI/Components/Models/` folder.
+- `command` no longer declares its own `CommandItem`, which clashed with `command-palette`. It now installs the shared `CommandModels.cs`.
+- `alert-dialog` was missing its `Variants` using.
+- `shellui add` adds the `@using` lines that installed components need (`.Components.UI.Variants` and `.Components.Models`) to `_Imports.razor`.
+
+### Behavior
+- Compositional Dropdown, Popover, ContextMenu and NavigationMenu items now open and close without binding `IsOpen`. ContextMenu and Dropdown close on an outside click.
+- A value-based `Carousel` (`CarouselSlide Value="..."`) shows its dots and the correct width on first render.
+- `HoverCardContent` stays open while the pointer is over it.
+- `SelectItem` marks the selected option (`data-selected`, `aria-selected`), and triggers expose `aria-expanded`.
+- Dialog, Sheet and Drawer take focus when they open, close on Escape, and set `role="dialog"` and `aria-modal`.
+- Keyboard shortcuts such as `Ctrl+K` accept Ctrl or Cmd, as intended. Before, they required both.
+- `Loading` animations work in CLI projects. Their keyframes ship with the component, and the grid delays no longer depend on the server culture.
+- Headings focused by Blazor navigation no longer show a focus outline.
+
+### Tooling
+- CI runs on `release/**` branches and installs every component into a fresh app and builds it, so a template that doesn't compile or a missing dependency fails the build.
+- New tests fail when a registry entry has empty content, when a hidden part isn't reachable from any installable component, or when a CLI template drifts from its package component.
+
+## 📦 Installation
+
+```bash
+# CLI (prerelease: the version is required)
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.3
+# or upgrade an existing install
+dotnet tool update -g ShellUI.CLI --version 0.3.0-rc.3
+```
+
+```bash
+# NuGet package
+dotnet add package ShellUI.Components --version 0.3.0-rc.3
+```
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.3.0-rc.2...v0.3.0-rc.3
+
+---
+
 # ShellUI v0.3.0-rc.2 🚦
 
 > Second release candidate for v0.3.0. It moves ShellUI to .NET 10, adds new components, and fixes bugs found in real projects using rc.1. If nothing critical comes up during testing, v0.3.0 ships from this code with the suffix dropped. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).

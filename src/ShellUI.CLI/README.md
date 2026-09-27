@@ -7,7 +7,7 @@ The ShellUI command-line tool initializes a .NET 10 Blazor project and copies Sh
 The tool needs the .NET 10 runtime. Prereleases are not picked up by a plain install, so pass the version:
 
 ```bash
-dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.2
+dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.3
 ```
 
 A global tool uses the `shellui` command:
@@ -20,7 +20,7 @@ A local .NET tool uses `dotnet shellui`:
 
 ```bash
 dotnet new tool-manifest
-dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.2
+dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.3
 dotnet shellui --help
 ```
 

@@ -4,7 +4,7 @@
 
 | Context | Version |
 |---|---|
-| Latest prerelease (recommended) | `0.3.0-rc.2`, needs the .NET 10 runtime |
+| Latest prerelease (recommended) | `0.3.0-rc.3`, needs the .NET 10 runtime |
 | Latest stable | `0.2.1` |
 | Tailwind | `4.3.2` |
 
@@ -15,14 +15,14 @@ A plain tool install only selects stable releases, so pass `--version` for the p
 A global tool is available as `shellui`:
 
 ```bash
-dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.2
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.3
 shellui --version
 ```
 
 If a global tool is already installed, update it to the same version:
 
 ```bash
-dotnet tool update -g ShellUI.CLI --version 0.3.0-rc.2
+dotnet tool update -g ShellUI.CLI --version 0.3.0-rc.3
 ```
 
 ## Local installation
@@ -31,7 +31,7 @@ A local tool is recorded in the repository and invoked as `dotnet shellui` after
 
 ```bash
 dotnet new tool-manifest
-dotnet tool install ShellUI.CLI --version 0.3.0-rc.2
+dotnet tool install ShellUI.CLI --version 0.3.0-rc.3
 dotnet shellui --version
 ```
 
@@ -43,7 +43,7 @@ The manifest is `.config/dotnet-tools.json` and uses the installed package versi
   "isRoot": true,
   "tools": {
     "shellui.cli": {
-      "version": "0.3.0-rc.2",
+      "version": "0.3.0-rc.3",
       "commands": ["shellui"]
     }
   }
@@ -114,7 +114,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - run: dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.2
+      - run: dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.3
       - run: dotnet new blazor -n App
       - working-directory: App
         run: shellui init --yes --tailwind standalone
@@ -181,7 +181,7 @@ dotnet tool list -g
 shellui --version
 ```
 
-A plain install selects the latest stable release (`0.2.1`). Pass `--version 0.3.0-rc.2` for the prerelease.
+A plain install selects the latest stable release (`0.2.1`). Pass `--version 0.3.0-rc.3` for the prerelease.
 
 ## Related documentation
 

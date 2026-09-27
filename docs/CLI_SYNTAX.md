@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers CLI `0.3.0-rc.2`: `net10.0`, Tailwind CSS `4.3.2`, and 76 direct component targets. Older versions, including the stable `0.2.1`, lack some of these commands.
+This reference covers CLI `0.3.0-rc.3`: `net10.0`, Tailwind CSS `4.3.2`, and 76 direct component targets. Older versions, including the stable `0.2.1`, lack some of these commands.
 
 ## Command prefix
 
@@ -205,7 +205,7 @@ Representative fields look like this:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.3.0-rc.2",
+      "Version": "0.3.0-rc.3",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }

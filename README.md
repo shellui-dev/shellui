@@ -24,10 +24,10 @@
 
 | Channel | Version | Notes |
 |---|---|---|
-| Latest prerelease (recommended) | `0.3.0-rc.2` | .NET 10, Tailwind CSS `4.3.2` |
+| Latest prerelease (recommended) | `0.3.0-rc.3` | .NET 10, Tailwind CSS `4.3.2` |
 | Latest stable | `0.2.1` | Older release; superseded once `0.3.0` ships |
 
-Prereleases are not picked up by a plain install, so pass `--version 0.3.0-rc.2` explicitly. Projects still on .NET 9 can use `0.3.0-rc.1`, the last release that targets .NET 9.
+Prereleases are not picked up by a plain install, so pass `--version 0.3.0-rc.3` explicitly. Projects still on .NET 9 can use `0.3.0-rc.1`, the last release that targets .NET 9.
 
 ShellUI is prerelease software. Validate it in your target Blazor and hosting environments before relying on it.
 
@@ -53,7 +53,7 @@ ShellUI is prerelease software. Validate it in your target Blazor and hosting en
 The published global tool is named `shellui`:
 
 ```bash
-dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.2
+dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.3
 shellui --help
 ```
 
@@ -61,7 +61,7 @@ A local .NET tool is invoked as `dotnet shellui`:
 
 ```bash
 dotnet new tool-manifest
-dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.2
+dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.3
 dotnet shellui --help
 ```
 
@@ -101,7 +101,7 @@ shellui add typed-select command-palette data-picker multi-select tag-input donu
 ## Components package
 
 ```bash
-dotnet add package ShellUI.Components --version 0.3.0-rc.2
+dotnet add package ShellUI.Components --version 0.3.0-rc.3
 ```
 
 `ShellUI.Core` and `ShellUI.Templates` are internal projects and must not be installed by consumers.

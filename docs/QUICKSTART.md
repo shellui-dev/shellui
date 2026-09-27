@@ -1,6 +1,6 @@
 # ShellUI Quick Start
 
-This quick start uses ShellUI `0.3.0-rc.2`: .NET 10, Tailwind CSS `4.3.2`, and 76 direct component targets.
+This quick start uses ShellUI `0.3.0-rc.3`: .NET 10, Tailwind CSS `4.3.2`, and 76 direct component targets.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ dotnet --version
 A global tool is invoked as `shellui`:
 
 ```bash
-dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.2
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.3
 shellui --version
 ```
 

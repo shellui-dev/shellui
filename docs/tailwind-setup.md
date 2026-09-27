@@ -25,7 +25,7 @@ For a production Blazor application, use either the standalone or npm workflow a
 ### Install the CLI
 
 ```text
-dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.2
+dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.3
 ```
 
 A plain install without `--version` selects the older stable `0.2.1`.

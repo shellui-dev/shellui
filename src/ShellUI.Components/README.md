@@ -7,7 +7,7 @@
 Requires a .NET 10 project. Prereleases are not picked up by a plain install, so pass the version:
 
 ```bash
-dotnet add package ShellUI.Components --version 0.3.0-rc.2
+dotnet add package ShellUI.Components --version 0.3.0-rc.3
 ```
 
 Projects still on .NET 9 can use `0.3.0-rc.1`. Do not install `ShellUI.Core` or `ShellUI.Templates`; both are internal, non-packable projects.
