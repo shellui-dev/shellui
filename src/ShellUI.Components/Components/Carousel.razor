@@ -73,7 +73,12 @@
     private List<CarouselSlide> _slides = new();
     private bool _useValueBased => _slides.Count > 0;
 
-    public void RegisterSlide(CarouselSlide slide) => _slides.Add(slide);
+    public void RegisterSlide(CarouselSlide slide)
+    {
+        _slides.Add(slide);
+        StateHasChanged();
+    }
+
     public void UnregisterSlide(CarouselSlide slide) => _slides.Remove(slide);
 
     private ElementReference carouselRef;

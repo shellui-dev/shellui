@@ -3,6 +3,10 @@
 
 <CascadingValue Value="this" IsFixed="true">
     <div class="relative inline-block text-left" @oncontextmenu="OnContextMenu" @oncontextmenu:preventDefault="true">
+        @if (IsOpen)
+        {
+            <div class="fixed inset-0 z-40" @onclick="CloseAsync" @oncontextmenu="CloseAsync" @oncontextmenu:preventDefault="true" @oncontextmenu:stopPropagation="true"></div>
+        }
         @if (UseCompositional)
         {
             @ChildContent
@@ -67,6 +71,7 @@
             await OnItemSelected.InvokeAsync(item);
             IsOpen = false;
             await IsOpenChanged.InvokeAsync(IsOpen);
+            StateHasChanged();
         }
     }
 
@@ -74,5 +79,6 @@
     {
         IsOpen = false;
         await IsOpenChanged.InvokeAsync(IsOpen);
+        StateHasChanged();
     }
 }

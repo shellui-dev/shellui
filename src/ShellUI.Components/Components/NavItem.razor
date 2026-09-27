@@ -48,6 +48,7 @@
     internal async Task ToggleAsync()
     {
         IsOpen = !IsOpen;
+        StateHasChanged();
         await Task.CompletedTask;
     }
 
