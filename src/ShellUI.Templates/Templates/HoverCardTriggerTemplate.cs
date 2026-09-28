@@ -11,7 +11,6 @@ public static class HoverCardTriggerTemplate
         Description = "Hover trigger for HoverCard (shadcn-style)",
         Category = ComponentCategory.Overlay,
         FilePath = "HoverCardTrigger.razor",
-        Dependencies = new List<string> { "hover-card" },
         IsAvailable = false,
         Tags = new List<string> { "overlay", "hover-card", "trigger" }
     };

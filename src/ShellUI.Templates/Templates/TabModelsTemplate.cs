@@ -11,7 +11,7 @@ public static class TabModelsTemplate
         Description = "Models for Tabs component",
         Category = ComponentCategory.Navigation,
 
-        FilePath = "Components/Models/TabModels.cs",
+        FilePath = "Models/TabModels.cs",
         IsAvailable = false
     };
 

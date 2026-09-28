@@ -31,8 +31,7 @@ public class AccordionItemTemplate
                     disabled=""@Disabled""
                     class=""flex w-full flex-1 items-center justify-between py-4 font-medium transition-all hover:underline disabled:pointer-events-none disabled:opacity-50"">
                 @Title
-                <svg class=""@Shell.Cn(""h-4 w-4 shrink-0 transition-transform duration-200"", EffectiveIsOpen ? ""rotate-180"" : """")""
-                     fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                <svg class=""@Shell.Cn(""h-4 w-4 shrink-0 transition-transform duration-200"", EffectiveIsOpen ? ""rotate-180"" : """")"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
                     <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M19 9l-7 7-7-7"" />
                 </svg>
             </button>
@@ -64,6 +63,7 @@ public class AccordionItemTemplate
 
     private string? _assignedValue;
 
+    // Title empty = compositional (AccordionTrigger + AccordionContent); Title set = legacy
     private bool UseCompositional => string.IsNullOrEmpty(Title);
 
     internal bool EffectiveIsOpen => Accordion != null
@@ -72,9 +72,15 @@ public class AccordionItemTemplate
 
     internal string? EffectiveValue => _assignedValue ?? Value;
 
-    public void SetAssignedValue(string value) => _assignedValue = value;
+    public void SetAssignedValue(string value)
+    {
+        _assignedValue = value;
+    }
 
-    protected override void OnInitialized() => Accordion?.RegisterItem(this);
+    protected override void OnInitialized()
+    {
+        Accordion?.RegisterItem(this);
+    }
 
     protected override void OnParametersSet()
     {
@@ -82,13 +88,18 @@ public class AccordionItemTemplate
             _assignedValue = null;
     }
 
-    public void Dispose() => Accordion?.UnregisterItem(this);
+    public void Dispose()
+    {
+        Accordion?.UnregisterItem(this);
+    }
 
     public async Task ToggleAsync()
     {
         if (Disabled) return;
         if (Accordion != null)
+        {
             await Accordion.ToggleItemAsync(this);
+        }
         else
         {
             IsOpen = !IsOpen;
@@ -96,7 +107,10 @@ public class AccordionItemTemplate
         }
     }
 
-    private async Task Toggle() => await ToggleAsync();
+    private async Task Toggle()
+    {
+        await ToggleAsync();
+    }
 }
 ";
 }

@@ -12,54 +12,84 @@ public static class SelectTemplate
         Category = ComponentCategory.Form,
 
         FilePath = "Select.razor",
-        Dependencies = new List<string>()
+        Dependencies = new List<string> { "select-trigger", "select-content", "select-item" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative"">
-    <select 
-        value=""@Value""
-        disabled=""@Disabled""
-        @onchange=""HandleChange""
-        class=""flex h-10 w-full items-center appearance-none rounded-md border border-input bg-background px-3 pr-8 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 @ClassName @Class""
-        @attributes=""AdditionalAttributes"">
-        @ChildContent
-    </select>
-    <svg class=""pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground""
-         xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
-        <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M19 9l-7 7-7-7"" />
-    </svg>
-</div>
+<CascadingValue Value=""this"" IsFixed=""true"">
+    @if (UseCustomSelect)
+    {
+        <div class=""relative w-full"">
+            @ChildContent
+            @if (IsOpen)
+            {
+                <div class=""fixed inset-0 z-40"" @onclick=""HandleBackdropClick""></div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class=""relative w-full"">
+            <select value=""@Value""
+                    disabled=""@Disabled""
+                    @onchange=""HandleChange""
+                    class=""@ComputedClass""
+                    @attributes=""AdditionalAttributes"">
+                @ChildContent
+            </select>
+            <div class=""absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"">
+                <svg class=""h-4 w-4 opacity-50"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
+                    <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M19 9l-7 7-7-7"" />
+                </svg>
+            </div>
+        </div>
+    }
+</CascadingValue>
 
 @code {
-    [Parameter]
-    public string? Value { get; set; }
-
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
-
-    [Parameter]
-    public bool Disabled { get; set; }
-
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-
+    [Parameter] public string ClassName { get; set; } = """";
+    [Parameter] public bool UseCustomSelect { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Shell.Cn(
+        ""flex h-10 w-full appearance-none items-center justify-between rounded-md border border-input bg-background px-3 py-2 pr-8 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"",
+        ClassName, Class);
 
     private async Task HandleChange(ChangeEventArgs e)
     {
         Value = e.Value?.ToString();
-        await ValueChanged.InvokeAsync(Value);
+        await ValueChanged.InvokeAsync(Value ?? """");
     }
+
+    public async Task SelectValueAsync(string value)
+    {
+        Value = value;
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    public Task CloseAsync()
+    {
+        IsOpen = false;
+        InvokeStateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    internal void InvokeStateHasChanged() => StateHasChanged();
+
+    private async Task HandleBackdropClick()
+    {
+        await CloseAsync();
+    }
+
+    internal bool IsOpen { get; set; }
 }
 ";
 }

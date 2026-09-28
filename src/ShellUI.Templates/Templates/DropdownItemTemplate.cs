@@ -11,7 +11,6 @@ public static class DropdownItemTemplate
         Description = "Menu item for Dropdown (shadcn-style)",
         Category = ComponentCategory.Overlay,
         FilePath = "DropdownItem.razor",
-        Dependencies = new List<string> { "dropdown" },
         IsAvailable = false,
         Tags = new List<string> { "overlay", "dropdown", "item", "menu" }
     };
