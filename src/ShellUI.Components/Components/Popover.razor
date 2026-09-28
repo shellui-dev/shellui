@@ -1,7 +1,7 @@
 @namespace ShellUI.Components
 
 <CascadingValue Value="this" IsFixed="true">
-    <div class="@Shell.Cn("relative inline-block", Class)" @attributes="AdditionalAttributes">
+    <div class="@Shell.Cn("relative inline-block", ClassName, Class)" @attributes="AdditionalAttributes">
         @if (Trigger is null)
         {
             @ChildContent
@@ -28,6 +28,8 @@
     [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
     [Parameter] public string Placement { get; set; } = "bottom";
     [Parameter] public string? Class { get; set; }
+    // Deprecated: use Class.
+    [Parameter] public string ClassName { get; set; } = "";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
@@ -39,8 +41,8 @@
         _ => "top-full left-0 mt-2"
     };
 
-    public async Task ToggleAsync() { IsOpen = !IsOpen; await IsOpenChanged.InvokeAsync(IsOpen); }
-    public async Task CloseAsync() { IsOpen = false; await IsOpenChanged.InvokeAsync(IsOpen); }
+    public async Task ToggleAsync() { IsOpen = !IsOpen; await IsOpenChanged.InvokeAsync(IsOpen); StateHasChanged(); }
+    public async Task CloseAsync() { IsOpen = false; await IsOpenChanged.InvokeAsync(IsOpen); StateHasChanged(); }
     private async Task Toggle() => await ToggleAsync();
     private async Task Close() => await CloseAsync();
 }

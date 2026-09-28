@@ -2,6 +2,9 @@
 
 <button type="button"
         class="relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[selected]:bg-accent data-[selected]:text-accent-foreground"
+        role="option"
+        aria-selected="@(IsSelected.ToString().ToLowerInvariant())"
+        data-selected="@IsSelected"
         disabled="@Disabled"
         @onclick="HandleClick"
         @attributes="AdditionalAttributes">
@@ -15,6 +18,8 @@
     [Parameter] public bool Disabled { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool IsSelected => Parent != null && Parent.Value == Value;
 
     private async Task HandleClick()
     {
