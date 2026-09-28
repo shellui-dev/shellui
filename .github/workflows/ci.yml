@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, "release/**" ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, "release/**" ]
 
 jobs:
   build-and-test:
@@ -132,6 +132,24 @@ jobs:
         grep -Fq 'disposeSidebar: function (handle)' wwwroot/shellui.js || (echo "shellui.js does not expose disposeSidebar"; exit 1)
         test ! -e wwwroot/shellui-sidebar.js || (echo "legacy sidebar JS was installed for a fresh sidebar install"; exit 1)
 
+        dotnet build -c Debug
+
+        # Every direct target must install and compile together; this catches missing
+        # dependencies and template compile errors that per-template tests can't see.
+        ALL=$(python3 - "$GITHUB_WORKSPACE" <<'PY'
+        import os, re, sys
+        root = sys.argv[1]
+        reg = open(os.path.join(root, "src/ShellUI.Templates/ComponentRegistry.cs")).read().split("GetComponentContent")[0]
+        names = [n for n, c in re.findall(r'\{ "([a-z0-9-]+)", (\w+)\.Metadata \}', reg)
+                 if not re.search(r"IsAvailable\s*=\s*false", open(os.path.join(root, f"src/ShellUI.Templates/Templates/{c}.cs")).read())]
+        print(" ".join(names))
+        PY
+        )
+        cd "$TMPDIR/app"
+        dotnet new blazor -o AllApp --no-restore
+        cd AllApp
+        shellui init --tailwind standalone --yes
+        shellui add $ALL
         dotnet build -c Debug
 
     # Pure-NuGet install path — `dotnet add package ShellUI.Components` without

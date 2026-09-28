@@ -13,26 +13,32 @@ public class NavigationMenuTemplate
         FilePath = "NavigationMenu.razor",
 
         Tags = new List<string> { "navigation", "menu", "nav" },
-        Dependencies = new List<string> { "navigation-menu-item" }
+        Dependencies = new List<string> { "navigation-menu-item", "nav-list", "nav-item", "nav-trigger", "nav-content" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<nav class=""@(""flex items-center space-x-1 "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</nav>
+<CascadingValue Value=""this"" IsFixed=""true"">
+    <nav class=""@Shell.Cn(""relative z-10 flex max-w-max flex-1 items-center justify-center"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
+        @if (UseNavList)
+        {
+            @ChildContent
+        }
+        else
+        {
+            <div class=""group flex flex-1 list-none items-center justify-center space-x-1"">
+                @ChildContent
+            </div>
+        }
+    </nav>
+</CascadingValue>
 
 @code {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
+    [Parameter] public bool UseNavList { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }

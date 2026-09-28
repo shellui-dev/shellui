@@ -13,7 +13,7 @@ public class AccordionTemplate
         FilePath = "Accordion.razor",
 
         Tags = new List<string> { "layout", "collapsible", "accordion" },
-        Dependencies = new List<string> { "accordion-type", "accordion-item" }
+        Dependencies = new List<string> { "accordion-type", "accordion-item", "accordion-trigger", "accordion-content" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

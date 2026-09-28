@@ -11,7 +11,6 @@ public static class DropdownContentTemplate
         Description = "Content panel for Dropdown (shadcn-style)",
         Category = ComponentCategory.Overlay,
         FilePath = "DropdownContent.razor",
-        Dependencies = new List<string> { "dropdown" },
         IsAvailable = false,
         Tags = new List<string> { "overlay", "dropdown", "content" }
     };

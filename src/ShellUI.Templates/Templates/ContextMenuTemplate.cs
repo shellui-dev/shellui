@@ -12,44 +12,56 @@ public static class ContextMenuTemplate
         Category = ComponentCategory.Navigation,
         FilePath = "ContextMenu.razor",
         Tags = new List<string> { "menu", "context", "right-click", "dropdown" },
-        Dependencies = new List<string> { "context-menu-models" }
+        Dependencies = new List<string> { "context-menu-models", "context-menu-trigger", "context-menu-content", "context-menu-option" }
     };
 
-    public const string Content = """
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using YourProjectNamespace.Components.Models
 
-<div class="relative inline-block text-left" @oncontextmenu="OnContextMenu" @oncontextmenu:preventDefault="true">
-    @ChildContent
-    
-    @if (IsOpen)
-    {
-        <div class="absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md">
-            @foreach (var item in Items)
+<CascadingValue Value=""this"" IsFixed=""true"">
+    <div class=""relative inline-block text-left"" @oncontextmenu=""OnContextMenu"" @oncontextmenu:preventDefault=""true"">
+        @if (IsOpen)
+        {
+            <div class=""fixed inset-0 z-40"" @onclick=""CloseAsync"" @oncontextmenu=""CloseAsync"" @oncontextmenu:preventDefault=""true"" @oncontextmenu:stopPropagation=""true""></div>
+        }
+        @if (UseCompositional)
+        {
+            @ChildContent
+        }
+        else
+        {
+            @ChildContent
+            @if (IsOpen)
             {
-                @if (item.IsSeparator)
-                {
-                    <div class="my-1 h-px bg-border"></div>
-                }
-                else
-                {
-                    <button class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
-                            disabled="@item.Disabled"
-                            @onclick="() => SelectItem(item)">
-                        @if (!string.IsNullOrEmpty(item.Icon))
+                <div class=""absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"">
+                    @foreach (var item in Items)
+                    {
+                        @if (item.IsSeparator)
                         {
-                            <span class="mr-2 flex shrink-0 items-center justify-center text-muted-foreground" style="width: 0.875rem; height: 0.875rem;">@((MarkupString)item.Icon)</span>
+                            <div class=""my-1 h-px bg-border""></div>
                         }
-                        <span class="flex-1">@item.Label</span>
-                        @if (!string.IsNullOrEmpty(item.Shortcut))
+                        else
                         {
-                            <span class="ml-auto text-xs text-muted-foreground">@item.Shortcut</span>
+                            <button class=""relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50""
+                                    disabled=""@item.Disabled""
+                                    @onclick=""() => SelectItem(item)"">
+                                @if (!string.IsNullOrEmpty(item.Icon))
+                                {
+                                    <span class=""mr-2 flex shrink-0 items-center justify-center text-muted-foreground"" style=""width: 0.875rem; height: 0.875rem;"">@((MarkupString)item.Icon)</span>
+                                }
+                                <span class=""flex-1"">@item.Label</span>
+                                @if (!string.IsNullOrEmpty(item.Shortcut))
+                                {
+                                    <span class=""ml-auto text-xs text-muted-foreground"">@item.Shortcut</span>
+                                }
+                            </button>
                         }
-                    </button>
-                }
+                    }
+                </div>
             }
-        </div>
-    }
-</div>
+        }
+    </div>
+</CascadingValue>
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -58,23 +70,35 @@ public static class ContextMenuTemplate
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
 
-    private async Task OnContextMenu(MouseEventArgs e)
+    private bool UseCompositional => Items.Count == 0;
+
+    internal bool IsOpenState => IsOpen;
+
+    internal async Task OnContextMenu(MouseEventArgs e)
     {
         IsOpen = true;
         await IsOpenChanged.InvokeAsync(IsOpen);
         StateHasChanged();
     }
 
-    private async Task SelectItem(ContextMenuItem item)
+    internal async Task SelectItem(ContextMenuItem? item)
     {
-        if (!item.Disabled)
+        if (item != null && !item.Disabled)
         {
             await OnItemSelected.InvokeAsync(item);
             IsOpen = false;
             await IsOpenChanged.InvokeAsync(IsOpen);
+            StateHasChanged();
         }
     }
+
+    internal async Task CloseAsync()
+    {
+        IsOpen = false;
+        await IsOpenChanged.InvokeAsync(IsOpen);
+        StateHasChanged();
+    }
 }
-""";
+";
 }
 

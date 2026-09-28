@@ -1,7 +1,7 @@
 @namespace ShellUI.Components
 
 <CascadingValue Value="this" IsFixed="true">
-    <div class="@Shell.Cn("relative inline-block text-left", Class)" @attributes="AdditionalAttributes">
+    <div class="@Shell.Cn("relative inline-block text-left", ClassName, Class)" @attributes="AdditionalAttributes">
         @if (UseCompositional)
         {
             @ChildContent
@@ -21,6 +21,10 @@
             }
         }
     </div>
+    @if (IsOpen)
+    {
+        <div class="fixed inset-0 z-40" @onclick="CloseAsync"></div>
+    }
 </CascadingValue>
 
 @code {
@@ -29,6 +33,8 @@
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
     [Parameter] public string? Class { get; set; }
+    // Deprecated: use Class.
+    [Parameter] public string ClassName { get; set; } = "";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
@@ -38,12 +44,14 @@
     {
         IsOpen = !IsOpen;
         await IsOpenChanged.InvokeAsync(IsOpen);
+        StateHasChanged();
     }
 
     public async Task CloseAsync()
     {
         IsOpen = false;
         await IsOpenChanged.InvokeAsync(IsOpen);
+        StateHasChanged();
     }
 
     private async Task ToggleOpen()

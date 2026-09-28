@@ -11,7 +11,6 @@ public static class DropdownTriggerTemplate
         Description = "Trigger for Dropdown (shadcn-style)",
         Category = ComponentCategory.Overlay,
         FilePath = "DropdownTrigger.razor",
-        Dependencies = new List<string> { "dropdown" },
         IsAvailable = false,
         Tags = new List<string> { "overlay", "dropdown", "trigger" }
     };
@@ -37,7 +36,9 @@ public static class DropdownTriggerTemplate
     private async Task HandleKeyDown(KeyboardEventArgs e)
     {
         if (e.Key is ""Enter"" or "" "" && Parent != null)
+        {
             await Parent.ToggleAsync();
+        }
     }
 }
 ";
