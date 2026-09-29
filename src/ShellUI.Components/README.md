@@ -1,102 +1,86 @@
 # ShellUI Components
 
-`ShellUI.Components` is the .NET 10 Razor class library packaged as `ShellUI.Components`. It provides the component runtime, Tailwind classes, theme variables, JavaScript assets, and package build integration used by ShellUI.
+Blazor components styled with Tailwind CSS, in the spirit of shadcn/ui, as a Razor class library.
+
+Prefer to own and edit the component source? Use the [ShellUI CLI](https://www.nuget.org/packages/ShellUI.CLI) instead; it copies the components into your project.
 
 ## Install
 
-Requires a .NET 10 project. Prereleases are not picked up by a plain install, so pass the version:
+Requires a .NET 10 project:
 
 ```bash
-dotnet add package ShellUI.Components --version 0.3.0-rc.3
+dotnet add package ShellUI.Components
 ```
 
-Projects still on .NET 9 can use `0.3.0-rc.1`. Do not install `ShellUI.Core` or `ShellUI.Templates`; both are internal, non-packable projects.
+On .NET 8 or 9, use the [ShellUI CLI](https://www.nuget.org/packages/ShellUI.CLI) instead. The source it installs builds on .NET 8, 9 and 10.
 
-## CSS workflows
+## Set up
 
-After building the current package, consumers can choose one of two CSS workflows.
+1. Import the namespace in `Components/_Imports.razor`:
 
-### Precompiled bundle
+   ```razor
+   @using ShellUI.Components
+   ```
 
-The release pipeline runs `scripts/rebuild-precompiled-css.sh` before packing. For a local pack, run that script first; the generated `shellui-all.css` contains the ShellUI theme and safelisted utilities, so the consuming app does not need a Tailwind build for ShellUI styles.
+2. Make the app interactive. Components with state or events (dialogs, dropdowns, tabs) need an interactive render mode, for example in `Components/App.razor`:
+
+   ```razor
+   <HeadOutlet @rendermode="InteractiveServer" />
+   ...
+   <Routes @rendermode="InteractiveServer" />
+   ```
+
+3. Add the styles, in one of two ways:
+
+   - **Precompiled stylesheet.** No Tailwind build needed. Add it to the `<head>` in `App.razor`:
+
+     ```html
+     <link href="_content/ShellUI.Components/shellui-all.css" rel="stylesheet" />
+     ```
+
+   - **Your own Tailwind build.** On build, the package writes the class names it uses to `wwwroot/shellui-classes.txt`. Add it as a source in your input stylesheet, and copy the theme variables from the package's `shellui-theme.css` into the same file:
+
+     ```css
+     @import "tailwindcss";
+     @source "./shellui-classes.txt";
+     ```
+
+     ShellUI uses Tailwind CSS `4.3.2`.
+
+## Use
 
 ```razor
-<link href="_content/ShellUI.Components/shellui-all.css" rel="stylesheet" />
-```
-
-```razor
-@using ShellUI.Components
-```
-
-`shellui-all.css` is generated and gitignored; it is not a checked-in source file.
-
-### Safelist with an existing Tailwind build
-
-For an app that already compiles Tailwind, the package build target writes `wwwroot/shellui-classes.txt` in the consuming project. Reference that file from the app's input stylesheet:
-
-```css
-@import "tailwindcss";
-@source "./shellui-classes.txt";
-```
-
-Keep the theme variables used by ShellUI in the same Tailwind build. ShellUI uses Tailwind CSS `4.3.2`.
-
-## Use a component
-
-Add the package namespace to `Components/_Imports.razor`:
-
-```razor
-@using ShellUI.Components
-```
-
-Then use the components in a Razor file:
-
-```razor
-<Button Variant="ButtonVariant.Default">Save</Button>
+<Button Variant="ButtonVariant.Outline">Cancel</Button>
+<Button>Save</Button>
 
 <Card>
     <CardHeader>
         <CardTitle>ShellUI</CardTitle>
     </CardHeader>
     <CardContent>
-        <p>Component content</p>
+        <p>Card content</p>
     </CardContent>
 </Card>
 ```
 
-The package also serves static assets, including `shellui.js`, from `_content/ShellUI.Components/` for components that use JavaScript interop. The package's own `SidebarProvider` retains `shellui-sidebar.js` for its runtime module; CLI-copied providers use the host-loaded `shellui.js` contract instead.
+## Themes
 
-## Component inventory
-
-The CLI registry contains **176 entries**: **76 direct install targets** and **100 hidden dependency entries**. The CLI displays the 76 direct targets and resolves hidden entries recursively.
-
-`0.3.0-rc.2` adds `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`. Use the CLI's `list` command for the complete direct-target inventory.
-
-## Theming with the CLI
-
-The CLI can apply a public [tweakcn](https://tweakcn.com) theme:
+Themes come from [tweakcn](https://tweakcn.com). With the CLI, write a theme as a stylesheet and load it after `shellui-all.css`:
 
 ```bash
-shellui theme apply https://tweakcn.com/themes/THEME_ID
 shellui theme apply https://tweakcn.com/themes/THEME_ID --emit-override wwwroot/theme.css
-shellui theme update
 ```
 
-The first form updates the managed region in `wwwroot/input.css` for a Tailwind build. The override form writes standalone variables for an app using `shellui-all.css`; load that file after the precompiled stylesheet. The source URL and hash are stored in `shellui.theme.lock` for `theme update`.
-
-These commands require CLI `0.3.0-rc.2` or later.
-
-## Accessibility
-
-ShellUI components use Blazor and Tailwind patterns for semantics, focus, and keyboard interaction where implemented. Accessibility still depends on the component API, configuration, content, and host application; test each consuming app rather than assuming a blanket conformance level.
+```html
+<link href="theme.css" rel="stylesheet" />
+```
 
 ## Documentation
 
-- [Repository README](https://github.com/shellui-dev/shellui/blob/main/README.md)
-- [Tailwind setup](https://github.com/shellui-dev/shellui/blob/main/docs/tailwind-setup.md)
-- [Contributing guide](https://github.com/shellui-dev/shellui/blob/main/docs/CONTRIBUTING.md)
-- [Historical release notes](https://github.com/shellui-dev/shellui/blob/main/docs/RELEASE_NOTES.md)
+- [README](https://github.com/shellui-dev/shellui/blob/v0.3.0/README.md)
+- [Tailwind setup](https://github.com/shellui-dev/shellui/blob/v0.3.0/docs/tailwind-setup.md)
+- [Release notes](https://github.com/shellui-dev/shellui/blob/v0.3.0/docs/RELEASE_NOTES.md)
 
 ## License
 
-[MIT](https://github.com/shellui-dev/shellui/blob/main/LICENSE.txt)
+[MIT](https://github.com/shellui-dev/shellui/blob/v0.3.0/LICENSE.txt)

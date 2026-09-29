@@ -6,10 +6,10 @@
 
 ## Current inventory
 
-`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **176 entries**:
+`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **177 entries**:
 
 - **76 direct CLI targets** shown by `shellui list`
-- **100 hidden entries** for sub-components, variants, models, services, and support assets
+- **101 hidden entries** for sub-components, variants, models, services, and support assets
 - **Packable projects:** `ShellUI.CLI` and `ShellUI.Components`
 
 Hidden entries are not counted as direct targets. They can still be installed recursively when a parent target declares them.

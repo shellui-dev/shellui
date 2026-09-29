@@ -6,13 +6,13 @@ Answers for the current ShellUI source and the currently published packages.
 
 ### Which version should I use?
 
-Use `0.3.0-rc.3`. It targets `net10.0`, uses Tailwind CSS `4.3.2`, and exposes 76 direct component targets. A plain install selects the older stable `0.2.1`, so select the prerelease explicitly:
+Use `0.3.0`. It uses Tailwind CSS `4.3.2` and has 76 direct component targets:
 
 ```bash
-dotnet tool install -g ShellUI.CLI --version 0.3.0-rc.3
+dotnet tool install -g ShellUI.CLI
 ```
 
-Projects still on .NET 9 can use `0.3.0-rc.1`, the last release targeting .NET 9.
+The CLI needs the .NET 10 SDK and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 10 only; on .NET 8 or 9, use the CLI.
 
 ### Which command prefix should I use?
 
@@ -145,7 +145,7 @@ A representative Tailwind and component record is:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.3.0-rc.3",
+      "Version": "0.3.0",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
@@ -236,7 +236,7 @@ For standalone mode, check `.shellui/bin/`. For npm mode, run `npm install`.
 Pass the version explicitly:
 
 ```bash
-dotnet add package ShellUI.Components --version 0.3.0-rc.3
+dotnet add package ShellUI.Components
 ```
 
 Then restore and build the project.

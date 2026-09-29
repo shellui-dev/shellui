@@ -93,7 +93,7 @@ For a component change:
 
 1. Update the live component and its generated template together.
 2. Update registry metadata, dependencies, `FilePath`, variants, and NuGet dependencies when the public contract changes.
-3. Preserve the distinction between direct targets and hidden dependency entries. The current registry has 176 entries, including 76 direct targets and 100 hidden entries.
+3. Preserve the distinction between direct targets and hidden dependency entries. The current registry has 177 entries, including 76 direct targets and 101 hidden entries.
 4. Use the Tailwind `4.3.2` variable and utility conventions already used by the project.
 5. Add or update tests that exercise the changed registry, template, or CLI behavior.
 6. Review keyboard and assistive-technology behavior without claiming a blanket accessibility conformance level that the repository does not test.

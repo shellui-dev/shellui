@@ -24,26 +24,26 @@
 
 | Channel | Version | Notes |
 |---|---|---|
-| Latest prerelease (recommended) | `0.3.0-rc.3` | .NET 10, Tailwind CSS `4.3.2` |
-| Latest stable | `0.2.1` | Older release; superseded once `0.3.0` ships |
+| Latest stable (recommended) | `0.3.0` | Tailwind CSS `4.3.2` |
+| Previous stable | `0.2.1` | Superseded by `0.3.0` |
 
-Prereleases are not picked up by a plain install, so pass `--version 0.3.0-rc.3` explicitly. Projects still on .NET 9 can use `0.3.0-rc.1`, the last release that targets .NET 9.
+The CLI needs the .NET 10 SDK and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 10 only; on .NET 8 or 9, use the CLI.
 
-ShellUI is prerelease software. Validate it in your target Blazor and hosting environments before relying on it.
+ShellUI is pre-1.0, so APIs and generated output can still change between minor versions. Validate it in your target Blazor and hosting environments before relying on it.
 
 ## Capabilities
 
 - The CLI commands are `init`, `add`, `list`, `remove`, and `update`, plus `theme init`, `theme apply`, and `theme update`.
-- The component registry has **176 entries**: **76 direct install targets** and **100 hidden dependency entries**. `list` shows direct targets; `add` resolves hidden dependencies.
-- `0.3.0-rc.2` adds `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
+- The component registry has **177 entries**: **76 direct install targets** and **101 hidden dependency entries**. `list` shows direct targets; `add` resolves hidden dependencies.
+- `0.3.0` adds `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
 - `ShellUI.Components` supports a release-generated precompiled CSS bundle and a generated safelist for existing Tailwind builds.
 - The CLI can install source with Tailwind's standalone executable or an npm-based build. The current Tailwind baseline is `4.3.2`.
 - The repository and demo have migrated to .NET 10. The demo is `NET10/BlazorInteractiveServer`.
 
 ## Requirements
 
-- .NET 10 SDK
-- A .NET 10 Blazor project
+- The .NET 10 SDK
+- A Blazor project on .NET 8, 9 or 10 with the CLI, or on .NET 10 with the NuGet package
 - Tailwind CSS `4.3.2` via either:
   - the standalone CLI, which does not require Node.js; or
   - npm, which requires Node.js and npm
@@ -53,7 +53,7 @@ ShellUI is prerelease software. Validate it in your target Blazor and hosting en
 The published global tool is named `shellui`:
 
 ```bash
-dotnet tool install --global ShellUI.CLI --version 0.3.0-rc.3
+dotnet tool install --global ShellUI.CLI
 shellui --help
 ```
 
@@ -61,7 +61,7 @@ A local .NET tool is invoked as `dotnet shellui`:
 
 ```bash
 dotnet new tool-manifest
-dotnet tool install --local ShellUI.CLI --version 0.3.0-rc.3
+dotnet tool install --local ShellUI.CLI
 dotnet shellui --help
 ```
 
@@ -92,7 +92,7 @@ New CLI sidebar installs use the host-loaded `shellui.js`; the legacy `sidebar-j
 | `theme apply <url-or-id>` | Apply a theme to `wwwroot/input.css` or emit override CSS |
 | `theme update` | Re-fetch the source recorded in `shellui.theme.lock` |
 
-The targets added in `0.3.0-rc.2` can be installed together:
+The targets added in `0.3.0` can be installed together:
 
 ```bash
 shellui add typed-select command-palette data-picker multi-select tag-input donut-chart radar-chart radial-chart
@@ -101,7 +101,7 @@ shellui add typed-select command-palette data-picker multi-select tag-input donu
 ## Components package
 
 ```bash
-dotnet add package ShellUI.Components --version 0.3.0-rc.3
+dotnet add package ShellUI.Components
 ```
 
 `ShellUI.Core` and `ShellUI.Templates` are internal projects and must not be installed by consumers.

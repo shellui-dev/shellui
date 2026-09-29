@@ -6,7 +6,7 @@ This is a qualitative comparison, not a benchmark report. Library features, pack
 
 - **Target framework:** .NET 10
 - **Tailwind CSS:** `4.3.2`
-- **CLI inventory:** 76 direct targets, 176 registry entries, and 100 hidden entries
+- **CLI inventory:** 76 direct targets, 177 registry entries, and 101 hidden entries
 - **Distribution:** the CLI copies source into an application; the repository also contains the packable `ShellUI.Components` package
 - **Packaging boundary:** only `ShellUI.CLI` and `ShellUI.Components` are packable. `ShellUI.Core` and `ShellUI.Templates` are internal/non-packable projects.
 
@@ -18,7 +18,7 @@ The direct-target count is the number users invoke with `shellui add`. It is not
 |---|---|---|---|---|---|---|
 | Distribution | CLI source-copy workflow; `ShellUI.Components` is packable | NuGet package | NuGet package | NuGet package | NuGet package | NuGet package |
 | CSS model | Tailwind CSS `4.3.2` | Material-oriented component styling | Project-specific component styling | Provider-based CSS options | Ant Design styling | Project-specific styling |
-| Direct component count | 76 CLI targets; 176 registry entries; 100 hidden | Not audited here | Not audited here | Not audited here | Not audited here | Not audited here |
+| Direct component count | 76 CLI targets; 177 registry entries; 101 hidden | Not audited here | Not audited here | Not audited here | Not audited here | Not audited here |
 | Source customization | Copied component source can be edited | Package/API customization | Package/API customization | Package/API customization | Package/API customization | Package/API customization |
 | CLI workflow | Yes | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison |
 | Accessibility status | Semantic markup is used; no current WCAG conformance claim | Not audited here | Not audited here | Not audited here | Not audited here | Not audited here |
@@ -39,7 +39,7 @@ ShellUI templates use Tailwind utility classes and CSS variables. ShellUI pins T
 
 ### Registry-driven dependencies
 
-`ComponentRegistry` is authoritative for the 76 direct targets, 100 hidden support entries, source dependencies, and NuGet dependencies. A component's visible sub-components or support files do not imply that it is a standalone package.
+`ComponentRegistry` is authoritative for the 76 direct targets, 101 hidden support entries, source dependencies, and NuGet dependencies. A component's visible sub-components or support files do not imply that it is a standalone package.
 
 ### Compositional APIs
 
@@ -52,7 +52,7 @@ Choose ShellUI when the project benefits from:
 - Direct ownership and editing of copied Blazor component source
 - Tailwind CSS as the styling foundation
 - A CLI workflow similar to copy-based component libraries
-- A .NET 10 component source that can be adapted for a particular application
+- Component source for .NET 8, 9 and 10 projects that can be adapted for a particular application
 - Explicit control over generated code and dependencies
 
 These are workflow and architecture characteristics, not a claim that ShellUI has more features, better performance, or broader compatibility than every packaged library.
@@ -96,7 +96,7 @@ The CLI's copy-based model can avoid installing unused component source, but it 
 
 Community size is not a stable, comparable metric. Stars, forum activity, Discord membership, and commercial support change over time, and no current comparable dataset is maintained here. Check the official project repositories and support channels directly.
 
-ShellUI is prerelease software. Validate the specific release you plan to use.
+ShellUI is pre-1.0. Validate the specific release you plan to use.
 
 ## Migration considerations
 

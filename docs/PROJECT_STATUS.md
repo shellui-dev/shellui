@@ -42,10 +42,10 @@ theme update
 
 ### Registry and components
 
-`ComponentRegistry` has 176 entries:
+`ComponentRegistry` has 177 entries:
 
 - 76 direct targets with `IsAvailable = true`.
-- 100 hidden entries with `IsAvailable = false`, generally installed as dependencies or assets.
+- 101 hidden entries with `IsAvailable = false`, generally installed as dependencies or assets.
 
 The direct-target count is the number shown by the normal public list. The hidden count is not a second public library; it represents the sub-components, variants, models, services, and assets needed to make the direct targets work.
 
@@ -67,7 +67,7 @@ CI restores `ShellUI.slnx`, regenerates the precompiled CSS bundle, builds the s
 
 ## Current Boundaries
 
-- ShellUI is prerelease software and its APIs, templates, and generated output may change.
+- ShellUI is pre-1.0, so its APIs, templates, and generated output may change between minor versions.
 - Only `ShellUI.CLI` and `ShellUI.Components` are packable in the current project configuration.
 - `ShellUI.Core` and `ShellUI.Templates` are internal; they are not consumer installation targets.
 - No stable release date, adoption target, or guaranteed delivery schedule is stated here.

@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers CLI `0.3.0-rc.3`: `net10.0`, Tailwind CSS `4.3.2`, and 76 direct component targets. Older versions, including the stable `0.2.1`, lack some of these commands.
+This reference covers CLI `0.3.0`: it runs on .NET 10, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has and 76 direct component targets. Older versions, such as `0.2.1`, lack some of these commands.
 
 ## Command prefix
 
@@ -42,7 +42,7 @@ shellui init --tailwind npm --yes
 Options:
 
 - `--force` reinitializes a project that already has `shellui.json`.
-- `--style <style>` selects `default`, `new-york`, or `minimal`.
+- `--style <style>` accepts `default`, `new-york`, or `minimal` and is recorded in `shellui.json`. All styles currently install the same templates.
 - `--tailwind standalone|npm` selects the Tailwind setup method.
 - `--yes` runs without prompts and uses the selected defaults. Without an explicit method, the default is `standalone`.
 
@@ -125,7 +125,7 @@ shellui theme init <url-or-id>
 shellui theme init <url-or-id> --force --style default --tailwind standalone --yes
 ```
 
-`--style` accepts `default`, `new-york`, or `minimal`. The command uses the same initialization options as `init`.
+The command uses the same initialization options as `init`.
 
 ### `theme apply`
 
@@ -205,7 +205,7 @@ Representative fields look like this:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.3.0-rc.3",
+      "Version": "0.3.0",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }

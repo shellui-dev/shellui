@@ -1,5 +1,59 @@
 # ShellUI Release Notes
 
+# ShellUI v0.3.0 🎉
+
+> The first stable release of the 0.3 line. It builds on .NET 10 and Tailwind CSS 4.3.2 and ships everything from the 0.3.0 alphas and release candidates. A plain `dotnet tool install` now picks it up, so `--version` is no longer needed. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
+
+## Highlights since 0.2.1
+
+- **Blazor on .NET 8, 9 and 10.** The CLI needs the .NET 10 SDK, and the components it installs build in projects on .NET 8, 9 and 10; CI now checks all three. The `ShellUI.Components` NuGet package targets .NET 10 only.
+- **Tailwind CSS 4.3.2.**
+- **`shellui init` produces an app that builds and runs.** It patches `App.razor` (render mode, theme bootstrap, `shellui.js`), writes the full theme to `input.css`, and wires Tailwind into the build.
+- **`shellui add` resolves everything a component needs:** its sub-components, models and variants, NuGet packages (`Blazor-ApexCharts`, `System.Linq.Dynamic.Core`), and the `@using` lines in `_Imports.razor`. Typos get a "did you mean" suggestion.
+- **76 components**, including `command-palette`, `data-picker`, `multi-select`, `tag-input`, `typed-select`, and the `donut-chart`, `radar-chart` and `radial-chart` charts.
+- **Composable APIs** for Select, Dropdown, Popover, ContextMenu, NavigationMenu, Carousel, HoverCard, Accordion and Tabs, installed together with their parent.
+- **Themes from [tweakcn](https://tweakcn.com):** `shellui theme init | apply | update`.
+- **NuGet package** with a precompiled `shellui-all.css` bundle and a Tailwind safelist, so it works without a Tailwind build step.
+- **Accessibility:** Dialog, Sheet and Drawer take focus on open, close on Escape, and set `role="dialog"`.
+- `Class` is accepted everywhere; `ClassName` still works but is deprecated.
+
+See the release candidate sections below for the full list of changes.
+
+## 🐛 Fixes since rc.3
+
+- Adding certain components on their own produced a project that did not build:
+  - `avatar`, `alert`, `badge`, `sonner`, `toggle`: `shellui add` wrote `@using ….Components.UI.Variants` to `_Imports.razor`, but those variants files declare `.Components.UI`. Imports now follow the namespace each installed file declares.
+  - `input`, `alert`, `badge`, `toggle`: the component files imported that same namespace themselves. The import is removed.
+  - `chart-series`: now installs `chart` and the `Blazor-ApexCharts` package.
+
+  Every component was installed and built on its own in a fresh app for this release, and a new test checks that each component installs the namespaces and packages it imports.
+- `shellui init` on .NET 8 left Bootstrap active: the template keeps it in `wwwroot/bootstrap/`, which was not removed. It is now, and the local Bootstrap `<link>` is removed from `App.razor` (on .NET 9 and 10 it pointed at deleted files). Bootstrap loaded from a CDN is left alone.
+- On Windows the CLI now writes UTF-8, so ✅ no longer prints as `?` and the spinner no longer falls back to ASCII.
+- A failed `shellui init` now exits with code 1.
+
+## ⬆️ Upgrading
+
+- **From a 0.3.0 release candidate:** update the tool, then run `shellui update` to rewrite the installed components from the new templates. `update` overwrites the files, so commit or back up any components you customized first.
+- **From 0.2.1:** install the .NET 10 SDK to run the CLI. Your project can stay on .NET 8 or 9 when you use the CLI; the NuGet package needs .NET 10. Read the rc.1 notes below for what changed in `init` and the templates.
+
+## 📦 Installation
+
+```bash
+# CLI
+dotnet tool install -g ShellUI.CLI
+# or upgrade an existing install
+dotnet tool update -g ShellUI.CLI
+```
+
+```bash
+# NuGet package
+dotnet add package ShellUI.Components
+```
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.2.1...v0.3.0
+
+---
+
 # ShellUI v0.3.0-rc.3 🚦
 
 > Third release candidate for v0.3.0. It contains only fixes, mostly to what `shellui add` installs. There are no new components and no breaking changes. If nothing critical comes up during testing, v0.3.0 ships from this code with the suffix dropped. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
