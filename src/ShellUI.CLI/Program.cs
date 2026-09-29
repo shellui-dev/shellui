@@ -10,6 +10,10 @@ class Program
 {
     static async Task<int> Main(string[] args)
     {
+        // Windows consoles default to the OEM code page, so Spectre would fall back to ASCII
+        // spinners and print ✅ as "?". Must run before AnsiConsole is first used.
+        try { Console.OutputEncoding = System.Text.Encoding.UTF8; } catch (IOException) { }
+
         var rootCommand = new RootCommand("ShellUI - CLI-first Blazor component library")
         {
             Description = "Add beautiful, accessible components to your Blazor app. Inspired by shadcn/ui."
@@ -206,6 +210,7 @@ class Program
             catch (Exception ex)
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
+                Environment.Exit(1);
             }
         }, forceOption, styleOption, tailwindOption, nonInteractiveOption);
 

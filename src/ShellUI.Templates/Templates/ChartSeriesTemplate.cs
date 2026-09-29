@@ -11,7 +11,7 @@ public class ChartSeriesTemplate
         Description = "Individual chart series component for use in multi-series charts",
         Category = ComponentCategory.DataDisplay,
         FilePath = "ChartSeries.razor",
-        Dependencies = new List<string>(),
+        Dependencies = new List<string> { "chart" },
         Variants = new List<string> { "line", "bar", "area", "pie" },
         Tags = new List<string> { "chart", "series", "data", "visualization", "apexcharts" }
     };

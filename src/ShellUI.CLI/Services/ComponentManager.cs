@@ -79,7 +79,7 @@ public static class ComponentManager
         
         AnsiConsole.WriteLine();
         var panel = new Panel(
-            new Markup($"[green]{installedCount} installed[/] | [blue]{availableCount} available[/] | [yellow]{ComponentRegistry.Components.Count} total[/]")
+            new Markup($"[green]{installedCount} installed[/] | [blue]{availableCount} available[/] | [yellow]{ComponentRegistry.Components.Values.Count(c => c.IsAvailable)} total[/]")
         );
         panel.Header = new PanelHeader("[bold]Summary[/]");
         panel.Border = BoxBorder.Rounded;

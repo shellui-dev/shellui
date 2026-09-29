@@ -485,6 +485,9 @@ public class InitService
     // are preserved (they'll need to set @rendermode manually).
     internal static string RewriteAppRazor(string content)
     {
+        // init deletes the template's local Bootstrap copy; CDN links are left alone.
+        content = Regex.Replace(content, @"^[ \t]*<link\b(?![^\r\n]*://)[^\r\n]*bootstrap[^\r\n]*\.css[^\r\n]*\r?\n", "", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
         content = Regex.Replace(content, @"<HeadOutlet\s*/>", @"<HeadOutlet @rendermode=""InteractiveServer"" />");
         content = Regex.Replace(content, @"<Routes\s*/>", @"<Routes @rendermode=""InteractiveServer"" />");
 
@@ -599,12 +602,13 @@ public class InitService
             AnsiConsole.MarkupLine("[cyan]Checking for Bootstrap files to clean up...[/]");
             var deletedCount = 0;
 
-            // 1. Delete wwwroot/lib/bootstrap
-            var libBootstrap = Path.Combine(wwwrootPath, "lib", "bootstrap");
-            if (Directory.Exists(libBootstrap))
+            // 1. Delete wwwroot/lib/bootstrap (.NET 9+) and wwwroot/bootstrap (.NET 8)
+            foreach (var folder in new[] { Path.Combine("lib", "bootstrap"), "bootstrap" })
             {
-                Directory.Delete(libBootstrap, true);
-                AnsiConsole.MarkupLine($"[dim]Deleted:[/] wwwroot/lib/bootstrap folder");
+                var bootstrapDir = Path.Combine(wwwrootPath, folder);
+                if (!Directory.Exists(bootstrapDir)) continue;
+                Directory.Delete(bootstrapDir, true);
+                AnsiConsole.MarkupLine($"[dim]Deleted:[/] wwwroot/{folder.Replace('\\', '/')} folder");
                 deletedCount++;
             }
 

@@ -1,6 +1,7 @@
 using ShellUI.Core.Models;
 using ShellUI.Templates;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Spectre.Console;
 
 namespace ShellUI.CLI.Services;
@@ -413,14 +414,16 @@ public class ComponentInstaller
     }
 
     // Consumer pages reference helper types such as ButtonVariant and CommandItem, which live in
-    // sub-namespaces; the imports are only added once a file in that namespace exists.
-    public static IEnumerable<string> RequiredImports(string rootNamespace, IEnumerable<string> filePaths)
+    // sub-namespaces; the imports are only added once an installed file declares that namespace.
+    public static IEnumerable<string> RequiredImports(string rootNamespace, IEnumerable<string> templateContents)
     {
-        var paths = filePaths.Select(p => p.Replace('\\', '/')).ToList();
-        if (paths.Any(p => p.StartsWith("Variants/", StringComparison.Ordinal)))
-            yield return $"@using {rootNamespace}.Components.UI.Variants";
-        if (paths.Any(p => p.Contains("Models/", StringComparison.Ordinal)))
-            yield return $"@using {rootNamespace}.Components.Models";
+        var contents = templateContents.ToList();
+        foreach (var ns in new[] { "Components.UI.Variants", "Components.Models" })
+        {
+            var declaration = new Regex($@"^\s*namespace\s+YourProjectNamespace\.{Regex.Escape(ns)}\s*[;{{]", RegexOptions.Multiline);
+            if (contents.Any(c => declaration.IsMatch(c)))
+                yield return $"@using {rootNamespace}.{ns}";
+        }
     }
 
     private static void EnsureImports(ProjectInfo projectInfo, IEnumerable<string> installed)
@@ -431,11 +434,11 @@ public class ComponentInstaller
         if (importsPath == null) return;
 
         var existing = File.ReadAllLines(importsPath).Select(l => l.Trim()).ToHashSet();
-        var filePaths = installed
-            .Select(ComponentRegistry.GetMetadata)
-            .Where(m => m != null && !m.IsLayoutBlock)
-            .Select(m => m!.FilePath);
-        var missing = RequiredImports(projectInfo.RootNamespace, filePaths).Where(u => !existing.Contains(u)).ToList();
+        var contents = installed
+            .Where(name => ComponentRegistry.GetMetadata(name) is { IsLayoutBlock: false })
+            .Select(ComponentRegistry.GetComponentContent)
+            .OfType<string>();
+        var missing = RequiredImports(projectInfo.RootNamespace, contents).Where(u => !existing.Contains(u)).ToList();
         if (missing.Count == 0) return;
 
         File.AppendAllText(importsPath, Environment.NewLine + string.Join(Environment.NewLine, missing) + Environment.NewLine);

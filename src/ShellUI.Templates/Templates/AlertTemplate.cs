@@ -16,7 +16,6 @@ public static class AlertTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using YourProjectNamespace.Components.UI.Variants
 
 <div role=""alert"" class=""@ComputedClass"" @attributes=""AdditionalAttributes"">
     @if (Icon != null)
