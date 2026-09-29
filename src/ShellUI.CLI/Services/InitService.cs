@@ -9,50 +9,25 @@ namespace ShellUI.CLI.Services;
 
 public class InitService
 {
-    public static async Task InitializeAsync(string style, bool force, string tailwindMethod = "standalone", bool nonInteractive = false)
+    public static async Task InitializeAsync(string style, bool force, string tailwindMethod = "standalone", bool nonInteractive = false,
+        string? dashboard = null, LayoutSwitch layoutSwitch = LayoutSwitch.Ask)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
+        var dashboardChoice = DashboardSetup.ParseDashboardOption(dashboard) ?? (nonInteractive ? "none" : null);
 
         if (File.Exists(configPath) && !force)
         {
             AnsiConsole.MarkupLine("[yellow]ShellUI is already initialized in this project.[/]");
-            AnsiConsole.MarkupLine("[dim]Use --force to reinitialize[/]");
+            AnsiConsole.MarkupLine("[dim]Use --force to reinitialize, or add a dashboard with: shellui add dashboard-02[/]");
             return;
         }
 
         // Step 1: Detect project
-        ProjectInfo projectInfo = null!;
-
-        try
-        {
-            await AnsiConsole.Status()
-                .Spinner(Spinner.Known.Dots)
-                .SpinnerStyle(Style.Parse("green"))
-                .StartAsync("Initializing ShellUI...", async ctx =>
-                {
-                    ctx.Status("Detecting project type...");
-                    await Task.Delay(300); // Brief delay for UX
-                    projectInfo = ProjectDetector.DetectProject();
-                    AnsiConsole.MarkupLine($"[green]✅ Detected:[/] {projectInfo.ProjectType}");
-                    AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
-                    AnsiConsole.MarkupLine($"[dim]Namespace: {projectInfo.RootNamespace}[/]");
-
-                    // Clean up bootstrap files
-                    ctx.Status("Cleaning up Bootstrap files...");
-                    RemoveBootstrapFiles();
-                });
-        }
-        catch
-        {
-            // Fallback if status display fails
-            projectInfo = ProjectDetector.DetectProject();
-            AnsiConsole.MarkupLine($"[green]✅ Detected:[/] {projectInfo.ProjectType}");
-            AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
-            AnsiConsole.MarkupLine($"[dim]Namespace: {projectInfo.RootNamespace}[/]");
-
-            // Clean up bootstrap files
-            RemoveBootstrapFiles();
-        }
+        var projectInfo = ProjectDetector.DetectProject();
+        AnsiConsole.MarkupLine($"[green]✅ Detected:[/] {projectInfo.ProjectType}");
+        AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
+        AnsiConsole.MarkupLine($"[dim]Namespace: {projectInfo.RootNamespace}[/]");
+        RemoveBootstrapFiles();
 
         // Step 2: Determine Tailwind method preference
         AnsiConsole.MarkupLine("[cyan]Setting up Tailwind CSS...[/]");
@@ -78,6 +53,23 @@ public class InitService
             AnsiConsole.MarkupLine($"[green]✅ Selected:[/] {method}");
         }
 
+        if (dashboardChoice == null)
+        {
+            var dashboardSelection = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[bold yellow]Set up the ShellUI dashboard layout?[/] [dim](sidebar, header, theme toggle)[/]")
+                    .AddChoices(new[] {
+                        "Sticky header (dashboard-02, recommended)",
+                        "Scrolling header (dashboard-01)",
+                        "No, keep my layout"
+                    }));
+
+            dashboardChoice = dashboardSelection.StartsWith("Sticky") ? "dashboard-02"
+                : dashboardSelection.StartsWith("Scrolling") ? "dashboard-01"
+                : "none";
+            AnsiConsole.MarkupLine($"[green]✅ Selected:[/] {dashboardChoice}");
+        }
+
         // Check npm availability if selected
         if (method == "npm" && !await IsNpmAvailableAsync())
         {
@@ -100,28 +92,27 @@ public class InitService
             }
         };
 
-        await AnsiConsole.Status()
-            .StartAsync("Installing ShellUI components...", async ctx =>
+        await LogoLoader.RunAsync("Installing ShellUI components...", async status =>
             {
                 // Step 3: Create Components/UI folder
-                ctx.Status("Creating component folders...");
+                status("Creating component folders...");
                 var componentsPath = Path.Combine(Directory.GetCurrentDirectory(), "Components", "UI");
                 Directory.CreateDirectory(componentsPath);
                 AnsiConsole.MarkupLine($"[green]Created:[/] Components/UI/");
 
                 // Step 3.5: Install Shell utilities and shellui.js (required for CopyButton, FileUpload, Command)
-                ctx.Status("Installing Shell utilities...");
+                status("Installing Shell utilities...");
                 if (!await ComponentInstaller.InstallComponentForInitAsync("shell", projectInfo, config))
                     throw new InvalidOperationException("Shell could not be installed.");
                 if (!await ComponentInstaller.InstallComponentForInitAsync("shellui-js", projectInfo, config))
                     throw new InvalidOperationException("shellui.js could not be installed.");
 
                 // Step 4: Create shellui.json
-                ctx.Status("Preparing configuration...");
+                status("Preparing configuration...");
                 AnsiConsole.MarkupLine("[green]Configuration prepared[/]");
 
                 // Step 5: Create _Imports.razor if it doesn't exist
-                ctx.Status("Setting up imports...");
+                status("Setting up imports...");
                 var importsPath = Path.Combine(Directory.GetCurrentDirectory(), "Components", "_Imports.razor");
                 if (File.Exists(importsPath))
                 {
@@ -136,7 +127,7 @@ public class InitService
                 }
 
                 // Step 6: Set up Tailwind CSS based on method
-                ctx.Status("Setting up Tailwind CSS...");
+                status("Setting up Tailwind CSS...");
                 if (method == "npm")
                 {
                     await SetupTailwindNpmAsync();
@@ -147,11 +138,18 @@ public class InitService
                 }
 
                 // Step 6.5: Patch App.razor / index.html — render mode + theme bootstrap + shellui.js
-                ctx.Status("Wiring up theme and render mode...");
+                status("Wiring up theme and render mode...");
                 await BootstrapHostAsync(projectInfo);
 
+                status("Restyling the template's sample pages...");
+                var pages = StockPages.Apply(Directory.GetCurrentDirectory(), new[] { config.ComponentsPath, config.LayoutPath });
+                if (pages.Restyled.Count > 0)
+                    AnsiConsole.MarkupLine($"[green]Restyled:[/] {Markup.Escape(string.Join(", ", pages.Restyled))} [dim](Bootstrap classes → Tailwind)[/]");
+                foreach (var note in pages.Notes)
+                    AnsiConsole.MarkupLine($"[yellow]![/] {Markup.Escape(note)}");
+
                 // Step 7: Create MSBuild targets file
-                ctx.Status("Setting up MSBuild integration...");
+                status("Setting up MSBuild integration...");
                 var buildPath = Path.Combine(Directory.GetCurrentDirectory(), "Build");
                 Directory.CreateDirectory(buildPath);
 
@@ -165,7 +163,7 @@ public class InitService
                 AnsiConsole.MarkupLine($"[green]Updated:[/] {Path.GetFileName(projectInfo.ProjectPath)}");
 
                 // Step 8: Run initial Tailwind build
-                ctx.Status("Building Tailwind CSS...");
+                status("Building Tailwind CSS...");
                 if (method == "npm")
                 {
                     await RunNpmTailwindBuildAsync();
@@ -187,10 +185,21 @@ public class InitService
         File.WriteAllText(configPath, json);
         AnsiConsole.MarkupLine("[green]✅ Created:[/] shellui.json");
 
+        if (dashboardChoice != "none")
+        {
+            AnsiConsole.MarkupLine($"\n[cyan]Adding {dashboardChoice}...[/]");
+            if (!await ComponentInstaller.InstallComponents(new[] { dashboardChoice! }, force: false, layoutSwitch))
+                throw new InvalidOperationException($"{dashboardChoice} could not be installed.");
+        }
+
         AnsiConsole.MarkupLine("\n[green]✅ ShellUI initialized successfully![/]");
         AnsiConsole.MarkupLine("\n[blue]Next steps:[/]");
-        AnsiConsole.MarkupLine("  [dim]1. Add components:[/] shellui add button");
-        AnsiConsole.MarkupLine("  [dim]2. Browse all:[/] shellui list");
+        var step = 1;
+        if (dashboardChoice != "none")
+            AnsiConsole.MarkupLine($"  [dim]{step++}. Run the app:[/] dotnet watch");
+        AnsiConsole.MarkupLine($"  [dim]{step++}. Pick a theme at[/] [link]https://tweakcn.com[/][dim], then:[/] shellui theme apply <theme-url>");
+        AnsiConsole.MarkupLine($"  [dim]{step++}. Add components:[/] shellui add button");
+        AnsiConsole.MarkupLine($"  [dim]{step}. Browse all:[/] shellui list");
     }
 
     private static async Task SetupTailwindNpmAsync()
@@ -485,6 +494,9 @@ public class InitService
     // are preserved (they'll need to set @rendermode manually).
     internal static string RewriteAppRazor(string content)
     {
+        // init deletes the template's local Bootstrap copy; CDN links are left alone.
+        content = Regex.Replace(content, @"^[ \t]*<link\b(?![^\r\n]*://)[^\r\n]*bootstrap[^\r\n]*\.css[^\r\n]*\r?\n", "", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
         content = Regex.Replace(content, @"<HeadOutlet\s*/>", @"<HeadOutlet @rendermode=""InteractiveServer"" />");
         content = Regex.Replace(content, @"<Routes\s*/>", @"<Routes @rendermode=""InteractiveServer"" />");
 
@@ -599,12 +611,13 @@ public class InitService
             AnsiConsole.MarkupLine("[cyan]Checking for Bootstrap files to clean up...[/]");
             var deletedCount = 0;
 
-            // 1. Delete wwwroot/lib/bootstrap
-            var libBootstrap = Path.Combine(wwwrootPath, "lib", "bootstrap");
-            if (Directory.Exists(libBootstrap))
+            // 1. Delete wwwroot/lib/bootstrap (.NET 9+) and wwwroot/bootstrap (.NET 8)
+            foreach (var folder in new[] { Path.Combine("lib", "bootstrap"), "bootstrap" })
             {
-                Directory.Delete(libBootstrap, true);
-                AnsiConsole.MarkupLine($"[dim]Deleted:[/] wwwroot/lib/bootstrap folder");
+                var bootstrapDir = Path.Combine(wwwrootPath, folder);
+                if (!Directory.Exists(bootstrapDir)) continue;
+                Directory.Delete(bootstrapDir, true);
+                AnsiConsole.MarkupLine($"[dim]Deleted:[/] wwwroot/{folder.Replace('\\', '/')} folder");
                 deletedCount++;
             }
 

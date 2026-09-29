@@ -10,6 +10,10 @@ class Program
 {
     static async Task<int> Main(string[] args)
     {
+        // Windows consoles default to the OEM code page, so Spectre would fall back to ASCII
+        // spinners and print ✅ as "?". Must run before AnsiConsole is first used.
+        try { Console.OutputEncoding = System.Text.Encoding.UTF8; } catch (IOException) { }
+
         var rootCommand = new RootCommand("ShellUI - CLI-first Blazor component library")
         {
             Description = "Add beautiful, accessible components to your Blazor app. Inspired by shadcn/ui."
@@ -48,17 +52,22 @@ class Program
         var tailwindOpt = new Option<string>("--tailwind", getDefaultValue: () => "standalone",
             "Tailwind method: standalone, npm");
         var yesOpt = new Option<bool>("--yes", "Non-interactive mode with default options");
+        var dashboardOpt = CreateDashboardOption();
+        var replaceLayoutOpt = CreateReplaceLayoutOption();
         command.AddOption(forceOpt);
         command.AddOption(styleOpt);
         command.AddOption(tailwindOpt);
         command.AddOption(yesOpt);
+        command.AddOption(dashboardOpt);
+        command.AddOption(replaceLayoutOpt);
 
-        command.SetHandler(async (url, force, style, tailwind, nonInteractive) =>
+        command.SetHandler(async (url, force, style, tailwind, nonInteractive, dashboard, replaceLayout) =>
         {
             try
             {
                 AnsiConsole.MarkupLine("[cyan]Step 1/2:[/] initializing ShellUI…");
-                await InitService.InitializeAsync(style, force, tailwind, nonInteractive);
+                await InitService.InitializeAsync(style, force, tailwind, nonInteractive, dashboard,
+                    replaceLayout ? LayoutSwitch.Always : LayoutSwitch.Ask);
                 AnsiConsole.MarkupLine("");
                 AnsiConsole.MarkupLine("[cyan]Step 2/2:[/] applying tweakcn theme…");
                 await ApplyThemeAsync(url, emitOverride: null);
@@ -68,10 +77,18 @@ class Program
                 AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
                 Environment.Exit(1);
             }
-        }, urlArg, forceOpt, styleOpt, tailwindOpt, yesOpt);
+        }, urlArg, forceOpt, styleOpt, tailwindOpt, yesOpt, dashboardOpt, replaceLayoutOpt);
 
         return command;
     }
+
+    static Option<string?> CreateDashboardOption() => new(
+        "--dashboard",
+        "Set up the dashboard layout: 02 (sticky header), 01 (scrolling header) or none. Prompts when omitted; --yes alone means none");
+
+    static Option<bool> CreateReplaceLayoutOption() => new(
+        "--replace-layout",
+        "Make the dashboard the default layout even if the app already has a custom one");
 
     static Command CreateThemeApplyCommand()
     {
@@ -134,8 +151,7 @@ class Program
     {
         var cwd = Directory.GetCurrentDirectory();
 
-        AnsiConsole.MarkupLine($"[cyan]Fetching theme:[/] {url.Replace("[", "[[").Replace("]", "]]")}");
-        var json = await ThemeService.FetchThemeJsonAsync(url);
+        var json = await Loaders.SnakeStatus().StartAsync($"Fetching theme: {Markup.Escape(url)}", _ => ThemeService.FetchThemeJsonAsync(url));
         var theme = ThemeService.ParseTheme(json);
         AnsiConsole.MarkupLine($"[green]✓[/] Fetched: [bold]{theme.Name}[/] ({theme.LightVars.Count} light + {theme.DarkVars.Count} dark vars)");
 
@@ -181,33 +197,30 @@ class Program
             "--yes",
             "Run in non-interactive mode with default options");
 
+        var dashboardOption = CreateDashboardOption();
+        var replaceLayoutOption = CreateReplaceLayoutOption();
+
         command.AddOption(forceOption);
         command.AddOption(styleOption);
         command.AddOption(tailwindOption);
         command.AddOption(nonInteractiveOption);
+        command.AddOption(dashboardOption);
+        command.AddOption(replaceLayoutOption);
 
-        command.SetHandler(async (force, style, tailwind, nonInteractive) =>
+        command.SetHandler(async (force, style, tailwind, nonInteractive, dashboard, replaceLayout) =>
         {
             try
             {
-                var logo = @"
- ███████╗██╗  ██╗███████╗██╗     ██╗     ██╗   ██╗██╗
- ██╔════╝██║  ██║██╔════╝██║     ██║     ██║   ██║██║
- ███████╗███████║█████╗  ██║     ██║     ██║   ██║██║
- ╚════██║██╔══██║██╔══╝  ██║     ██║     ██║   ██║██║
- ███████║██║  ██║███████╗███████╗███████╗╚██████╔╝██║
- ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝ ╚═╝
-
-";
-
-                AnsiConsole.Markup($"[blue]{logo}[/]");
-                await InitService.InitializeAsync(style, force, tailwind, nonInteractive);
+                LogoLoader.WriteHeader("Setting up your Blazor project");
+                await InitService.InitializeAsync(style, force, tailwind, nonInteractive, dashboard,
+                    replaceLayout ? LayoutSwitch.Always : LayoutSwitch.Ask);
             }
             catch (Exception ex)
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
+                Environment.Exit(1);
             }
-        }, forceOption, styleOption, tailwindOption, nonInteractiveOption);
+        }, forceOption, styleOption, tailwindOption, nonInteractiveOption, dashboardOption, replaceLayoutOption);
 
         return command;
     }
@@ -229,11 +242,14 @@ class Program
             "Overwrite existing components");
         command.AddOption(forceOption);
 
-        command.SetHandler(async (components, force) =>
+        var replaceLayoutOption = CreateReplaceLayoutOption();
+        command.AddOption(replaceLayoutOption);
+
+        command.SetHandler(async (components, force, replaceLayout) =>
         {
             try
             {
-                if (!await ComponentInstaller.InstallComponents(components, force))
+                if (!await ComponentInstaller.InstallComponents(components, force, replaceLayout ? LayoutSwitch.Always : LayoutSwitch.Ask))
                     Environment.Exit(1);
             }
             catch (Exception ex)
@@ -241,7 +257,7 @@ class Program
                 AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
                 Environment.Exit(1);
             }
-        }, componentsArg, forceOption);
+        }, componentsArg, forceOption, replaceLayoutOption);
 
         return command;
     }
