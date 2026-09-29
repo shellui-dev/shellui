@@ -1,4 +1,5 @@
 using ShellUI.CLI.Services;
+using ShellUI.Templates;
 using Xunit;
 
 namespace ShellUI.Tests;
@@ -27,6 +28,27 @@ public class InitBootstrapTests
 
 </html>
 ";
+
+    [Theory]
+    [InlineData(@"    <link rel=""stylesheet"" href=""@Assets[""lib/bootstrap/dist/css/bootstrap.min.css""]"" />")]
+    [InlineData(@"    <link rel=""stylesheet"" href=""bootstrap/bootstrap.min.css"" />")]
+    public void RewriteAppRazor_RemovesTheDeletedLocalBootstrapLink(string link)
+    {
+        var app = FreshAppRazor.Replace("    <link rel=\"stylesheet\" href=\"@Assets[\"app.css\"]\" />", link + "\n    <link rel=\"stylesheet\" href=\"@Assets[\"app.css\"]\" />");
+
+        var result = InitService.RewriteAppRazor(app);
+
+        Assert.DoesNotContain("bootstrap.min.css", result);
+        Assert.Contains("@Assets[\"app.css\"]", result);
+    }
+
+    [Fact]
+    public void RewriteAppRazor_KeepsCdnBootstrap()
+    {
+        const string cdn = @"<link rel=""stylesheet"" href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"" />";
+
+        Assert.Contains(cdn, InitService.RewriteAppRazor(FreshAppRazor.Replace("<ImportMap />", cdn + "\n    <ImportMap />")));
+    }
 
     [Fact]
     public void RewriteAppRazor_AddsRenderModeToHeadOutletAndRoutes()
@@ -138,7 +160,7 @@ public class RequiredImportsTests
     [Fact]
     public void VariantsAndModelsFiles_AddTheirNamespaces()
     {
-        var imports = ComponentInstaller.RequiredImports("App", new[] { "Button.razor", "Variants/ButtonVariants.cs", "Models/CommandModels.cs" }).ToList();
+        var imports = ComponentInstaller.RequiredImports("App", Contents("button", "button-variants", "command-models")).ToList();
 
         Assert.Equal(new[] { "@using App.Components.UI.Variants", "@using App.Components.Models" }, imports);
     }
@@ -146,8 +168,18 @@ public class RequiredImportsTests
     [Fact]
     public void PlainComponents_AddNothing()
     {
-        Assert.Empty(ComponentInstaller.RequiredImports("App", new[] { "Kbd.razor", "../../wwwroot/shellui.js" }));
+        Assert.Empty(ComponentInstaller.RequiredImports("App", Contents("kbd", "shellui-js")));
     }
+
+    [Fact]
+    public void VariantsFileInTheUiNamespace_AddsNothing()
+    {
+        // AvatarVariants sits in Variants/ but declares Components.UI; a Variants using would not compile.
+        Assert.Empty(ComponentInstaller.RequiredImports("App", Contents("avatar", "avatar-variants")));
+    }
+
+    private static IEnumerable<string> Contents(params string[] names) =>
+        names.Select(n => ComponentRegistry.GetComponentContent(n) ?? throw new InvalidOperationException(n));
 }
 
 public class InputCssTests
