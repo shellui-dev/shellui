@@ -16,12 +16,12 @@ shellui --version
 ## Command overview
 
 ```text
-shellui init [--force] [--style <style>] [--tailwind standalone|npm] [--yes]
-shellui add <name...> [--force]
+shellui init [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
+shellui add <name...> [--force] [--replace-layout]
 shellui list [--installed|--available]
 shellui remove <name...>
 shellui update [name...] [--all]
-shellui theme init <url-or-id> [--force] [--style <style>] [--tailwind standalone|npm] [--yes]
+shellui theme init <url-or-id> [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
 shellui theme apply <url-or-id> [--emit-override <path>]
 shellui theme update
 ```
@@ -37,6 +37,7 @@ shellui init
 shellui init --force
 shellui init --style new-york
 shellui init --tailwind npm --yes
+shellui init --yes --dashboard 02
 ```
 
 Options:
@@ -45,6 +46,8 @@ Options:
 - `--style <style>` selects `default`, `new-york`, or `minimal`.
 - `--tailwind standalone|npm` selects the Tailwind setup method.
 - `--yes` runs without prompts and uses the selected defaults. Without an explicit method, the default is `standalone`.
+- `--dashboard 01|02|none` sets up a dashboard layout: `02` has a sticky header, `01` a scrolling one. Without the option, `init` asks; with `--yes` alone, no dashboard is added.
+- `--replace-layout` makes the dashboard the default layout even when the app already uses a custom layout. See [Dashboard layouts](#dashboard-layouts).
 
 Initialization creates or updates:
 
@@ -57,6 +60,10 @@ Initialization creates or updates:
 - the host file when applicable
 
 `Components/Layout/` is created when a layout target is installed.
+
+`init` removes the template's local Bootstrap copy (`wwwroot/lib/bootstrap` or, on .NET 8, `wwwroot/bootstrap`) and its `<link>` in `App.razor`; Bootstrap loaded from a CDN is left alone. The sample pages (`Home`, `Counter`, `Weather`, `Error`, `NotFound`, `Auth`) are restyled with Tailwind classes when they are unchanged from `dotnet new blazor`. Pages you have edited are kept, and `init` lists any that still use Bootstrap classes. Identity pages under `Account/` are counted but not restyled.
+
+With `--dashboard`, `init` then runs `shellui add dashboard-0x`, including the layout wiring described under [Dashboard layouts](#dashboard-layouts).
 
 Standalone mode stores the Tailwind executable in `.shellui/bin/`. npm mode installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm. The current CLI invokes npm through `cmd`; use standalone mode on non-Windows systems or run npm manually.
 
@@ -75,6 +82,20 @@ shellui add button --force
 `add` accepts space-separated names, comma-separated names, and a mixture of both. Use the exact target names printed by `shellui list`.
 
 `--force` overwrites an existing component file. Dependencies are installed automatically; there is no separate dependency option.
+
+### Dashboard layouts
+
+`shellui add dashboard-01` and `shellui add dashboard-02`, and `init --dashboard`, also wire the layout into the app:
+
+- `Routes.razor` gets `DefaultLayout="typeof(Layout.DashboardLayout02)"`. Switching between the two dashboards is automatic.
+- If the app uses a custom layout, or a `MainLayout` that was modified, the CLI asks before switching. Without a terminal it leaves the layout alone and prints a hint; pass `--replace-layout` to switch anyway.
+- The stock `MainLayout` and `NavMenu` files (and their `.razor.css`) are deleted only when they are byte-identical to `dotnet new blazor` output for .NET 8, 9 or 10 and nothing else references them. Modified files are kept with a warning.
+- Pages that pin `@layout MainLayout`, such as the .NET 10 `NotFound` page, move to the dashboard layout.
+- The Blazor error bar (`blazor-error-ui`) moves from `MainLayout` into `App.razor`.
+- `AppSidebar` links are built from the app's `@page` routes. Parameterized routes, `/Account/*`, `/Error` and `/not-found` are skipped. Links you have edited are left alone.
+- `ReconnectModal` and pages are not changed otherwise.
+
+Running the command again is safe. It prints a summary of what changed.
 
 ## `list`
 

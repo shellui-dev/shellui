@@ -1,6 +1,7 @@
 using ShellUI.Core.Models;
 using ShellUI.Templates;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Spectre.Console;
 
 namespace ShellUI.CLI.Services;
@@ -9,7 +10,7 @@ public class ComponentInstaller
 {
     private const string ShellUiJsSidebarApiMarker = "initSidebar: function (handle, dotNetRef)";
 
-    public static async Task<bool> InstallComponents(string[] components, bool force)
+    public static async Task<bool> InstallComponents(string[] components, bool force, LayoutSwitch layoutSwitch = LayoutSwitch.Ask)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
 
@@ -62,9 +63,7 @@ public class ComponentInstaller
 
         AnsiConsole.MarkupLine("");
 
-        await AnsiConsole.Status()
-            .Spinner(Spinner.Known.Dots)
-            .SpinnerStyle(Style.Parse("green"))
+        await Loaders.SnakeStatus()
             .StartAsync("Installing components...", ctx =>
             {
                 foreach (var componentName in componentList)
@@ -94,6 +93,11 @@ public class ComponentInstaller
         }
 
         EnsureImports(projectInfo, installedSet);
+
+        foreach (var dashboard in componentList.Where(c => DashboardSetup.Layouts.ContainsKey(c) && installedSet.Contains(c)))
+        {
+            await DashboardSetup.WireAsync(dashboard, projectInfo, config, layoutSwitch);
+        }
 
         // Update config
         var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions
@@ -413,14 +417,16 @@ public class ComponentInstaller
     }
 
     // Consumer pages reference helper types such as ButtonVariant and CommandItem, which live in
-    // sub-namespaces; the imports are only added once a file in that namespace exists.
-    public static IEnumerable<string> RequiredImports(string rootNamespace, IEnumerable<string> filePaths)
+    // sub-namespaces; the imports are only added once an installed file declares that namespace.
+    public static IEnumerable<string> RequiredImports(string rootNamespace, IEnumerable<string> templateContents)
     {
-        var paths = filePaths.Select(p => p.Replace('\\', '/')).ToList();
-        if (paths.Any(p => p.StartsWith("Variants/", StringComparison.Ordinal)))
-            yield return $"@using {rootNamespace}.Components.UI.Variants";
-        if (paths.Any(p => p.Contains("Models/", StringComparison.Ordinal)))
-            yield return $"@using {rootNamespace}.Components.Models";
+        var contents = templateContents.ToList();
+        foreach (var ns in new[] { "Components.UI.Variants", "Components.Models" })
+        {
+            var declaration = new Regex($@"^\s*namespace\s+YourProjectNamespace\.{Regex.Escape(ns)}\s*[;{{]", RegexOptions.Multiline);
+            if (contents.Any(c => declaration.IsMatch(c)))
+                yield return $"@using {rootNamespace}.{ns}";
+        }
     }
 
     private static void EnsureImports(ProjectInfo projectInfo, IEnumerable<string> installed)
@@ -431,11 +437,11 @@ public class ComponentInstaller
         if (importsPath == null) return;
 
         var existing = File.ReadAllLines(importsPath).Select(l => l.Trim()).ToHashSet();
-        var filePaths = installed
-            .Select(ComponentRegistry.GetMetadata)
-            .Where(m => m != null && !m.IsLayoutBlock)
-            .Select(m => m!.FilePath);
-        var missing = RequiredImports(projectInfo.RootNamespace, filePaths).Where(u => !existing.Contains(u)).ToList();
+        var contents = installed
+            .Where(name => ComponentRegistry.GetMetadata(name) is { IsLayoutBlock: false })
+            .Select(ComponentRegistry.GetComponentContent)
+            .OfType<string>();
+        var missing = RequiredImports(projectInfo.RootNamespace, contents).Where(u => !existing.Contains(u)).ToList();
         if (missing.Count == 0) return;
 
         File.AppendAllText(importsPath, Environment.NewLine + string.Join(Environment.NewLine, missing) + Environment.NewLine);
