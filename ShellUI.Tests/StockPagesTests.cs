@@ -30,16 +30,20 @@ public class StockPagesTests
             Assert.Equal(restyled, StockPages.Restyle(file, restyled));
     }
 
-    [Fact]
-    public void Restyle_TurnsStockHomeIntoThemeCard()
+    [Theory]
+    [InlineData("\n")]
+    [InlineData("\r\n")]
+    public void Restyle_TurnsStockHomeIntoThemeCard_KeepingLineEndings(string newline)
     {
-        var home = StockPages.Restyle("Home.razor", Fixture("net10", "Home.razor"));
+        var stock = Fixture("net10", "Home.razor").Replace("\r\n", "\n").Replace("\n", newline);
+
+        var home = StockPages.Restyle("Home.razor", stock);
 
         Assert.StartsWith("@page \"/\"", home);
         Assert.Contains("<PageTitle>Home</PageTitle>", home);
         Assert.Contains("shellui theme apply https://tweakcn.com/themes/&lt;id&gt;", home);
         Assert.Contains("href=\"https://tweakcn.com\"", home);
-        Assert.Contains("\r\n", home);
+        Assert.Equal(newline == "\r\n", home.Contains("\r\n"));
     }
 
     [Fact]
