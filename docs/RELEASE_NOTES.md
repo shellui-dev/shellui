@@ -27,6 +27,7 @@ See the release candidate sections below for the full list of changes.
   - `chart-series`: now installs `chart` and the `Blazor-ApexCharts` package.
 
   Every component was installed and built on its own in a fresh app for this release, and a new test checks that each component installs the namespaces and packages it imports.
+- On .NET 8 and 9 projects whose name is not a valid namespace, such as `my-app`, installed files got `namespace my-app.Components.UI` and did not build. The template writes `<RootNamespace>my-app</RootNamespace>`, while the compiler uses `my_app`; the CLI now does the same.
 - `shellui init` on .NET 8 left Bootstrap active: the template keeps it in `wwwroot/bootstrap/`, which was not removed. It is now, and the local Bootstrap `<link>` is removed from `App.razor` (on .NET 9 and 10 it pointed at deleted files). Bootstrap loaded from a CDN is left alone.
 - On Windows the CLI now writes UTF-8, so ✅ no longer prints as `?` and the spinner no longer falls back to ASCII.
 - A failed `shellui init` now exits with code 1.
