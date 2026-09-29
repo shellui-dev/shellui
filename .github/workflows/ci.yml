@@ -134,6 +134,19 @@ jobs:
 
         dotnet build -c Debug
 
+        # init --dashboard wires the layout: Routes default, stock MainLayout/NavMenu removed,
+        # error bar moved to App.razor, sidebar links built from the app's pages.
+        cd "$TMPDIR/app"
+        dotnet new blazor -o DashApp --no-restore
+        cd DashApp
+        shellui init --tailwind standalone --yes --dashboard 02
+        grep -q 'typeof(Layout.DashboardLayout02)' Components/Routes.razor || (echo "init --dashboard 02 did not switch Routes.razor"; exit 1)
+        test ! -e Components/Layout/MainLayout.razor || (echo "stock MainLayout.razor was not removed"; exit 1)
+        test ! -e Components/Layout/NavMenu.razor || (echo "stock NavMenu.razor was not removed"; exit 1)
+        grep -q 'id="blazor-error-ui"' Components/App.razor || (echo "the error bar was not added to App.razor"; exit 1)
+        grep -q '"/counter"' Components/UI/AppSidebar.razor || (echo "AppSidebar links were not built from the pages"; exit 1)
+        dotnet build -c Debug
+
         # Every direct target must install and compile together; this catches missing
         # dependencies and template compile errors that per-template tests can't see.
         ALL=$(python3 - "$GITHUB_WORKSPACE" <<'PY'
