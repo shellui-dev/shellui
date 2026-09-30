@@ -67,7 +67,7 @@ CI restores `ShellUI.slnx`, regenerates the precompiled CSS bundle, builds the s
 
 ## Current Boundaries
 
-- ShellUI is prerelease software and its APIs, templates, and generated output may change.
+- ShellUI is pre-1.0, so its APIs, templates, and generated output may change between minor versions.
 - Only `ShellUI.CLI` and `ShellUI.Components` are packable in the current project configuration.
 - `ShellUI.Core` and `ShellUI.Templates` are internal; they are not consumer installation targets.
 - No stable release date, adoption target, or guaranteed delivery schedule is stated here.

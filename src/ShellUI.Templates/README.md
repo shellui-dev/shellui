@@ -39,7 +39,7 @@ The registry contains **194 entries**:
 
 Each entry provides content plus metadata used by the CLI, including its display name, category, description, target path, version, dependencies, and optional NuGet dependencies. The catalog also includes hidden subcomponents, variants, models, services, JavaScript, and stylesheet assets required by direct targets.
 
-`0.3.0-rc.2` adds the direct targets `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
+`0.3.0` added the direct targets `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
 
 ## Development
 

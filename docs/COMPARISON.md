@@ -52,7 +52,7 @@ Choose ShellUI when the project benefits from:
 - Direct ownership and editing of copied Blazor component source
 - Tailwind CSS as the styling foundation
 - A CLI workflow similar to copy-based component libraries
-- A .NET 10 component source that can be adapted for a particular application
+- Component source for .NET 8, 9 and 10 projects that can be adapted for a particular application
 - Explicit control over generated code and dependencies
 
 These are workflow and architecture characteristics, not a claim that ShellUI has more features, better performance, or broader compatibility than every packaged library.
@@ -96,7 +96,7 @@ The CLI's copy-based model can avoid installing unused component source, but it 
 
 Community size is not a stable, comparable metric. Stars, forum activity, Discord membership, and commercial support change over time, and no current comparable dataset is maintained here. Check the official project repositories and support channels directly.
 
-ShellUI is prerelease software. Validate the specific release you plan to use.
+ShellUI is pre-1.0. Validate the specific release you plan to use.
 
 ## Migration considerations
 
