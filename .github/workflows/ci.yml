@@ -158,12 +158,15 @@ jobs:
         print(" ".join(names))
         PY
         )
-        cd "$TMPDIR/app"
-        dotnet new blazor -o AllApp --no-restore
-        cd AllApp
-        shellui init --tailwind standalone --yes
-        shellui add $ALL
-        dotnet build -c Debug
+        # The CLI's source must build in .NET 8 and 9 projects too, and hyphenated names test the namespace sanitizing.
+        for fw in net10.0 net9.0 net8.0; do
+          cd "$TMPDIR/app"
+          dotnet new blazor -o "AllApp-$fw" -f "$fw" --no-restore
+          cd "AllApp-$fw"
+          shellui init --tailwind standalone --yes
+          shellui add $ALL
+          dotnet build -c Debug
+        done
 
     # Pure-NuGet install path — `dotnet add package ShellUI.Components` without
     # the CLI. Uses a one-off NuGet.config that whitelists ONLY the local feed,

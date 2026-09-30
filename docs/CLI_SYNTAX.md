@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers CLI `0.3.0-rc.2`: `net10.0`, Tailwind CSS `4.3.2`, and 90 direct component targets. Older versions, including the stable `0.2.1`, lack some of these commands.
+This reference covers the CLI on `main` (0.4, in development): it runs on .NET 10, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 90 direct component targets. Some options, such as `--dashboard`, are not in the released 0.3.0; see the [v0.3.0 reference](https://github.com/shellui-dev/shellui/blob/v0.3.0/docs/CLI_SYNTAX.md) for that version.
 
 ## Command prefix
 
@@ -63,7 +63,7 @@ Initialization creates or updates:
 
 `init` removes the template's local Bootstrap copy (`wwwroot/lib/bootstrap` or, on .NET 8, `wwwroot/bootstrap`) and its `<link>` in `App.razor`; Bootstrap loaded from a CDN is left alone. The sample pages (`Home`, `Counter`, `Weather`, `Error`, `NotFound`, `Auth`) are restyled with Tailwind classes when they are unchanged from `dotnet new blazor`. Pages you have edited are kept, and `init` lists any that still use Bootstrap classes. Identity pages under `Account/` are counted but not restyled.
 
-With `--dashboard`, `init` then runs `shellui add dashboard-0x`, including the layout wiring described under [Dashboard layouts](#dashboard-layouts).
+With `--dashboard`, `init` then runs `shellui add dashboard-02` (or `dashboard-01`), including the layout wiring described under [Dashboard layouts](#dashboard-layouts).
 
 Standalone mode stores the Tailwind executable in `.shellui/bin/`. npm mode installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm. The current CLI invokes npm through `cmd`; use standalone mode on non-Windows systems or run npm manually.
 
@@ -226,7 +226,7 @@ Representative fields look like this:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.3.0-rc.2",
+      "Version": "0.4.0",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
