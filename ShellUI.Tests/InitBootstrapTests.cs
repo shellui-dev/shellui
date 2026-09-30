@@ -191,3 +191,18 @@ public class InputCssTests
         Assert.Contains("h1:focus {\n    outline: none;", ShellUI.Templates.CssTemplates.InputCss.Replace("\r\n", "\n"));
     }
 }
+
+public class RootNamespaceTests
+{
+    // Matches what the compiler and the .NET 10 template produce for the same project names.
+    [Theory]
+    [InlineData("my-app", "my_app")]
+    [InlineData("AllApp-net9.0", "AllApp_net9._0")]
+    [InlineData("Contoso.Shop", "Contoso.Shop")]
+    [InlineData("1app", "_1app")]
+    [InlineData("My App", "My_App")]
+    public void SanitizeNamespace_MakesAValidNamespace(string value, string expected)
+    {
+        Assert.Equal(expected, ProjectDetector.SanitizeNamespace(value));
+    }
+}

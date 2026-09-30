@@ -66,8 +66,16 @@ public class ProjectDetector
             .Descendants("RootNamespace")
             .FirstOrDefault()?.Value;
 
-        return rootNamespace ?? projectName;
+        return SanitizeNamespace(string.IsNullOrWhiteSpace(rootNamespace) ? projectName : rootNamespace);
     }
+
+    // The .NET 8/9 templates write e.g. <RootNamespace>my-app</RootNamespace>; the compiler and Razor use my_app.
+    internal static string SanitizeNamespace(string value) =>
+        string.Join(".", value.Trim().Split('.', StringSplitOptions.RemoveEmptyEntries).Select(segment =>
+        {
+            var identifier = new string(segment.Select(c => char.IsLetterOrDigit(c) || c == '_' ? c : '_').ToArray());
+            return char.IsDigit(identifier[0]) ? "_" + identifier : identifier;
+        }));
 }
 
 public class ProjectInfo

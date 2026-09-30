@@ -16,7 +16,6 @@ public static class InputTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using YourProjectNamespace.Components.UI.Variants
 
 <input 
     type=""@Type""
