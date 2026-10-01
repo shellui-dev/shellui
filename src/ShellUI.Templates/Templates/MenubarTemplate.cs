@@ -13,7 +13,7 @@ public class MenubarTemplate
         FilePath = "Menubar.razor",
 
         Tags = new List<string> { "navigation", "menu", "menubar", "app" },
-        Dependencies = new List<string> { "menubar-item" }
+        Dependencies = new List<string> { "menubar-item", "menubar-menu", "menubar-trigger", "menubar-content", "menubar-separator" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

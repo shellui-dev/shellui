@@ -13,13 +13,13 @@ public class FormTemplate
         FilePath = "Form.razor",
 
         Tags = new List<string> { "form", "validation", "input", "wrapper" },
-        Dependencies = new List<string> { "label", "input", "button" }
+        Dependencies = new List<string> { "label", "input", "button", "form-field", "form-item", "form-label", "form-control", "form-description", "form-message" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 @using Microsoft.AspNetCore.Components.Forms
 
-<form @onsubmit=""HandleSubmit"" @attributes=""AdditionalAttributes"" class=""@ClassName @Class"">
+<form @onsubmit=""HandleSubmit"" @attributes=""AdditionalAttributes"" class=""@Shell.Cn(ClassName, Class)"" novalidate>
     @ChildContent
 </form>
 
@@ -43,11 +43,13 @@ public class FormTemplate
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
+    // For validation, use EditForm with DataAnnotationsValidator; FormField and FormMessage work inside it.
     private async Task HandleSubmit()
     {
-        await Task.CompletedTask;
+        if (OnValidSubmit.HasDelegate) await OnValidSubmit.InvokeAsync();
     }
 }
+
 ";
 }
 

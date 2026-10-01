@@ -11,12 +11,21 @@ public static class CommandTemplate
         Description = "Command palette component for quick actions",
         Category = ComponentCategory.Overlay,
         FilePath = "Command.razor",
-        Dependencies = new List<string> { "command-models" }
+        Dependencies = new List<string> { "command-models", "command-input", "command-list", "command-group", "command-option", "command-empty", "command-separator" }
     };
 
-    public static string Content => @"@using YourProjectNamespace.Components.Models
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.Models
 
-@if (IsOpen)
+@if (ChildContent != null)
+{
+    <CascadingValue Value=""this"" IsFixed=""true"">
+        <div class=""@Shell.Cn(""flex h-full w-full flex-col overflow-hidden rounded-md border border-border bg-popover text-popover-foreground"", Class)"" @attributes=""AdditionalAttributes"">
+            @ChildContent
+        </div>
+    </CascadingValue>
+}
+else if (IsOpen)
 {
     <div class=""fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity duration-150 starting:opacity-0"" @onclick=""CloseAsync""></div>
     <div role=""dialog"" aria-modal=""true"" aria-label=""Command menu""
@@ -112,6 +121,11 @@ public static class CommandTemplate
     [Parameter] public List<CommandItem> Commands { get; set; } = new();
     [Parameter] public EventCallback<CommandItem> CommandSelected { get; set; }
     [Parameter] public string Placeholder { get; set; } = ""Type a command or search..."";
+    // Set to compose the command menu from CommandInput, CommandList, CommandGroup and CommandOption.
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
     private readonly string _listId = $""command-list-{Guid.NewGuid():N}"";
     private readonly Dictionary<int, ElementReference> _itemRefs = new();
@@ -124,6 +138,56 @@ public static class CommandTemplate
     private bool _scrollToActive;
 
     private string ItemId(int index) => $""{_listId}-{index}"";
+
+    private readonly List<CommandOption> _options = new();
+    internal string Search { get; private set; } = """";
+    internal CommandOption? ActiveOption { get; private set; }
+    internal event Action? Changed;
+
+    internal bool Matches(CommandOption option) =>
+        Search.Length == 0 || option.Text.Contains(Search, StringComparison.OrdinalIgnoreCase);
+
+    internal int VisibleCount => _options.Count(Matches);
+
+    internal void Register(CommandOption option)
+    {
+        _options.Add(option);
+        if (ActiveOption == null && Matches(option) && !option.Disabled) ActiveOption = option;
+        Changed?.Invoke();
+    }
+
+    internal void Unregister(CommandOption option)
+    {
+        _options.Remove(option);
+        if (ActiveOption == option) ActiveOption = _options.FirstOrDefault(o => Matches(o) && !o.Disabled);
+        Changed?.Invoke();
+    }
+
+    internal void SetSearch(string value)
+    {
+        Search = value.Trim();
+        ActiveOption = _options.FirstOrDefault(o => Matches(o) && !o.Disabled);
+        Changed?.Invoke();
+    }
+
+    internal void SetActive(CommandOption option)
+    {
+        if (ActiveOption == option) return;
+        ActiveOption = option;
+        Changed?.Invoke();
+    }
+
+    internal void MoveActive(int delta, bool toEnd = false)
+    {
+        var visible = _options.Where(o => Matches(o) && !o.Disabled).ToList();
+        if (visible.Count == 0) return;
+        var index = ActiveOption == null ? -1 : visible.IndexOf(ActiveOption);
+        index = toEnd ? (delta < 0 ? 0 : visible.Count - 1) : ((index + delta) % visible.Count + visible.Count) % visible.Count;
+        ActiveOption = visible[index];
+        Changed?.Invoke();
+    }
+
+    internal Task SelectActiveAsync() => ActiveOption?.SelectAsync() ?? Task.CompletedTask;
 
     protected override void OnParametersSet()
     {
