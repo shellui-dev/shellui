@@ -189,6 +189,17 @@ public class TemplateCompileTests
         Assert.True(failures.Count == 0, "Targets whose imports are not installed with them:\n  " + string.Join("\n  ", failures));
     }
 
+    // Templates are copied into the user's project, where the NuGet package's namespace does not exist.
+    [Fact]
+    public void NoTemplate_ReferencesThePackageNamespace()
+    {
+        var packageNamespace = new Regex(@"\bShellUI\.Components\b|^\s*@?using\s+ShellUI\.", RegexOptions.Multiline);
+        var offenders = ComponentRegistry.Components.Keys
+            .Where(name => packageNamespace.IsMatch(ComponentRegistry.GetComponentContent(name) ?? ""))
+            .ToList();
+        Assert.True(offenders.Count == 0, "Templates referencing ShellUI.* namespaces:\n  " + string.Join("\n  ", offenders));
+    }
+
     private static readonly (string Namespace, string Package)[] ThirdPartyNamespaces =
     {
         ("ApexCharts", "Blazor-ApexCharts"),
