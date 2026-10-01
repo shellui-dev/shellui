@@ -1,0 +1,16 @@
+@namespace ShellUI.Components
+
+<span aria-hidden="true" class="@Shell.Cn("flex h-9 w-9 items-center justify-center", Class)" @attributes="AdditionalAttributes">
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <circle cx="5" cy="12" r="1" fill="currentColor" />
+        <circle cx="12" cy="12" r="1" fill="currentColor" />
+        <circle cx="19" cy="12" r="1" fill="currentColor" />
+    </svg>
+    <span class="sr-only">More pages</span>
+</span>
+
+@code {
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

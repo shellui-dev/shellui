@@ -1,7 +1,7 @@
 @namespace ShellUI.Components
 @using Microsoft.AspNetCore.Components.Forms
 
-<form @onsubmit="HandleSubmit" @attributes="AdditionalAttributes" class="@Shell.Cn(ClassName, Class)">
+<form @onsubmit="HandleSubmit" @attributes="AdditionalAttributes" class="@Shell.Cn(ClassName, Class)" novalidate>
     @ChildContent
 </form>
 
@@ -25,10 +25,10 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
+    // For validation, use EditForm with DataAnnotationsValidator; FormField and FormMessage work inside it.
     private async Task HandleSubmit()
     {
-        // Basic form submission - users can add EditContext for validation
-        await Task.CompletedTask;
+        if (OnValidSubmit.HasDelegate) await OnValidSubmit.InvokeAsync();
     }
 }
 
