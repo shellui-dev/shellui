@@ -4,9 +4,9 @@
 
 ## Registry snapshot
 
-- **194** total registry entries
+- **239** total registry entries
 - **90** direct CLI targets (`IsAvailable = true`)
-- **104** hidden entries (`IsAvailable = false`)
+- **149** hidden entries (`IsAvailable = false`)
 - `shellui list` displays the 90 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
 `Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
@@ -17,50 +17,56 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 
 | Direct target | Declared source dependencies | Declared NuGet dependencies |
 |---|---|---|
-| `accordion` | `accordion-type`, `accordion-item` | — |
+| `accordion` | `accordion-type`, `accordion-item`, `accordion-trigger`, `accordion-content` | — |
 | `alert` | `alert-variants` | — |
-| `alert-dialog` | `dialog`, `button` | — |
+| `alert-dialog` | `dialog`, `button`, `alert-dialog-trigger`, `alert-dialog-content`, `alert-dialog-header`, `alert-dialog-title`, `alert-dialog-description`, `alert-dialog-footer`, `alert-dialog-action`, `alert-dialog-cancel` | — |
 | `area-chart` | `chart` | — |
 | `avatar` | `avatar-variants` | — |
 | `badge` | `badge-variants` | — |
 | `bar-chart` | `chart` | — |
-| `breadcrumb` | `breadcrumb-item` | — |
+| `breadcrumb` | `breadcrumb-item`, `breadcrumb-list`, `breadcrumb-link`, `breadcrumb-page`, `breadcrumb-separator`, `breadcrumb-ellipsis` | — |
 | `button` | `button-variants` | — |
 | `callout` | `callout-variants` | — |
 | `card` | `card-header`, `card-title`, `card-description`, `card-content`, `card-footer` | — |
-| `carousel` | `carousel-item`, `carousel-content`, `carousel-previous`, `carousel-next`, `carousel-dots` | — |
+| `carousel` | `carousel-item`, `carousel-content`, `carousel-previous`, `carousel-next`, `carousel-dots`, `carousel-list`, `carousel-slide` | — |
 | `chart` | `chart-variants`, `chart-styles` | `Blazor-ApexCharts` `6.0.2` |
+| `chart-series` | `chart` | — |
 | `chat` | `chat-message`, `chat-input` | — |
 | `collapsible` | `collapsible-trigger`, `collapsible-content` | — |
-| `command` | `command-models` | — |
+| `command` | `command-models`, `command-input`, `command-list`, `command-group`, `command-option`, `command-empty`, `command-separator` | — |
 | `command-palette` | `command`, `shellui-js` | — |
-| `context-menu` | `context-menu-models` | — |
+| `context-menu` | `context-menu-models`, `context-menu-trigger`, `context-menu-content`, `context-menu-option` | — |
 | `copy-button` | `shellui-js` | — |
 | `dashboard-01` | `sidebar`, `breadcrumb`, `separator`, `theme-toggle`, `app-sidebar` | — |
 | `dashboard-02` | `sidebar`, `breadcrumb`, `separator`, `theme-toggle`, `app-sidebar` | — |
 | `data-table` | `data-table-models` | `System.Linq.Dynamic.Core` `1.7.1` |
 | `dialog` | `dialog-trigger`, `dialog-content`, `dialog-header`, `dialog-footer`, `dialog-title`, `dialog-description`, `dialog-close` | — |
 | `donut-chart` | `chart` | — |
-| `drawer` | `drawer-variants`, `drawer-trigger`, `drawer-content` | — |
+| `drawer` | `drawer-variants`, `drawer-trigger`, `drawer-content`, `drawer-header`, `drawer-title`, `drawer-description`, `drawer-footer`, `drawer-close` | — |
+| `dropdown` | `dropdown-trigger`, `dropdown-content`, `dropdown-item` | — |
 | `empty-state` | `button` | — |
 | `file-upload` | `shellui-js` | — |
-| `form` | `label`, `input`, `button` | — |
+| `form` | `label`, `input`, `button`, `form-field`, `form-item`, `form-label`, `form-control`, `form-description`, `form-message` | — |
+| `hover-card` | `hover-card-trigger`, `hover-card-content` | — |
 | `input-otp` | `shellui-js` | — |
 | `line-chart` | `chart` | — |
-| `menubar` | `menubar-item` | — |
+| `menubar` | `menubar-item`, `menubar-menu`, `menubar-trigger`, `menubar-content`, `menubar-separator` | — |
 | `multi-series-chart` | `chart`, `chart-series` | — |
-| `navigation-menu` | `navigation-menu-item` | — |
+| `navigation-menu` | `navigation-menu-item`, `nav-list`, `nav-item`, `nav-trigger`, `nav-content` | — |
+| `pagination` | `pagination-content`, `pagination-item`, `pagination-link`, `pagination-previous`, `pagination-next`, `pagination-ellipsis` | — |
 | `pie-chart` | `chart` | — |
+| `popover` | `popover-trigger`, `popover-content` | — |
 | `qr-code` | — | `QRCoder` `1.8.0` |
 | `radar-chart` | `chart` | — |
 | `radial-chart` | `chart` | — |
 | `radio-group` | `radio-group-item` | — |
-| `sheet` | `sheet-variants`, `sheet-trigger`, `sheet-content` | — |
+| `select` | `select-trigger`, `select-content`, `select-item` | — |
+| `sheet` | `sheet-variants`, `sheet-trigger`, `sheet-content`, `sheet-header`, `sheet-title`, `sheet-description`, `sheet-footer`, `sheet-close` | — |
 | `sidebar` | `shell`, `sidebar-models`, `sidebar-provider`, `sidebar-header`, `sidebar-content`, `sidebar-footer`, `sidebar-group`, `sidebar-group-label`, `sidebar-group-content`, `sidebar-menu`, `sidebar-menu-item`, `sidebar-menu-button`, `sidebar-menu-sub`, `sidebar-menu-sub-item`, `sidebar-menu-sub-button`, `sidebar-menu-action`, `sidebar-menu-badge`, `sidebar-separator`, `sidebar-trigger`, `sidebar-inset`, `sidebar-rail` | — |
 | `sonner` | `sonner-variants`, `sonner-service` | — |
 | `stepper` | `stepper-list`, `stepper-step`, `stepper-content` | — |
 | `table` | `table-header`, `table-body`, `table-row`, `table-cell`, `table-head` | — |
-| `tabs` | `tabs-list`, `tabs-trigger`, `tabs-content` | — |
+| `tabs` | `tabs-list`, `tabs-trigger`, `tabs-content`, `tab-models` | — |
 | `theme-toggle` | `shellui-js` | — |
 | `timeline` | `timeline-item` | — |
 | `toggle` | `toggle-variants` | — |
