@@ -36,6 +36,26 @@ Object.assign(window.ShellUI, {
     removeClassFromDocument: function (className) {
         document.documentElement.classList.remove(className);
     },
+
+    _themeObservers: new Map(),
+    observeTheme: function (handle, dotNetRef) {
+        this.unobserveTheme(handle);
+        const root = document.documentElement;
+        const observer = new MutationObserver(() => {
+            dotNetRef.invokeMethodAsync("OnThemeChanged", root.classList.contains("dark")).catch(() => {});
+        });
+        observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+        this._themeObservers.set(handle, observer);
+        return root.classList.contains("dark");
+    },
+
+    unobserveTheme: function (handle) {
+        const observer = this._themeObservers.get(handle);
+        if (observer) {
+            observer.disconnect();
+            this._themeObservers.delete(handle);
+        }
+    },
     
     toggleClassOnDocument: function (className) {
         document.documentElement.classList.toggle(className);

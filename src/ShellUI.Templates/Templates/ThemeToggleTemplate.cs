@@ -42,7 +42,9 @@ public static class ThemeToggleTemplate
 </button>
 
 @code {
-    private static readonly List<ThemeToggle> _instances = new();
+    private readonly string _handle = Guid.NewGuid().ToString(""N"");
+    private DotNetObjectReference<ThemeToggle>? _selfRef;
+    private bool _observing;
     private bool _isDark = true;
 
     [Parameter] public string Size { get; set; } = ""default"";
@@ -51,25 +53,38 @@ public static class ThemeToggleTemplate
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    protected override void OnInitialized()
-    {
-        _instances.Add(this);
-    }
-
     // JSRuntime is unavailable during prerender.
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
         try
         {
-            var theme = await JSRuntime.InvokeAsync<string>(""localStorage.getItem"", ""theme"");
-            _isDark = string.IsNullOrEmpty(theme) ? true : theme == ""dark"";
-            StateHasChanged();
+            // Reports the page's current theme and keeps every toggle in sync, whoever changes it.
+            _selfRef = DotNetObjectReference.Create(this);
+            _isDark = await JSRuntime.InvokeAsync<bool>(""ShellUI.observeTheme"", _handle, _selfRef);
+            _observing = true;
         }
         catch
         {
-            _isDark = true;
+            try
+            {
+                var theme = await JSRuntime.InvokeAsync<string>(""localStorage.getItem"", ""theme"");
+                _isDark = string.IsNullOrEmpty(theme) || theme == ""dark"";
+            }
+            catch
+            {
+                return;
+            }
         }
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public Task OnThemeChanged(bool isDark)
+    {
+        if (_isDark == isDark) return Task.CompletedTask;
+        _isDark = isDark;
+        return InvokeAsync(StateHasChanged);
     }
 
     private async Task ToggleTheme()
@@ -83,16 +98,6 @@ public static class ThemeToggleTemplate
             await JSRuntime.InvokeVoidAsync(
                 _isDark ? ""ShellUI.addClassToDocument"" : ""ShellUI.removeClassFromDocument"",
                 ""dark"");
-
-            foreach (var instance in _instances)
-            {
-                if (instance != this)
-                {
-                    instance._isDark = _isDark;
-                    instance.StateHasChanged();
-                }
-            }
-
             StateHasChanged();
         }
         catch
@@ -103,8 +108,11 @@ public static class ThemeToggleTemplate
 
     public async ValueTask DisposeAsync()
     {
-        _instances.Remove(this);
-        await ValueTask.CompletedTask;
+        if (_observing)
+        {
+            try { await JSRuntime.InvokeVoidAsync(""ShellUI.unobserveTheme"", _handle); } catch { }
+        }
+        _selfRef?.Dispose();
     }
 }
 ";
