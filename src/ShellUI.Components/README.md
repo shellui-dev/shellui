@@ -77,10 +77,10 @@ shellui theme apply https://tweakcn.com/themes/THEME_ID --emit-override wwwroot/
 
 ## Documentation
 
-- [README](https://github.com/shellui-dev/shellui/blob/v0.3.1/README.md)
-- [Tailwind setup](https://github.com/shellui-dev/shellui/blob/v0.3.1/docs/tailwind-setup.md)
-- [Release notes](https://github.com/shellui-dev/shellui/blob/v0.3.1/docs/RELEASE_NOTES.md)
+- [README](https://github.com/shellui-dev/shellui/blob/v0.3.2/README.md)
+- [Tailwind setup](https://github.com/shellui-dev/shellui/blob/v0.3.2/docs/tailwind-setup.md)
+- [Release notes](https://github.com/shellui-dev/shellui/blob/v0.3.2/docs/RELEASE_NOTES.md)
 
 ## License
 
-[MIT](https://github.com/shellui-dev/shellui/blob/v0.3.1/LICENSE.txt)
+[MIT](https://github.com/shellui-dev/shellui/blob/v0.3.2/LICENSE.txt)

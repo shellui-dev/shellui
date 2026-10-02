@@ -1,5 +1,25 @@
 # ShellUI Release Notes
 
+# ShellUI v0.3.2
+
+> A patch release with component fixes for both the `ShellUI.Components` NuGet package and the CLI templates.
+
+## 🐛 Fixes
+
+- `MultiSeriesChart` threw on every render in the NuGet package. It now renders, inside the same card as `Chart`.
+- NuGet package: `ThemeToggle` flipped its icon but did not change the theme, dialogs, sheets and drawers did not lock page scrolling, and close-on-scroll dropdowns stayed open. The package's `shellui.js` now loads automatically through a Blazor JS initializer, with no `<script>` tag needed, and includes the functions `ThemeToggle`, `ThemeService` and `FileUpload` call.
+- `ThemeToggle` kept a list of instances shared by every user on Blazor Server, so one user's toggle tried to re-render other users' components. Toggles now follow the page's `dark` class, so all toggles on a page stay in sync and start from the page's actual theme.
+- `DatePicker` and `DateRangePicker`: the calendar popover has a width, so it is no longer squeezed in a flex row.
+- `DataPicker` and `MultiSelect`: option rows are left-aligned, so custom `OptionTemplate`s no longer render centered.
+- Removed leftover files from the Razor class library template (`Component1`, `ExampleJsInterop`, `background.png`) from the package.
+
+A new test renders every package component and fails on parameter errors like the `MultiSeriesChart` one.
+
+## ⬆️ Upgrading
+
+- **NuGet package:** update to `0.3.2`.
+- **CLI:** update the tool, then run `shellui update` to rewrite installed components, including `shellui.js`, from the new templates. `update` overwrites the files, so commit or back up any components you customized first.
+
 # ShellUI v0.3.1
 
 > A patch release for the `ShellUI.Components` NuGet package. The CLI and its templates have no changes beyond the version number.
