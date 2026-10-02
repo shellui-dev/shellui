@@ -21,16 +21,14 @@ public class MultiSeriesChartTemplate
 @inherits Chart<TItem>
 @typeparam TItem where TItem : class
 
-<ApexChart TItem=""TItem""
-           Title=""@Title""
-           Options=""@ChartOptions""
-           Height=""@Height""
-           Width=""@Width"">
-    @ChildContent
-</ApexChart>
-
-@code {
-    // ChildContent is inherited from Chart<TItem>
-}
+<div class=""@ComputedClass"" data-chart-theme=""@Theme.ToString().ToLower()"">
+    <ApexChart TItem=""TItem""
+               Title=""@Title""
+               Options=""@ChartOptions""
+               Height=""@Height""
+               Width=""@Width"">
+        @ChildContent
+    </ApexChart>
+</div>
 ";
 }
