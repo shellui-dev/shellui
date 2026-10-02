@@ -4,7 +4,6 @@
 @* AppSidebar - Inset sidebar with secondary nav. SidebarProvider > AppSidebar + SidebarInset. Collapsible: Offcanvas or Icon. *@
 
 <Sidebar Variant="SidebarVariant.Inset" Collapsible="@Collapsible" Class="@Class">
-    @* Header: Logo & Company *@
     <SidebarHeader>
         <SidebarMenu>
             <SidebarMenuItem>
@@ -19,10 +18,8 @@
         </SidebarMenu>
     </SidebarHeader>
 
-    @* Content *@
     <SidebarContent>
 
-        @* Dashboard *@
         <SidebarGroup>
             <SidebarGroupLabel>Navigation</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -43,7 +40,6 @@
             </SidebarGroupContent>
         </SidebarGroup>
 
-        @* Components *@
         <SidebarGroup>
             <SidebarGroupLabel>Components</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -61,7 +57,6 @@
             </SidebarGroupContent>
         </SidebarGroup>
 
-        @* NavSecondary (pushed to bottom) *@
         <SidebarGroup Class="mt-auto">
             <SidebarGroupContent>
                 <SidebarMenu>
@@ -80,7 +75,6 @@
 
     </SidebarContent>
 
-    @* Footer: User Profile *@
     <SidebarFooter>
         <SidebarMenu>
             <SidebarMenuItem>
@@ -92,12 +86,10 @@
                             data-size="lg"
                             title="@_user.Name"
                             class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:!rounded-full group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!items-center">
-                        @* Icon + expandable arrows when collapsed *@
                         <span class="hidden size-8 min-h-8 min-w-8 flex-shrink-0 flex-col items-center justify-center gap-0 overflow-hidden rounded-full bg-sidebar-primary text-sidebar-primary-foreground group-data-[collapsible=icon]:!flex">
                             <i class="fa-solid fa-user text-[10px] leading-none"></i>
                             <i class="fa-solid fa-sort text-[8px] leading-none opacity-90"></i>
                         </span>
-                        @* Avatar + text when expanded *@
                         <span class="flex group-data-[collapsible=icon]:hidden">
                             <Avatar Fallback="@_user.Initials" Class="h-8 w-8 flex-shrink-0 rounded-full" />
                         </span>
@@ -110,10 +102,8 @@
 
                     @if (_showUserMenu)
                     {
-                        <!-- Backdrop to close on outside click -->
                         <div class="fixed inset-0 z-40" @onclick="() => _showUserMenu = false"></div>
 
-                        <!-- Dropdown menu -->
                         <div class="absolute bottom-full left-0 z-50 mb-2 w-56 rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-lg animate-in fade-in-0 zoom-in-95">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                 <Avatar Fallback="@_user.Initials" Class="h-8 w-8 rounded-lg" />
@@ -170,11 +160,10 @@
         var uri = new Uri(Navigation.Uri);
         var currentPath = uri.AbsolutePath.TrimEnd('/');
         var targetPath = path.TrimEnd('/');
-        // Exact match only — prevents parent (e.g. Overview at /components) from staying active when on child (e.g. Input at /components/form/input)
+        // Exact match, so a parent route is not active on its child pages
         return currentPath.Equals(targetPath, StringComparison.OrdinalIgnoreCase);
     }
 
-    // Data Models
     private class NavItem
     {
         public string Title { get; set; } = "";
@@ -206,7 +195,6 @@
         public string Initials { get; set; } = "";
     }
 
-    // User
     private readonly UserProfile _user = new()
     {
         Name = "Shewart",
@@ -214,7 +202,6 @@
         Initials = "SH"
     };
 
-    // Component links (like shellui.dev/docs)
     private readonly List<NavItem> _componentItems = new()
     {
         new NavItem { Title = "Overview", Url = "/components", IconClass = "fa-solid fa-layer-group" },

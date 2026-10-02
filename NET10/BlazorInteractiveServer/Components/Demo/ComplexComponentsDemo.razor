@@ -4,13 +4,11 @@
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Complex Components</h2>
     <div class="space-y-6">
-        <!-- DataTable Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Data Table</h3>
             <DataTable Items="Users" Columns="UserColumns" RowActions="UserActions" ShowFilters="true" ShowPagination="true" ShowSelection="true" />
         </div>
 
-        <!-- AlertDialog Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Alert Dialog</h3>
             <Button @onclick="() => ShowAlertDialog = true">Show Alert Dialog</Button>
@@ -26,7 +24,6 @@
                 IsOpenChanged="val => ShowAlertDialog = val" />
         </div>
 
-        <!-- Calendar Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Calendar</h3>
             <div class="flex gap-4">
@@ -38,7 +35,6 @@
             </div>
         </div>
 
-        <!-- Loading Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Loading Components</h3>
             <div class="flex flex-wrap gap-8 items-center">
@@ -85,7 +81,6 @@
             </div>
         </div>
 
-        <!-- HoverCard Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Hover Card</h3>
             <HoverCard>
@@ -105,7 +100,6 @@
             </HoverCard>
         </div>
 
-        <!-- Collapsible Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Collapsible</h3>
             <Collapsible IsOpen="@_collapsibleOpen" IsOpenChanged="@(v => _collapsibleOpen = v)">
@@ -122,7 +116,6 @@
             </Collapsible>
         </div>
 
-        <!-- Docs Components: CopyButton, Callout, LinkCard, PrevNextNav -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Docs Components</h3>
             <div class="space-y-4">
@@ -161,7 +154,6 @@
             </div>
         </div>
 
-        <!-- Command Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Command Palette</h3>
             <Button @onclick="HandleOpenCommand">Open Command Palette (Ctrl+K)</Button>
@@ -173,7 +165,6 @@
                 IsOpenChanged="HandleShowCommandChanged" />
         </div>
 
-        <!-- ContextMenu Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Context Menu</h3>
             <ContextMenu Items="ContextMenuItems" OnItemSelected="HandleContextMenuSelect">
@@ -181,7 +172,6 @@
             </ContextMenu>
         </div>
 
-        <!-- EmptyState Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Empty State</h3>
             <EmptyState 
@@ -194,7 +184,6 @@
             </EmptyState>
         </div>
 
-        <!-- Tabs Demo (shadcn-style compositional) -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Tabs</h3>
             <Tabs DefaultValue="overview" Class="w-full max-w-[400px]">
@@ -259,7 +248,6 @@
             </Tabs>
         </div>
 
-        <!-- Stepper Demo (compositional with Confirm on last step) -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Stepper</h3>
             <Stepper TotalSteps="4" CurrentStep="@CurrentStep" CurrentStepChanged="HandleStepChange" OnConfirm="HandleStepperConfirm">
@@ -280,7 +268,6 @@
             }
         </div>
 
-        <!-- Stepper in Dialog -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Stepper in Dialog</h3>
             <p class="text-sm text-muted-foreground mb-4">Combine Dialog with Stepper for multi-step flows in a modal.</p>
@@ -305,7 +292,6 @@
             </Dialog>
         </div>
 
-        <!-- Carousel Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Text Carousel</h3>
             <Carousel TotalSlides="3" CurrentSlide="@TextCarouselSlide" CurrentSlideChanged="HandleTextCarouselSlideChange" AutoPlay="true" AutoPlayInterval="3000" AspectRatio="16/9">
@@ -336,7 +322,6 @@
             </Carousel>
         </div>
 
-        <!-- Image Carousel Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Image Carousel</h3>
             <Carousel TotalSlides="3" CurrentSlide="@ImageCarouselSlide" CurrentSlideChanged="HandleImageCarouselSlideChange" AutoPlay="true" AutoPlayInterval="5000" AspectRatio="21/9" ShowDots="true">
@@ -358,7 +343,6 @@
             </Carousel>
         </div>
 
-        <!-- Pagination Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Pagination</h3>
             <div class="space-y-4">
@@ -415,13 +399,11 @@
 
     private async Task HandleAlertConfirm()
     {
-        // Handle confirm
         await Task.CompletedTask;
     }
 
     private async Task HandleAlertCancel()
     {
-        // Handle cancel
         await Task.CompletedTask;
     }
 

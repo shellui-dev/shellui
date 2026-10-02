@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <!-- Centralized ShellUI Version - Update this single file to version all components -->
+  <!-- One version for every ShellUI package -->
   <PropertyGroup>
-    <ShellUIVersion>0.3.0</ShellUIVersion>
+    <ShellUIVersion>0.3.1</ShellUIVersion>
     <ShellUIVersionSuffix></ShellUIVersionSuffix>
   </PropertyGroup>
 
-  <!-- Common properties for all ShellUI projects -->
   <PropertyGroup>
     <Version>$(ShellUIVersion)</Version>
     <Version Condition="'$(ShellUIVersionSuffix)' != ''">$(ShellUIVersion)-$(ShellUIVersionSuffix)</Version>
@@ -15,7 +14,6 @@
     <InformationalVersion>$(Version)</InformationalVersion>
   </PropertyGroup>
 
-  <!-- Common package metadata -->
   <PropertyGroup>
     <Authors>ShellUI</Authors>
     <Company>ShellUI</Company>

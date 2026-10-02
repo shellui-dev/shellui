@@ -31,9 +31,7 @@
         Class
     );
 
-    // InvariantCulture on IFormattable so decimals/dates round-trip cleanly across a
-    // German user's `0,5` vs an English user's `0.5` (the browser sends whatever the
-    // user's <option value=""> literal was).
+    // Invariant culture so values round-trip regardless of the user's locale.
     private string? FormatValue() => Value switch
     {
         null => null,
@@ -68,8 +66,7 @@
         }
         catch
         {
-            // Placeholder <option value=""> and other unparseable values gracefully
-            // resolve to default(TValue) instead of throwing across the render loop.
+            // The placeholder and unparseable values become default(TValue).
             await ValueChanged.InvokeAsync(default);
         }
     }

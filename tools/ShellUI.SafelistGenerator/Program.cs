@@ -4,10 +4,7 @@ using System.Xml;
 
 namespace ShellUI.SafelistGenerator;
 
-/* Scans .razor and .cs files for Tailwind utility classes and emits:
-     - wwwroot/shellui-classes.txt (committed, used for drift detection + demo build)
-     - build/ShellUI.Components.targets (NuGet auto-imports; embeds the list inline so we don't
-       depend on NuGet extracting a separate data file — behavior varies by client) */
+// Writes the safelist .txt and a .targets that embeds it, since NuGet always imports .targets.
 public static class Program
 {
     public static int Main(string[] args)
@@ -113,8 +110,7 @@ public static class Program
         return anyUtility;
     }
 
-    // XML comments in the generated .targets must not contain `--` (XML 1.0 spec); MSBuild on
-    // Linux .NET 10.301+ rejects the file with MSB4024. Keep the emitted comment text safe.
+    // XML 1.0 forbids `--` in comments; MSBuild on Linux rejects the file (MSB4024).
     public static string BuildTargetsFileContent(IEnumerable<string> classes)
     {
         var sb = new StringBuilder();

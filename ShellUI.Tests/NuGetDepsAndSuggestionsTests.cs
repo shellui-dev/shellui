@@ -22,8 +22,6 @@ public class RegistrySuggestionsTests
     [Fact]
     public void FindClosestMatch_ReturnsNullForExactMatch()
     {
-        // Exact matches have distance 0 and are excluded from suggestions —
-        // the caller already knows the component exists.
         Assert.Null(ComponentRegistry.FindClosestMatch("button"));
     }
 
@@ -36,8 +34,7 @@ public class RegistrySuggestionsTests
     [Fact]
     public void FindClosestMatch_DoesNotSuggestHiddenSubComponents()
     {
-        // `data-table-models` is IsAvailable=false (installed only as a dep of data-table).
-        // A user typo like "data-table-modls" should not be redirected to it.
+        // Hidden entries are never suggested.
         var result = ComponentRegistry.FindClosestMatch("data-table-modls");
         Assert.NotEqual("data-table-models", result);
     }
@@ -80,9 +77,7 @@ public class NuGetDependenciesTests
     [InlineData("multi-series-chart")]
     public void ChartVariants_TransitivelyPullInBlazorApexCharts(string componentName)
     {
-        // Chart family components don't declare the NuGet dep themselves — they depend
-        // on `chart` which does. Verify the dependency chain is intact so the installer's
-        // recursive walk picks up the package.
+        // Chart types get the NuGet package through their `chart` dependency.
         var metadata = ComponentRegistry.GetMetadata(componentName);
         Assert.NotNull(metadata);
         Assert.Contains("chart", metadata!.Dependencies);
@@ -91,10 +86,7 @@ public class NuGetDependenciesTests
 
 public class DependencyGraphTests
 {
-    // Every dependency name declared by any registered component must itself resolve
-    // via ComponentRegistry.GetMetadata. Catches the class of bug where a sub-component
-    // template exists on disk but is never wired into the registry — the CLI then
-    // reports "Failed: <dep-name>" and the consumer project won't compile.
+    // An unregistered dependency makes `shellui add` report "Failed: <dep>".
     [Fact]
     public void EveryDeclaredDependency_ResolvesInRegistry()
     {
@@ -112,10 +104,7 @@ public class DependencyGraphTests
             string.Join("\n  ", missing));
     }
 
-    // Every installable component (IsAvailable = true) must route through the
-    // GetComponentContent switch. Sub-component stubs registered as IsAvailable = false
-    // with intentionally-empty Content are allowed — they exist only so the CLI can
-    // resolve them as dependency names when the parent renders their markup inline.
+    // Hidden parts may have empty Content when the parent renders their markup.
     [Fact]
     public void EveryInstallableComponent_HasContentMapping()
     {
@@ -135,13 +124,7 @@ public class DependencyGraphTests
 
 public class HiddenNetworkDependencyTests
 {
-    // ShellUI never links Google Material Symbols/Icons or Font Awesome and every
-    // component uses inline SVG for its chrome. When a template depends on an
-    // external icon font the raw icon name ("expand_more", "cloud_upload", ...)
-    // shows as literal text or the glyph slot renders empty on consumers.
-    // Fail loudly here so the SVG-swap convention stays enforced across the whole
-    // registry — the specific classes below cover both Material families and
-    // Font Awesome's solid/regular/brands.
+    // Consumers don't load icon fonts, so the icon name would render as text.
     [Theory]
     [InlineData("material-symbols-outlined")]   // Material Symbols (newer variable font)
     [InlineData("material-symbols-rounded")]
@@ -167,15 +150,7 @@ public class HiddenNetworkDependencyTests
 
 public class RelativeJsModuleImportTests
 {
-    // A component whose C# does JSRuntime.InvokeAsync("import", "./foo.js") resolves that
-    // path against the current page URL. That only works when ShellUI is installed straight
-    // into the host app; the moment the generated component is compiled into a consumer's
-    // own Razor Class Library, the asset is served from _content/<Library>/ instead and the
-    // import 404s — silently, since every one of these calls is wrapped in try/catch.
-    // ShellUI's established fix for this shape of bug (see ThemeToggle, InputOTP,
-    // CommandPalette, Combobox, ...) is to route through the already-loaded global
-    // `window.ShellUI` object (shellui.js, loaded via one host-controlled <script> tag)
-    // instead of a per-component dynamic import. Fail loudly if a template reintroduces it.
+    // A dynamic import resolves against the page URL and 404s once compiled into a consumer's RCL; use window.ShellUI.
     [Fact]
     public void NoTemplate_DynamicallyImportsARelativeJsModule()
     {
@@ -274,10 +249,7 @@ public class SidebarInteropTests
 
 public class DataTableTemplateContentTests
 {
-    // The library-wide convention is `Components.Models` for model namespaces regardless
-    // of where the file lives on disk (TabModels, StepperModels, ContextMenuModels,
-    // ChartModels all use this). The DataTable @using and DataTableModels namespace
-    // must agree on that convention so consumers can compile.
+    // Model namespaces are `Components.Models` regardless of folder.
     [Fact]
     public void DataTable_UsingDirectiveMatchesDataTableModelsNamespace()
     {

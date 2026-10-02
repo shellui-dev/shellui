@@ -16,7 +16,6 @@ public static class VersionHelper
 
         try
         {
-            // Look for Directory.Build.props in the solution root
             var solutionRoot = FindSolutionRoot();
             if (solutionRoot != null)
             {
@@ -41,10 +40,9 @@ public static class VersionHelper
         }
         catch
         {
-            // Ignore errors
         }
 
-        // Fallback: read from assembly version (set at build time by Directory.Build.props)
+        // Fallback: the assembly version set from Directory.Build.props
         var assembly = typeof(VersionHelper).Assembly;
         var assemblyVersion = assembly.GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>();
         if (assemblyVersion != null)
@@ -53,7 +51,7 @@ public static class VersionHelper
             return _cachedVersion;
         }
 
-        return "0.3.0";
+        return "0.3.1";
     }
 
     private static string? FindSolutionRoot()
@@ -61,7 +59,6 @@ public static class VersionHelper
         var currentDir = Directory.GetCurrentDirectory();
         var dir = new DirectoryInfo(currentDir);
 
-        // move up directories looking for .sln file or src directory
         while (dir != null)
         {
             if (dir.GetFiles("*.sln").Any() || dir.Name == "src")

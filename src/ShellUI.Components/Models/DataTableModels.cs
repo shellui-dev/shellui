@@ -25,8 +25,7 @@ public enum SortDirection
     Descending
 }
 
-// Passed to OnDataRequest when DataTable is in ServerSide mode. The server-side data
-// loader receives filter / sort / page state and returns just the current page.
+// Passed to OnDataRequest when DataTable is in ServerSide mode.
 public class DataTableRequest
 {
     public int Skip { get; set; }

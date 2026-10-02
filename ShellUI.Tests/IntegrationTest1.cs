@@ -17,29 +17,23 @@ public class CliIntegrationTests : IDisposable
     [Fact]
     public async Task InitCommand_DoesNotCrash()
     {
-        // Create a minimal Blazor project
         await CreateTestBlazorProject();
 
-        // Run init command with --yes flag (just test it doesn't crash)
         var exitCode = await RunShellUICommand("init --yes");
 
-        // We expect it to work, but if it fails due to missing dependencies in test env, that's ok
-        // The important thing is it doesn't crash the process
-        Assert.True(exitCode == 0 || exitCode == 1); // 0 = success, 1 = expected failure in test env
+        // init may fail in the test environment; it only must not crash.
+        Assert.True(exitCode == 0 || exitCode == 1);
     }
 
     [Fact]
     public async Task AddCommand_DoesNotCrash()
     {
-        // Create a minimal Blazor project
         await CreateTestBlazorProject();
 
-        // Test: Add button component (just test it doesn't crash)
         var exitCode = await RunShellUICommand("add button");
 
-        // We expect it to work, but if it fails due to missing dependencies in test env, that's ok
-        // The important thing is it doesn't crash the process
-        Assert.True(exitCode == 0 || exitCode == 1); // 0 = success, 1 = expected failure in test env
+        // add may fail in the test environment; it only must not crash.
+        Assert.True(exitCode == 0 || exitCode == 1);
     }
 
     private async Task CreateTestBlazorProject()
@@ -64,7 +58,6 @@ public class CliIntegrationTests : IDisposable
 
     private async Task<int> RunShellUICommand(string args)
     {
-        // Get the path to the CLI from the test directory perspective
         var solutionDir = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), ".."));
         var cliPath = Path.Combine(solutionDir, "src", "ShellUI.CLI", "bin", "Release", "net10.0", "ShellUI.CLI.dll");
 

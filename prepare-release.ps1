@@ -11,7 +11,6 @@ if ($Suffix) {
     Write-Host "📦 Pre-release suffix: $Suffix" -ForegroundColor Yellow
 }
 
-# Check if working directory is clean
 $status = git status --porcelain
 if ($status) {
     Write-Host "❌ Working directory is not clean. Please commit or stash changes." -ForegroundColor Red
@@ -20,7 +19,6 @@ if ($status) {
     exit 1
 }
 
-# Update version in Directory.Build.props
 if (-not $DryRun) {
     Write-Host "📝 Updating version to $Version..." -ForegroundColor Yellow
     $propsFile = "Directory.Build.props"
@@ -35,7 +33,6 @@ if (-not $DryRun) {
     Write-Host "✅ Updated Directory.Build.props" -ForegroundColor Green
 }
 
-# Clean and build all projects
 Write-Host "🔨 Building all projects..." -ForegroundColor Yellow
 dotnet clean
 if ($LASTEXITCODE -ne 0) { exit 1 }
@@ -47,7 +44,6 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "✅ All projects built successfully" -ForegroundColor Green
 
-# Check created packages
 $packages = Get-ChildItem -Path "src/*/bin/Release/*.nupkg" -Recurse | Where-Object { $_.Name -like "*$Version*" }
 if ($packages) {
     Write-Host "`n📦 Created packages:" -ForegroundColor Cyan
@@ -58,7 +54,6 @@ if ($packages) {
     Write-Host "⚠️ No packages found with version $Version" -ForegroundColor Yellow
 }
 
-# Run tests
 Write-Host "`n🧪 Running tests..." -ForegroundColor Yellow
 dotnet test --configuration Release
 if ($LASTEXITCODE -ne 0) {
@@ -81,7 +76,6 @@ if ($DryRun) {
     exit 0
 }
 
-# Create git tag
 Write-Host "`n🏷️ Creating git tag v$Version..." -ForegroundColor Yellow
 $tagName = "v$Version"
 if ($Suffix) {
@@ -92,7 +86,6 @@ git tag $tagName
 git push origin $tagName
 Write-Host "✅ Created and pushed tag $tagName" -ForegroundColor Green
 
-# Instructions for next steps
 Write-Host "`n🎉 Release v$Version prepared!" -ForegroundColor Green
 Write-Host "`nNext steps:" -ForegroundColor Cyan
 Write-Host "1. Create GitHub release at: https://github.com/shellui-dev/shellui/releases/new" -ForegroundColor White

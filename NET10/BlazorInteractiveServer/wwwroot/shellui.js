@@ -28,10 +28,8 @@ window.ShellUI = {
         }
         
         try {
-            // Create a new DataTransfer object
             const dt = new DataTransfer();
             
-            // Get files from the drag event's DataTransfer
             let files;
             if (dataTransfer && dataTransfer.files) {
                 files = dataTransfer.files;
@@ -39,15 +37,12 @@ window.ShellUI = {
                 return false;
             }
             
-            // Add files to the new DataTransfer
             for (let i = 0; i < files.length; i++) {
                 dt.items.add(files[i]);
             }
             
-            // Assign the files from the DataTransfer to the input
             inputElement.files = dt.files;
             
-            // Trigger change event
             const event = new Event('change', { bubbles: true });
             inputElement.dispatchEvent(event);
             
@@ -66,7 +61,6 @@ window.ShellUI = {
             return false;
         }
         
-        // Remove existing listener if any
         dropZone.removeEventListener('drop', handleDrop);
         
         function handleDrop(e) {
@@ -79,19 +73,15 @@ window.ShellUI = {
             }
             
             try {
-                // Create a new DataTransfer object
                 const dt = new DataTransfer();
                 
-                // Add files from the drag event to the new DataTransfer
                 const files = dataTransfer.files;
                 for (let i = 0; i < files.length; i++) {
                     dt.items.add(files[i]);
                 }
                 
-                // Assign the files from the DataTransfer to the input
                 inputElement.files = dt.files;
                 
-                // Trigger change event
                 const changeEvent = new Event('change', { bubbles: true });
                 inputElement.dispatchEvent(changeEvent);
             } catch (error) {
@@ -99,7 +89,6 @@ window.ShellUI = {
             }
         }
         
-        // Attach the drop handler
         dropZone.addEventListener('drop', handleDrop);
         
         return true;
@@ -159,8 +148,7 @@ window.ShellUI = {
         }
     },
 
-    // Fire a .NET callback when the window scrolls or resizes. Used by dropdowns
-    // to close when the page scrolls (Blazor can't reposition popovers natively).
+    // Closes dropdowns on page scroll or resize; Blazor can't reposition popovers.
     _dismissHandlers: new Map(),
     onDismissEvents: function (handle, dotNetRef) {
         const listener = () => dotNetRef.invokeMethodAsync("OnDismissEvent");

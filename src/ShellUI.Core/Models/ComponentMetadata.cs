@@ -12,10 +12,7 @@ public class ComponentMetadata
     public required ComponentCategory Category { get; set; }
     public List<string> Dependencies { get; set; } = new();
 
-    // NuGet packages the rendered component references at compile time (e.g. Chart
-    // uses Blazor-ApexCharts; DataTable uses System.Linq.Dynamic.Core). The CLI
-    // runs `dotnet add package` for each on install — without this the consumer
-    // sees CS0246 errors after `shellui add`.
+    // NuGet packages the component needs; the CLI runs `dotnet add package` for each.
     public List<NuGetDependency> NuGetDependencies { get; set; } = new();
 
     // Relative to Components/UI folder (or LayoutPath when IsLayoutBlock is true)
@@ -26,7 +23,6 @@ public class ComponentMetadata
 
     public bool IsAvailable { get; set; } = true;
 
-    // Version is now computed from centralized version
     public string Version => GetCurrentVersion();
 
     public List<string> Variants { get; set; } = new();
@@ -34,7 +30,6 @@ public class ComponentMetadata
 
     private static string GetCurrentVersion()
     {
-        // Try to read version from Directory.Build.props at runtime
         try
         {
             var currentDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -63,16 +58,15 @@ public class ComponentMetadata
         }
         catch
         {
-            // Ignore errors
         }
 
-        // Fallback: read from assembly version (set at build time by Directory.Build.props)
+        // Fallback: the assembly version set from Directory.Build.props
         var assembly = typeof(ComponentMetadata).Assembly;
         var assemblyVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
         if (assemblyVersion != null)
-            return assemblyVersion.InformationalVersion.Split('+')[0]; // strip build metadata
+            return assemblyVersion.InformationalVersion.Split('+')[0];
 
-        return "0.3.0";
+        return "0.3.1";
     }
 }
 

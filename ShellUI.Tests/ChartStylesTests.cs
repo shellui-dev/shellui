@@ -27,9 +27,7 @@ public class ChartStylesRegistryTests
     {
         var metadata = ComponentRegistry.GetMetadata("chart-styles");
         Assert.NotNull(metadata);
-        // The `../../wwwroot/` prefix walks out of Components/UI/ to project root,
-        // matching the shellui-js convention. Without it the file lands inside the
-        // component tree and is never served.
+        // ../../wwwroot/ escapes Components/UI/; otherwise the file is never served.
         Assert.StartsWith("../../wwwroot/", metadata!.FilePath);
         Assert.EndsWith(".css", metadata.FilePath);
     }
@@ -39,7 +37,6 @@ public class ChartStylesRegistryTests
     {
         var content = ComponentRegistry.GetComponentContent("chart-styles");
         Assert.NotNull(content);
-        // Custom tooltip emitted by ChartVariants' Custom HTML.
         Assert.Contains(".shellui-chart-tooltip", content);
         Assert.Contains(".shellui-chart-tooltip-title", content);
         Assert.Contains(".shellui-chart-tooltip-body", content);
@@ -47,11 +44,9 @@ public class ChartStylesRegistryTests
         Assert.Contains(".shellui-chart-tooltip-marker", content);
         Assert.Contains(".shellui-chart-tooltip-label", content);
         Assert.Contains(".shellui-chart-tooltip-value", content);
-        // ApexCharts built-in classes also styled so charts without the custom HTML still look right.
         Assert.Contains(".apexcharts-tooltip", content);
         Assert.Contains(".apexcharts-legend", content);
         Assert.Contains(".apexcharts-xaxis-label", content);
-        // Theme-aware: values come from the CSS variables the init script ships.
         Assert.Contains("var(--popover", content);
         Assert.Contains("var(--foreground", content);
         Assert.Contains("var(--border", content);
