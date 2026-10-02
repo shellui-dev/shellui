@@ -20,6 +20,25 @@ Object.assign(window.ShellUI, {
         document.documentElement.classList.remove(className);
     },
 
+    _themeObservers: new Map(),
+    observeTheme: function (handle, dotNetRef) {
+        this.unobserveTheme(handle);
+        const root = document.documentElement;
+        const observer = new MutationObserver(() => {
+            dotNetRef.invokeMethodAsync("OnThemeChanged", root.classList.contains("dark")).catch(() => {});
+        });
+        observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+        this._themeObservers.set(handle, observer);
+        return root.classList.contains("dark");
+    },
+    unobserveTheme: function (handle) {
+        const observer = this._themeObservers.get(handle);
+        if (observer) {
+            observer.disconnect();
+            this._themeObservers.delete(handle);
+        }
+    },
+
     setupFileDrop: function (dropZoneId, inputElementId) {
         const dropZone = document.getElementById(dropZoneId);
         const input = document.getElementById(inputElementId);
@@ -102,6 +121,8 @@ export function copyToClipboard(text) { return window.ShellUI.copyToClipboard(te
 export function focusElement(elementId) { return window.ShellUI.focusElement(elementId); }
 export function addClassToDocument(className) { return window.ShellUI.addClassToDocument(className); }
 export function removeClassFromDocument(className) { return window.ShellUI.removeClassFromDocument(className); }
+export function observeTheme(handle, dotNetRef) { return window.ShellUI.observeTheme(handle, dotNetRef); }
+export function unobserveTheme(handle) { return window.ShellUI.unobserveTheme(handle); }
 export function setupFileDrop(dropZoneId, inputElementId) { return window.ShellUI.setupFileDrop(dropZoneId, inputElementId); }
 export function registerShortcut(handle, key, ctrl, meta, shift, alt, dotNetRef) {
     return window.ShellUI.registerShortcut(handle, key, ctrl, meta, shift, alt, dotNetRef);
