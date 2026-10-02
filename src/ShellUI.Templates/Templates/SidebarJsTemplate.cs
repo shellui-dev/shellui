@@ -14,8 +14,7 @@ public static class SidebarJsTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"// ShellUI Sidebar JS Interop Module
-// Handles mobile detection, resize events, keyboard shortcuts
+    public static string Content => @"// Legacy: kept for projects that still load shellui-sidebar.js.
 
 export function initSidebar(dotnetRef) {
     const MOBILE_BREAKPOINT = 768;

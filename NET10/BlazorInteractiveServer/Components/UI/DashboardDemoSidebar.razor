@@ -5,7 +5,7 @@
     <SidebarHeader>
         <SidebarMenu>
             <SidebarMenuItem>
-                @* Swapped: light shows dark-style icon (white bg, dark logo), dark shows light-style icon (dark bg, light logo) *@
+                @* Swapped on purpose: each theme shows the opposite logo style *@
                 <SidebarMenuButton Size="lg" Href="#" Tooltip="ShellUI" Class="group-data-[collapsible=icon]:!bg-white group-data-[collapsible=icon]:!text-black dark:group-data-[collapsible=icon]:!bg-black dark:group-data-[collapsible=icon]:!text-white">
                     <ShellUILogo Size="32" Class="shrink-0 text-sidebar-foreground group-data-[collapsible=icon]:!text-black dark:group-data-[collapsible=icon]:!text-white" />
                     <div class="grid min-w-0 flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
@@ -70,7 +70,7 @@
                     <SidebarMenuItem>
                         <SidebarMenuButton Href="#" Tooltip="Shewart Shepherd" Size="default"
                             Class="bg-sidebar-accent text-sidebar-accent-foreground hover:bg-sidebar-accent/90">
-                            @* Wrapped in div: SidebarMenuButton hides [&>span] when collapsed, Avatar renders span - div keeps it visible *@
+                            @* SidebarMenuButton hides child spans when collapsed; the div keeps the Avatar visible *@
                             <div class="shrink-0">
                                 <Avatar Fallback="SS" Class="h-8 w-8 rounded-full [&>span]:!bg-sidebar-accent [&>span]:!text-sidebar-accent-foreground [&>span]:!font-semibold [&>span]:!text-sm" />
                             </div>

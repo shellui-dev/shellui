@@ -179,12 +179,12 @@
     @apply bg-background text-foreground;
   }
 }
-/* Ensure font-family updates when theme changes - must come after @theme inline */
+/* Must come after @theme inline so the font follows the theme */
 html, body, :host {
   font-family: var(--font-sans) !important;
 }
 
-/* Loading component animations - Add these when installing the loading component */
+/* Loading component animations */
 @keyframes bars {
   0%, 100% { transform: scaleY(0.4); opacity: 0.7; }
   50% { transform: scaleY(1); opacity: 1; }
@@ -205,21 +205,17 @@ html, body, :host {
   100% { transform: translate(-50%, 0) rotate(360deg) translateX(calc((var(--size, 1rem) - 0.5rem) / 2)) rotate(-360deg); }
 }
 
-/* ==========================================================
-   ApexCharts chrome — shadcn/ui aesthetic
-   ========================================================== */
+/* ApexCharts chrome */
 
 .apexcharts-canvas {
   background: transparent;
 }
 
-/* Gridlines — subtle horizontal dashes */
 .apexcharts-gridline {
   stroke: var(--border);
   stroke-opacity: 0.6;
 }
 
-/* Axis + legend text */
 .apexcharts-text,
 .apexcharts-xaxis-label,
 .apexcharts-yaxis-label {
@@ -231,11 +227,9 @@ html, body, :host {
   font-family: var(--font-sans);
 }
 
-/* Title + subtitle */
 .apexcharts-title-text { fill: var(--foreground); font-family: var(--font-sans); }
 .apexcharts-subtitle-text { fill: var(--muted-foreground); font-family: var(--font-sans); }
 
-/* Legend — top-left, circle markers */
 .apexcharts-legend {
   display: flex !important;
   flex-wrap: wrap;
@@ -256,7 +250,6 @@ html, body, :host {
   flex-shrink: 0;
 }
 
-/* Custom shellui tooltip — compact shadcn look */
 .shellui-chart-tooltip {
   background: var(--popover);
   color: var(--popover-foreground);
@@ -304,7 +297,7 @@ html, body, :host {
   padding-left: 12px;
 }
 
-/* Kill default ApexCharts tooltip wrapper — we render our own */
+/* Replaced by the custom tooltip */
 .apexcharts-tooltip {
   background: transparent !important;
   border: none !important;
@@ -312,14 +305,12 @@ html, body, :host {
   padding: 0 !important;
 }
 
-/* Crosshair on hover */
 .apexcharts-xcrosshairs,
 .apexcharts-ycrosshairs {
   stroke: var(--border);
   stroke-dasharray: 3;
 }
 
-/* Toolbar (opt-in via ShowToolbar) */
 .apexcharts-toolbar { z-index: 10; }
 .apexcharts-toolbar-item {
   color: var(--muted-foreground);
@@ -345,7 +336,6 @@ html, body, :host {
   color: var(--accent-foreground);
 }
 
-/* Data labels */
 .apexcharts-datalabel,
 .apexcharts-datalabel-label,
 .apexcharts-datalabel-value {
@@ -354,7 +344,7 @@ html, body, :host {
   font-weight: 500;
 }
 
-/* Blazor error UI - hidden by default, shown only when Blazor adds .show on error */
+/* Blazor adds .show on an unhandled error */
 #blazor-error-ui {
   display: none;
   position: fixed;

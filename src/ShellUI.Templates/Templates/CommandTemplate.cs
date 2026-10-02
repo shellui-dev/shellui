@@ -22,7 +22,6 @@ public static class CommandTemplate
 {
     <div class=""fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"" @onclick=""CloseCommand""></div>
     <div class=""fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-0 shadow-lg duration-200 sm:rounded-lg"">
-        <!-- Search Input -->
         <div class=""flex items-center border-b px-3"">
             <svg class=""mr-2 h-4 w-4 shrink-0 text-foreground/70"" xmlns=""http://www.w3.org/2000/svg"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
                 <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"" />
@@ -38,7 +37,6 @@ public static class CommandTemplate
                 class=""flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"" />
         </div>
 
-        <!-- Results -->
         <div class=""max-h-[300px] overflow-y-auto p-2"">
             @if (_filteredCommands.Any())
             {
@@ -150,11 +148,9 @@ public static class CommandTemplate
         }
         else if (e.Key == ""ArrowDown"" && _filteredCommands.Count > 1)
         {
-            // Could implement keyboard navigation here
         }
         else if (e.Key == ""ArrowUp"" && _filteredCommands.Count > 1)
         {
-            // Could implement keyboard navigation here
         }
     }
 }

@@ -48,7 +48,6 @@ public class TailwindDownloader
         var bytes = await response.Content.ReadAsByteArrayAsync();
         await File.WriteAllBytesAsync(destinationPath, bytes);
 
-        // Make executable on Unix systems
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             var process = System.Diagnostics.Process.Start("chmod", $"+x {destinationPath}");

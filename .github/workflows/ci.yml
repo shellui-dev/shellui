@@ -30,22 +30,15 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ShellUI.slnx
 
-    # Generates src/ShellUI.Components/wwwroot/shellui-all.css fresh on every run.
-    # File is gitignored — the Windows + Linux Tailwind CLI binaries produce
-    # byte-different output, so drift-checking a committed file failed spuriously.
-    # Instead we regenerate and validate content properties.
+    # Regenerated every run: it's gitignored because Windows and Linux Tailwind builds differ byte for byte.
     - name: Build precompiled CSS bundle
-      # Invoke via `bash` (not `./script.sh`) so we don't rely on the file's
-      # executable bit. Windows contributors can edit and commit without
-      # remembering `git update-index --chmod=+x`.
+      # Run through bash so the executable bit doesn't matter.
       run: |
         set -euxo pipefail
         bash scripts/rebuild-precompiled-css.sh
         BUNDLE=src/ShellUI.Components/wwwroot/shellui-all.css
         test -f "$BUNDLE" || (echo "ERROR: bundle was not produced"; exit 1)
 
-        # Content assertions using grep -F (fixed-string, no regex escaping headaches).
-        # These catch classes of bugs we've actually shipped before — worth the paranoia.
         grep -Fq -- '--background' "$BUNDLE" || (echo "ERROR: theme vars not in bundle"; exit 1)
         grep -Fq '.bg-background' "$BUNDLE" || (echo "ERROR: core utility rule missing"; exit 1)
         grep -Fq 'hover\:bg-accent' "$BUNDLE" || (echo "ERROR: hover: modifier rules missing"; exit 1)
@@ -53,8 +46,7 @@ jobs:
         grep -Fq 'px-2\.5' "$BUNDLE" || (echo "ERROR: Badge padding class px-2.5 missing (variant .cs helpers not scanned?)"; exit 1)
         grep -Fq 'border-transparent' "$BUNDLE" || (echo "ERROR: border-transparent missing (variant .cs helpers not scanned?)"; exit 1)
 
-        # Size guard — keep the threshold above the current component bundle,
-        # but below runaway output (for example, an unminified full Tailwind base).
+        # Above the current bundle, below an accidental full Tailwind build.
         size=$(wc -c < "$BUNDLE")
         echo "precompiled bundle size: ${size} bytes"
         if [ "$size" -gt 150000 ]; then
@@ -68,8 +60,7 @@ jobs:
     - name: Run tests
       run: dotnet test ShellUI.slnx --no-restore --no-build --configuration Release --verbosity normal
 
-    # End-to-end build of a scaffolded project — catches anything the in-process
-    # TemplateCompileTests miss (missing usings, dependency resolution).
+    # Builds a scaffolded project; catches what TemplateCompileTests can't.
     - name: Smoke-test CLI scaffolding
       shell: bash
       run: |
@@ -84,8 +75,6 @@ jobs:
         cd SmokeApp
         shellui init --tailwind standalone --yes
 
-        # Assert init produced a working host: App.razor patched with render mode,
-        # theme bootstrap, and shellui.js script tag.
         grep -q 'HeadOutlet @rendermode="InteractiveServer"' Components/App.razor || (echo "init did not patch HeadOutlet @rendermode"; exit 1)
         grep -q 'Routes @rendermode="InteractiveServer"' Components/App.razor || (echo "init did not patch Routes @rendermode"; exit 1)
         grep -q 'ShellUI theme bootstrap' Components/App.razor || (echo "init did not inject theme bootstrap"; exit 1)
@@ -95,32 +84,22 @@ jobs:
           exit 1
         fi
 
-        # Assert input.css has the full theme, not just @import "tailwindcss";
         grep -q '@theme inline' wwwroot/input.css || (echo "init did not write full theme to input.css"; exit 1)
         grep -q ':root' wwwroot/input.css || (echo "init did not write :root variables to input.css"; exit 1)
         grep -q '\.dark' wwwroot/input.css || (echo "init did not write .dark variables to input.css"; exit 1)
 
         shellui add chart pie-chart dashboard-02 data-table --force
 
-        # NuGet dependencies (Blazor-ApexCharts, System.Linq.Dynamic.Core) should
-        # now be added automatically by `shellui add`. Assert they appear in the
-        # project file so a regression in the auto-install fails loudly here.
         grep -q 'Blazor-ApexCharts' SmokeApp.csproj || (echo "shellui add chart did not add Blazor-ApexCharts NuGet dep"; exit 1)
         grep -q 'System.Linq.Dynamic.Core' SmokeApp.csproj || (echo "shellui add data-table did not add System.Linq.Dynamic.Core NuGet dep"; exit 1)
 
-        # And the DataTable models file must land at Components/UI/Models/, not be missing.
         test -f Components/UI/Models/DataTableModels.cs || (echo "shellui add data-table did not install data-table-models"; exit 1)
 
-        # chart-styles ships the CSS for the custom tooltip + ApexCharts chrome.
-        # Without it, hovering a chart shows invisible white-on-white text.
+        # Without charts.css, chart tooltips render white on white.
         test -f wwwroot/css/charts.css || (echo "shellui add chart did not install chart-styles CSS"; exit 1)
         grep -q '<link href="css/charts.css"' Components/App.razor || (echo "shellui add chart did not link charts.css in App.razor"; exit 1)
 
-        # SidebarProvider (pulled in transitively by dashboard-02) must call the
-        # global ShellUI.initSidebar helper, not dynamically import a separate
-        # shellui-sidebar.js module — that import resolves against the page URL and
-        # breaks silently when ShellUI is compiled into a consumer's own Razor Class
-        # Library, where the file is served from _content/<Library>/, not the root.
+        # A dynamic import of shellui-sidebar.js 404s once compiled into a consumer's RCL.
         grep -q 'ShellUI.initSidebar' Components/UI/SidebarProvider.razor || (echo "SidebarProvider did not call ShellUI.initSidebar"; exit 1)
         if grep -Fq 'shellui-sidebar.js' Components/UI/SidebarProvider.razor; then
           echo "SidebarProvider still dynamically imports shellui-sidebar.js"
@@ -134,8 +113,7 @@ jobs:
 
         dotnet build -c Debug
 
-        # Every direct target must install and compile together; this catches missing
-        # dependencies and template compile errors that per-template tests can't see.
+        # Catches missing dependencies that per-template tests can't see.
         ALL=$(python3 - "$GITHUB_WORKSPACE" <<'PY'
         import os, re, sys
         root = sys.argv[1]
@@ -155,12 +133,7 @@ jobs:
           dotnet build -c Debug
         done
 
-    # Pure-NuGet install path — `dotnet add package ShellUI.Components` without
-    # the CLI. Uses a one-off NuGet.config that whitelists ONLY the local feed,
-    # so a missing local package can't silently fall back to nuget.org and pull
-    # an older version (which would mask whether the current PR's package is
-    # correct). $GITHUB_WORKSPACE is absolute — relative paths from inside the
-    # temp consumer dir would resolve to the wrong root.
+    # Package-only install from a local-only feed, so nuget.org can't mask a broken package.
     - name: NuGet-only install — verify safelist ships
       shell: bash
       run: |
@@ -169,8 +142,6 @@ jobs:
         test -d "$LOCAL_FEED" || (echo "local feed not found at $LOCAL_FEED — did the pack step run?"; exit 1)
         ls "$LOCAL_FEED"/*.nupkg | head -3
 
-        # DIAGNOSTIC: dump what's actually inside the fresh nupkg. The precompiled
-        # bundle must ship as a static web asset for consumers to `<link>` it.
         echo "---nupkg contents (looking for shellui-all.css):---"
         unzip -l "$LOCAL_FEED"/ShellUI.Components*.nupkg | grep -E 'shellui-all|staticwebassets/' | head -10 || echo "  (no matches — bundle not in nupkg!)"
         echo "---source wwwroot check:---"
@@ -181,8 +152,6 @@ jobs:
         dotnet new blazor -o NuGetSmoke --no-restore
         cd NuGetSmoke
 
-        # Pin restore to only the local feed; nuget.org explicitly disabled so a
-        # broken local feed can't be papered over by a public-published older version.
         cat > NuGet.config <<EOF
         <?xml version="1.0" encoding="utf-8"?>
         <configuration>
@@ -193,19 +162,12 @@ jobs:
         </configuration>
         EOF
 
-        # Evict every cached ShellUI.Components from ~/.nuget/packages before restore.
-        # The runner-level cache is restored from actions/cache and may contain a
-        # stale copy of the current version from an earlier CI run (before we added
-        # the precompiled bundle, .cs scan, etc.). NuGet prefers cached over local
-        # feeds when version matches, so a stale cache silently masks the fresh
-        # nupkg. Wildcard covers any version — future-proof.
+        # A cached copy of the same version would shadow the fresh nupkg.
         rm -rf ~/.nuget/packages/shellui.components
 
         dotnet add package ShellUI.Components --prerelease
 
-        # The safelist gets copied into wwwroot/ during the consumer's build by
-        # the package's build/ShellUI.Components.targets — auto-imported by NuGet.
-        # Need to actually build the project, not just restore, for the Copy to run.
+        # The package's .targets copies the safelist during build, so restore alone isn't enough.
         dotnet build -c Debug
 
         SAFELIST="wwwroot/shellui-classes.txt"
@@ -216,16 +178,10 @@ jobs:
           exit 1
         )
 
-        # Sanity: the safelist contains real Tailwind classes
         grep -q 'bg-background' "$SAFELIST" || (echo "safelist appears malformed — missing core Tailwind class 'bg-background'"; exit 1)
         wc -l "$SAFELIST"
 
-        # In .NET 10, MapStaticAssets() doesn't physically copy static web assets
-        # from referenced packages into the consumer's bin/ during `dotnet build`
-        # — it uses a manifest and reads from the extracted NuGet cache at runtime.
-        # So the correct assertion is "does the file exist in the extracted package
-        # cache after restore", which proves it'll be served at
-        # `_content/ShellUI.Components/shellui-all.css` in the running app.
+        # .NET 10 serves package assets from the NuGet cache, not bin/, so check the extracted package.
         BUNDLE="$(find ~/.nuget/packages/shellui.components -name 'shellui-all.css' -type f | head -1)"
         if [ -z "$BUNDLE" ]; then
           echo "ERROR: shellui-all.css not in consumer's extracted NuGet cache — the pure-NuGet install path is broken."
@@ -237,8 +193,6 @@ jobs:
         BUNDLE_SIZE=$(wc -c < "$BUNDLE")
         echo "bundle size: $BUNDLE_SIZE bytes"
 
-        # Spot-check a handful of representative rules using fixed-string grep
-        # (no regex escaping headaches). These catch classes of bugs we've hit.
         grep -Fq -- '--background' "$BUNDLE" || (echo "ERROR: bundle missing --background theme var"; exit 1)
         grep -Fq '.bg-background' "$BUNDLE" || (echo "ERROR: bundle missing .bg-background utility"; exit 1)
         grep -Fq 'hover\:bg-accent' "$BUNDLE" || (echo "ERROR: bundle missing hover:bg-accent modifier rule"; exit 1)

@@ -155,13 +155,7 @@ Object.assign(window.ShellUI, {
         }
     },
 
-    // Sidebar mobile detection + Ctrl/Cmd+B shortcut. Lives here (rather than a
-    // dynamically-imported shellui-sidebar.js) because a relative import resolves
-    // against the page URL, which breaks the moment SidebarProvider is compiled
-    // into a consumer's own Razor Class Library instead of installed straight into
-    // the host app — the file is then served from _content/<Library>/ and the
-    // import 404s silently (caught). shellui.js is already loaded globally via the
-    // host-controlled script tag, so no per-component import is needed.
+    // Here rather than in shellui-sidebar.js: a dynamic import 404s once compiled into a consumer's RCL.
     _sidebarHandlers: new Map(),
     initSidebar: function (handle, dotNetRef) {
         this.disposeSidebar(handle);

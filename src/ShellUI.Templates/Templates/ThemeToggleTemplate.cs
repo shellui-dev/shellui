@@ -12,8 +12,7 @@ public static class ThemeToggleTemplate
         Category = ComponentCategory.Utility,
 
         FilePath = "ThemeToggle.razor",
-        // shellui-js provides ShellUI.addClassToDocument / removeClassFromDocument
-        // used by the toggle action. Without it the toggle silently no-ops.
+        // Provides ShellUI.addClassToDocument; without it the toggle does nothing.
         Dependencies = new List<string> { "shellui-js" }
     };
 
@@ -57,8 +56,7 @@ public static class ThemeToggleTemplate
         _instances.Add(this);
     }
 
-    // localStorage and document mutation must run after first render — JSRuntime
-    // is unavailable during prerender on Blazor Server.
+    // JSRuntime is unavailable during prerender.
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;

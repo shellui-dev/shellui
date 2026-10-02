@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
-# Regenerates src/ShellUI.Components/wwwroot/shellui-all.css — the pre-compiled
-# Tailwind bundle NuGet consumers link to when they don't want a Tailwind build
-# of their own. Downloads the Tailwind standalone CLI on first run and caches it
-# at ~/.shellui/bin/. CI runs this via `.github/workflows/*.yml` and validates no
-# drift with `git diff --exit-code`.
-#
+# Builds the precompiled bundle NuGet consumers can link instead of running Tailwind.
 # Usage: ./scripts/rebuild-precompiled-css.sh
 set -euo pipefail
 
-# Version comes from TailwindConstants.cs — single source of truth. Portable awk
-# instead of grep -P because Perl regex isn't universally available on CI runners.
+# Version from TailwindConstants.cs; awk because grep -P isn't on every runner.
 TAILWIND_VERSION="$(awk -F'"' '/public const string Version/ {print $2; exit}' src/ShellUI.Core/TailwindConstants.cs)"
 if [[ -z "$TAILWIND_VERSION" ]]; then
   echo "Could not extract Tailwind version from src/ShellUI.Core/TailwindConstants.cs" >&2
@@ -17,7 +11,6 @@ if [[ -z "$TAILWIND_VERSION" ]]; then
 fi
 echo "Using Tailwind CSS v$TAILWIND_VERSION"
 
-# Detect platform for the standalone binary name.
 case "$(uname -sm)" in
   "Linux x86_64")   PLATFORM="linux-x64" ;;
   "Linux aarch64")  PLATFORM="linux-arm64" ;;
@@ -27,7 +20,6 @@ case "$(uname -sm)" in
   *) echo "Unsupported platform: $(uname -sm)" >&2; exit 1 ;;
 esac
 
-# Cache in ~/.shellui/bin so this doesn't re-download per project or per CI run.
 CACHE_DIR="${SHELLUI_CACHE_DIR:-$HOME/.shellui/bin}"
 BINARY_NAME="tailwindcss-$TAILWIND_VERSION-$PLATFORM"
 BINARY_PATH="$CACHE_DIR/$BINARY_NAME"
@@ -40,22 +32,17 @@ if [[ ! -f "$BINARY_PATH" ]]; then
   chmod +x "$BINARY_PATH"
 fi
 
-# Portable mktemp: --suffix is GNU-only, breaks on macOS/BSD. Template form works everywhere.
+# mktemp --suffix is GNU-only.
 INPUT_CSS="$(mktemp "${TMPDIR:-/tmp}/shellui-input.XXXXXX")"
 mv "$INPUT_CSS" "$INPUT_CSS.css"
 INPUT_CSS="$INPUT_CSS.css"
 COMPONENTS_ROOT="src/ShellUI.Components"
 
-# Compose the input fixture: theme block + inline safelist.
-# We use `@source inline("…")` instead of `@source "file.txt"` because Tailwind's
-# default file extractor fails to pick up classes with `[state=…]` arbitrary
-# values from plain text files. Inline is explicit — each entry becomes a rule
-# regardless of shape.
+# @source inline, because Tailwind's file extractor misses `[state=…]` classes in plain text.
 cat "$COMPONENTS_ROOT/wwwroot/shellui-theme.css" > "$INPUT_CSS"
 echo "" >> "$INPUT_CSS"
 
-# Feed classes space-separated inside a single @source inline("…") call. Split
-# into ~500-char chunks so we don't hit any parser limits on very long strings.
+# Chunks of ~500 chars to avoid very long strings.
 awk '
   BEGIN { line=""; }
   {

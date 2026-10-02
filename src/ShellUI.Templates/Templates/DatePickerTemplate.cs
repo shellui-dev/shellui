@@ -106,8 +106,7 @@ public class DatePickerTemplate
     [Parameter]
     public bool Disabled { get; set; }
 
-    /// Dismiss the calendar when the page scrolls. Matches shadcn/Radix behavior.
-    /// Set false to keep the calendar open across scroll.
+    /// Close the calendar when the page scrolls; set false to keep it open.
     [Parameter]
     public bool CloseOnScroll { get; set; }
 

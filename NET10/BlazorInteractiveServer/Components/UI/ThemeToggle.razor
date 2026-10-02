@@ -39,8 +39,7 @@
         _instances.Add(this);
     }
 
-    // localStorage and document mutation must run after first render — JSRuntime
-    // is unavailable during prerender on Blazor Server.
+    // JSRuntime is unavailable during prerender.
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;

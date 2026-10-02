@@ -19,8 +19,8 @@ public static class AccordionTypeTemplate
 
 public enum AccordionType
 {
-    Single,   // one open at a time
-    Multiple  // multiple open
+    Single,
+    Multiple
 }
 ";
 }

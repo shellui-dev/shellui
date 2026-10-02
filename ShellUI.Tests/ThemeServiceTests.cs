@@ -263,7 +263,7 @@ public class ThemeService_LockFile
             Assert.NotNull(lockFile);
             Assert.Equal("https://tweakcn.com/r/themes/abc", lockFile!.SourceUrl);
             Assert.Equal("x", lockFile.ThemeName);
-            Assert.Equal(64, lockFile.ContentSha256.Length); // SHA-256 hex is 64 chars
+            Assert.Equal(64, lockFile.ContentSha256.Length);
             Assert.Matches("^[a-f0-9]+$", lockFile.ContentSha256);
         }
         finally

@@ -1,8 +1,6 @@
 namespace ShellUI.Core;
 
-/// Single source of truth for the Tailwind CSS version ShellUI ships against.
-/// Bump this and every consumer (downloader, npm install string, config default,
-/// docs sweep) picks it up via a rebuild.
+/// The Tailwind CSS version ShellUI targets; everything else reads it from here.
 public static class TailwindConstants
 {
     public const string Version = "4.3.2";

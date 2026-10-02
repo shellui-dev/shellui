@@ -6,9 +6,7 @@ namespace ShellUI.Tests;
 
 public class InitBootstrapTests
 {
-    // Mirrors the App.razor that `dotnet new blazor` (net9) produces, including the
-    // @Assets[] asset-fingerprinting wrapper around the Blazor script. The wrapper
-    // is what tripped the smoke test on the first CI run of this branch.
+    // The net9 `dotnet new blazor` App.razor, including the @Assets[] wrapper.
     private const string FreshAppRazor = @"<!DOCTYPE html>
 <html lang=""en"">
 
@@ -66,7 +64,6 @@ public class InitBootstrapTests
 
         Assert.Contains("ShellUI theme bootstrap", result);
         Assert.Contains("classList.add('dark')", result);
-        // Theme script must be inside <head>, before </head>.
         var themeIdx = result.IndexOf("ShellUI theme bootstrap");
         var headCloseIdx = result.IndexOf("</head>");
         Assert.True(themeIdx > 0 && themeIdx < headCloseIdx);
@@ -87,7 +84,7 @@ public class InitBootstrapTests
     [Fact]
     public void RewriteAppRazor_HandlesBareBlazorScriptTag()
     {
-        // Older templates ship the bare form without @Assets[]. The patcher must handle both.
+        // Older templates use the bare form without @Assets[].
         const string bare = @"<head><HeadOutlet /></head><body><Routes /><script src=""_framework/blazor.web.js""></script></body>";
 
         var result = InitService.RewriteAppRazor(bare);
@@ -108,8 +105,6 @@ public class InitBootstrapTests
     [Fact]
     public void RewriteAppRazor_PreservesExistingRenderMode()
     {
-        // If the user (or another tool) already set a different render mode (e.g. Auto),
-        // we must not overwrite it.
         const string custom =
             @"<HeadOutlet @rendermode=""InteractiveAuto"" />" + "\n" +
             @"<Routes @rendermode=""InteractiveAuto"" />";

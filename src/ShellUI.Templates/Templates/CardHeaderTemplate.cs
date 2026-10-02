@@ -12,7 +12,7 @@ public static class CardHeaderTemplate
         Category = ComponentCategory.Layout,
 
         FilePath = "CardHeader.razor",
-        IsAvailable = false // Hidden from list, installed via dependency
+        IsAvailable = false
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI

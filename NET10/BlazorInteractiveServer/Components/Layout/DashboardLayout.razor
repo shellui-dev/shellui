@@ -8,7 +8,6 @@
 <SidebarProvider>
     <AppSidebar />
     <SidebarInset>
-        @* Shared header: trigger, breadcrumbs, theme toggle — sticky so expand/collapse stays accessible on scroll *@
         <header class="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b border-border bg-background">
             <div class="flex min-w-0 flex-1 items-center gap-2 px-4">
                 <SidebarTrigger Class="-ml-1 shrink-0" />
@@ -34,7 +33,6 @@
             </div>
         </header>
 
-        @* Page content *@
         <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
             @Body
         </div>
@@ -42,10 +40,7 @@
 </SidebarProvider>
 
 @code {
-    /// <summary>
-    /// Optional header content (breadcrumbs, page title, etc.) 
-    /// Pages can set this via a cascading parameter or just leave it empty.
-    /// </summary>
+    /// Optional header content, such as breadcrumbs.
     [Parameter] public RenderFragment? HeaderContent { get; set; }
 
     private List<BreadcrumbItemData> _breadcrumbItems = new();

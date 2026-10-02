@@ -15,30 +15,6 @@ public static class LoadingTemplate
     };
 
     public static string Content => @"
-@* 
- * IMPORTANT: For bars, bars-vertical, bars-pulse, and orbit variants to work,
- * add these CSS keyframes to your input.css file:
- *
- * @keyframes bars {
- *   0%, 100% { transform: scaleY(0.4); opacity: 0.7; }
- *   50% { transform: scaleY(1); opacity: 1; }
- * }
- *
- * @keyframes bars-vertical {
- *   0%, 100% { transform: scaleY(0.4); opacity: 0.7; }
- *   50% { transform: scaleY(1); opacity: 1; }
- * }
- *
- * @keyframes bars-pulse {
- *   0%, 100% { transform: scaleY(0.3); opacity: 0.5; }
- *   50% { transform: scaleY(1); opacity: 1; }
- * }
- *
- * @keyframes orbit {
- *   0% { transform: translate(-50%, 0) rotate(0deg) translateX(calc((var(--size, 1rem) - 0.5rem) / 2)) rotate(0deg); }
- *   100% { transform: translate(-50%, 0) rotate(360deg) translateX(calc((var(--size, 1rem) - 0.5rem) / 2)) rotate(-360deg); }
- * }
- *@
 @if (Variant == ""spinner"")
 {
     <div class=""@($""animate-spin rounded-full border-2 border-muted border-t-primary {(Size == ""sm"" ? ""h-4 w-4"" : Size == ""lg"" ? ""h-8 w-8"" : ""h-6 w-6"")} {Class}"")""></div>

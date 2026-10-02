@@ -21,7 +21,6 @@ public class ComponentInstaller
             return false;
         }
 
-        // Load config
         var configJson = File.ReadAllText(configPath);
         var config = JsonSerializer.Deserialize<ShellUIConfig>(configJson);
 
@@ -31,10 +30,8 @@ public class ComponentInstaller
             return false;
         }
 
-        // Detect project for namespace
         var projectInfo = ProjectDetector.DetectProject();
 
-        // Parse comma-separated components
         var componentList = new List<string>();
         foreach (var comp in components)
         {
@@ -45,13 +42,10 @@ public class ComponentInstaller
         var skippedCount = 0;
         var failedComponents = new List<string>();
 
-        // Track installed components to avoid duplicates
         var installedSet = new HashSet<string>();
-        // Track NuGet packages requested this batch so we don't re-invoke `dotnet add package` for the same dep
         var requestedPackages = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var pendingNuGetDeps = new List<NuGetDependency>();
 
-        // Show dependency information
         foreach (var componentName in componentList)
         {
             var metadata = ComponentRegistry.GetMetadata(componentName);
@@ -76,13 +70,9 @@ public class ComponentInstaller
                 return Task.CompletedTask;
             });
 
-        // Install collected NuGet dependencies once, after all source files are in place
-        // (so `dotnet add package` doesn't restore between every component).
+        // Once, after all files are written, so restore doesn't run per component.
         var failedPackages = await InstallNuGetDependenciesAsync(projectInfo, pendingNuGetDeps);
 
-        // Wire any installed wwwroot/ stylesheets into the host so the user doesn't
-        // have to add <link> tags by hand. Detected via FilePath, which uses the
-        // `../../wwwroot/` traversal trick that asset templates already follow.
         foreach (var name in installedSet)
         {
             var metadata = ComponentRegistry.GetMetadata(name);
@@ -96,14 +86,12 @@ public class ComponentInstaller
 
         EnsureImports(projectInfo, installedSet);
 
-        // Update config
         var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions
         {
             WriteIndented = true
         });
         File.WriteAllText(configPath, updatedJson);
 
-        // Summary
         AnsiConsole.MarkupLine("");
         if (successCount > 0)
             AnsiConsole.MarkupLine($"[green]Installed {successCount} component(s) successfully![/]");
@@ -467,9 +455,7 @@ public class ComponentInstaller
         }
     }
 
-    // Returns the href that should appear in the host's <link> tag, or null if the
-    // component's FilePath isn't a CSS asset under wwwroot/. Strips the `../../wwwroot/`
-    // prefix that asset templates use to escape Components/UI/.
+    // href for the host's <link>, or null when the file isn't a wwwroot CSS asset.
     internal static string? ResolveHostStylesheetHref(string filePath)
     {
         if (!filePath.EndsWith(".css", StringComparison.OrdinalIgnoreCase)) return null;

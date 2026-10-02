@@ -42,7 +42,6 @@ public static class SidebarProviderTemplate
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    // Public state
     public bool IsMobile { get; private set; }
     public bool IsOpen { get; private set; } = true;
     public bool MobileOpen { get; private set; }
