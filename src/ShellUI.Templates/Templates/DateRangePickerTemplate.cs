@@ -48,7 +48,7 @@ public class DateRangePickerTemplate
     
     @if (_isOpen)
     {
-        <div class=""absolute z-50 mt-1 rounded-md border bg-popover p-3 text-popover-foreground shadow-md"">
+        <div class=""absolute z-50 mt-1 w-max rounded-md border bg-popover p-3 text-popover-foreground shadow-md"">
             <div class=""flex items-center justify-between mb-2"">
                 <button type=""button"" @onclick=""PreviousMonth"" class=""p-1 hover:bg-accent rounded"">
                     <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">

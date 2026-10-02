@@ -12,6 +12,52 @@ Object.assign(window.ShellUI, {
         if (element) element.focus();
     },
 
+    addClassToDocument: function (className) {
+        document.documentElement.classList.add(className);
+    },
+
+    removeClassFromDocument: function (className) {
+        document.documentElement.classList.remove(className);
+    },
+
+    _themeObservers: new Map(),
+    observeTheme: function (handle, dotNetRef) {
+        this.unobserveTheme(handle);
+        const root = document.documentElement;
+        const observer = new MutationObserver(() => {
+            dotNetRef.invokeMethodAsync("OnThemeChanged", root.classList.contains("dark")).catch(() => {});
+        });
+        observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+        this._themeObservers.set(handle, observer);
+        return root.classList.contains("dark");
+    },
+    unobserveTheme: function (handle) {
+        const observer = this._themeObservers.get(handle);
+        if (observer) {
+            observer.disconnect();
+            this._themeObservers.delete(handle);
+        }
+    },
+
+    setupFileDrop: function (dropZoneId, inputElementId) {
+        const dropZone = document.getElementById(dropZoneId);
+        const input = document.getElementById(inputElementId);
+        if (!dropZone || !input) return false;
+        if (dropZone._shelluiDrop) dropZone.removeEventListener("drop", dropZone._shelluiDrop);
+        dropZone._shelluiDrop = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const files = e.dataTransfer && e.dataTransfer.files;
+            if (!files || files.length === 0) return;
+            const dt = new DataTransfer();
+            for (let i = 0; i < files.length; i++) dt.items.add(files[i]);
+            input.files = dt.files;
+            input.dispatchEvent(new Event("change", { bubbles: true }));
+        };
+        dropZone.addEventListener("drop", dropZone._shelluiDrop);
+        return true;
+    },
+
     registerShortcut: function (handle, key, ctrl, meta, shift, alt, dotNetRef) {
         const listener = (e) => {
             if (e.key.toLowerCase() !== key.toLowerCase()) return;
@@ -73,6 +119,11 @@ Object.assign(window.ShellUI, {
 // ES module re-exports so consumers who import this file dynamically still work.
 export function copyToClipboard(text) { return window.ShellUI.copyToClipboard(text); }
 export function focusElement(elementId) { return window.ShellUI.focusElement(elementId); }
+export function addClassToDocument(className) { return window.ShellUI.addClassToDocument(className); }
+export function removeClassFromDocument(className) { return window.ShellUI.removeClassFromDocument(className); }
+export function observeTheme(handle, dotNetRef) { return window.ShellUI.observeTheme(handle, dotNetRef); }
+export function unobserveTheme(handle) { return window.ShellUI.unobserveTheme(handle); }
+export function setupFileDrop(dropZoneId, inputElementId) { return window.ShellUI.setupFileDrop(dropZoneId, inputElementId); }
 export function registerShortcut(handle, key, ctrl, meta, shift, alt, dotNetRef) {
     return window.ShellUI.registerShortcut(handle, key, ctrl, meta, shift, alt, dotNetRef);
 }
