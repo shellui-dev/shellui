@@ -53,15 +53,14 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ShellUI.slnx
 
-    # Generate the precompiled CSS bundle before build so releases always ship
-    # a fresh one. File is gitignored — regenerated on every CI/release run.
+    # shellui-all.css is gitignored, so every release regenerates it.
     - name: Build precompiled CSS bundle
       run: |
         set -euxo pipefail
         bash scripts/rebuild-precompiled-css.sh
         BUNDLE=src/ShellUI.Components/wwwroot/shellui-all.css
         test -f "$BUNDLE" || (echo "ERROR: bundle was not produced"; exit 1)
-        # Content sanity — same assertions ci.yml runs.
+        # Same checks as ci.yml.
         grep -q -- '--background:' "$BUNDLE" || (echo "ERROR: theme vars missing"; exit 1)
         grep -q '\.bg-background' "$BUNDLE" || (echo "ERROR: utilities missing"; exit 1)
         echo "release bundle size: $(wc -c < "$BUNDLE") bytes"
@@ -75,9 +74,7 @@ jobs:
     - name: Pack NuGet packages
       run: dotnet pack ShellUI.slnx --no-build --configuration Release -p:ContinuousIntegrationBuild=true
 
-    # ShellUI.Core and ShellUI.Templates are internal-only — they have no public API
-    # surface that consumers reference. Only the CLI tool and the Components runtime
-    # library are pushed to NuGet.
+    # Core and Templates are internal; only the CLI and Components are published.
     - name: Publish to NuGet
       run: |
         dotnet nuget push src/ShellUI.CLI/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

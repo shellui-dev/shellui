@@ -8,10 +8,7 @@ using Xunit;
 
 namespace ShellUI.Tests;
 
-/// Verifies that the *generated* content of each template parses as valid C#.
-/// Pure-.cs templates (variants) parse the whole content; .razor templates parse
-/// the body of the @code block. Catches unescaped quotes inside C# verbatim
-/// strings — the kind of error that ships as a compile failure to consumers.
+/// Parses each template's generated C# to catch unescaped quotes in verbatim strings.
 public class TemplateCompileTests
 {
     [Theory]
@@ -50,10 +47,7 @@ public class TemplateCompileTests
         var codeBlock = ExtractCodeBlock(content!);
         if (string.IsNullOrWhiteSpace(codeBlock))
         {
-            // Brace extraction failed — almost always because an unterminated string
-            // swallowed the closing brace. Surface a real diagnostic by parsing the
-            // raw @code-onward suffix as if it were C#; the line/column points at
-            // the actual offending escape.
+            // Usually an unterminated string swallowed the brace; parsing the rest points at it.
             var raw = StripRazorDirectives(content!);
             var rawTree = CSharpSyntaxTree.ParseText($"class __Probe {{ {raw} }}");
             var rawErrors = rawTree.GetDiagnostics()
@@ -68,7 +62,6 @@ public class TemplateCompileTests
                 string.Join("\n", rawErrors.Select(e => $"  {e.Id} at {e.Location.GetLineSpan().StartLinePosition}: {e.GetMessage()}")));
         }
 
-        // Wrap in a synthetic class so the code block parses standalone.
         var wrapped = $"class __Probe {{ {codeBlock} }}";
         var tree = CSharpSyntaxTree.ParseText(wrapped);
         var errors = tree.GetDiagnostics()
@@ -80,11 +73,7 @@ public class TemplateCompileTests
             string.Join("\n", errors.Select(e => $"  {e.Location.GetLineSpan().StartLinePosition}: {e.GetMessage()}")));
     }
 
-    /// Exhaustive sweep: parse the @code block of every installable .razor template
-    /// in the registry. This is the safety net for the class of bugs where a template
-    /// ships with an unescaped quote inside its verbatim string (Tabs, PieChart, etc.).
-    /// Kept separate from the targeted Theory above so a regression's failure point
-    /// lists just the offending component(s) rather than aborting on the first one.
+    /// Lists every failing template instead of stopping at the first.
     [Fact]
     public void EveryRazorTemplate_CodeBlockParses()
     {
@@ -206,18 +195,14 @@ public class TemplateCompileTests
         ("System.Linq.Dynamic.Core", "System.Linq.Dynamic.Core")
     };
 
-    /// Strips Razor markup directives so the remaining text can be best-effort
-    /// parsed as C#. Not a real Razor parser — just enough to surface useful
-    /// diagnostics when ExtractCodeBlock fails.
+    /// Best effort: drops everything before @code so the rest can be parsed as C#.
     private static string StripRazorDirectives(string razor)
     {
-        // Drop everything before the first @code keyword if present, else return as-is.
         var codeIdx = razor.IndexOf("@code", System.StringComparison.Ordinal);
         return codeIdx >= 0 ? razor.Substring(codeIdx + 5) : razor;
     }
 
-    /// Extracts the body of the first `@code { ... }` block, balancing braces.
-    /// Returns null if no `@code` block is found.
+    /// Body of the first `@code { }` block, or null.
     private static string? ExtractCodeBlock(string razor)
     {
         var match = Regex.Match(razor, @"@code\s*\{");

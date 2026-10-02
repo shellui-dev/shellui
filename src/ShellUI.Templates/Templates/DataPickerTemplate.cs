@@ -121,8 +121,7 @@ public static class DataPickerTemplate
     [Parameter] public string SearchPlaceholder { get; set; } = ""Search..."";
     [Parameter] public string EmptyText { get; set; } = ""No results found."";
     [Parameter] public bool Disabled { get; set; }
-    /// Dismiss the dropdown when the page scrolls. Matches shadcn/Radix behavior.
-    /// Set false to keep the dropdown open across scroll (useful for infinite-scroll pages).
+    /// Close the dropdown when the page scrolls; set false to keep it open.
     [Parameter] public bool CloseOnScroll { get; set; }
     [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]

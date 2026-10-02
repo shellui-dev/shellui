@@ -161,21 +161,17 @@
   --shadow-2xl: var(--shadow-2xl);
 }
 
-/* ============================================================
-   ApexCharts chrome — shadcn/ui aesthetic
-   ============================================================ */
+/* ApexCharts chrome */
 
 .apexcharts-canvas {
   background: transparent;
 }
 
-/* Gridlines */
 .apexcharts-gridline {
   stroke: var(--border);
   stroke-opacity: 0.6;
 }
 
-/* Axis labels */
 .apexcharts-text,
 .apexcharts-xaxis-label,
 .apexcharts-yaxis-label,
@@ -187,7 +183,6 @@
   color: var(--foreground) !important;
 }
 
-/* Title + subtitle */
 .apexcharts-title-text {
   fill: var(--foreground);
   font-family: inherit;
@@ -197,7 +192,6 @@
   font-family: inherit;
 }
 
-/* Legend */
 .apexcharts-legend {
   display: flex !important;
   flex-wrap: wrap;
@@ -218,7 +212,6 @@
   flex-shrink: 0;
 }
 
-/* Custom shellui tooltip — compact shadcn look */
 .shellui-chart-tooltip {
   background: var(--popover);
   color: var(--popover-foreground);
@@ -270,7 +263,7 @@
   padding-left: 12px;
 }
 
-/* Kill the default ApexCharts tooltip wrapper — we render our own */
+/* Replaced by the custom tooltip */
 .apexcharts-tooltip {
   background: transparent !important;
   border: none !important;
@@ -278,14 +271,12 @@
   padding: 0 !important;
 }
 
-/* Axis crosshair line on hover */
 .apexcharts-xcrosshairs,
 .apexcharts-ycrosshairs {
   stroke: var(--border);
   stroke-dasharray: 3;
 }
 
-/* Toolbar (only visible when ShowToolbar=true) */
 .apexcharts-toolbar {
   z-index: 10;
 }
@@ -315,7 +306,6 @@
   color: var(--accent-foreground);
 }
 
-/* Data labels */
 .apexcharts-datalabel,
 .apexcharts-datalabel-label,
 .apexcharts-datalabel-value {

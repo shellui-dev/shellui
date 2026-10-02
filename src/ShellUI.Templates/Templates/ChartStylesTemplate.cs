@@ -10,8 +10,7 @@ public class ChartStylesTemplate
         DisplayName = "Chart Styles",
         Description = "CSS styles for ApexCharts integration with ShellUI theme system",
         Category = ComponentCategory.DataDisplay,
-        // FilePath walks up out of Components/UI/ to project root then into wwwroot/css/,
-        // matching the trick shellui-js uses for its own asset path.
+        // ../../wwwroot/ escapes Components/UI/, like shellui-js.
         FilePath = "../../wwwroot/css/charts.css",
         IsAvailable = false,
         Dependencies = new List<string>(),
@@ -28,13 +27,11 @@ public class ChartStylesTemplate
 
 .apexcharts-canvas { background: transparent; }
 
-/* Gridlines — subtle horizontal dashes */
 .apexcharts-gridline {
     stroke: var(--border);
     stroke-opacity: 0.6;
 }
 
-/* Axis + legend text */
 .apexcharts-text,
 .apexcharts-xaxis-label,
 .apexcharts-yaxis-label {
@@ -46,11 +43,9 @@ public class ChartStylesTemplate
     font-family: inherit;
 }
 
-/* Title + subtitle */
 .apexcharts-title-text { fill: var(--foreground); font-family: inherit; }
 .apexcharts-subtitle-text { fill: var(--muted-foreground); font-family: inherit; }
 
-/* Legend — top-left, circle markers */
 .apexcharts-legend {
     display: flex !important;
     flex-wrap: wrap;
@@ -71,7 +66,6 @@ public class ChartStylesTemplate
     flex-shrink: 0;
 }
 
-/* Custom shellui tooltip — compact shadcn look */
 .shellui-chart-tooltip {
     background: var(--popover);
     color: var(--popover-foreground);
@@ -119,7 +113,7 @@ public class ChartStylesTemplate
     padding-left: 12px;
 }
 
-/* Kill default ApexCharts tooltip wrapper — we render our own */
+/* Replaced by the custom tooltip */
 .apexcharts-tooltip {
     background: transparent !important;
     border: none !important;
@@ -127,14 +121,12 @@ public class ChartStylesTemplate
     padding: 0 !important;
 }
 
-/* Crosshair on hover */
 .apexcharts-xcrosshairs,
 .apexcharts-ycrosshairs {
     stroke: var(--border);
     stroke-dasharray: 3;
 }
 
-/* Toolbar (opt-in via ShowToolbar) */
 .apexcharts-toolbar { z-index: 10; }
 .apexcharts-toolbar-item {
     color: var(--muted-foreground);
@@ -160,7 +152,6 @@ public class ChartStylesTemplate
     color: var(--accent-foreground);
 }
 
-/* Data labels */
 .apexcharts-datalabel,
 .apexcharts-datalabel-label,
 .apexcharts-datalabel-value {

@@ -48,11 +48,9 @@ else if (SidebarProvider?.IsMobile == true && !Inline)
 {
     @if (SidebarProvider.MobileOpen)
     {
-        <!-- Mobile overlay backdrop -->
         <div class=""fixed inset-0 z-50 bg-black/80 animate-in fade-in-0""
              @onclick=""SidebarProvider.CloseMobileSidebar""></div>
 
-        <!-- Mobile sidebar sheet -->
         <div class=""@Shell.Cn(
                  ""fixed inset-y-0 z-50 flex h-svh flex-col bg-sidebar text-sidebar-foreground shadow-lg transition-transform duration-200"",
                  Side == SidebarSide.Left ? ""left-0"" : ""right-0"",
@@ -69,17 +67,15 @@ else if (SidebarProvider?.IsMobile == true && !Inline)
 }
 else
 {
-    <!-- Desktop sidebar -->
     <div class=""group peer hidden text-sidebar-foreground md:block""
          data-state=""@state""
          data-collapsible=""@collapsibleAttr""
          data-variant=""@variantValue""
          data-side=""@sideValue"">
 
-        <!-- Gap element that reserves space in flex layout -->
+        <!-- Reserves the sidebar width in the flex layout -->
         <div class=""@GapClass"" style=""@GapStyle""></div>
 
-        <!-- Fixed sidebar container -->
         <div class=""@FixedClass"" style=""@FixedStyle"" @attributes=""AdditionalAttributes"">
             <div data-sidebar=""sidebar""
                  class=""flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"">
@@ -95,9 +91,7 @@ else
     [Parameter] public SidebarSide Side { get; set; } = SidebarSide.Left;
     [Parameter] public SidebarVariant Variant { get; set; } = SidebarVariant.Sidebar;
     [Parameter] public SidebarCollapsible Collapsible { get; set; } = SidebarCollapsible.Offcanvas;
-    /// When true, the sidebar positions itself absolutely (not fixed) so it stays inside
-    /// a bounded parent container. Parent must be `position: relative` with a set height.
-    /// Intended for inline demos and previews; production sidebars should leave this false.
+    /// Positions absolutely inside a `relative` parent with a set height, for demos and previews.
     [Parameter] public bool Inline { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
@@ -106,7 +100,7 @@ else
 
     private bool IsFloatingOrInset => Variant == SidebarVariant.Floating || Variant == SidebarVariant.Inset;
 
-    // Inline styles for CSS variable widths (reliable across Tailwind versions)
+    // Widths as inline CSS variables; Tailwind arbitrary values for them are unreliable
     private string GapStyle
     {
         get

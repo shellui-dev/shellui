@@ -11,7 +11,6 @@ public class InputOTPTemplate
         Description = "One-time password input component",
         Category = ComponentCategory.Form,
         FilePath = "InputOTP.razor",
-        // shellui-js provides ShellUI.focusElement for moving focus between OTP digit inputs.
         // Shell.Cn is installed by `shellui init` via the shell template, so it is not listed here.
         Dependencies = new List<string> { "shellui-js" },
         Tags = new List<string> { "form", "input", "otp", "password", "verification" }
@@ -129,7 +128,6 @@ public class InputOTPTemplate
 
     private async Task HandlePaste(ClipboardEventArgs e)
     {
-        // Paste handling will be done via JS in a real implementation
         await Task.CompletedTask;
     }
 

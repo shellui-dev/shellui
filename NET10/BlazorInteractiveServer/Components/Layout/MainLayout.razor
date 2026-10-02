@@ -7,14 +7,10 @@
 <div class="min-h-screen bg-background text-foreground">
     <Navbar ClassName="flex items-center justify-center">
         <div class="flex items-center justify-center w-full px-5">
-            <!-- Centered Content Group with Side Spacing -->
             <div class="flex items-center justify-between w-full">
-                <!-- Left Spacer -->
                 <div class="flex-1"></div>
                 
-                <!-- Main Content Group -->
                 <div class="flex items-center gap-6">
-                    <!-- Logo Section -->
                     <div class="flex items-center gap-3">
                         <a href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                             <ShellUILogo Size="32" />
@@ -22,7 +18,6 @@
                         </a>
                     </div>
 
-                    <!-- Navigation Links - Desktop Only -->
                     <div class="hidden lg:flex items-center gap-1 h-12">
                         <a href="/" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Home</a>
                         <a href="/dashboard" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Dashboard</a>
@@ -33,9 +28,7 @@
                         <a href="/sponsors" class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50">Sponsors</a>
                     </div>
 
-                    <!-- Utilities -->
                     <div class="flex items-center gap-3">
-                <!-- Search Bar - Responsive Width -->
                 <div class="relative hidden sm:block">
                     <div class="flex items-center bg-muted/50 rounded-lg px-3 py-2 border border-border cursor-pointer hover:bg-muted transition-colors" 
                          style="width: min(180px, 18vw);"
@@ -51,10 +44,8 @@
                     </div>
                 </div>
 
-                <!-- Theme Toggle -->
                 <ThemeToggle Class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border" />
 
-                <!-- GitHub Link -->
                 <a href="https://github.com/shellui-dev/shellui" target="_blank" 
                    class="w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border">
                     <svg class="w-4 h-4 text-foreground" fill="currentColor" viewBox="0 0 24 24">
@@ -62,7 +53,6 @@
                     </svg>
                 </a>
 
-                <!-- Mobile Menu Button - Always Last -->
                 <button class="lg:hidden w-8 h-8 rounded-full bg-muted/50 hover:bg-muted transition-colors flex items-center justify-center border border-border"
                         @onclick="ToggleMobileMenu">
                     <svg class="w-4 h-4 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,22 +62,17 @@
                     </div>
                 </div>
                 
-                <!-- Right Spacer -->
                 <div class="flex-1"></div>
             </div>
         </div>
     </Navbar>
 
-    <!-- Mobile Menu Overlay -->
     @if (_isMobileMenuOpen)
     {
         <div class="fixed inset-0 z-50 lg:hidden">
-            <!-- Backdrop -->
             <div class="fixed inset-0 bg-background/80 backdrop-blur-sm" @onclick="CloseMobileMenu"></div>
             
-            <!-- Mobile Menu -->
             <div class="fixed left-0 top-0 h-full w-80 bg-background border-r border-border shadow-lg">
-                <!-- Header -->
                 <div class="flex items-center justify-between p-4 border-b border-border">
                     <div class="flex items-center gap-3">
                         <ShellUILogo Size="32" />
@@ -109,7 +94,6 @@
                     </div>
                 </div>
                 
-                <!-- Navigation Links -->
                 <nav class="p-4 space-y-2">
                     <a href="/" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Home</a>
                     <a href="/dashboard" class="block px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors">Dashboard</a>
@@ -135,7 +119,6 @@
 
 <Sonner />
 
-<!-- Command Palette -->
 <CommandPalette @bind-IsOpen="_isCommandPaletteOpen"
                 Commands="_commandItems"
                 CommandSelected="HandleCommandSelected" />

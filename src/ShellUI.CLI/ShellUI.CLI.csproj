@@ -16,7 +16,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     
-    <!-- CLI Tool Configuration -->
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>shellui</ToolCommandName>
     <PackageId>ShellUI.CLI</PackageId>

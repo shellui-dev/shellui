@@ -8,18 +8,13 @@ using Xunit;
 
 namespace ShellUI.Tests;
 
-/// Asserts the @code block of each live src/ShellUI.Components/Components/*.razor
-/// matches the corresponding CLI template's emitted Content. Compares after stripping
-/// comments, blank lines, and whitespace differences so the legitimate divergence
-/// (namespace, formatting) doesn't fire, but real divergence (parameter list, JS
-/// interop calls, lifecycle methods) does.
+/// Each package component's @code block must match its CLI template, ignoring comments, whitespace and namespace.
 public class TemplateSyncTests
 {
     // Component name → reason. Empty by default — fix the drift instead of adding entries.
     private static readonly Dictionary<string, string> AllowedDrift = new()
     {
-        // Live version imports the NuGet-package shellui.js module (Path A/B); template
-        // calls window.ShellUI directly (Path C, where shellui-js drops the monolith).
+        // The package imports the shellui.js module; the template calls window.ShellUI.
         ["command-palette"] = "JS-interop path differs between package (module import) and CLI template (window.ShellUI global).",
         ["input-otp"] = "JS-interop path differs between package (module import + fallback) and CLI template (window.ShellUI global)."
     };
@@ -170,8 +165,6 @@ public class TemplateSyncTests
         Assert.True(live == generated, "Drift detected between live ChartVariants.cs and template chart-variants.\n\n" + DiffSummary(live, generated));
     }
 
-    // [CallerFilePath] captures the absolute path of this source file at compile time,
-    // so the test resolves the live components directory regardless of cwd on CI.
     private static string GetLiveRazorPath(string razorFileName, [CallerFilePath] string thisFile = "")
     {
         var testDir = Path.GetDirectoryName(thisFile) ?? throw new InvalidOperationException("CallerFilePath is empty");
@@ -211,9 +204,7 @@ public class TemplateSyncTests
         return diffs.Length == 0 ? "(no per-line diff — file lengths differ)" : diffs.ToString();
     }
 
-    /// Extracts the body of the first `@code { ... }` block, balancing braces while
-    /// respecting strings, verbatim strings, char literals, line comments, and block comments.
-    /// Returns null if no `@code` block is found or braces are unbalanced.
+    /// Body of the first `@code { }` block, or null if missing or unbalanced.
     private static string? ExtractCodeBlock(string razor)
     {
         var match = Regex.Match(razor, @"@code\s*\{");

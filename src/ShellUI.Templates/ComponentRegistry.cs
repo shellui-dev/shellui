@@ -515,9 +515,7 @@ public static class ComponentRegistry
         return Components.ContainsKey(componentName.ToLower());
     }
 
-    // Returns the closest installable component name to `query` within edit distance 3,
-    // or null if nothing is close enough. Used to power "did you mean …?" hints when a
-    // user mistypes (e.g. `datatable` → `data-table`). Excludes hidden sub-components.
+    // Closest installable name within edit distance 3, for "did you mean" hints.
     public static string? FindClosestMatch(string query)
     {
         var lower = query.ToLowerInvariant();

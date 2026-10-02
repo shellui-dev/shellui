@@ -34,8 +34,7 @@ Object.assign(window.ShellUI, {
         }
     },
 
-    // Ref-counted body-scroll lock so nested modals (dialog opens a drawer opens a
-    // sheet) don't prematurely unlock when the innermost closes.
+    // Ref-counted so nested overlays don't unlock early.
     _scrollLockCount: 0,
     _originalOverflow: "",
     lockBodyScroll: function () {
@@ -53,13 +52,7 @@ Object.assign(window.ShellUI, {
         }
     },
 
-    // Fire a .NET callback when the window scrolls or resizes. Used by dropdowns
-    // to close when the page scrolls (native Blazor can't reposition popovers).
-    // Bubble-phase listener means inner scrolling inside the dropdown itself
-    // (e.g. scrolling through options) does NOT fire this — only page scroll does.
-    // Fire a .NET callback when the page (window) scrolls or the window resizes.
-    // Bubble-phase intentionally — scrolling inside an inner element (e.g. an option
-    // list with overflow:auto) does NOT fire this, only page-level scroll does.
+    // Bubble phase: scrolling inside the dropdown doesn't fire, only page scroll does.
     _dismissHandlers: new Map(),
     onDismissEvents: function (handle, dotNetRef) {
         const listener = () => dotNetRef.invokeMethodAsync("OnDismissEvent");

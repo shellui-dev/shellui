@@ -6,9 +6,7 @@
     var isCompleted = ParentStepper != null && index < ParentStepper.HighestStepReached;
     var isClickable = ParentStepper != null && index <= ParentStepper.HighestStepReached;
 
-    // Active wins over completed so clicking back to a visited step still shows
-    // "you are here" instead of the completed checkmark. Ring adds a subtle glow
-    // that reads as "current" independent of fill.
+    // Active wins over completed, so a revisited step shows as current.
     string stateClass;
     if (isActive)
         stateClass = "border-primary bg-primary text-primary-foreground ring-2 ring-primary/20 ring-offset-2 ring-offset-background";

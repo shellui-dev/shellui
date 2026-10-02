@@ -12,11 +12,6 @@
     <PackageReference Include="Blazor-ApexCharts" Version="6.0.2" />
   </ItemGroup>
 
-  <!-- Removed NuGet/Project reference - using CLI-installed components instead -->
-  <!-- <ItemGroup>
-    <ProjectReference Include="..\..\src\ShellUI.Components\ShellUI.Components.csproj" />
-  </ItemGroup> -->
-
   <Import Project="Build\ShellUI.targets" />
 
 </Project>
