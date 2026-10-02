@@ -81,7 +81,7 @@ public static class CalendarTemplate
     public DateTime? MaxDate { get; set; }
 
     [Parameter]
-    public EventCallback<DateTime> SelectedDateChanged { get; set; }
+    public EventCallback<DateTime?> SelectedDateChanged { get; set; }
 
     private DateTime _currentMonth = DateTime.Today;
     private int _daysInMonth;
