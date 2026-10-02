@@ -11,7 +11,7 @@ public class DrawerTemplate
         Description = "Sliding drawer component with handle — supports compositional subcomponent pattern",
         Category = ComponentCategory.Overlay,
         FilePath = "Drawer.razor",
-        Dependencies = new List<string> { "drawer-variants", "drawer-trigger", "drawer-content" },
+        Dependencies = new List<string> { "drawer-variants", "drawer-trigger", "drawer-content", "drawer-header", "drawer-title", "drawer-description", "drawer-footer", "drawer-close" },
         Tags = new List<string> { "overlay", "drawer", "modal", "slide" }
     };
 

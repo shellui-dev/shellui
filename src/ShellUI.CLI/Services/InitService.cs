@@ -22,14 +22,12 @@ public class InitService
             return;
         }
 
-        // Step 1: Detect project
         var projectInfo = ProjectDetector.DetectProject();
         AnsiConsole.MarkupLine($"[green]✅ Detected:[/] {projectInfo.ProjectType}");
         AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
         AnsiConsole.MarkupLine($"[dim]Namespace: {projectInfo.RootNamespace}[/]");
         RemoveBootstrapFiles();
 
-        // Step 2: Determine Tailwind method preference
         AnsiConsole.MarkupLine("[cyan]Setting up Tailwind CSS...[/]");
         string method;
 
@@ -70,7 +68,6 @@ public class InitService
             AnsiConsole.MarkupLine($"[green]✅ Selected:[/] {dashboardChoice}");
         }
 
-        // Check npm availability if selected
         if (method == "npm" && !await IsNpmAvailableAsync())
         {
             AnsiConsole.MarkupLine("[red]Error: npm is not available. Please install Node.js and npm, or choose the 'standalone' Tailwind method.[/]");
@@ -94,24 +91,20 @@ public class InitService
 
         await LogoLoader.RunAsync("Installing ShellUI components...", async status =>
             {
-                // Step 3: Create Components/UI folder
                 status("Creating component folders...");
                 var componentsPath = Path.Combine(Directory.GetCurrentDirectory(), "Components", "UI");
                 Directory.CreateDirectory(componentsPath);
                 AnsiConsole.MarkupLine($"[green]Created:[/] Components/UI/");
 
-                // Step 3.5: Install Shell utilities and shellui.js (required for CopyButton, FileUpload, Command)
                 status("Installing Shell utilities...");
                 if (!await ComponentInstaller.InstallComponentForInitAsync("shell", projectInfo, config))
                     throw new InvalidOperationException("Shell could not be installed.");
                 if (!await ComponentInstaller.InstallComponentForInitAsync("shellui-js", projectInfo, config))
                     throw new InvalidOperationException("shellui.js could not be installed.");
 
-                // Step 4: Create shellui.json
                 status("Preparing configuration...");
                 AnsiConsole.MarkupLine("[green]Configuration prepared[/]");
 
-                // Step 5: Create _Imports.razor if it doesn't exist
                 status("Setting up imports...");
                 var importsPath = Path.Combine(Directory.GetCurrentDirectory(), "Components", "_Imports.razor");
                 if (File.Exists(importsPath))
@@ -126,7 +119,6 @@ public class InitService
                     }
                 }
 
-                // Step 6: Set up Tailwind CSS based on method
                 status("Setting up Tailwind CSS...");
                 if (method == "npm")
                 {
@@ -137,7 +129,6 @@ public class InitService
                     await SetupTailwindStandaloneAsync();
                 }
 
-                // Step 6.5: Patch App.razor / index.html — render mode + theme bootstrap + shellui.js
                 status("Wiring up theme and render mode...");
                 await BootstrapHostAsync(projectInfo);
 
@@ -148,7 +139,6 @@ public class InitService
                 foreach (var note in pages.Notes)
                     AnsiConsole.MarkupLine($"[yellow]![/] {Markup.Escape(note)}");
 
-                // Step 7: Create MSBuild targets file
                 status("Setting up MSBuild integration...");
                 var buildPath = Path.Combine(Directory.GetCurrentDirectory(), "Build");
                 Directory.CreateDirectory(buildPath);
@@ -158,11 +148,9 @@ public class InitService
                 File.WriteAllText(targetsPath, targetsContent);
                 AnsiConsole.MarkupLine($"[green]Created:[/] Build/ShellUI.targets");
 
-                // Update .csproj to import targets
                 await UpdateProjectFileAsync(projectInfo.ProjectPath, targetsPath);
                 AnsiConsole.MarkupLine($"[green]Updated:[/] {Path.GetFileName(projectInfo.ProjectPath)}");
 
-                // Step 8: Run initial Tailwind build
                 status("Building Tailwind CSS...");
                 if (method == "npm")
                 {
@@ -204,33 +192,27 @@ public class InitService
 
     private static async Task SetupTailwindNpmAsync()
     {
-        // Check if npm is available
         if (!await IsNpmAvailableAsync())
         {
             throw new Exception("npm is not available. Please install Node.js and npm, or choose the 'standalone' Tailwind method.");
         }
 
-        // Install Tailwind CSS packages (v4 with @tailwindcss/cli)
         AnsiConsole.MarkupLine("[cyan]Installing Tailwind CSS packages...[/]");
         await RunNpmCommandAsync("install", "-D", $"tailwindcss@{TailwindConstants.NpmRange}", $"@tailwindcss/cli@{TailwindConstants.NpmRange}");
         AnsiConsole.MarkupLine($"[green]Installed:[/] tailwindcss v{TailwindConstants.Version}, @tailwindcss/cli");
 
-        // Create CSS files
         AnsiConsole.MarkupLine("[cyan]Creating CSS files...[/]");
         var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
         Directory.CreateDirectory(wwwrootPath);
 
-        // Create input.css with npm-compatible imports
         var inputCssPath = Path.Combine(wwwrootPath, "input.css");
         File.WriteAllText(inputCssPath, CssTemplates.InputCssNpm);
         AnsiConsole.MarkupLine($"[green]Created:[/] wwwroot/input.css");
 
-        // Create placeholder app.css
         var appCssPath = Path.Combine(wwwrootPath, "app.css");
         File.WriteAllText(appCssPath, CssTemplates.AppCss);
         AnsiConsole.MarkupLine($"[green]Created:[/] wwwroot/app.css");
 
-        // Create tailwind.config.js for npm
         var tailwindConfigPath = Path.Combine(Directory.GetCurrentDirectory(), "tailwind.config.js");
         File.WriteAllText(tailwindConfigPath, CssTemplates.TailwindConfigJsNpm);
         AnsiConsole.MarkupLine($"[green]Created:[/] tailwind.config.js");
@@ -238,26 +220,21 @@ public class InitService
 
     private static async Task SetupTailwindStandaloneAsync()
     {
-        // Download Tailwind CLI
         AnsiConsole.MarkupLine("[cyan]Downloading Tailwind CSS standalone CLI...[/]");
         var tailwindPath = await TailwindDownloader.EnsureTailwindCliAsync(Directory.GetCurrentDirectory());
 
-        // Create CSS files
         AnsiConsole.MarkupLine("[cyan]Creating CSS files...[/]");
         var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
         Directory.CreateDirectory(wwwrootPath);
 
-        // Create input.css with design tokens
         var inputCssPath = Path.Combine(wwwrootPath, "input.css");
         File.WriteAllText(inputCssPath, CssTemplates.InputCss);
         AnsiConsole.MarkupLine($"[green]Created:[/] wwwroot/input.css");
 
-        // Create placeholder app.css
         var appCssPath = Path.Combine(wwwrootPath, "app.css");
         File.WriteAllText(appCssPath, CssTemplates.AppCss);
         AnsiConsole.MarkupLine($"[green]Created:[/] wwwroot/app.css");
 
-        // Create tailwind.config.js
         var tailwindConfigPath = Path.Combine(Directory.GetCurrentDirectory(), "tailwind.config.js");
         File.WriteAllText(tailwindConfigPath, CssTemplates.TailwindConfigJs);
         AnsiConsole.MarkupLine($"[green]Created:[/] tailwind.config.js");
@@ -267,7 +244,7 @@ public class InitService
     {
         try
         {
-            // Try cmd /c npm --version (most reliable on Windows)
+            // cmd /c is the reliable way to run npm on Windows
             var startInfo = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = "cmd",
@@ -324,7 +301,6 @@ public class InitService
         var inputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "input.css");
         var outputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "app.css");
 
-        // Use npx to run tailwindcss
         var startInfo = new System.Diagnostics.ProcessStartInfo
         {
             FileName = "cmd",
@@ -436,13 +412,11 @@ public class InitService
         var content = await File.ReadAllTextAsync(projectFilePath);
         var targetsImport = $"  <Import Project=\"Build\\ShellUI.targets\" />";
 
-        // Check if import already exists
         if (content.Contains(targetsImport) || content.Contains("ShellUI.targets"))
         {
             return;
         }
 
-        // Insert before closing </Project> tag
         var closingTag = "</Project>";
         var insertIndex = content.LastIndexOf(closingTag);
         
@@ -457,7 +431,6 @@ public class InitService
     {
         var cwd = Directory.GetCurrentDirectory();
 
-        // Blazor Web App / Server / SSR: patch Components/App.razor
         var appRazor = Path.Combine(cwd, "Components", "App.razor");
         if (File.Exists(appRazor))
         {
@@ -471,8 +444,7 @@ public class InitService
             return;
         }
 
-        // Blazor WASM (standalone): patch wwwroot/index.html instead — no Routes/HeadOutlet
-        // render-mode pattern there; just inject theme bootstrap + shellui.js script tag.
+        // WASM has no render mode to patch; only the theme bootstrap and shellui.js are added.
         var indexHtml = Path.Combine(cwd, "wwwroot", "index.html");
         if (File.Exists(indexHtml))
         {
@@ -489,9 +461,7 @@ public class InitService
         AnsiConsole.MarkupLine("[yellow]No Components/App.razor or wwwroot/index.html found — skipped host bootstrap.[/]");
     }
 
-    // Idempotent: a second `shellui init` won't double-inject. Tags that already
-    // carry @rendermode or any other attribute aren't matched, so user customizations
-    // are preserved (they'll need to set @rendermode manually).
+    // Idempotent. Tags that already have attributes are left for the user.
     internal static string RewriteAppRazor(string content)
     {
         // init deletes the template's local Bootstrap copy; CDN links are left alone.
@@ -500,7 +470,7 @@ public class InitService
         content = Regex.Replace(content, @"<HeadOutlet\s*/>", @"<HeadOutlet @rendermode=""InteractiveServer"" />");
         content = Regex.Replace(content, @"<Routes\s*/>", @"<Routes @rendermode=""InteractiveServer"" />");
 
-        // 3. Theme bootstrap in <head> — sets `dark` class before paint to avoid FOUC.
+        // Sets `dark` before first paint to avoid a light flash.
         if (!content.Contains("ShellUI theme bootstrap"))
         {
             const string themeScript =
@@ -515,10 +485,7 @@ public class InitService
             content = Regex.Replace(content, @"</head>", themeScript + "</head>", RegexOptions.IgnoreCase);
         }
 
-        // 4. <script src="shellui.js"></script> immediately before blazor.web.js — provides
-        //    window.ShellUI.* (addClassToDocument, focusElement, copyToClipboard, …) for
-        //    ThemeToggle, CopyButton, InputOTP, FileUpload, Command. The pattern matches
-        //    both the modern `@Assets["_framework/blazor.web.js"]` and the bare form.
+        // shellui.js must load before blazor.web.js; matches both @Assets[...] and the bare form.
         if (!content.Contains("shellui.js"))
         {
             content = Regex.Replace(
@@ -557,8 +524,6 @@ public class InitService
         return content;
     }
 
-    // Idempotent injection of a stylesheet <link> before </head>. Used by post-install
-    // hooks when a component ships a CSS asset (e.g. chart-styles → css/charts.css).
     internal static string InjectStylesheetLink(string content, string href)
     {
         var linkTag = $"<link href=\"{href}\" rel=\"stylesheet\" />";
@@ -569,8 +534,6 @@ public class InitService
         return Regex.Replace(content, @"</head>", $"    {linkTag}\n</head>", RegexOptions.IgnoreCase);
     }
 
-    // Used by ComponentInstaller after `shellui add` so newly-installed CSS assets
-    // are wired into the host without requiring the user to edit App.razor by hand.
     internal static async Task InjectStylesheetIntoHostAsync(string href)
     {
         var cwd = Directory.GetCurrentDirectory();
@@ -611,7 +574,6 @@ public class InitService
             AnsiConsole.MarkupLine("[cyan]Checking for Bootstrap files to clean up...[/]");
             var deletedCount = 0;
 
-            // 1. Delete wwwroot/lib/bootstrap (.NET 9+) and wwwroot/bootstrap (.NET 8)
             foreach (var folder in new[] { Path.Combine("lib", "bootstrap"), "bootstrap" })
             {
                 var bootstrapDir = Path.Combine(wwwrootPath, folder);
@@ -621,7 +583,6 @@ public class InitService
                 deletedCount++;
             }
 
-            // 2. Delete bootstrap css files in wwwroot/css
             var cssPath = Path.Combine(wwwrootPath, "css");
             if (Directory.Exists(cssPath))
             {

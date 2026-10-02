@@ -18,7 +18,6 @@ public static class CalendarTemplate
 @using System.Globalization
 
 <div class=""p-3"">
-    <!-- Header -->
     <div class=""flex items-center justify-between mb-4"">
         <button
             @onclick=""PreviousMonth""
@@ -41,7 +40,6 @@ public static class CalendarTemplate
         </button>
     </div>
 
-    <!-- Days of week -->
     <div class=""grid grid-cols-7 gap-1 mb-2"">
         @foreach (var day in new[] { ""Su"", ""Mo"", ""Tu"", ""We"", ""Th"", ""Fr"", ""Sa"" })
         {
@@ -49,7 +47,6 @@ public static class CalendarTemplate
         }
     </div>
 
-    <!-- Calendar grid -->
     <div class=""grid grid-cols-7 gap-1"">
         @for (int i = 0; i < _leadingDays; i++)
         {

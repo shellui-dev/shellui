@@ -15,7 +15,6 @@
         <p class="text-sm sm:text-base text-muted-foreground">Beautiful, accessible components inspired by shadcn/ui</p>
     </div>
 
-    <!-- Responsive Design Info -->
     <div class="mb-8 rounded-lg border border-border bg-muted/50 p-4 sm:p-6">
         <h2 class="text-lg sm:text-xl font-semibold mb-2 text-foreground">Responsive Design</h2>
         <p class="text-sm text-muted-foreground mb-3">All components support Tailwind's responsive utilities. Resize your browser to see it in action!</p>
@@ -46,7 +45,6 @@
         </p>
     </div>
 
-    <!-- Component Showcases -->
     <div class="mt-12 space-y-8">
         <FormControlsDemo SelectedFruit="@selectedFruit" SelectedFruitChanged="HandleSelectedFruitChanged"
                           AcceptTerms="@acceptTerms" AcceptTermsChanged="HandleAcceptTermsChanged"
@@ -102,7 +100,6 @@
     private bool isSidebarOpen = false;
     private bool isPopoverOpen = false;
 
-    // Form Controls
     private string selectedFruit = "";
     private bool acceptTerms = false;
     private bool notifications = true;
@@ -113,7 +110,6 @@
     private bool togglePressed2 = false;
     private bool togglePressed3 = false;
     
-    // Advanced Forms
     private string otp1 = "";
     private string otp2 = "";
     private string otp3 = "";
@@ -129,7 +125,6 @@
     private string formPhone = "";
     private bool formSubmitted = false;
     
-    // Complex Components
     private bool showAlertDialog = false;
     private bool showCommand = false;
     private DateTime? selectedCalendarDate;
@@ -235,7 +230,6 @@
         };
     }
 
-    // Event Handlers
     private void HandleSelectedFruitChanged(string value) => selectedFruit = value;
     private void HandleAcceptTermsChanged(bool value) => acceptTerms = value;
     private void HandleNotificationsChanged(bool value) => notifications = value;

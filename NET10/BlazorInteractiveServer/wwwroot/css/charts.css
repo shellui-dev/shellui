@@ -7,13 +7,11 @@
 
 .apexcharts-canvas { background: transparent; }
 
-/* Gridlines — subtle horizontal dashes */
 .apexcharts-gridline {
     stroke: var(--border);
     stroke-opacity: 0.6;
 }
 
-/* Axis + legend text */
 .apexcharts-text,
 .apexcharts-xaxis-label,
 .apexcharts-yaxis-label {
@@ -25,11 +23,9 @@
     font-family: inherit;
 }
 
-/* Title + subtitle */
 .apexcharts-title-text { fill: var(--foreground); font-family: inherit; }
 .apexcharts-subtitle-text { fill: var(--muted-foreground); font-family: inherit; }
 
-/* Legend — top-left, circle markers */
 .apexcharts-legend {
     display: flex !important;
     flex-wrap: wrap;
@@ -50,7 +46,6 @@
     flex-shrink: 0;
 }
 
-/* Custom shellui tooltip — compact shadcn look */
 .shellui-chart-tooltip {
     background: var(--popover);
     color: var(--popover-foreground);
@@ -98,7 +93,7 @@
     padding-left: 12px;
 }
 
-/* Kill default ApexCharts tooltip wrapper — we render our own */
+/* Replaced by the custom tooltip */
 .apexcharts-tooltip {
     background: transparent !important;
     border: none !important;
@@ -106,14 +101,12 @@
     padding: 0 !important;
 }
 
-/* Crosshair on hover */
 .apexcharts-xcrosshairs,
 .apexcharts-ycrosshairs {
     stroke: var(--border);
     stroke-dasharray: 3;
 }
 
-/* Toolbar (opt-in via ShowToolbar) */
 .apexcharts-toolbar { z-index: 10; }
 .apexcharts-toolbar-item {
     color: var(--muted-foreground);
@@ -139,7 +132,6 @@
     color: var(--accent-foreground);
 }
 
-/* Data labels */
 .apexcharts-datalabel,
 .apexcharts-datalabel-label,
 .apexcharts-datalabel-value {

@@ -19,9 +19,9 @@
     [Parameter] public string? Class { get; set; }
     [Parameter] public string? Height { get; set; } = "400px";
     [Parameter] public string? Width { get; set; } = "100%";
-    /// Show ApexCharts' zoom/pan/download toolbar. Off by default (shadcn aesthetic).
+    /// Show ApexCharts' zoom/pan/download toolbar.
     [Parameter] public bool ShowToolbar { get; set; }
-    /// Show the series legend. Defaults to true; set false on single-series charts for a cleaner look.
+    /// Show the series legend.
     [Parameter] public bool ShowLegend { get; set; } = true;
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -35,14 +35,12 @@
             {
                 _chartOptions = ChartVariants.GetOptions<TItem>(Theme, ShowToolbar, ShowLegend);
                 
-                // Apply title if provided
                 if (!string.IsNullOrEmpty(Title))
                 {
                     _chartOptions.Title = _chartOptions.Title ?? new ApexCharts.Title();
                     _chartOptions.Title.Text = Title;
                 }
                 
-                // Apply subtitle if provided
                 if (!string.IsNullOrEmpty(Subtitle))
                 {
                     _chartOptions.Subtitle = _chartOptions.Subtitle ?? new ApexCharts.Subtitle();

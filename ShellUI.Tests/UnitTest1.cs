@@ -9,7 +9,6 @@ public class ComponentRegistryTests
     [Fact]
     public void ComponentRegistry_ContainsExpectedComponents()
     {
-        // Test that all components are registered
         Assert.True(ComponentRegistry.Exists("button"));
         Assert.True(ComponentRegistry.Exists("alert"));
         Assert.True(ComponentRegistry.Exists("badge"));
@@ -38,7 +37,6 @@ public class TemplateTests
     [Fact]
     public void TemplateContent_ContainsNamespacePlaceholder()
     {
-        // Templates use a placeholder namespace that gets replaced during installation
         var content = ComponentRegistry.GetComponentContent("button");
         Assert.Contains("@namespace YourProjectNamespace.Components.UI", content);
     }
@@ -46,7 +44,6 @@ public class TemplateTests
     [Fact]
     public void TemplateContent_UsesReplacableNamespace()
     {
-        // Button template uses placeholder namespace that CLI replaces with user's namespace
         var content = ComponentRegistry.GetComponentContent("button");
         Assert.Contains("YourProjectNamespace", content);
     }

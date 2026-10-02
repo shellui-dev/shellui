@@ -4,7 +4,6 @@
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Form Controls</h2>
     <div class="space-y-6">
-        <!-- Select Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Select</h3>
             <div class="max-w-xs">
@@ -22,7 +21,6 @@
             </div>
         </div>
 
-        <!-- Checkbox & Switch Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Checkbox & Switch</h3>
             <div class="space-y-4">
@@ -37,7 +35,6 @@
             </div>
         </div>
 
-        <!-- Radio Group Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Radio Group</h3>
             <CascadingValue Value="@_radioGroup">
@@ -53,7 +50,6 @@
             }
         </div>
 
-        <!-- Slider Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Slider</h3>
             <div class="space-y-4">
@@ -68,7 +64,6 @@
             </div>
         </div>
 
-        <!-- Toggle Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Toggle</h3>
             <div class="flex items-center space-x-4">
@@ -87,7 +82,6 @@
 </section>
 
 @code {
-    // Local state
     private string _selectedFruit = "";
     private bool _acceptTerms = false;
     private bool _notifications = true;
@@ -99,7 +93,6 @@
     private bool _togglePressed2 = false;
     private bool _togglePressed3 = false;
 
-    // Parameters for parent sync (optional)
     [Parameter] public string SelectedFruit { get; set; } = "";
     [Parameter] public EventCallback<string> SelectedFruitChanged { get; set; }
     [Parameter] public bool AcceptTerms { get; set; } = false;
@@ -122,7 +115,6 @@
 
     protected override void OnParametersSet()
     {
-        // Sync parameters to local state
         if (SelectedFruit != _selectedFruit) _selectedFruit = SelectedFruit;
         if (AcceptTerms != _acceptTerms) _acceptTerms = AcceptTerms;
         if (Notifications != _notifications) _notifications = Notifications;

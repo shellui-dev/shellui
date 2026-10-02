@@ -25,7 +25,6 @@ public static class DataTableTemplate
 @namespace YourProjectNamespace.Components.UI
 
 <div class=""w-full"" @onclick=""CloseActionsDropdown"">
-    <!-- Filters -->
     @if (ShowFilters)
     {
         <div class=""flex items-center py-4"">
@@ -38,7 +37,6 @@ public static class DataTableTemplate
         </div>
     }
 
-    <!-- Table -->
     <div class=""rounded-md border border-border overflow-x-auto"">
         <table class=""w-full min-w-[640px] caption-bottom text-sm"">
             <thead class=""[&_tr]:border-b"">
@@ -135,7 +133,6 @@ public static class DataTableTemplate
         </table>
     </div>
 
-    <!-- Pagination -->
     @if (ShowPagination && (_filteredItems.Any() || (ServerSide && _serverTotalCount > 0)))
     {
         <div class=""flex flex-col gap-4 px-2 py-4 sm:flex-row sm:items-center sm:justify-between"">
@@ -213,13 +210,11 @@ public static class DataTableTemplate
     [Parameter]
     public EventCallback<HashSet<TItem>> SelectedItemsChanged { get; set; }
 
-    /// When true, `Items` is ignored and the table calls `OnDataRequest` for each
-    /// filter / sort / page change. Use for datasets too large to materialize client-side.
+    /// Load each page through OnDataRequest instead of filtering Items.
     [Parameter]
     public bool ServerSide { get; set; }
 
-    /// Required when `ServerSide` is true. Receives the current DataTableRequest
-    /// (skip/take/sort/search) and returns the page of items plus total count.
+    /// Called for each filter, sort or page change when ServerSide is true.
     [Parameter]
     public Func<DataTableRequest, Task<DataTableResponse<TItem>>>? OnDataRequest { get; set; }
 
@@ -279,7 +274,6 @@ public static class DataTableTemplate
 
     private void UpdateFilteredItems()
     {
-        // Apply filtering
         _filteredItems = string.IsNullOrWhiteSpace(_filterText)
             ? Items
             : Items.Where(item =>
@@ -294,7 +288,6 @@ public static class DataTableTemplate
                     return false;
                 }));
 
-        // Apply sorting
         var sortColumn = Columns.FirstOrDefault(c => c.SortDirection != SortDirection.None);
         if (sortColumn != null)
         {
@@ -302,7 +295,6 @@ public static class DataTableTemplate
             _filteredItems = _filteredItems.AsQueryable().OrderBy($""{sortColumn.PropertyName} {sortDirection}"");
         }
 
-        // Update pagination
         _totalPages = (int)Math.Ceiling(_filteredItems.Count() / (double)_pageSize);
         _currentPage = Math.Min(_currentPage, Math.Max(1, _totalPages));
         _startIndex = (_currentPage - 1) * _pageSize + 1;

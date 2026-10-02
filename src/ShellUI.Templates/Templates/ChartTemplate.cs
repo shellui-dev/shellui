@@ -56,14 +56,12 @@ public class ChartTemplate
             {
                 _chartOptions = ChartVariants.GetOptions<TItem>(Theme, ShowToolbar, ShowLegend);
                 
-                // Apply title if provided
                 if (!string.IsNullOrEmpty(Title))
                 {
                     _chartOptions.Title = _chartOptions.Title ?? new ApexCharts.Title();
                     _chartOptions.Title.Text = Title;
                 }
                 
-                // Apply subtitle if provided
                 if (!string.IsNullOrEmpty(Subtitle))
                 {
                     _chartOptions.Subtitle = _chartOptions.Subtitle ?? new ApexCharts.Subtitle();

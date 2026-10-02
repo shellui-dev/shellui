@@ -36,7 +36,6 @@ public class ProjectDetector
     {
         var projectDir = Path.GetDirectoryName(csprojPath) ?? "";
         
-        // Check for Program.cs patterns
         var programCsPath = Path.Combine(projectDir, "Program.cs");
         if (File.Exists(programCsPath))
         {
@@ -52,7 +51,6 @@ public class ProjectDetector
                 return ProjectType.BlazorServerSideRendering;
         }
 
-        // Fallback: check SDK
         var sdk = doc.Root?.Attribute("Sdk")?.Value ?? "";
         if (sdk.Contains("Web"))
             return ProjectType.BlazorServerSideRendering;

@@ -7,10 +7,7 @@ using Xunit;
 
 namespace ShellUI.Tests;
 
-/// Regenerates the safelist in-process and diffs against the committed file.
-/// If a contributor adds a new Tailwind class to a component but forgets to
-/// regenerate the safelist, this test fails with a precise diff of which
-/// classes are missing — so NuGet consumers don't ship with broken styles.
+/// Fails when a component uses Tailwind classes missing from the committed safelist.
 public class SafelistDriftTests
 {
     private const string RegenerateCommand =
@@ -28,8 +25,7 @@ public class SafelistDriftTests
         Assert.True(Directory.Exists(componentsDir), $"components dir not found: {componentsDir}");
         Assert.True(File.Exists(safelistPath), $"safelist not found at {safelistPath}. Run: {RegenerateCommand}");
 
-        // Use the same source enumeration the CLI uses (dual .razor + .cs, minus
-        // bin/obj). Diverging file lists would produce false-positive drifts.
+        // Same file set as the CLI, or the diff reports false drift.
         var (razorFiles, csFiles) = Program.EnumerateSources(componentsDir);
         var freshlyGenerated = Program.GenerateSafelist(razorFiles.Concat(csFiles));
         var committed = File.ReadAllLines(safelistPath)
@@ -46,10 +42,7 @@ public class SafelistDriftTests
     [Fact]
     public void GeneratedTargetsFile_IsValidXml()
     {
-        // XML 1.0 disallows `--` inside comment bodies. Some MSBuild versions are
-        // permissive (Windows .NET 10.300 accepts it); strict parsers reject the
-        // whole file with MSB4024. Run an actual XML parse so we catch this and
-        // any other malformed-XML class of bug before the consumer's build does.
+        // XML 1.0 forbids `--` in comments, and strict MSBuild versions reject the file (MSB4024).
         var targetsPath = ResolveTargetsPath();
         Assert.True(File.Exists(targetsPath), $"targets file not found at {targetsPath}");
 
@@ -64,11 +57,7 @@ public class SafelistDriftTests
     [Fact]
     public void GeneratedTargetsFile_EmbedsSameClassesAsSafelist()
     {
-        // The build/ShellUI.Components.targets file ships in the NuGet package and
-        // writes the safelist into the consumer's wwwroot/ at build time. If the
-        // embedded ItemGroup drifts from the .txt source-of-truth, NuGet consumers
-        // see different classes than CLI consumers — bug class we want to never
-        // ship.
+        // The packaged .targets must embed the same list as the .txt.
         var safelistPath = ResolveSafelistPath();
         var targetsPath = ResolveTargetsPath();
 

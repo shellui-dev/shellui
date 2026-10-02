@@ -2,9 +2,7 @@ using System.Collections.Generic;
 
 namespace BlazorInteractiveServer.Components.UI.Variants;
 
-/* Chart color themes.
-   Default matches the theme file's --chart-1..5 shadcn warm palette;
-   the other two are alternates for emphasis or minimal aesthetic. */
+// Default matches the theme's --chart-1..5 palette.
 public enum ChartTheme
 {
     Default,
@@ -12,10 +10,7 @@ public enum ChartTheme
     Monochrome
 }
 
-/* ApexCharts configuration tuned to the shadcn/ui chart aesthetic.
-   ApexCharts accepts colors as JS strings only, so palettes use oklch literals
-   mirroring the theme's --chart-N tokens. Grid, axis, tooltip, and legend chrome
-   is styled via companion CSS (charts.css). */
+// ApexCharts only accepts JS color strings, so palettes mirror the --chart-N tokens; the chrome is styled in CSS.
 public static class ChartVariants
 {
     public static ApexCharts.ApexChartOptions<TItem> GetOptions<TItem>(ChartTheme theme = ChartTheme.Default, bool showToolbar = false, bool showLegend = true) where TItem : class
@@ -130,8 +125,7 @@ public static class ChartVariants
                     const isCircular = ['pie', 'donut', 'radialBar', 'polarArea'].indexOf(type) >= 0
                         || (Array.isArray(series) && series.length > 0 && typeof series[0] === 'number');
 
-                    // Resolve x-axis label from the first source that has a real string.
-                    // ApexCharts stashes category names in different globals depending on axis type.
+                    // ApexCharts keeps category names in different globals depending on axis type.
                     function xLabelAt(i) {
                         const sources = [w.globals.categoryLabels, w.config.xaxis && w.config.xaxis.categories, w.globals.labels];
                         for (const s of sources) {
@@ -203,7 +197,7 @@ public static class ChartVariants
                     ExpandOnClick = true,
                     DataLabels = new ApexCharts.PieDataLabels
                     {
-                        MinAngleToShowLabel = 360 // never show the slice callout labels — tooltip does the talking
+                        MinAngleToShowLabel = 360 // labels off; the tooltip shows values
                     },
                     Donut = new ApexCharts.PlotOptionsDonut
                     {
@@ -239,9 +233,7 @@ public static class ChartVariants
         };
     }
 
-    /* Chart palettes.
-       ApexCharts doesn't support CSS variables in color arrays, so we use literal colors.
-       Text and borders use CSS variables (styled via CSS) for automatic dark mode support. */
+    // ApexCharts color arrays can't use CSS variables.
     private static List<string> GetThemeColors(ChartTheme theme)
     {
         return theme switch

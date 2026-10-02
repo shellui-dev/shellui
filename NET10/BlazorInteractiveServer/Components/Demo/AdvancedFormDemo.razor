@@ -4,7 +4,6 @@
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Advanced Forms</h2>
     <div class="space-y-6">
-        <!-- Input OTP Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Input OTP</h3>
             <div class="space-y-6">
@@ -41,7 +40,6 @@
             </div>
         </div>
 
-        <!-- Combobox Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Combobox</h3>
             <div class="space-y-4">
@@ -68,7 +66,6 @@
             </div>
         </div>
 
-        <!-- Date Picker Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Date Picker</h3>
             <div class="space-y-4 max-w-xs">
@@ -103,7 +100,6 @@
             </div>
         </div>
 
-        <!-- Time Picker Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Time Picker</h3>
             <div class="max-w-xs">
@@ -115,7 +111,6 @@
             </div>
         </div>
 
-        <!-- Form Demo -->
         <div>
             <h3 class="text-xl font-semibold mb-2 text-card-foreground">Form</h3>
             <Form OnValidSubmit="HandleFormSubmit" ClassName="space-y-4">
@@ -146,7 +141,6 @@
 </section>
 
 @code {
-    // Local state
     private string _otp1 = "";
     private string _otp2 = "";
     private string _otp3 = "";
@@ -162,7 +156,6 @@
     private string _formPhone = "";
     private bool _formSubmitted = false;
 
-    // Parameters for parent sync (optional)
     [Parameter] public string Otp1 { get; set; } = "";
     [Parameter] public EventCallback<string> Otp1Changed { get; set; }
     [Parameter] public string Otp2 { get; set; } = "";
@@ -204,7 +197,6 @@
 
     protected override void OnParametersSet()
     {
-        // Sync parameters to local state
         if (Otp1 != _otp1) _otp1 = Otp1;
         if (Otp2 != _otp2) _otp2 = Otp2;
         if (Otp3 != _otp3) _otp3 = Otp3;

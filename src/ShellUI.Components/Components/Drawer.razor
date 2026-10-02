@@ -39,7 +39,10 @@ else if (Open)
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private bool UseCompositional => string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Description);
+    // CLI templates need Compositional="true"; the package also switches when Title and Description are empty.
+    [Parameter] public bool Compositional { get; set; }
+
+    private bool UseCompositional => Compositional || (string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Description));
 
     private async Task Close()
     {

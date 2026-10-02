@@ -8,18 +8,13 @@ using Xunit;
 
 namespace ShellUI.Tests;
 
-/// Asserts the @code block of each live src/ShellUI.Components/Components/*.razor
-/// matches the corresponding CLI template's emitted Content. Compares after stripping
-/// comments, blank lines, and whitespace differences so the legitimate divergence
-/// (namespace, formatting) doesn't fire, but real divergence (parameter list, JS
-/// interop calls, lifecycle methods) does.
+/// Each package component's @code block must match its CLI template, ignoring comments, whitespace and namespace.
 public class TemplateSyncTests
 {
     // Component name → reason. Empty by default — fix the drift instead of adding entries.
     private static readonly Dictionary<string, string> AllowedDrift = new()
     {
-        // Live version imports the NuGet-package shellui.js module (Path A/B); template
-        // calls window.ShellUI directly (Path C, where shellui-js drops the monolith).
+        // The package imports the shellui.js module; the template calls window.ShellUI.
         ["command-palette"] = "JS-interop path differs between package (module import) and CLI template (window.ShellUI global).",
         ["input-otp"] = "JS-interop path differs between package (module import + fallback) and CLI template (window.ShellUI global)."
     };
@@ -84,6 +79,56 @@ public class TemplateSyncTests
     [InlineData("accordion-item", "AccordionItem.razor")]
     [InlineData("accordion-trigger", "AccordionTrigger.razor")]
     [InlineData("accordion-content", "AccordionContent.razor")]
+    [InlineData("breadcrumb", "Breadcrumb.razor")]
+    [InlineData("breadcrumb-item", "BreadcrumbItem.razor")]
+    [InlineData("breadcrumb-list", "BreadcrumbList.razor")]
+    [InlineData("breadcrumb-link", "BreadcrumbLink.razor")]
+    [InlineData("breadcrumb-page", "BreadcrumbPage.razor")]
+    [InlineData("breadcrumb-separator", "BreadcrumbSeparator.razor")]
+    [InlineData("breadcrumb-ellipsis", "BreadcrumbEllipsis.razor")]
+    [InlineData("pagination-content", "PaginationContent.razor")]
+    [InlineData("pagination-item", "PaginationItem.razor")]
+    [InlineData("pagination-link", "PaginationLink.razor")]
+    [InlineData("pagination-previous", "PaginationPrevious.razor")]
+    [InlineData("pagination-next", "PaginationNext.razor")]
+    [InlineData("pagination-ellipsis", "PaginationEllipsis.razor")]
+    [InlineData("sheet-header", "SheetHeader.razor")]
+    [InlineData("sheet-title", "SheetTitle.razor")]
+    [InlineData("sheet-description", "SheetDescription.razor")]
+    [InlineData("sheet-footer", "SheetFooter.razor")]
+    [InlineData("sheet-close", "SheetClose.razor")]
+    [InlineData("drawer-header", "DrawerHeader.razor")]
+    [InlineData("drawer-title", "DrawerTitle.razor")]
+    [InlineData("drawer-description", "DrawerDescription.razor")]
+    [InlineData("drawer-footer", "DrawerFooter.razor")]
+    [InlineData("drawer-close", "DrawerClose.razor")]
+    [InlineData("alert-dialog", "AlertDialog.razor")]
+    [InlineData("alert-dialog-trigger", "AlertDialogTrigger.razor")]
+    [InlineData("alert-dialog-content", "AlertDialogContent.razor")]
+    [InlineData("alert-dialog-header", "AlertDialogHeader.razor")]
+    [InlineData("alert-dialog-title", "AlertDialogTitle.razor")]
+    [InlineData("alert-dialog-description", "AlertDialogDescription.razor")]
+    [InlineData("alert-dialog-footer", "AlertDialogFooter.razor")]
+    [InlineData("alert-dialog-action", "AlertDialogAction.razor")]
+    [InlineData("alert-dialog-cancel", "AlertDialogCancel.razor")]
+    [InlineData("form", "Form.razor")]
+    [InlineData("form-field", "FormField.razor")]
+    [InlineData("form-item", "FormItem.razor")]
+    [InlineData("form-label", "FormLabel.razor")]
+    [InlineData("form-control", "FormControl.razor")]
+    [InlineData("form-description", "FormDescription.razor")]
+    [InlineData("form-message", "FormMessage.razor")]
+    [InlineData("menubar-item", "MenubarItem.razor")]
+    [InlineData("menubar-menu", "MenubarMenu.razor")]
+    [InlineData("menubar-trigger", "MenubarTrigger.razor")]
+    [InlineData("menubar-content", "MenubarContent.razor")]
+    [InlineData("menubar-separator", "MenubarSeparator.razor")]
+    [InlineData("command-input", "CommandInput.razor")]
+    [InlineData("command-list", "CommandList.razor")]
+    [InlineData("command-group", "CommandGroup.razor")]
+    [InlineData("command-option", "CommandOption.razor")]
+    [InlineData("command-empty", "CommandEmpty.razor")]
+    [InlineData("command-separator", "CommandSeparator.razor")]
     public void TemplateCodeBlock_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         if (AllowedDrift.ContainsKey(templateName)) return;
@@ -120,8 +165,6 @@ public class TemplateSyncTests
         Assert.True(live == generated, "Drift detected between live ChartVariants.cs and template chart-variants.\n\n" + DiffSummary(live, generated));
     }
 
-    // [CallerFilePath] captures the absolute path of this source file at compile time,
-    // so the test resolves the live components directory regardless of cwd on CI.
     private static string GetLiveRazorPath(string razorFileName, [CallerFilePath] string thisFile = "")
     {
         var testDir = Path.GetDirectoryName(thisFile) ?? throw new InvalidOperationException("CallerFilePath is empty");
@@ -161,9 +204,7 @@ public class TemplateSyncTests
         return diffs.Length == 0 ? "(no per-line diff — file lengths differ)" : diffs.ToString();
     }
 
-    /// Extracts the body of the first `@code { ... }` block, balancing braces while
-    /// respecting strings, verbatim strings, char literals, line comments, and block comments.
-    /// Returns null if no `@code` block is found or braces are unbalanced.
+    /// Body of the first `@code { }` block, or null if missing or unbalanced.
     private static string? ExtractCodeBlock(string razor)
     {
         var match = Regex.Match(razor, @"@code\s*\{");

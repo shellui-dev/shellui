@@ -1,0 +1,17 @@
+@namespace ShellUI.Components
+
+<div @onclick="Close" @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code {
+    [CascadingParameter] private Sheet? Parent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private async Task Close()
+    {
+        if (Parent != null) await Parent.SetOpen(false);
+    }
+}
