@@ -63,7 +63,7 @@
                         <button type="button"
                                 @onclick="() => SelectItem(item)"
                                 @onmouseenter="() => _highlightedIndex = localIdx"
-                                class="@Shell.Cn("relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none", isHighlighted ? "bg-accent text-accent-foreground" : "", isSelected && !isHighlighted ? "bg-accent/50" : "")">
+                                class="@Shell.Cn("relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 text-left pl-2 pr-8 text-sm outline-none", isHighlighted ? "bg-accent text-accent-foreground" : "", isSelected && !isHighlighted ? "bg-accent/50" : "")">
                             @if (OptionTemplate is not null)
                             {
                                 @OptionTemplate(item)
