@@ -1,5 +1,17 @@
 # ShellUI Release Notes
 
+# ShellUI v0.3.1
+
+> A patch release for the `ShellUI.Components` NuGet package. The CLI and its templates have no changes beyond the version number.
+
+## 🐛 Fixes
+
+- `Calendar`, `Command`, `DataTable`, `FileUpload`, `CarouselContent`, `CarouselDots`, `CarouselNext` and `CarouselPrevious` compiled into the `ShellUI.Components.Components` namespace, so `@using ShellUI.Components` did not find them. They are now in `ShellUI.Components` like every other component, and a test checks that every package component declares that namespace.
+
+## ⬆️ Upgrading
+
+Update the package to `0.3.1`. If you added `@using ShellUI.Components.Components` to work around this, remove it: that namespace no longer exists, so the line now fails the build.
+
 # ShellUI v0.3.0 🎉
 
 > The first stable release of the 0.3 line. It builds on .NET 10 and Tailwind CSS 4.3.2 and ships everything from the 0.3.0 alphas and release candidates. A plain `dotnet tool install` now picks it up, so `--version` is no longer needed. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
