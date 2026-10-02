@@ -50,6 +50,17 @@ public class ClassParameterTests
             string.Join("\n  ", offenders));
     }
 
+    // Without it the component lands in ShellUI.Components.Components, which `@using ShellUI.Components` doesn't reach.
+    [Fact]
+    public void EveryPackageComponent_DeclaresThePackageNamespace()
+    {
+        var missing = Directory.GetFiles(GetComponentsDirectory(), "*.razor")
+            .Where(path => !Regex.IsMatch(File.ReadAllText(path), @"^@namespace ShellUI\.Components\s*$", RegexOptions.Multiline))
+            .Select(Path.GetFileName)
+            .ToList();
+        Assert.True(missing.Count == 0, "Package components without `@namespace ShellUI.Components`:\n  " + string.Join("\n  ", missing));
+    }
+
     private static string GetComponentsDirectory([CallerFilePath] string thisFile = "")
     {
         var testDir = Path.GetDirectoryName(thisFile) ?? throw new InvalidOperationException("CallerFilePath is empty");
