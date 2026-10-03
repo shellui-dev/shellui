@@ -9,11 +9,14 @@ namespace ShellUI.CLI.Services;
 
 public class InitService
 {
-    public static async Task InitializeAsync(string style, bool force, string tailwindMethod = "standalone", bool nonInteractive = false,
+    public static async Task InitializeAsync(string style, bool force, string? tailwindMethod = null, bool nonInteractive = false,
         string? dashboard = null, LayoutSwitch layoutSwitch = LayoutSwitch.Ask)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
         var dashboardChoice = DashboardSetup.ParseDashboardOption(dashboard) ?? (nonInteractive ? "none" : null);
+        var tailwindChoice = tailwindMethod?.Trim().ToLowerInvariant();
+        if (tailwindChoice is not (null or "standalone" or "npm"))
+            throw new ArgumentException($"Unknown --tailwind value '{tailwindMethod}'. Use standalone or npm.");
 
         if (File.Exists(configPath) && !force)
         {
@@ -31,10 +34,15 @@ public class InitService
         AnsiConsole.MarkupLine("[cyan]Setting up Tailwind CSS...[/]");
         string method;
 
-        if (nonInteractive)
+        if (tailwindChoice != null)
         {
-            method = tailwindMethod;
-            AnsiConsole.MarkupLine($"[green]✅ Selected:[/] {method} (non-interactive mode)");
+            method = tailwindChoice;
+            AnsiConsole.MarkupLine($"[green]✅ Tailwind:[/] {method}");
+        }
+        else if (nonInteractive)
+        {
+            method = "standalone";
+            AnsiConsole.MarkupLine("[green]✅ Tailwind:[/] standalone [dim](default with --yes; pass --tailwind npm to use npm)[/]");
         }
         else
         {
