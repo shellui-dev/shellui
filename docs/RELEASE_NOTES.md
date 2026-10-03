@@ -1,5 +1,37 @@
 # ShellUI Release Notes
 
+# ShellUI v0.3.2
+
+> A patch release with component fixes for both the `ShellUI.Components` NuGet package and the CLI templates.
+
+## 🐛 Fixes
+
+- `MultiSeriesChart` threw on every render in the NuGet package. It now renders, inside the same card as `Chart`.
+- NuGet package: `ThemeToggle` flipped its icon but did not change the theme, dialogs, sheets and drawers did not lock page scrolling, and close-on-scroll dropdowns stayed open. The package's `shellui.js` now loads automatically through a Blazor JS initializer, with no `<script>` tag needed, and includes the functions `ThemeToggle`, `ThemeService` and `FileUpload` call.
+- `ThemeToggle` kept a list of instances shared by every user on Blazor Server, so one user's toggle tried to re-render other users' components. Toggles now follow the page's `dark` class, so all toggles on a page stay in sync and start from the page's actual theme.
+- `DatePicker` and `DateRangePicker`: the calendar popover has a width, so it is no longer squeezed in a flex row.
+- `DataPicker` and `MultiSelect`: option rows are left-aligned, so custom `OptionTemplate`s no longer render centered.
+- Removed leftover files from the Razor class library template (`Component1`, `ExampleJsInterop`, `background.png`) from the package.
+
+A new test renders every package component and fails on parameter errors like the `MultiSeriesChart` one.
+
+## ⬆️ Upgrading
+
+- **NuGet package:** update to `0.3.2`.
+- **CLI:** update the tool, then run `shellui update` to rewrite installed components, including `shellui.js`, from the new templates. `update` overwrites the files, so commit or back up any components you customized first.
+
+# ShellUI v0.3.1
+
+> A patch release for the `ShellUI.Components` NuGet package. The CLI and its templates have no changes beyond the version number.
+
+## 🐛 Fixes
+
+- `Calendar`, `Command`, `DataTable`, `FileUpload`, `CarouselContent`, `CarouselDots`, `CarouselNext` and `CarouselPrevious` compiled into the `ShellUI.Components.Components` namespace, so `@using ShellUI.Components` did not find them. They are now in `ShellUI.Components` like every other component, and a test checks that every package component declares that namespace.
+
+## ⬆️ Upgrading
+
+Update the package to `0.3.1`. If you added `@using ShellUI.Components.Components` to work around this, remove it: that namespace no longer exists, so the line now fails the build.
+
 # ShellUI v0.3.0 🎉
 
 > The first stable release of the 0.3 line. It builds on .NET 10 and Tailwind CSS 4.3.2 and ships everything from the 0.3.0 alphas and release candidates. A plain `dotnet tool install` now picks it up, so `--version` is no longer needed. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
