@@ -143,13 +143,13 @@ public class ComponentInstaller
         return Task.FromResult(result != InstallResult.Failed);
     }
 
-    public static void InstallComponent(string componentName, ComponentMetadata metadata, bool force, bool skipConfig = false)
+    public static bool InstallComponent(string componentName, ComponentMetadata metadata, bool force, bool skipConfig = false)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
         var configJson = File.ReadAllText(configPath);
         var config = JsonSerializer.Deserialize<ShellUIConfig>(configJson);
 
-        if (config == null) return;
+        if (config == null) return false;
 
         var projectInfo = ProjectDetector.DetectProject();
         var result = InstallComponentInternal(componentName, config, projectInfo, force);
@@ -159,6 +159,7 @@ public class ComponentInstaller
             var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(configPath, updatedJson);
         }
+        return result != InstallResult.Failed;
     }
 
     public static bool EnsureShellUiJs()
