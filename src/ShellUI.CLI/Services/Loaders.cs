@@ -9,8 +9,7 @@ public static class Loaders
         AnsiConsole.Status().Spinner(SnakeSpinner.Instance).SpinnerStyle(Style.Parse("green"));
 }
 
-// The Loading component's "snake" grid (3x3) as a one-line spinner. A Braille cell is 2 dots wide
-// and 4 tall, so the grid fits in two characters. Spectre falls back to ASCII without Unicode.
+// The Loading "snake" grid as a two-character Braille spinner; Spectre falls back to ASCII without Unicode.
 public sealed class SnakeSpinner : Spinner
 {
     private static readonly int[] Path = { 0, 1, 2, 5, 8, 7, 6, 3 };
@@ -41,8 +40,7 @@ public sealed class SnakeSpinner : Spinner
     }
 }
 
-// The Loading component's "logo" variant: the 5x5 ShellUI mark lights up along the diagonal,
-// with the current step beside it. Falls back to the snake spinner when there is no terminal.
+// The Loading "logo" variant beside the current step; the snake spinner is used when there is no terminal.
 public static class LogoLoader
 {
     private static readonly string[] Pattern = { "X...X", ".X..X", "..X.X", ".X..X", "X...X" };

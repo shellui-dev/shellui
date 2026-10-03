@@ -132,8 +132,7 @@ public class TemplateCompileTests
         Assert.True(orphans.Count == 0, "Hidden entries no installable target depends on:\n  " + string.Join("\n  ", orphans));
     }
 
-    // `shellui add <target>` alone must compile: every project namespace a file imports has to be declared
-    // by a file the same install writes. The all-components CI sweep can't see this, since other files fill the gap.
+    // `shellui add <target>` alone must compile; the all-components CI sweep can't catch a namespace only another target declares.
     [Fact]
     public void EveryDirectTarget_ImportsOnlyNamespacesItInstalls()
     {

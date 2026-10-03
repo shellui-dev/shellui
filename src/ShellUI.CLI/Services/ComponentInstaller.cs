@@ -404,8 +404,7 @@ public class ComponentInstaller
         return failed;
     }
 
-    // Consumer pages reference helper types such as ButtonVariant and CommandItem, which live in
-    // sub-namespaces; the imports are only added once an installed file declares that namespace.
+    // Pages use helper types such as ButtonVariant from sub-namespaces, imported once an installed file declares them.
     public static IEnumerable<string> RequiredImports(string rootNamespace, IEnumerable<string> templateContents)
     {
         var contents = templateContents.ToList();

@@ -4,8 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace ShellUI.CLI.Services;
 
-// init removes Bootstrap, so the template's sample pages lose their styling. Unmodified copies are
-// restyled with Tailwind classes that match ShellUI's Button and Table; edited pages are only reported.
+// init removes Bootstrap; unmodified sample pages get ShellUI's Tailwind classes and edited ones are only reported.
 public static class StockPages
 {
     // `dotnet new blazor` pages for net8.0/net9.0/net10.0 across --interactivity, --all-interactive and --auth.

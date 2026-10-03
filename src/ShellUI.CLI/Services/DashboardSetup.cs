@@ -22,8 +22,7 @@ public static class DashboardSetup
 
     internal const string StockProjectName = "ShellStockProbe";
 
-    // `dotnet new blazor` output for net8.0/net9.0/net10.0 across --interactivity, --all-interactive, --auth and --empty,
-    // hashed after NormalizeStock.
+    // `dotnet new blazor` for net8.0/net9.0/net10.0 across --interactivity, --all-interactive, --auth and --empty, after NormalizeStock.
     private static readonly Dictionary<string, HashSet<string>> StockHashes = new(StringComparer.OrdinalIgnoreCase)
     {
         ["MainLayout.razor"] = new(StringComparer.Ordinal)
