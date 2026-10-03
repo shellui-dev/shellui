@@ -249,6 +249,7 @@ else if (IsOpen)
     private async Task SelectAsync(CommandItem command)
     {
         await CloseAsync();
+        if (command.Action is not null) await command.Action();
         await CommandSelected.InvokeAsync(command);
     }
 
