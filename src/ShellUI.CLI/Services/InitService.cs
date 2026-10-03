@@ -139,6 +139,9 @@ public class InitService
                 foreach (var note in pages.Notes)
                     AnsiConsole.MarkupLine($"[yellow]![/] {Markup.Escape(note)}");
 
+                if (DashboardSetup.IsIdentityApp(Directory.GetCurrentDirectory()))
+                    AnsiConsole.MarkupLine($"[yellow]![/] {Markup.Escape(AuthSetup.Hint)}");
+
                 status("Setting up MSBuild integration...");
                 var buildPath = Path.Combine(Directory.GetCurrentDirectory(), "Build");
                 Directory.CreateDirectory(buildPath);

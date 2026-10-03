@@ -68,7 +68,7 @@ Dependencies are copied automatically. Use `--force` to overwrite an existing co
 shellui add button --force
 ```
 
-Use the exact names shown by `shellui list`. There are 90 direct targets; dependency-only registry entries are not direct targets.
+Use the exact names shown by `shellui list`. There are 93 direct targets; dependency-only registry entries are not direct targets.
 
 ## Use a component
 

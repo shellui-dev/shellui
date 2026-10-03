@@ -90,6 +90,10 @@ public class ComponentInstaller
         {
             await DashboardSetup.WireAsync(dashboard, projectInfo, config, layoutSwitch);
         }
+        foreach (var auth in componentList.Where(c => AuthSetup.Layouts.ContainsKey(c) && installedSet.Contains(c)))
+        {
+            await AuthSetup.WireAsync(auth, projectInfo, config);
+        }
 
         var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions
         {

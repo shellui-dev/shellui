@@ -37,7 +37,7 @@ dotnet watch
 |---|---|
 | `init` | Set up ShellUI and Tailwind in the current project |
 | `add <names...>` | Install components and their dependencies |
-| `list` | List the 90 components, with `--installed` or `--available` filters |
+| `list` | List the 93 components, with `--installed` or `--available` filters |
 | `remove <names...>` | Delete installed component files |
 | `update [names...]` | Rewrite installed components from the current templates (`--all` for every one) |
 | `theme init <url-or-id>` | Run `init`, then apply a [tweakcn](https://tweakcn.com) theme |

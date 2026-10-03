@@ -124,6 +124,17 @@ jobs:
         grep -q '"/counter"' Components/UI/AppSidebar.razor || (echo "AppSidebar links were not built from the pages"; exit 1)
         dotnet build -c Debug
 
+        cd "$TMPDIR/app"
+        dotnet new blazor -o IdentityApp --auth Individual --no-restore
+        cd IdentityApp
+        shellui init --tailwind standalone --yes --dashboard 02
+        grep -q '<SidebarAccount />' Components/UI/AppSidebar.razor || (echo "the sidebar footer has no account menu"; exit 1)
+        grep -q 'StartsWithSegments("/Account")' Components/App.razor || (echo "Identity pages are not kept static"; exit 1)
+        shellui add auth-01
+        grep -q '@layout IdentityApp.Components.Layout.AuthLayout01' Components/Account/Pages/_Imports.razor || (echo "auth-01 was not set as the sign-in layout"; exit 1)
+        ! grep -q 'class="form-control"' Components/Account/Pages/Login.razor || (echo "Login.razor was not restyled"; exit 1)
+        dotnet build -c Debug
+
         # Catches missing dependencies that per-template tests can't see.
         ALL=$(python3 - "$GITHUB_WORKSPACE" <<'PY'
         import os, re, sys

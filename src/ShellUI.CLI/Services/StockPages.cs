@@ -106,12 +106,12 @@ public static class StockPages
         var skip = skipDirs.Select(d => d.Replace('\\', '/').Trim('/') + "/").ToList();
         var restyled = new List<string>();
         var leftovers = new List<string>();
-        var accountPages = 0;
 
         foreach (var file in DashboardSetup.EnumerateSources(cwd, "*.razor"))
         {
             var rel = Path.GetRelativePath(cwd, file).Replace('\\', '/');
             if (skip.Any(d => rel.StartsWith(d, StringComparison.OrdinalIgnoreCase))) continue;
+            if (rel.Contains("Components/Account/", StringComparison.OrdinalIgnoreCase)) continue;
 
             var content = File.ReadAllText(file);
             if (IsStock(Path.GetFileName(file), content))
@@ -123,17 +123,13 @@ public static class StockPages
             }
             else if (UsesBootstrap(content))
             {
-                if (rel.Contains("/Account/", StringComparison.OrdinalIgnoreCase)) accountPages++;
-                else leftovers.Add(rel);
+                leftovers.Add(rel);
             }
         }
 
         var notes = leftovers
             .Select(f => $"Kept {f} because it was modified. It still uses Bootstrap classes, which no longer have styles.")
             .ToList();
-        if (accountPages > 0)
-            notes.Add($"{accountPages} Identity page(s) under Account/ still use Bootstrap classes and need restyling.");
-
         return new Result(restyled, notes);
     }
 }
