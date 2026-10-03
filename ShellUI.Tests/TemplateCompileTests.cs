@@ -127,8 +127,9 @@ public class TemplateCompileTests
             foreach (var dep in ComponentRegistry.Components[name].Dependencies ?? new List<string>())
                 stack.Push(dep);
         }
-        // sidebar-js: legacy, kept for projects that still load shellui-sidebar.js.
-        var orphans = ComponentRegistry.Components.Keys.Where(k => !reachable.Contains(k) && k != "sidebar-js").ToList();
+        // Installed outside the dependency graph: sidebar-js (legacy) and sidebar-account (with a dashboard in Identity apps).
+        var installedOtherwise = new[] { "sidebar-js", "sidebar-account" };
+        var orphans = ComponentRegistry.Components.Keys.Where(k => !reachable.Contains(k) && !installedOtherwise.Contains(k)).ToList();
         Assert.True(orphans.Count == 0, "Hidden entries no installable target depends on:\n  " + string.Join("\n  ", orphans));
     }
 

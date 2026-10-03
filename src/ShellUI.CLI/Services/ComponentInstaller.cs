@@ -37,6 +37,8 @@ public class ComponentInstaller
         {
             componentList.AddRange(comp.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
         }
+        if (componentList.Any(DashboardSetup.Layouts.ContainsKey) && DashboardSetup.IsIdentityApp(Directory.GetCurrentDirectory()))
+            componentList.Add("sidebar-account");
 
         var successCount = 0;
         var skippedCount = 0;

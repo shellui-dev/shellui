@@ -142,6 +142,7 @@ public static class DashboardSetup
         }
 
         await UpdateSidebarLinksAsync(cwd, config, changes);
+        await UseAccountMenuAsync(cwd, config, changes, notes);
 
         AnsiConsole.MarkupLine("");
         AnsiConsole.MarkupLine($"[cyan]Dashboard setup ({layoutName}):[/]");
@@ -395,6 +396,47 @@ public static class DashboardSetup
 
         await File.WriteAllTextAsync(sidebarPath, rewritten);
         changes.Add($"AppSidebar.razor: links for your pages ({string.Join(", ", links.Select(l => l.Title))})");
+    }
+
+    private static readonly Regex IdentityRegistration = new(@"\.Add(Identity|IdentityCore|DefaultIdentity)<", RegexOptions.Compiled);
+    private static readonly Regex FooterPattern = new(@"<SidebarFooter>.*?</SidebarFooter>", RegexOptions.Compiled | RegexOptions.Singleline);
+
+    internal const string AccountFooter = "<SidebarFooter>\n        <SidebarAccount />\n    </SidebarFooter>";
+
+    internal static bool IsIdentityApp(string cwd) =>
+        Directory.Exists(Path.Combine(cwd, "Components", "Account"))
+        && EnumerateSources(cwd, "*.cs").Any(f => IdentityRegistration.IsMatch(File.ReadAllText(f)));
+
+    // Only the template's placeholder user footer is replaced; a customized footer is left alone.
+    internal static string? RewriteSidebarFooter(string sidebar, string templateFooter)
+    {
+        var match = FooterPattern.Match(sidebar);
+        if (!match.Success) return null;
+        static string Squash(string s) => Regex.Replace(s, @"\s+", "");
+        if (Squash(match.Value) != Squash(templateFooter)) return null;
+
+        var newline = sidebar.Contains("\r\n") ? "\r\n" : "\n";
+        return sidebar[..match.Index] + AccountFooter.Replace("\n", newline) + sidebar[(match.Index + match.Length)..];
+    }
+
+    private static async Task UseAccountMenuAsync(string cwd, ShellUIConfig config, List<string> changes, List<string> notes)
+    {
+        var sidebarPath = Path.Combine(cwd, config.ComponentsPath, "AppSidebar.razor");
+        if (!File.Exists(sidebarPath) || !File.Exists(Path.Combine(cwd, config.ComponentsPath, "SidebarAccount.razor"))) return;
+
+        var sidebar = await File.ReadAllTextAsync(sidebarPath);
+        if (sidebar.Contains("<SidebarAccount", StringComparison.Ordinal)) return;
+
+        var templateFooter = FooterPattern.Match(ShellUI.Templates.Templates.AppSidebarTemplate.Content).Value;
+        var rewritten = RewriteSidebarFooter(sidebar, templateFooter);
+        if (rewritten == null)
+        {
+            notes.Add("AppSidebar.razor has a custom footer. Add <SidebarAccount /> to it for Log in, Register and Log out.");
+            return;
+        }
+
+        await File.WriteAllTextAsync(sidebarPath, rewritten);
+        changes.Add("AppSidebar.razor: footer shows Log in, Register and Log out (ASP.NET Core Identity)");
     }
 
     private static string Rel(string cwd, string path) => Path.GetRelativePath(cwd, path).Replace('\\', '/');
