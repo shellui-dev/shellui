@@ -1,5 +1,89 @@
 # ShellUI Release Notes
 
+# ShellUI v0.4.0-alpha.1 🧪
+
+> The first 0.4 prerelease. It adds 14 components, compositional parts for eight existing ones, dashboard and sign-in page blocks, and support for apps that use ASP.NET Core Identity. It is a prerelease, so installs need `--version`. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
+
+## ✨ New components
+
+The CLI now has 93 direct targets, up from 76 in 0.3.
+
+| Target | What it is |
+|---|---|
+| `kbd` | Keyboard key hint |
+| `aspect-ratio` | Fixed-ratio container |
+| `button-group` | Joined buttons, horizontal or vertical |
+| `toggle-group` | Single- or multi-select toggles (`@bind-Value` / `@bind-Values`) |
+| `input-group` | Input with `Prefix` / `Suffix` slots |
+| `number-input` | −/+ input with min, max and step |
+| `stat-card` | KPI tile with a trend badge |
+| `timeline` | Vertical event timeline |
+| `tree-view` | Expandable, selectable tree (`@bind-SelectedValue`) |
+| `qr-code` | QR code rendered as SVG (adds the `QRCoder` package) |
+| `image-viewer` | Thumbnail with a zoomable lightbox |
+| `chat`, `chat-message`, `chat-input` | AI chat panel, message bubbles with a streaming indicator, and a prompt input (Enter sends, Shift+Enter adds a line) |
+
+## 🧩 Compositional parts
+
+Eight more components can be built from parts, shadcn-style. Each mode is opt-in, so existing markup keeps working, and the parts install with their parent.
+
+- **AlertDialog:** `AlertDialogTrigger`, `Content`, `Header`, `Title`, `Description`, `Footer`, `Action`, `Cancel`. Escape acts as Cancel.
+- **Breadcrumb:** `BreadcrumbList`, `Link`, `Page`, `Separator`, `Ellipsis`.
+- **Command:** `CommandInput`, `List`, `Group`, `CommandOption`, `Empty`, `Separator`. The part is `CommandOption` because `CommandItem` is the model.
+- **Form:** `FormField`, `Item`, `Label`, `Control`, `Description`, `Message`, with live validation inside an `EditForm`.
+- **Menubar:** `MenubarMenu`, `Trigger`, `Content`, `Separator`. A `MenubarItem` with a `Title` is a dropdown; without one it is a clickable item.
+- **Pagination:** `PaginationContent`, `Item`, `Link`, `Previous`, `Next`, `Ellipsis`.
+- **Sheet and Drawer:** `Header`, `Title`, `Description`, `Footer`, `Close`. CLI templates use them with `Compositional="true"`.
+
+## 🧱 Blocks and `shellui init`
+
+- **Dashboard setup in `init`:** `init` asks for a layout (sticky header `dashboard-02`, scrolling header `dashboard-01`, or none), or takes `--dashboard 01|02|none`. Adding a dashboard wires it in: `Routes.razor` uses it, the stock `MainLayout` and `NavMenu` are removed when unmodified, the error bar moves to `App.razor`, and the sidebar links come from your pages. A custom layout is only replaced after you confirm or pass `--replace-layout`.
+- **Sample pages restyled:** unmodified `dotnet new blazor` pages (Home, Counter, Weather, Error, NotFound, Auth) get ShellUI's Tailwind classes, and Home becomes a short guide to themes and components. Edited pages are listed, not changed.
+- **ASP.NET Core Identity apps (`--auth Individual`):**
+  - The `/Account` pages render statically while the rest of the app is interactive. Before, `init` made every page interactive and the Identity pages returned Not Found.
+  - The dashboard sidebar shows Log in and Register, or the signed-in user and Log out.
+  - New blocks `auth-01` (centered card), `auth-02` (split screen) and `auth-03` (minimal) give the sign-in, sign-up and recovery pages their own layout and restyle the stock Identity pages for .NET 8, 9 and 10.
+- **Tailwind CLI:** in projects set up by this version, the build downloads the pinned Tailwind CLI when `.shellui/bin` has none, for example after a fresh clone, and warns if it can't instead of silently skipping Tailwind.
+- **Terminal:** `init` shows the ShellUI logo and an animated logo loader; `add`, `update` and theme commands use a compact spinner. Both fall back to plain lines without an interactive terminal.
+
+## 🎨 Component changes
+
+- **Loading** is rebuilt with 23 variants, including `logo`, `snake`, `wave`, `typing` and `shimmer`. Its keyframes ship inside the component, so the animations also work with the NuGet package. It follows `currentColor`, has `role="status"`, and slows down under reduced motion.
+- **Command** is rewritten: it filters as you type, supports ↑/↓/Home/End/Enter, optional `Group` headings and a footer with key hints. Selecting an item now runs its `CommandItem.Action`, then raises `CommandSelected`; before, `Action` was ignored. `CommandPalette` gets the same behavior and a bindable `IsOpen`.
+- **Dropdown and Popover** close on Escape.
+
+## 🐛 Fixes
+
+- The CLI's `SidebarProvider` logged `JSDisconnectedException` twice on every page reload. It no longer does.
+- `init --tailwind standalone|npm` now skips the Tailwind prompt, which ignored the flag. An unknown value fails before `init` changes the project, and `--yes` says that standalone is the default.
+- `shellui update` reported every requested component as updated. It now counts updated, skipped and failed components separately.
+- Everything fixed in 0.3.1 and 0.3.2 is included.
+
+## ⚠️ Breaking changes
+
+- **Calendar:** `SelectedDateChanged` is now `EventCallback<DateTime?>`, so `@bind-SelectedDate` works with a `DateTime?` field. Handlers that take a `DateTime` must take a `DateTime?`.
+
+## ⬆️ Upgrading from 0.3
+
+- **CLI:** update the tool to this version, then run `shellui update` to rewrite installed components from the new templates. `update` overwrites the files, so commit or back up any components you customized first. `Build/ShellUI.targets` is only written by `init`, so projects set up with 0.3 keep the old Tailwind build step.
+- **NuGet package:** update `ShellUI.Components` to `0.4.0-alpha.1`. If you handle `Calendar.SelectedDateChanged`, change the handler's parameter to `DateTime?`.
+
+## 📦 Installation
+
+```bash
+# CLI (prerelease: the version is required)
+dotnet tool install -g ShellUI.CLI --version 0.4.0-alpha.1
+# or upgrade an existing install
+dotnet tool update -g ShellUI.CLI --version 0.4.0-alpha.1
+```
+
+```bash
+# NuGet package
+dotnet add package ShellUI.Components --version 0.4.0-alpha.1
+```
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.3.2...v0.4.0-alpha.1
+
 # ShellUI v0.3.2
 
 > A patch release with component fixes for both the `ShellUI.Components` NuGet package and the CLI templates.
