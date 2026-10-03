@@ -24,12 +24,12 @@
 
 | Channel | Version | Notes |
 |---|---|---|
-| Latest stable (recommended) | `0.3.0` | Tailwind CSS `4.3.2` |
-| In development | `0.4.0` | This branch; not published yet |
+| Latest stable (recommended) | `0.3.2` | Tailwind CSS `4.3.2` |
+| Prerelease | `0.4.0-alpha.1` | This branch; install with `--version 0.4.0-alpha.1` |
 
 The CLI needs the .NET 10 SDK and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 10 only; on .NET 8 or 9, use the CLI.
 
-`main` is where 0.4 is being built, so this README and `docs/` include features that are not released yet, such as `shellui init --dashboard`. For the released version, read the [v0.3.0 docs](https://github.com/shellui-dev/shellui/tree/v0.3.0). Prereleases, when published, need `--version` to install.
+`main` is the 0.4 line, so this README and `docs/` describe `0.4.0-alpha.1`, including features that are not in a stable release yet, such as `shellui init --dashboard` and the auth blocks. For the stable version, read the [v0.3.2 docs](https://github.com/shellui-dev/shellui/tree/v0.3.2). Prereleases need `--version` to install.
 
 ShellUI is pre-1.0, so APIs and generated output can still change between minor versions. Validate it in your target Blazor and hosting environments before relying on it.
 
@@ -37,6 +37,7 @@ ShellUI is pre-1.0, so APIs and generated output can still change between minor 
 
 - The CLI commands are `init`, `add`, `list`, `remove`, and `update`, plus `theme init`, `theme apply`, and `theme update`.
 - The component registry has **243 entries**: **93 direct install targets** and **150 hidden dependency entries**. `list` shows direct targets; `add` resolves hidden dependencies.
+- `0.4.0-alpha.1` adds `kbd`, `aspect-ratio`, `button-group`, `toggle-group`, `input-group`, `number-input`, `stat-card`, `timeline`, `tree-view`, `qr-code`, `image-viewer`, `chat`, `chat-message`, `chat-input`, and the `auth-01`, `auth-02` and `auth-03` blocks.
 - `0.3.0` added `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
 - `ShellUI.Components` supports a release-generated precompiled CSS bundle and a generated safelist for existing Tailwind builds.
 - The CLI can install source with Tailwind's standalone executable or an npm-based build. The current Tailwind baseline is `4.3.2`.

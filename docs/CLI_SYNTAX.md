@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers the CLI on `main` (0.4, in development): it runs on .NET 10, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 93 direct component targets. Some options, such as `--dashboard`, are not in the released 0.3.0; see the [v0.3.0 reference](https://github.com/shellui-dev/shellui/blob/v0.3.0/docs/CLI_SYNTAX.md) for that version.
+This reference covers CLI `0.4.0-alpha.1` (prerelease): it runs on .NET 10, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 93 direct component targets. Some options, such as `--dashboard`, are not in the released 0.3.0; see the [v0.3.0 reference](https://github.com/shellui-dev/shellui/blob/v0.3.0/docs/CLI_SYNTAX.md) for that version.
 
 ## Command prefix
 
@@ -250,7 +250,7 @@ Representative fields look like this:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.4.0",
+      "Version": "0.4.0-alpha.1",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }

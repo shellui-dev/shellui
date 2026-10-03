@@ -6,7 +6,7 @@ ShellUI uses one centralized version for the source templates, CLI tool, and pac
 
 | Scope | Value |
 |---|---|
-| Version | `0.4.0-alpha.1` (in development; latest release `0.3.0`) |
+| Version | `0.4.0-alpha.1` (prerelease; latest stable `0.3.2`) |
 | Target framework | .NET 10 |
 | Tailwind version | `4.3.2` |
 
@@ -57,7 +57,7 @@ The CLI writes the computed version into `shellui.json` for each installed entry
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.4.0",
+      "Version": "0.4.0-alpha.1",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
