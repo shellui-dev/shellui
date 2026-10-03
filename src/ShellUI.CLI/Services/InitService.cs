@@ -9,11 +9,14 @@ namespace ShellUI.CLI.Services;
 
 public class InitService
 {
-    public static async Task InitializeAsync(string style, bool force, string tailwindMethod = "standalone", bool nonInteractive = false,
+    public static async Task InitializeAsync(string style, bool force, string? tailwindMethod = null, bool nonInteractive = false,
         string? dashboard = null, LayoutSwitch layoutSwitch = LayoutSwitch.Ask)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
         var dashboardChoice = DashboardSetup.ParseDashboardOption(dashboard) ?? (nonInteractive ? "none" : null);
+        var tailwindChoice = tailwindMethod?.Trim().ToLowerInvariant();
+        if (tailwindChoice is not (null or "standalone" or "npm"))
+            throw new ArgumentException($"Unknown --tailwind value '{tailwindMethod}'. Use standalone or npm.");
 
         if (File.Exists(configPath) && !force)
         {
@@ -31,10 +34,15 @@ public class InitService
         AnsiConsole.MarkupLine("[cyan]Setting up Tailwind CSS...[/]");
         string method;
 
-        if (nonInteractive)
+        if (tailwindChoice != null)
         {
-            method = tailwindMethod;
-            AnsiConsole.MarkupLine($"[green]✅ Selected:[/] {method} (non-interactive mode)");
+            method = tailwindChoice;
+            AnsiConsole.MarkupLine($"[green]✅ Tailwind:[/] {method}");
+        }
+        else if (nonInteractive)
+        {
+            method = "standalone";
+            AnsiConsole.MarkupLine("[green]✅ Tailwind:[/] standalone [dim](default with --yes; pass --tailwind npm to use npm)[/]");
         }
         else
         {
@@ -356,7 +364,7 @@ public class InitService
         }
     }
 
-    private static string GetTargetsFileContent(string method)
+    internal static string GetTargetsFileContent(string method)
     {
         if (method == "npm")
         {
@@ -394,7 +402,22 @@ public class InitService
     <TailwindOutputCss Condition=""'$(TailwindOutputCss)' == ''"">$(MSBuildProjectDirectory)\wwwroot\app.css</TailwindOutputCss>
     <TailwindMinify Condition=""'$(Configuration)' == 'Release'"">--minify</TailwindMinify>
     <TailwindMinify Condition=""'$(Configuration)' != 'Release'""></TailwindMinify>
+    <TailwindTag>__TAILWIND_TAG__</TailwindTag>
+    <TailwindArch>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant())</TailwindArch>
+    <TailwindPlatform Condition=""$([MSBuild]::IsOSPlatform('Windows'))"">windows-$(TailwindArch).exe</TailwindPlatform>
+    <TailwindPlatform Condition=""$([MSBuild]::IsOSPlatform('Linux'))"">linux-$(TailwindArch)</TailwindPlatform>
+    <TailwindPlatform Condition=""$([MSBuild]::IsOSPlatform('OSX'))"">macos-$(TailwindArch)</TailwindPlatform>
   </PropertyGroup>
+
+  <Target Name=""DownloadTailwindCLI"" BeforeTargets=""BeforeBuild"" Condition=""!Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)') AND '$(TailwindPlatform)' != ''"">
+    <Message Importance=""high"" Text=""Downloading the Tailwind CLI $(TailwindTag)..."" />
+    <DownloadFile SourceUrl=""https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindTag)/tailwindcss-$(TailwindPlatform)"" DestinationFolder=""$(ShellUIBinPath)"" DestinationFileName=""$([System.IO.Path]::GetFileName('$(TailwindExecutable)'))"" ContinueOnError=""true"" />
+    <Exec Command=""chmod +x &quot;$(TailwindExecutable)&quot;"" Condition=""'$(OS)' != 'Windows_NT' AND Exists('$(TailwindExecutable)')"" />
+  </Target>
+
+  <Target Name=""WarnMissingTailwindCLI"" BeforeTargets=""BeforeBuild"" Condition=""!Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')"">
+    <Warning Text=""ShellUI: the Tailwind CLI is missing from $(ShellUIBinPath) and could not be downloaded, so wwwroot/app.css was not rebuilt."" />
+  </Target>
 
   <Target Name=""BuildTailwindCSS"" BeforeTargets=""BeforeBuild"" Condition=""Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')"">
     <Message Importance=""high"" Text=""Building Tailwind CSS..."" />
@@ -406,7 +429,7 @@ public class InitService
     <Message Importance=""high"" Text=""Cleaning Tailwind CSS output..."" />
     <Delete Files=""$(TailwindOutputCss)"" />
   </Target>
-</Project>";
+</Project>".Replace("__TAILWIND_TAG__", TailwindConstants.GitHubTag);
         }
     }
 

@@ -187,6 +187,10 @@ public static class ComponentManager
         AnsiConsole.Write(new Rule("[blue]Updating Components[/]").RuleStyle("blue dim"));
         AnsiConsole.WriteLine();
 
+        var updated = 0;
+        var skipped = 0;
+        var failed = new List<string>();
+
         Loaders.SnakeStatus().Start("Updating components...", ctx =>
         {
             foreach (var componentName in toUpdate)
@@ -197,12 +201,14 @@ public static class ComponentManager
                 if (!ComponentRegistry.Components.TryGetValue(normalizedName, out var metadata))
                 {
                     AnsiConsole.MarkupLine($"[yellow]Warning:[/] Unknown component '{componentName}'");
+                    skipped++;
                     continue;
                 }
 
                 if (!installed.Contains(normalizedName))
                 {
                     AnsiConsole.MarkupLine($"[yellow]Skipped:[/] Component '{metadata.DisplayName}' is not installed");
+                    skipped++;
                     continue;
                 }
 
@@ -211,16 +217,29 @@ public static class ComponentManager
                     !ComponentInstaller.EnsureShellUiJs())
                 {
                     AnsiConsole.MarkupLine($"[yellow]Skipped:[/] Component '{metadata.DisplayName}' requires a compatible wwwroot/shellui.js.");
+                    skipped++;
                     continue;
                 }
 
-                ComponentInstaller.InstallComponent(normalizedName, metadata, force: true, skipConfig: false);
-                AnsiConsole.MarkupLine($"[green]Updated:[/] {metadata.DisplayName} to v{metadata.Version}");
+                if (ComponentInstaller.InstallComponent(normalizedName, metadata, force: true, skipConfig: false))
+                {
+                    AnsiConsole.MarkupLine($"[green]Updated:[/] {metadata.DisplayName} to v{metadata.Version}");
+                    updated++;
+                }
+                else
+                {
+                    failed.Add(metadata.DisplayName);
+                }
             }
         });
 
         AnsiConsole.WriteLine();
-        AnsiConsole.MarkupLine($"[green]Successfully updated {toUpdate.Length} component(s)[/]");
+        if (updated > 0)
+            AnsiConsole.MarkupLine($"[green]Updated {updated} component(s)[/]");
+        if (skipped > 0)
+            AnsiConsole.MarkupLine($"[yellow]Skipped {skipped} component(s)[/]");
+        if (failed.Count > 0)
+            AnsiConsole.MarkupLine($"[red]Failed: {Markup.Escape(string.Join(", ", failed))}[/]");
     }
 
     private static void UpdateConfig(List<string> installedComponentNames)

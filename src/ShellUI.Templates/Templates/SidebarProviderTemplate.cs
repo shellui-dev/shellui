@@ -128,6 +128,7 @@ public static class SidebarProviderTemplate
         {
             try { await JSRuntime.InvokeVoidAsync(""ShellUI.disposeSidebar"", _handle); }
             catch (JSException) { }
+            catch (JSDisconnectedException) { }
         }
 
         _dotnetRef?.Dispose();

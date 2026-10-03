@@ -44,7 +44,7 @@ Options:
 
 - `--force` reinitializes a project that already has `shellui.json`.
 - `--style <style>` selects `default`, `new-york`, or `minimal`.
-- `--tailwind standalone|npm` selects the Tailwind setup method.
+- `--tailwind standalone|npm` selects the Tailwind setup method and skips the prompt. With `--yes` and no `--tailwind`, `init` uses standalone.
 - `--yes` runs without prompts and uses the selected defaults. Without an explicit method, the default is `standalone`.
 - `--dashboard 01|02|none` sets up a dashboard layout: `02` has a sticky header, `01` a scrolling one. Without the option, `init` asks; with `--yes` alone, no dashboard is added.
 - `--replace-layout` makes the dashboard the default layout even when the app already uses a custom layout. See [Dashboard layouts](#dashboard-layouts).

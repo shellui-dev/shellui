@@ -48,8 +48,7 @@ class Program
         var forceOpt = new Option<bool>("--force", "Reinitialize even if already initialized");
         var styleOpt = new Option<string>("--style", getDefaultValue: () => "default",
             "Component style: default, new-york, minimal");
-        var tailwindOpt = new Option<string>("--tailwind", getDefaultValue: () => "standalone",
-            "Tailwind method: standalone, npm");
+        var tailwindOpt = new Option<string?>("--tailwind", "Tailwind method: standalone (default with --yes) or npm");
         var yesOpt = new Option<bool>("--yes", "Non-interactive mode with default options");
         var dashboardOpt = CreateDashboardOption();
         var replaceLayoutOpt = CreateReplaceLayoutOption();
@@ -188,10 +187,9 @@ class Program
             "--style",
             getDefaultValue: () => "default",
             "Choose component style (default, new-york, minimal)");
-        var tailwindOption = new Option<string>(
+        var tailwindOption = new Option<string?>(
             "--tailwind",
-            getDefaultValue: () => "standalone",
-            "Choose Tailwind method (standalone, npm)");
+            "Choose Tailwind method: standalone (default with --yes) or npm");
         var nonInteractiveOption = new Option<bool>(
             "--yes",
             "Run in non-interactive mode with default options");
