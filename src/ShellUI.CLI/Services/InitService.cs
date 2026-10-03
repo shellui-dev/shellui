@@ -139,6 +139,9 @@ public class InitService
                 foreach (var note in pages.Notes)
                     AnsiConsole.MarkupLine($"[yellow]![/] {Markup.Escape(note)}");
 
+                if (DashboardSetup.IsIdentityApp(Directory.GetCurrentDirectory()))
+                    AnsiConsole.MarkupLine($"[yellow]![/] {Markup.Escape(AuthSetup.Hint)}");
+
                 status("Setting up MSBuild integration...");
                 var buildPath = Path.Combine(Directory.GetCurrentDirectory(), "Build");
                 Directory.CreateDirectory(buildPath);
@@ -435,7 +438,7 @@ public class InitService
         if (File.Exists(appRazor))
         {
             var original = await File.ReadAllTextAsync(appRazor);
-            var patched = RewriteAppRazor(original);
+            var patched = RewriteAppRazor(original, DashboardSetup.IsIdentityApp(cwd));
             if (patched != original)
             {
                 await File.WriteAllTextAsync(appRazor, patched);
@@ -462,13 +465,31 @@ public class InitService
     }
 
     // Idempotent. Tags that already have attributes are left for the user.
-    internal static string RewriteAppRazor(string content)
+    internal const string IdentityRenderMode =
+@"@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    // The Identity pages under /Account set cookies, so they need a static render with a real HTTP request.
+    private IComponentRenderMode? PageRenderMode =>
+        HttpContext.Request.Path.StartsWithSegments(""/Account"") ? null : InteractiveServer;
+}
+";
+
+    internal static string RewriteAppRazor(string content, bool identity = false)
     {
         // init deletes the template's local Bootstrap copy; CDN links are left alone.
         content = Regex.Replace(content, @"^[ \t]*<link\b(?![^\r\n]*://)[^\r\n]*bootstrap[^\r\n]*\.css[^\r\n]*\r?\n", "", RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-        content = Regex.Replace(content, @"<HeadOutlet\s*/>", @"<HeadOutlet @rendermode=""InteractiveServer"" />");
-        content = Regex.Replace(content, @"<Routes\s*/>", @"<Routes @rendermode=""InteractiveServer"" />");
+        var renderMode = identity ? "PageRenderMode" : "InteractiveServer";
+        var beforeRenderMode = content;
+        content = Regex.Replace(content, @"<HeadOutlet\s*/>", $@"<HeadOutlet @rendermode=""{renderMode}"" />");
+        content = Regex.Replace(content, @"<Routes\s*/>", $@"<Routes @rendermode=""{renderMode}"" />");
+        if (identity && content != beforeRenderMode && !content.Contains("PageRenderMode =>", StringComparison.Ordinal))
+        {
+            var newline = content.Contains("\r\n") ? "\r\n" : "\n";
+            content = content.TrimEnd() + newline + newline + IdentityRenderMode.Replace("\r\n", "\n").Replace("\n", newline);
+        }
 
         // Sets `dark` before first paint to avoid a light flash.
         if (!content.Contains("ShellUI theme bootstrap"))

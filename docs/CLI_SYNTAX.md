@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers the CLI on `main` (0.4, in development): it runs on .NET 10, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 90 direct component targets. Some options, such as `--dashboard`, are not in the released 0.3.0; see the [v0.3.0 reference](https://github.com/shellui-dev/shellui/blob/v0.3.0/docs/CLI_SYNTAX.md) for that version.
+This reference covers the CLI on `main` (0.4, in development): it runs on .NET 10, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 93 direct component targets. Some options, such as `--dashboard`, are not in the released 0.3.0; see the [v0.3.0 reference](https://github.com/shellui-dev/shellui/blob/v0.3.0/docs/CLI_SYNTAX.md) for that version.
 
 ## Command prefix
 
@@ -61,7 +61,9 @@ Initialization creates or updates:
 
 `Components/Layout/` is created when a layout target is installed.
 
-`init` removes the template's local Bootstrap copy (`wwwroot/lib/bootstrap` or, on .NET 8, `wwwroot/bootstrap`) and its `<link>` in `App.razor`; Bootstrap loaded from a CDN is left alone. The sample pages (`Home`, `Counter`, `Weather`, `Error`, `NotFound`, `Auth`) are restyled with Tailwind classes when they are unchanged from `dotnet new blazor`. Pages you have edited are kept, and `init` lists any that still use Bootstrap classes. Identity pages under `Account/` are counted but not restyled.
+`init` removes the template's local Bootstrap copy (`wwwroot/lib/bootstrap` or, on .NET 8, `wwwroot/bootstrap`) and its `<link>` in `App.razor`; Bootstrap loaded from a CDN is left alone. The sample pages (`Home`, `Counter`, `Weather`, `Error`, `NotFound`, `Auth`) are restyled with Tailwind classes when they are unchanged from `dotnet new blazor`. Pages you have edited are kept, and `init` lists any that still use Bootstrap classes.
+
+In apps created with `--auth Individual`, `init` renders the `/Account` pages statically while the rest of the app stays interactive, because those pages set sign-in cookies and need a real HTTP request. It leaves their Bootstrap markup alone and points to the [auth layouts](#auth-layouts) instead.
 
 With `--dashboard`, `init` then runs `shellui add dashboard-02` (or `dashboard-01`), including the layout wiring described under [Dashboard layouts](#dashboard-layouts).
 
@@ -93,9 +95,31 @@ shellui add button --force
 - Pages that pin `@layout MainLayout`, such as the .NET 10 `NotFound` page, move to the dashboard layout.
 - The Blazor error bar (`blazor-error-ui`) moves from `MainLayout` into `App.razor`.
 - `AppSidebar` links are built from the app's `@page` routes. Parameterized routes, `/Account/*`, `/Error` and `/not-found` are skipped. Links you have edited are left alone.
+- In apps that use ASP.NET Core Identity, the sidebar footer shows Log in and Register, or the signed-in user (linking to the account page) and Log out. This adds the hidden `sidebar-account` component and replaces the placeholder user in the footer; a footer you have edited is left alone.
 - `ReconnectModal` and pages are not changed otherwise.
 
 Running the command again is safe. It prints a summary of what changed.
+
+### Auth layouts
+
+For apps that use ASP.NET Core Identity (`dotnet new blazor --auth Individual`), three blocks style the sign-in, sign-up and account recovery pages:
+
+| Block | Design |
+|---|---|
+| `auth-01` | Centered card on a muted background |
+| `auth-02` | Split screen: the form beside a brand panel |
+| `auth-03` | Minimal centered form |
+
+```bash
+shellui add auth-01
+```
+
+Adding one:
+
+- Sets `@layout` in `Components/Account/Pages/_Imports.razor`, so those pages render without the dashboard sidebar. The account management pages under `Account/Manage` keep the app's layout. Adding another auth block switches to it.
+- Restyles the Identity pages that are unchanged from `dotnet new blazor` for .NET 8, 9 or 10 with ShellUI's button, input and alert styles. Pages you have edited are kept and listed.
+
+The layouts show a placeholder logo and "My App"; edit the installed `AuthLayout0x.razor` to brand them.
 
 ## `list`
 
@@ -107,7 +131,7 @@ shellui list --installed
 shellui list --available
 ```
 
-There are 90 direct targets. Registry entries used only as dependencies are not counted as direct targets. Choose either `--installed` or `--available` to filter the output.
+There are 93 direct targets. Registry entries used only as dependencies are not counted as direct targets. Choose either `--installed` or `--available` to filter the output.
 
 ## `remove`
 

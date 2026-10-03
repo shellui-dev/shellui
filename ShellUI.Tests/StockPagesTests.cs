@@ -71,9 +71,8 @@ public class StockPagesTests
 
             Assert.Equal(new[] { "Components/Pages/Counter.razor" }, result.Restyled);
             Assert.False(StockPages.UsesBootstrap(File.ReadAllText(Path.Combine(root, "Components/Pages/Counter.razor"))));
-            Assert.Equal(2, result.Notes.Count);
+            Assert.Single(result.Notes);
             Assert.Contains(result.Notes, n => n.Contains("Components/Pages/Weather.razor") && n.Contains("modified"));
-            Assert.Contains(result.Notes, n => n.StartsWith("1 Identity page"));
             Assert.Contains("<p>mine</p>", File.ReadAllText(Path.Combine(root, "Components/Pages/Weather.razor")));
         }
         finally

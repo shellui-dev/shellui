@@ -32,10 +32,10 @@ The global tool command is `shellui`; a local .NET tool is invoked as `dotnet sh
 
 ## Template inventory
 
-The registry contains **239 entries**:
+The registry contains **243 entries**:
 
-- **90 direct install targets** displayed by `shellui list`
-- **149 hidden dependency entries** installed recursively and omitted from the direct list
+- **93 direct install targets** displayed by `shellui list`
+- **150 hidden dependency entries** installed recursively and omitted from the direct list
 
 Each entry provides content plus metadata used by the CLI, including its display name, category, description, target path, version, dependencies, and optional NuGet dependencies. The catalog also includes hidden subcomponents, variants, models, services, JavaScript, and stylesheet assets required by direct targets.
 

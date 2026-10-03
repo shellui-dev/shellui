@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using ShellUI.CLI.Services;
 using ShellUI.Core.Models;
 using ShellUI.Templates;
@@ -194,6 +195,39 @@ public class DashboardSetupTests
         Assert.DoesNotContain("/settings", rewritten);
         Assert.DoesNotContain("\"/dashboard\"", rewritten);
         Assert.Null(DashboardSetup.RewriteSidebarLinks(rewritten!, links));
+    }
+
+    [Fact]
+    public void AppSidebarTemplate_FooterBecomesTheAccountMenu()
+    {
+        var sidebar = ComponentRegistry.GetComponentContent("app-sidebar")!;
+        var templateFooter = Regex.Match(sidebar, "<SidebarFooter>.*?</SidebarFooter>", RegexOptions.Singleline).Value;
+
+        var rewritten = DashboardSetup.RewriteSidebarFooter(sidebar, templateFooter);
+
+        Assert.NotNull(rewritten);
+        Assert.Contains("<SidebarAccount />", rewritten);
+        Assert.DoesNotContain("user@example.com", rewritten);
+        Assert.Null(DashboardSetup.RewriteSidebarFooter(sidebar.Replace("user@example.com", "me@company.com"), templateFooter));
+    }
+
+    [Fact]
+    public void IsIdentityApp_NeedsAccountPagesAndIdentityRegistration()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "shellui-identity-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Write(root, "Program.cs", "builder.Services.AddRazorComponents();");
+            Write(root, "Components/Account/Pages/Login.razor", "@page \"/Account/Login\"");
+            Assert.False(DashboardSetup.IsIdentityApp(root));
+
+            Write(root, "Program.cs", "builder.Services.AddIdentityCore<ApplicationUser>(options => { });");
+            Assert.True(DashboardSetup.IsIdentityApp(root));
+        }
+        finally
+        {
+            Directory.Delete(root, true);
+        }
     }
 
     private static void Write(string root, string relative, string content)

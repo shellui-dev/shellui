@@ -4,10 +4,10 @@
 
 ## Registry snapshot
 
-- **239** total registry entries
-- **90** direct CLI targets (`IsAvailable = true`)
-- **149** hidden entries (`IsAvailable = false`)
-- `shellui list` displays the 90 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
+- **243** total registry entries
+- **93** direct CLI targets (`IsAvailable = true`)
+- **150** hidden entries (`IsAvailable = false`)
+- `shellui list` displays the 93 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
 `Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
 

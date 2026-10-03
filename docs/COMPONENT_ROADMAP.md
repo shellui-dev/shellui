@@ -6,20 +6,20 @@
 
 ## Current inventory
 
-`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **239 entries**:
+`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **243 entries**:
 
-- **90 direct CLI targets** shown by `shellui list`
-- **149 hidden entries** for sub-components, variants, models, services, and support assets
+- **93 direct CLI targets** shown by `shellui list`
+- **150 hidden entries** for sub-components, variants, models, services, and support assets
 - **Packable projects:** `ShellUI.CLI` and `ShellUI.Components`
 
 Hidden entries are not counted as direct targets. They can still be installed recursively when a parent target declares them.
 
-### Implemented direct targets (90)
+### Implemented direct targets (93)
 
 The following categories describe the direct targets in the current registry, not a promise about future scope.
 
 - [x] **Form (26):** Button, ButtonGroup, ChatInput, Checkbox, Combobox, DataPicker, DatePicker, DateRangePicker, FileUpload, Form, Input, InputGroup, InputOTP, Label, MultiSelect, NumberInput, RadioGroup, Select, Slider, Switch, TagInput, Textarea, TimePicker, Toggle, ToggleGroup, TypedSelect
-- [x] **Layout (13):** Accordion, AspectRatio, Breadcrumb, Card, Collapsible, DashboardLayout01, DashboardLayout02, LinkCard, Navbar, Resizable, ScrollArea, Separator, Sidebar
+- [x] **Layout (16):** Accordion, AspectRatio, AuthLayout01, AuthLayout02, AuthLayout03, Breadcrumb, Card, Collapsible, DashboardLayout01, DashboardLayout02, LinkCard, Navbar, Resizable, ScrollArea, Separator, Sidebar
 - [x] **Feedback (9):** Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
 - [x] **Overlay (9):** AlertDialog, Command, CommandPalette, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
 - [x] **Navigation (8):** ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs, TreeView

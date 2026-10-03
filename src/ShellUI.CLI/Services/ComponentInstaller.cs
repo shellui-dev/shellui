@@ -37,6 +37,8 @@ public class ComponentInstaller
         {
             componentList.AddRange(comp.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
         }
+        if (componentList.Any(DashboardSetup.Layouts.ContainsKey) && DashboardSetup.IsIdentityApp(Directory.GetCurrentDirectory()))
+            componentList.Add("sidebar-account");
 
         var successCount = 0;
         var skippedCount = 0;
@@ -87,6 +89,10 @@ public class ComponentInstaller
         foreach (var dashboard in componentList.Where(c => DashboardSetup.Layouts.ContainsKey(c) && installedSet.Contains(c)))
         {
             await DashboardSetup.WireAsync(dashboard, projectInfo, config, layoutSwitch);
+        }
+        foreach (var auth in componentList.Where(c => AuthSetup.Layouts.ContainsKey(c) && installedSet.Contains(c)))
+        {
+            await AuthSetup.WireAsync(auth, projectInfo, config);
         }
 
         var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions
@@ -404,8 +410,7 @@ public class ComponentInstaller
         return failed;
     }
 
-    // Consumer pages reference helper types such as ButtonVariant and CommandItem, which live in
-    // sub-namespaces; the imports are only added once an installed file declares that namespace.
+    // Pages use helper types such as ButtonVariant from sub-namespaces, imported once an installed file declares them.
     public static IEnumerable<string> RequiredImports(string rootNamespace, IEnumerable<string> templateContents)
     {
         var contents = templateContents.ToList();

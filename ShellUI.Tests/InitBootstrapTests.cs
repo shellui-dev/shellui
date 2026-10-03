@@ -103,6 +103,17 @@ public class InitBootstrapTests
     }
 
     [Fact]
+    public void RewriteAppRazor_KeepsIdentityPagesStatic()
+    {
+        var once = InitService.RewriteAppRazor(FreshAppRazor, identity: true);
+
+        Assert.Contains(@"<HeadOutlet @rendermode=""PageRenderMode"" />", once);
+        Assert.Contains(@"<Routes @rendermode=""PageRenderMode"" />", once);
+        Assert.Contains(@"StartsWithSegments(""/Account"") ? null : InteractiveServer", once);
+        Assert.Equal(once, InitService.RewriteAppRazor(once, identity: true));
+    }
+
+    [Fact]
     public void RewriteAppRazor_PreservesExistingRenderMode()
     {
         const string custom =
