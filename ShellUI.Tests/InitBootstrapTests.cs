@@ -102,6 +102,23 @@ public class InitBootstrapTests
         Assert.Equal(once, twice);
     }
 
+    [Theory]
+    [InlineData("standalone")]
+    [InlineData("npm")]
+    public void TargetsFile_IsValidMsBuildXml(string method)
+    {
+        var targets = InitService.GetTargetsFileContent(method);
+
+        var xml = System.Xml.Linq.XDocument.Parse(targets);
+        Assert.Equal("Project", xml.Root!.Name.LocalName);
+        if (method == "standalone")
+        {
+            Assert.Contains($"<TailwindTag>{ShellUI.Core.TailwindConstants.GitHubTag}</TailwindTag>", targets);
+            Assert.Contains("<DownloadFile ", targets);
+            Assert.Contains("WarnMissingTailwindCLI", targets);
+        }
+    }
+
     [Fact]
     public void RewriteAppRazor_KeepsIdentityPagesStatic()
     {

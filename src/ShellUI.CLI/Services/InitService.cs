@@ -364,7 +364,7 @@ public class InitService
         }
     }
 
-    private static string GetTargetsFileContent(string method)
+    internal static string GetTargetsFileContent(string method)
     {
         if (method == "npm")
         {
@@ -402,7 +402,22 @@ public class InitService
     <TailwindOutputCss Condition=""'$(TailwindOutputCss)' == ''"">$(MSBuildProjectDirectory)\wwwroot\app.css</TailwindOutputCss>
     <TailwindMinify Condition=""'$(Configuration)' == 'Release'"">--minify</TailwindMinify>
     <TailwindMinify Condition=""'$(Configuration)' != 'Release'""></TailwindMinify>
+    <TailwindTag>__TAILWIND_TAG__</TailwindTag>
+    <TailwindArch>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant())</TailwindArch>
+    <TailwindPlatform Condition=""$([MSBuild]::IsOSPlatform('Windows'))"">windows-$(TailwindArch).exe</TailwindPlatform>
+    <TailwindPlatform Condition=""$([MSBuild]::IsOSPlatform('Linux'))"">linux-$(TailwindArch)</TailwindPlatform>
+    <TailwindPlatform Condition=""$([MSBuild]::IsOSPlatform('OSX'))"">macos-$(TailwindArch)</TailwindPlatform>
   </PropertyGroup>
+
+  <Target Name=""DownloadTailwindCLI"" BeforeTargets=""BeforeBuild"" Condition=""!Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)') AND '$(TailwindPlatform)' != ''"">
+    <Message Importance=""high"" Text=""Downloading the Tailwind CLI $(TailwindTag)..."" />
+    <DownloadFile SourceUrl=""https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindTag)/tailwindcss-$(TailwindPlatform)"" DestinationFolder=""$(ShellUIBinPath)"" DestinationFileName=""$([System.IO.Path]::GetFileName('$(TailwindExecutable)'))"" ContinueOnError=""true"" />
+    <Exec Command=""chmod +x &quot;$(TailwindExecutable)&quot;"" Condition=""'$(OS)' != 'Windows_NT' AND Exists('$(TailwindExecutable)')"" />
+  </Target>
+
+  <Target Name=""WarnMissingTailwindCLI"" BeforeTargets=""BeforeBuild"" Condition=""!Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')"">
+    <Warning Text=""ShellUI: the Tailwind CLI is missing from $(ShellUIBinPath) and could not be downloaded, so wwwroot/app.css was not rebuilt."" />
+  </Target>
 
   <Target Name=""BuildTailwindCSS"" BeforeTargets=""BeforeBuild"" Condition=""Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')"">
     <Message Importance=""high"" Text=""Building Tailwind CSS..."" />
@@ -414,7 +429,7 @@ public class InitService
     <Message Importance=""high"" Text=""Cleaning Tailwind CSS output..."" />
     <Delete Files=""$(TailwindOutputCss)"" />
   </Target>
-</Project>";
+</Project>".Replace("__TAILWIND_TAG__", TailwindConstants.GitHubTag);
         }
     }
 
