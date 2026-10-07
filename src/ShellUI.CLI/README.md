@@ -1,3 +1,5 @@
+![ShellUI](https://raw.githubusercontent.com/shellui-dev/shellui/main/assets/readme-logo.svg)
+
 # ShellUI CLI
 
 `shellui` sets up Tailwind CSS in a Blazor project and copies ShellUI components into it as source you own, in the spirit of shadcn/ui.
