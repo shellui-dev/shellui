@@ -2,7 +2,7 @@
 <Project>
   <!-- One version for every ShellUI package -->
   <PropertyGroup>
-    <ShellUIVersion>0.3.2</ShellUIVersion>
+    <ShellUIVersion>0.3.3</ShellUIVersion>
     <ShellUIVersionSuffix></ShellUIVersionSuffix>
   </PropertyGroup>
 

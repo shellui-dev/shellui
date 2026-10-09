@@ -24,7 +24,7 @@
 
 | Channel | Version | Notes |
 |---|---|---|
-| Latest stable (recommended) | `0.3.2` | Tailwind CSS `4.3.2` |
+| Latest stable (recommended) | `0.3.3` | Tailwind CSS `4.3.2` |
 | Previous stable | `0.2.1` | Superseded by `0.3.0` |
 
 The CLI needs the .NET 10 SDK and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 10 only; on .NET 8 or 9, use the CLI.

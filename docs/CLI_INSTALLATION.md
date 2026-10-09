@@ -4,7 +4,7 @@
 
 | Context | Version |
 |---|---|
-| Latest stable (recommended) | `0.3.2`, needs the .NET 10 runtime |
+| Latest stable (recommended) | `0.3.3`, needs the .NET 10 runtime |
 | Previous stable | `0.2.1` |
 | Tailwind | `4.3.2` |
 
@@ -43,7 +43,7 @@ The manifest is `.config/dotnet-tools.json` and uses the installed package versi
   "isRoot": true,
   "tools": {
     "shellui.cli": {
-      "version": "0.3.2",
+      "version": "0.3.3",
       "commands": ["shellui"]
     }
   }
