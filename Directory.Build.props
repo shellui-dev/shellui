@@ -24,5 +24,10 @@
     <PackageTags>blazor;ui;components;tailwindcss;shadcn</PackageTags>
     <RepositoryUrl>https://github.com/shellui-dev/shellui</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)assets\icon.png" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
 </Project>

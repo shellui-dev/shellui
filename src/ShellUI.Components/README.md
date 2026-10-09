@@ -1,3 +1,5 @@
+![ShellUI](https://raw.githubusercontent.com/shellui-dev/shellui/main/assets/readme-logo.svg)
+
 # ShellUI Components
 
 Blazor components styled with Tailwind CSS, in the spirit of shadcn/ui, as a Razor class library.
