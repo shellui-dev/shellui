@@ -19,7 +19,7 @@ public class PopoverTemplate
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <CascadingValue Value=""this"" IsFixed=""true"">
-    <div class=""@Shell.Cn(""relative inline-block"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
+    <div class=""@Shell.Cn(""relative inline-block"", ClassName, Class)"" @attributes=""AdditionalAttributes"" @onkeydown=""OnKeyDown"">
         @if (Trigger is null)
         {
             @ChildContent
@@ -63,6 +63,11 @@ public class PopoverTemplate
     public async Task CloseAsync() { IsOpen = false; await IsOpenChanged.InvokeAsync(IsOpen); StateHasChanged(); }
     private async Task Toggle() => await ToggleAsync();
     private async Task Close() => await CloseAsync();
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == ""Escape"" && IsOpen) await CloseAsync();
+    }
 }
 ";
 }
