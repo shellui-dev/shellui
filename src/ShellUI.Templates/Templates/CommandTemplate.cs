@@ -125,6 +125,7 @@ public static class CommandTemplate
 
     private async Task SelectCommand(CommandItem command)
     {
+        if (command.Action is not null) await command.Action();
         await CommandSelected.InvokeAsync(command);
         await CloseCommand();
     }

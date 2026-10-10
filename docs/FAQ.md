@@ -6,7 +6,7 @@ Answers for the current ShellUI source and the currently published packages.
 
 ### Which version should I use?
 
-Use `0.3.2`. It uses Tailwind CSS `4.3.2` and has 76 direct component targets:
+Use `0.3.3`. It uses Tailwind CSS `4.3.2` and has 76 direct component targets:
 
 ```bash
 dotnet tool install -g ShellUI.CLI
@@ -145,7 +145,7 @@ A representative Tailwind and component record is:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.3.2",
+      "Version": "0.3.3",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }

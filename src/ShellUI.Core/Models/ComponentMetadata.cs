@@ -66,7 +66,7 @@ public class ComponentMetadata
         if (assemblyVersion != null)
             return assemblyVersion.InformationalVersion.Split('+')[0];
 
-        return "0.3.2";
+        return "0.3.3";
     }
 }
 

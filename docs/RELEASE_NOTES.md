@@ -1,5 +1,23 @@
 # ShellUI Release Notes
 
+# ShellUI v0.3.3
+
+> A patch release with fixes for both the `ShellUI.Components` NuGet package and the CLI templates.
+
+## 🐛 Fixes
+
+- NuGet package: linking `shellui-theme.css` directly logged a 404 on every page load, because the file started with `@import "tailwindcss";` and the browser requested `tailwindcss` as a URL. The theme file now holds only the theme; the precompiled `shellui-all.css` is unchanged.
+- `Command` ignored `CommandItem.Action`: selecting an item only raised `CommandSelected`. It now runs the item's `Action`, then raises `CommandSelected`, the same as `CommandPalette`.
+- `Dropdown` and `Popover` now close on Escape.
+- CLI `SidebarProvider` logged a `JSDisconnectedException` twice on every full page reload, typed URL or closed tab. It now ignores the disconnected circuit when it cleans up.
+
+New tests cover `Command` running `Action` and Escape closing `Dropdown` and `Popover`.
+
+## ⬆️ Upgrading
+
+- **NuGet package:** update to `0.3.3`.
+- **CLI:** update the tool, then run `shellui update` to rewrite installed components from the new templates. `update` overwrites the files, so commit or back up any components you customized first.
+
 # ShellUI v0.3.2
 
 > A patch release with component fixes for both the `ShellUI.Components` NuGet package and the CLI templates.

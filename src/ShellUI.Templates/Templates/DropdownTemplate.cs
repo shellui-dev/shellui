@@ -18,7 +18,7 @@ public static class DropdownTemplate
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
 <CascadingValue Value=""this"" IsFixed=""true"">
-    <div class=""@Shell.Cn(""relative inline-block text-left"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
+    <div class=""@Shell.Cn(""relative inline-block text-left"", ClassName, Class)"" @attributes=""AdditionalAttributes"" @onkeydown=""OnKeyDown"">
         @if (UseCompositional)
         {
             @ChildContent
@@ -74,6 +74,11 @@ public static class DropdownTemplate
     private async Task ToggleOpen()
     {
         await ToggleAsync();
+    }
+
+    private async Task OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == ""Escape"" && IsOpen) await CloseAsync();
     }
 }
 ";
