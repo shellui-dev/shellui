@@ -38,10 +38,12 @@ mv "$INPUT_CSS" "$INPUT_CSS.css"
 INPUT_CSS="$INPUT_CSS.css"
 COMPONENTS_ROOT="src/ShellUI.Components"
 
-# @source inline, because Tailwind's file extractor misses `[state=…]` classes in plain text.
-cat "$COMPONENTS_ROOT/wwwroot/shellui-theme.css" > "$INPUT_CSS"
+# The import lives here, not in shellui-theme.css, so the theme can be linked directly without a 404.
+printf '@import "tailwindcss";\n\n' > "$INPUT_CSS"
+cat "$COMPONENTS_ROOT/wwwroot/shellui-theme.css" >> "$INPUT_CSS"
 echo "" >> "$INPUT_CSS"
 
+# @source inline, because Tailwind's file extractor misses `[state=…]` classes in plain text.
 # Chunks of ~500 chars to avoid very long strings.
 awk '
   BEGIN { line=""; }
