@@ -198,7 +198,6 @@ left-2
 left-3.5
 lg:space-x-8
 list-none
-material-symbols-outlined
 max-h-48
 max-h-60
 max-h-[90vh]
@@ -349,7 +348,6 @@ starting:opacity-0
 starting:scale-95
 tabular-nums
 text-2xl
-text-5xl
 text-[10px]
 text-[8px]
 text-accent-foreground
