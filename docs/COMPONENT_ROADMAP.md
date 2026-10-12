@@ -73,15 +73,10 @@ The current registry provides explicit sub-components for these parent component
 - [x] **Popover** — `PopoverTrigger`, `PopoverContent`
 - [x] **HoverCard** — `HoverCardTrigger`, `HoverCardContent`
 - [x] **Drawer and Sheet** — explicit trigger/content and variant support
-
-### Package only (CLI templates pending)
-
-These parts exist in the `ShellUI.Components` NuGet package, but their CLI templates are empty placeholders, so CLI installs only get the parent component.
-
-- [ ] **Select** — `SelectTrigger`, `SelectContent`, `SelectItem` (the native select works in both)
-- [ ] **ContextMenu** — `ContextMenuTrigger`, `ContextMenuContent`, `ContextMenuOption`
-- [ ] **NavigationMenu** — `NavList`, `NavItem`, `NavTrigger`, `NavContent`
-- [ ] **Carousel** — `CarouselList`, `CarouselSlide`
+- [x] **Select** — `SelectTrigger`, `SelectContent`, `SelectItem` (the native select still works)
+- [x] **ContextMenu** — `ContextMenuTrigger`, `ContextMenuContent`, `ContextMenuOption`
+- [x] **NavigationMenu** — `NavList`, `NavItem`, `NavTrigger`, `NavContent`
+- [x] **Carousel** — `CarouselList`, `CarouselSlide`
 
 The intended pattern is explicit child components, cascaded state and callbacks, value/label parameters, and Tailwind utility classes matching the shadcn-style API.
 
