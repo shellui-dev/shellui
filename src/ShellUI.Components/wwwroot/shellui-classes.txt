@@ -185,7 +185,6 @@ left-1/2
 left-2
 lg:space-x-8
 list-none
-material-symbols-outlined
 max-h-60
 max-h-[300px]
 max-w-sm
@@ -306,7 +305,6 @@ space-x-2
 space-y-2
 space-y-4
 sr-only
-text-5xl
 text-[10px]
 text-[8px]
 text-accent-foreground
