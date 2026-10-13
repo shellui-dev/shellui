@@ -65,7 +65,7 @@ Not for standalone mode:
 shellui init --yes --tailwind standalone
 ```
 
-Standalone mode downloads the Tailwind `4.3.2` CLI into `.shellui/bin/` and integrates it with the generated build target.
+Standalone mode downloads the Tailwind `4.3.2` CLI once per machine (into `~/.shellui/bin`, or `SHELLUI_CACHE_DIR`) and the generated build target runs it from there. Projects hold no copy of the binary, and later projects set up offline. The binary is a build tool: it never ships with your app, which only gets the generated `app.css`.
 
 npm mode is also supported. It requires Node.js and npm:
 
@@ -227,7 +227,7 @@ Check that `wwwroot/input.css` exists and starts with the Tailwind v4 import, th
 dotnet build
 ```
 
-For standalone mode, check `.shellui/bin/`. For npm mode, run `npm install`.
+For standalone mode, check `~/.shellui/bin`. For npm mode, run `npm install`.
 
 ## Package updates and licensing
 

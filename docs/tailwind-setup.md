@@ -10,7 +10,9 @@ This guide targets **Tailwind CSS 4.3.2**, the version ShellUI uses.
 | **Standalone** | One platform-specific CLI binary | MSBuild target | No | A .NET/Blazor project without Node.js |
 | **npm** | `tailwindcss` plus `@tailwindcss/cli` | npm or MSBuild | Yes | Projects that already use Node.js or plugins |
 
-The standalone CLI is cached inside the project at `.shellui/bin`. On Windows the executable is `.shellui/bin/tailwindcss.exe`; on macOS and Linux it is `.shellui/bin/tailwindcss`. The project-local `.shellui/bin` directory is the cache location.
+The standalone CLI is downloaded once per machine into `~/.shellui/bin` (`%USERPROFILE%\.shellui\bin` on Windows) as `tailwindcss-4.3.2-<platform>`, and every project builds with that one copy, so projects hold no binary. Set `SHELLUI_CACHE_DIR` to keep it somewhere else. A project that needs its own copy can put it at `.shellui/bin/tailwindcss.exe` (Windows) or `.shellui/bin/tailwindcss` (macOS, Linux), and the build uses that instead. `.shellui/` contains a `.gitignore` of `*`, so nothing in it is committed.
+
+The download streams to a `.partial` file, resumes after a dropped connection, retries, and only gives up when no data arrives for a minute, so a slow connection is fine. If it still fails, `init` finishes the rest of the setup and warns, and the next `dotnet build` tries again. Its warning names the exact URL and the file to save it as if you want to download it yourself.
 
 For a production Blazor application, use either the standalone or npm workflow and build the CSS as part of the project. The Play CDN is a prototyping convenience and does not provide the same production build and caching behavior.
 
@@ -264,7 +266,7 @@ Check that:
 - `wwwroot/app.css` contains generated utilities.
 - The host includes the generated stylesheet.
 - A Razor component using a ShellUI utility is styled in the browser.
-- The standalone executable is at `.shellui/bin/tailwindcss.exe` on Windows or `.shellui/bin/tailwindcss` on macOS/Linux.
+- The standalone executable is in `~/.shellui/bin` (`%USERPROFILE%\.shellui\bin` on Windows), or in the project's `.shellui/bin` if you put one there.
 - The npm project can run `npx @tailwindcss/cli -i wwwroot/input.css -o wwwroot/app.css`.
 
 ## Troubleshooting
@@ -272,7 +274,7 @@ Check that:
 ### Tailwind CSS is not building
 
 - Confirm `wwwroot/input.css` contains `@import "tailwindcss";`.
-- Confirm the standalone executable is in the project-local `.shellui/bin` directory.
+- Confirm the standalone executable is in `~/.shellui/bin` (or `SHELLUI_CACHE_DIR`). If the build warns that it couldn't download it, save the file it names there.
 - Confirm `Build/ShellUI.targets` is imported by the project.
 - Confirm the input and output paths exist.
 - For npm, confirm `tailwindcss@4.3.2` and `@tailwindcss/cli@4.3.2` are installed and run `npx @tailwindcss/cli --help`.
