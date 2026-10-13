@@ -94,6 +94,7 @@ public class InitService
             }
         };
 
+        string? tailwindPath = null;
         await AnsiConsole.Status()
             .StartAsync("Installing ShellUI components...", async ctx =>
             {
@@ -132,7 +133,7 @@ public class InitService
                 }
                 else
                 {
-                    await SetupTailwindStandaloneAsync();
+                    tailwindPath = await SetupTailwindStandaloneAsync(s => ctx.Status(s));
                 }
 
                 ctx.Status("Wiring up theme and render mode...");
@@ -154,15 +155,19 @@ public class InitService
                 if (method == "npm")
                 {
                     await RunNpmTailwindBuildAsync();
+                    AnsiConsole.MarkupLine($"[green]Built:[/] Tailwind CSS");
                 }
-                else
+                else if (tailwindPath != null)
                 {
-                    var tailwindPath = await TailwindDownloader.EnsureTailwindCliAsync(Directory.GetCurrentDirectory());
                     var inputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "input.css");
                     var appCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "app.css");
                     await RunTailwindBuildAsync(tailwindPath, inputCssPath, appCssPath);
+                    AnsiConsole.MarkupLine($"[green]Built:[/] Tailwind CSS");
                 }
-                AnsiConsole.MarkupLine($"[green]Built:[/] Tailwind CSS");
+                else
+                {
+                    AnsiConsole.MarkupLine("[yellow]Skipped:[/] Tailwind CSS build [dim](no Tailwind CLI yet; dotnet build tries the download again)[/]");
+                }
             });
 
         var json = JsonSerializer.Serialize(config, new JsonSerializerOptions
@@ -206,10 +211,9 @@ public class InitService
         AnsiConsole.MarkupLine($"[green]Created:[/] tailwind.config.js");
     }
 
-    private static async Task SetupTailwindStandaloneAsync()
+    private static async Task<string?> SetupTailwindStandaloneAsync(Action<string> status)
     {
-        AnsiConsole.MarkupLine("[cyan]Downloading Tailwind CSS standalone CLI...[/]");
-        var tailwindPath = await TailwindDownloader.EnsureTailwindCliAsync(Directory.GetCurrentDirectory());
+        var tailwindPath = await TailwindDownloader.EnsureTailwindCliAsync(Directory.GetCurrentDirectory(), status);
 
         AnsiConsole.MarkupLine("[cyan]Creating CSS files...[/]");
         var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
@@ -226,6 +230,7 @@ public class InitService
         var tailwindConfigPath = Path.Combine(Directory.GetCurrentDirectory(), "tailwind.config.js");
         File.WriteAllText(tailwindConfigPath, CssTemplates.TailwindConfigJs);
         AnsiConsole.MarkupLine($"[green]Created:[/] tailwind.config.js");
+        return tailwindPath;
     }
 
     private static async Task<bool> IsNpmAvailableAsync()
@@ -341,7 +346,41 @@ public class InitService
         }
     }
 
-    private static string GetTargetsFileContent(string method)
+    // Build/ShellUI.targets exactly as earlier CLIs wrote it for standalone Tailwind (LF-normalized SHA-256): 0.0.1–0.3.4, then 0.4.0-alpha.1.
+    private static readonly string[] PreviousStandaloneTargets =
+    {
+        "eace414bc927d6274976e888cd1de742efd82ee3142f1cabaea3b1f3e188455e",
+        "f42811cbd3bdad588c3389de9a0f706b7ac59331848a027b99c30a5765aea5f9",
+    };
+
+    // Brings a standalone project set up by an earlier CLI onto the shared Tailwind CLI; returns what changed.
+    internal static List<string> RefreshTailwindSetup(string projectRoot)
+    {
+        var notes = new List<string>();
+        var path = Path.Combine(projectRoot, "Build", "ShellUI.targets");
+        if (!File.Exists(path)) return notes;
+
+        var current = GetTargetsFileContent("standalone");
+        var hash = ComponentInstaller.ContentHash(File.ReadAllText(path));
+        if (PreviousStandaloneTargets.Contains(hash))
+        {
+            File.WriteAllText(path, current);
+            notes.Add("[green]Updated:[/] Build/ShellUI.targets [dim](uses one shared Tailwind CLI per machine and retries its download)[/]");
+        }
+        else if (hash != ComponentInstaller.ContentHash(current))
+        {
+            if (File.ReadAllText(path).Contains("TailwindExecutable", StringComparison.Ordinal))
+                notes.Add("[yellow]Note:[/] Build/ShellUI.targets has local changes, so it was not updated. Compare it with a new [bold]shellui init[/] to pick up the shared Tailwind CLI.");
+            return notes;
+        }
+
+        TailwindDownloader.IgnoreShellUiFolder(projectRoot);
+        if (TailwindDownloader.RemoveDuplicateProjectCopy(projectRoot))
+            notes.Add($"[green]Removed:[/] the project's copy of the Tailwind CLI [dim](builds use the shared one in {Markup.Escape(TailwindDownloader.CacheDirectory())})[/]");
+        return notes;
+    }
+
+    internal static string GetTargetsFileContent(string method)
     {
         if (method == "npm")
         {
@@ -373,13 +412,38 @@ public class InitService
 <Project>
   <PropertyGroup>
     <ShellUIBinPath Condition=""'$(ShellUIBinPath)' == ''"">$(MSBuildProjectDirectory)\.shellui\bin</ShellUIBinPath>
-    <TailwindExecutable Condition=""'$(OS)' == 'Windows_NT'"">$(ShellUIBinPath)\tailwindcss.exe</TailwindExecutable>
-    <TailwindExecutable Condition=""'$(OS)' != 'Windows_NT'"">$(ShellUIBinPath)/tailwindcss</TailwindExecutable>
     <TailwindInputCss Condition=""'$(TailwindInputCss)' == ''"">$(MSBuildProjectDirectory)\wwwroot\input.css</TailwindInputCss>
     <TailwindOutputCss Condition=""'$(TailwindOutputCss)' == ''"">$(MSBuildProjectDirectory)\wwwroot\app.css</TailwindOutputCss>
     <TailwindMinify Condition=""'$(Configuration)' == 'Release'"">--minify</TailwindMinify>
     <TailwindMinify Condition=""'$(Configuration)' != 'Release'""></TailwindMinify>
+    <TailwindTag>__TAILWIND_TAG__</TailwindTag>
+    <TailwindVersion>__TAILWIND_VERSION__</TailwindVersion>
+    <TailwindArch>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant())</TailwindArch>
+    <TailwindPlatform Condition=""$([MSBuild]::IsOSPlatform('Windows'))"">windows-$(TailwindArch).exe</TailwindPlatform>
+    <TailwindPlatform Condition=""$([MSBuild]::IsOSPlatform('Linux'))"">linux-$(TailwindArch)</TailwindPlatform>
+    <TailwindPlatform Condition=""$([MSBuild]::IsOSPlatform('OSX'))"">macos-$(TailwindArch)</TailwindPlatform>
+    <!-- One copy per machine, shared with the ShellUI CLI, so projects hold no binary; SHELLUI_CACHE_DIR moves it. -->
+    <ShellUICacheDir Condition=""'$(ShellUICacheDir)' == ''"">$(SHELLUI_CACHE_DIR)</ShellUICacheDir>
+    <ShellUICacheDir Condition=""'$(ShellUICacheDir)' == ''"">$([System.IO.Path]::Combine($([System.Environment]::GetFolderPath(SpecialFolder.UserProfile)), '.shellui', 'bin'))</ShellUICacheDir>
+    <TailwindCached>$([System.IO.Path]::Combine('$(ShellUICacheDir)', 'tailwindcss-$(TailwindVersion)-$(TailwindPlatform)'))</TailwindCached>
+    <!-- A copy in the project's .shellui/bin wins over the shared one. -->
+    <TailwindExecutable Condition=""'$(TailwindExecutable)' == '' AND '$(OS)' == 'Windows_NT' AND Exists('$(ShellUIBinPath)\tailwindcss.exe')"">$(ShellUIBinPath)\tailwindcss.exe</TailwindExecutable>
+    <TailwindExecutable Condition=""'$(TailwindExecutable)' == '' AND '$(OS)' != 'Windows_NT' AND Exists('$(ShellUIBinPath)/tailwindcss')"">$(ShellUIBinPath)/tailwindcss</TailwindExecutable>
+    <TailwindExecutable Condition=""'$(TailwindExecutable)' == ''"">$(TailwindCached)</TailwindExecutable>
   </PropertyGroup>
+
+  <!-- Downloads to .partial and renames only on success, so an interrupted download never looks like a working CLI. -->
+  <Target Name=""DownloadTailwindCLI"" BeforeTargets=""BeforeBuild"" Condition=""!Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)') AND '$(TailwindPlatform)' != ''"">
+    <Message Importance=""high"" Text=""Downloading the Tailwind CLI $(TailwindTag) to $(ShellUICacheDir)..."" />
+    <DownloadFile SourceUrl=""https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindTag)/tailwindcss-$(TailwindPlatform)"" DestinationFolder=""$(ShellUICacheDir)"" DestinationFileName=""tailwindcss-$(TailwindVersion)-$(TailwindPlatform).partial"" Retries=""3"" RetryDelayMilliseconds=""5000"" Timeout=""1800000"" ContinueOnError=""true"" />
+    <Move SourceFiles=""$(TailwindCached).partial"" DestinationFiles=""$(TailwindCached)"" Condition=""'$(MSBuildLastTaskResult)' == 'true' AND Exists('$(TailwindCached).partial')"" />
+    <Delete Files=""$(TailwindCached).partial"" ContinueOnError=""true"" />
+    <Exec Command=""chmod +x &quot;$(TailwindCached)&quot;"" Condition=""'$(OS)' != 'Windows_NT' AND Exists('$(TailwindCached)')"" />
+  </Target>
+
+  <Target Name=""WarnMissingTailwindCLI"" BeforeTargets=""BeforeBuild"" Condition=""!Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')"">
+    <Warning Text=""ShellUI: the Tailwind CLI could not be downloaded, so wwwroot/app.css was not rebuilt. Save https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindTag)/tailwindcss-$(TailwindPlatform) as $(TailwindCached), or build again to retry."" />
+  </Target>
 
   <Target Name=""BuildTailwindCSS"" BeforeTargets=""BeforeBuild"" Condition=""Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')"">
     <Message Importance=""high"" Text=""Building Tailwind CSS..."" />
@@ -391,7 +455,7 @@ public class InitService
     <Message Importance=""high"" Text=""Cleaning Tailwind CSS output..."" />
     <Delete Files=""$(TailwindOutputCss)"" />
   </Target>
-</Project>";
+</Project>".Replace("__TAILWIND_TAG__", TailwindConstants.GitHubTag).Replace("__TAILWIND_VERSION__", TailwindConstants.Version);
         }
     }
 

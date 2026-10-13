@@ -194,6 +194,9 @@ public static class ComponentManager
         var config = JsonSerializer.Deserialize<ShellUIConfig>(File.ReadAllText(ConfigFileName));
         var installed = config?.InstalledComponents.Select(c => c.Name).ToList() ?? new List<string>();
 
+        foreach (var note in InitService.RefreshTailwindSetup(Directory.GetCurrentDirectory()))
+            AnsiConsole.MarkupLine(note);
+
         if (config == null || installed.Count == 0)
         {
             AnsiConsole.MarkupLine("[yellow]No components installed yet.[/]");

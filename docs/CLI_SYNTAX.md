@@ -58,7 +58,7 @@ Initialization creates or updates:
 
 `Components/Layout/` is created when a layout target is installed.
 
-Standalone mode stores the Tailwind executable in `.shellui/bin/`. npm mode installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm. The current CLI invokes npm through `cmd`; use standalone mode on non-Windows systems or run npm manually.
+Standalone mode downloads the Tailwind executable once per machine into `~/.shellui/bin` (set `SHELLUI_CACHE_DIR` to move it), and every project builds with that copy; a copy in a project's `.shellui/bin/` takes precedence. If the download fails, `init` still completes and the build retries it. npm mode installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm. The current CLI invokes npm through `cmd`; use standalone mode on non-Windows systems or run npm manually.
 
 ## `add`
 
@@ -162,8 +162,9 @@ Run it from the project root after a theme has been applied.
 | `wwwroot/input.css` | Tailwind v4 input and theme variables |
 | `wwwroot/app.css` | Generated Tailwind output |
 | `tailwind.config.js` | Project content globs and dark-mode setting |
-| `.shellui/bin/tailwindcss` | Standalone CLI on macOS/Linux |
-| `.shellui/bin/tailwindcss.exe` | Standalone CLI on Windows |
+| `~/.shellui/bin/tailwindcss-<version>-<platform>` | Standalone CLI, shared by every project on the machine |
+| `.shellui/.gitignore` | Keeps `.shellui/` out of git |
+| `.shellui/bin/tailwindcss(.exe)` | Optional per-project CLI, used instead of the shared one |
 | `Build/ShellUI.targets` | MSBuild integration |
 | `shellui.json` | ShellUI project configuration |
 | `shellui.theme.lock` | Theme source and integrity record |
@@ -244,7 +245,7 @@ shellui add button,card
 - Run `shellui list` to verify a target name.
 - Confirm `wwwroot/input.css` exists and contains `@import "tailwindcss";`.
 - Run `dotnet build` to invoke the generated Tailwind build target.
-- In standalone mode, check `.shellui/bin/`; in npm mode, run `npm install`.
+- In standalone mode, check `~/.shellui/bin`; in npm mode, run `npm install`.
 
 ## Related documentation
 
