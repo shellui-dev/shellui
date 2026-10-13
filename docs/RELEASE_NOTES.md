@@ -1,5 +1,21 @@
 # ShellUI Release Notes
 
+# ShellUI v0.3.4
+
+> A patch release with a `TimePicker` fix for the `ShellUI.Components` NuGet package and dark-theme fixes for both the package and the CLI.
+
+## 🐛 Fixes
+
+- NuGet package: `TimePicker` threw a `FormatException` whenever `Value` was set, because it formatted the `TimeSpan` with a date pattern. It now shows the time, the same as the CLI template.
+- Dark theme: the browser kept drawing its own controls light on a dark page (the `<input type="date">` calendar, number spinners, scrollbars, autofill and `<select>` lists). The themes now set `color-scheme` to `light` in `:root` and `dark` in `.dark`: in `shellui-theme.css` and `shellui-all.css` in the package, and in the theme `shellui init` and `shellui theme apply` write.
+
+A new test renders every package component that takes a value with a sample value set, so a component that only fails once it has a value fails CI.
+
+## ⬆️ Upgrading
+
+- **NuGet package:** update to `0.3.4`.
+- **CLI:** update the tool. Existing projects keep their `input.css`: add `color-scheme: light;` inside `:root` and `color-scheme: dark;` inside `.dark`, or run `shellui theme apply` again if you use a tweakcn theme.
+
 # ShellUI v0.3.3
 
 > A patch release with fixes for both the `ShellUI.Components` NuGet package and the CLI templates.
