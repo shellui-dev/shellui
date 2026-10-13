@@ -35,6 +35,7 @@ module.exports = {
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  color-scheme: light;
   --background: oklch(0.9900 0 0);
   --foreground: oklch(0 0 0);
   --card: oklch(1 0 0);
@@ -90,6 +91,7 @@ module.exports = {
 }
 
 .dark {
+  color-scheme: dark;
   --background: oklch(0 0 0);
   --foreground: oklch(1 0 0);
   --card: oklch(0.1400 0 0);

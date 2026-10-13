@@ -62,4 +62,14 @@ public class PackageBehaviorTests
         dropdown.Find("div.relative").KeyDown(new KeyboardEventArgs { Key = "Escape" });
         Assert.Equal(new[] { false }, changes);
     }
+
+    [Fact]
+    public void TimePicker_ShowsASetValue()
+    {
+        using var ctx = new BunitContext();
+
+        var picker = ctx.Render<TimePicker>(p => p.Add(c => c.Value, new TimeSpan(9, 5, 0)));
+
+        Assert.Contains("09:05", picker.Markup);
+    }
 }
