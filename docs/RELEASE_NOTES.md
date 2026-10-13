@@ -1,5 +1,89 @@
 # ShellUI Release Notes
 
+# ShellUI v0.4.0-alpha.2 🧪
+
+> The second 0.4 prerelease. It fixes `shellui update`, which could leave a project upgraded from 0.3 unable to build, and makes `update` keep the files you changed. The Tailwind CLI is now downloaded once per machine instead of into every project, and the download survives slow connections. It also fixes `remove`, the dark theme and the package `TimePicker`. It is a prerelease, so installs need `--version`. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
+
+## 🌬️ Tailwind CLI: once per machine
+
+- **Projects no longer hold the binary.** The standalone Tailwind CLI (about 110 MB) is downloaded once into `~/.shellui/bin` (or `SHELLUI_CACHE_DIR`), and `init` and the build run it from there. A new project went from about 112 MB to 130 KB, and later projects set up offline. A copy in a project's `.shellui/bin` still takes precedence. The binary is a build tool and never shipped with your app.
+- **Nothing in `.shellui/` is committed:** it now contains a `.gitignore` of `*`.
+- **Slow connections work.** The download streams to a `.partial` file, resumes after a dropped connection, retries, and only gives up after a minute with no data. Before, `init` gave up after five minutes and left the project uninitialised. The build's own download uses the same cache and retries too.
+- **A failed download no longer stops `init`.** It finishes the rest of the setup and warns, and the next build tries again; its warning names the URL and where to save the file.
+
+## 🔧 `shellui update` and `remove`
+
+- **`update` installs new dependencies.** Components gain parts between versions; in 0.4, `breadcrumb` gained `breadcrumb-list`, `-link`, `-page`, `-separator` and `-ellipsis`, and `tabs` gained `tab-models`. `update` only rewrote existing files, so a project updated from 0.3 failed to build (`BreadcrumbList`, `TabItem` not found). It now installs missing dependencies the way `add` does, with their NuGet packages and `_Imports.razor` usings.
+- **`update` keeps your changes.** `shellui.json` now records a hash of each file the CLI writes. `update` skips files you have changed since and says so; `--force` overwrites them. Before, `update` with no names rewrote everything, including `app-sidebar` and the dashboard layouts that apps are meant to edit.
+- **`remove` finds files the way install writes them.** It always looked in `Components/UI`, so it ignored a custom `ComponentsPath`, could not remove dashboard or auth layouts, and reported every name as removed. It now removes layouts too, lists files that still use a removed layout (usually `Routes.razor`), and counts what it removed.
+
+## 🐛 Fixes
+
+- **Dark theme:** the browser drew its own controls (the `<input type="date">` calendar, number spinners, scrollbars, autofill, `<select>` lists) light on a dark page. The themes now set `color-scheme`: in the theme `init` and `theme apply` write, and in the package's `shellui-theme.css` and `shellui-all.css`.
+- **NuGet package `TimePicker`** threw a `FormatException` whenever `Value` was set. It now shows the time.
+- **NuGet package `shellui-theme.css`** logged a 404 on every page that linked it directly, because it started with `@import "tailwindcss";`. The file now holds only the theme; `shellui-all.css` is unchanged.
+- **NuGet packages** now have the ShellUI icon and show the logo at the top of their README.
+- Everything fixed in 0.3.3 and 0.3.4 is included.
+
+## ⬆️ Upgrading from 0.4.0-alpha.1
+
+- **CLI:** update the tool, then run `shellui update`. Files installed by alpha.1 have no recorded hash, so this first update keeps `app-sidebar`, `sidebar-account` and the dashboard and auth layouts if they differ from the template, and rewrites the other components. Commit first so you can review the changes. From then on, every file you edit is kept.
+- **Tailwind CLI:** the same `shellui update` replaces `Build/ShellUI.targets` if you haven't edited it, adds `.shellui/.gitignore`, and deletes the project's copy of the Tailwind CLI when it's the same as the shared one, so the project switches to the shared CLI. An edited targets file is left alone with a note.
+- **Existing `input.css`:** `update` doesn't rewrite it. Add `color-scheme: light;` inside `:root` and `color-scheme: dark;` inside `.dark`, or run `shellui theme apply` again if you use a tweakcn theme.
+- **NuGet package:** update `ShellUI.Components` to `0.4.0-alpha.2`.
+
+Upgrading from 0.3: see the 0.4.0-alpha.1 notes below, then the steps above.
+
+## 📦 Installation
+
+```bash
+# CLI (prerelease: the version is required)
+dotnet tool install -g ShellUI.CLI --version 0.4.0-alpha.2
+# or upgrade an existing install
+dotnet tool update -g ShellUI.CLI --version 0.4.0-alpha.2
+```
+
+```bash
+# NuGet package
+dotnet add package ShellUI.Components --version 0.4.0-alpha.2
+```
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.4.0-alpha.1...v0.4.0-alpha.2
+
+# ShellUI v0.3.4
+
+> A patch release with a `TimePicker` fix for the `ShellUI.Components` NuGet package and dark-theme fixes for both the package and the CLI.
+
+## 🐛 Fixes
+
+- NuGet package: `TimePicker` threw a `FormatException` whenever `Value` was set, because it formatted the `TimeSpan` with a date pattern. It now shows the time, the same as the CLI template.
+- Dark theme: the browser kept drawing its own controls light on a dark page (the `<input type="date">` calendar, number spinners, scrollbars, autofill and `<select>` lists). The themes now set `color-scheme` to `light` in `:root` and `dark` in `.dark`: in `shellui-theme.css` and `shellui-all.css` in the package, and in the theme `shellui init` and `shellui theme apply` write.
+
+A new test renders every package component that takes a value with a sample value set, so a component that only fails once it has a value fails CI.
+
+## ⬆️ Upgrading
+
+- **NuGet package:** update to `0.3.4`.
+- **CLI:** update the tool. Existing projects keep their `input.css`: add `color-scheme: light;` inside `:root` and `color-scheme: dark;` inside `.dark`, or run `shellui theme apply` again if you use a tweakcn theme.
+
+# ShellUI v0.3.3
+
+> A patch release with fixes for both the `ShellUI.Components` NuGet package and the CLI templates.
+
+## 🐛 Fixes
+
+- NuGet package: linking `shellui-theme.css` directly logged a 404 on every page load, because the file started with `@import "tailwindcss";` and the browser requested `tailwindcss` as a URL. The theme file now holds only the theme; the precompiled `shellui-all.css` is unchanged.
+- `Command` ignored `CommandItem.Action`: selecting an item only raised `CommandSelected`. It now runs the item's `Action`, then raises `CommandSelected`, the same as `CommandPalette`.
+- `Dropdown` and `Popover` now close on Escape.
+- CLI `SidebarProvider` logged a `JSDisconnectedException` twice on every full page reload, typed URL or closed tab. It now ignores the disconnected circuit when it cleans up.
+
+New tests cover `Command` running `Action` and Escape closing `Dropdown` and `Popover`.
+
+## ⬆️ Upgrading
+
+- **NuGet package:** update to `0.3.3`.
+- **CLI:** update the tool, then run `shellui update` to rewrite installed components from the new templates. `update` overwrites the files, so commit or back up any components you customized first.
+
 # ShellUI v0.4.0-alpha.1 🧪
 
 > The first 0.4 prerelease. It adds 14 components, compositional parts for eight existing ones, dashboard and sign-in page blocks, and support for apps that use ASP.NET Core Identity. It is a prerelease, so installs need `--version`. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
