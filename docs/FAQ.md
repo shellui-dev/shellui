@@ -103,7 +103,7 @@ Running `shellui update` without names also updates all installed components. Fi
 
 ### What happens when I remove a component?
 
-`remove` deletes the named component files and updates `shellui.json`. It has no options and does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-01` and `dashboard-02` currently require manual removal from `Components/Layout` because remove is not yet layout-aware:
+`remove` deletes the named component files and updates `shellui.json`. It has no options and does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-02` are removed from `Components/Layout`, and `remove` lists the files that still use the layout (usually `Routes.razor`):
 
 ```bash
 shellui remove button
