@@ -163,7 +163,7 @@ public static class ComponentManager
         AnsiConsole.MarkupLine($"[green]Successfully removed {componentNames.Length} component(s)[/]");
     }
 
-    public static void UpdateComponents(string[] componentNames, bool updateAll)
+    public static async Task UpdateComponents(string[] componentNames, bool updateAll, bool force = false)
     {
         if (!File.Exists(ConfigFileName))
         {
@@ -171,16 +171,19 @@ public static class ComponentManager
             return;
         }
 
-        var installed = GetInstalledComponents();
+        var config = JsonSerializer.Deserialize<ShellUIConfig>(File.ReadAllText(ConfigFileName));
+        var installed = config?.InstalledComponents.Select(c => c.Name).ToList() ?? new List<string>();
 
-        if (installed.Count == 0)
+        if (config == null || installed.Count == 0)
         {
             AnsiConsole.MarkupLine("[yellow]No components installed yet.[/]");
             return;
         }
 
-        var toUpdate = updateAll || componentNames.Length == 0 
-            ? installed.ToArray() 
+        var rootNamespace = ProjectDetector.DetectProject().RootNamespace;
+
+        var toUpdate = updateAll || componentNames.Length == 0
+            ? installed.ToArray()
             : componentNames;
 
         AnsiConsole.WriteLine();
@@ -190,6 +193,8 @@ public static class ComponentManager
         var updated = 0;
         var skipped = 0;
         var failed = new List<string>();
+        var updatedNames = new List<string>();
+        var customized = new List<string>();
 
         Loaders.SnakeStatus().Start("Updating components...", ctx =>
         {
@@ -212,6 +217,19 @@ public static class ComponentManager
                     continue;
                 }
 
+                var path = ComponentInstaller.InstalledFilePath(metadata, config);
+                if (!force && File.Exists(path))
+                {
+                    var entry = config.InstalledComponents.First(c => c.Name == normalizedName);
+                    if (HasLocalChanges(entry, metadata, File.ReadAllText(path), ComponentInstaller.RenderedContent(normalizedName, rootNamespace)))
+                    {
+                        AnsiConsole.MarkupLine($"[yellow]Skipped:[/] {metadata.DisplayName} has local changes [dim](use --force to overwrite)[/]");
+                        customized.Add(normalizedName);
+                        skipped++;
+                        continue;
+                    }
+                }
+
                 if (metadata.Dependencies.Contains("shellui-js") &&
                     !ComponentInstaller.IsShellUiJsCompatible() &&
                     !ComponentInstaller.EnsureShellUiJs())
@@ -224,6 +242,7 @@ public static class ComponentManager
                 if (ComponentInstaller.InstallComponent(normalizedName, metadata, force: true, skipConfig: false))
                 {
                     AnsiConsole.MarkupLine($"[green]Updated:[/] {metadata.DisplayName} to v{metadata.Version}");
+                    updatedNames.Add(normalizedName);
                     updated++;
                 }
                 else
@@ -233,6 +252,8 @@ public static class ComponentManager
             }
         });
 
+        if (customized.Count > 0) MarkCustomized(customized);
+
         AnsiConsole.WriteLine();
         if (updated > 0)
             AnsiConsole.MarkupLine($"[green]Updated {updated} component(s)[/]");
@@ -240,6 +261,54 @@ public static class ComponentManager
             AnsiConsole.MarkupLine($"[yellow]Skipped {skipped} component(s)[/]");
         if (failed.Count > 0)
             AnsiConsole.MarkupLine($"[red]Failed: {Markup.Escape(string.Join(", ", failed))}[/]");
+
+        // Templates gain dependencies between versions (breadcrumb-list, tab-models); add them like `add` does.
+        var missing = MissingDependencies(updatedNames, GetInstalledComponents());
+        if (missing.Count > 0)
+        {
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine($"[blue]Installing new dependencies:[/] {string.Join(", ", missing)}");
+            await ComponentInstaller.InstallComponents(missing.ToArray(), force: false);
+        }
+    }
+
+    // Blocks apps are told to edit. Entries from before hashes were recorded can only be compared with the current template.
+    private static bool IsEditableBlock(ComponentMetadata metadata) =>
+        metadata.IsLayoutBlock || metadata.Name is "app-sidebar" or "sidebar-account";
+
+    public static bool HasLocalChanges(InstalledComponent entry, ComponentMetadata metadata, string current, string? template)
+    {
+        var hash = ComponentInstaller.ContentHash(current);
+        if (entry.Hash != null) return hash != entry.Hash;
+        return IsEditableBlock(metadata) && template != null && hash != ComponentInstaller.ContentHash(template);
+    }
+
+    public static List<string> MissingDependencies(IEnumerable<string> components, ICollection<string> installed)
+    {
+        var missing = new List<string>();
+        var seen = new HashSet<string>(installed);
+        var queue = new Queue<string>(components);
+        while (queue.Count > 0)
+        {
+            var metadata = ComponentRegistry.GetMetadata(queue.Dequeue());
+            if (metadata == null) continue;
+            foreach (var dep in metadata.Dependencies)
+            {
+                if (!seen.Add(dep)) continue;
+                missing.Add(dep);
+                queue.Enqueue(dep);
+            }
+        }
+        return missing;
+    }
+
+    private static void MarkCustomized(List<string> names)
+    {
+        var config = JsonSerializer.Deserialize<ShellUIConfig>(File.ReadAllText(ConfigFileName));
+        if (config == null) return;
+        foreach (var entry in config.InstalledComponents.Where(c => names.Contains(c.Name)))
+            entry.IsCustomized = true;
+        File.WriteAllText(ConfigFileName, JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }));
     }
 
     private static void UpdateConfig(List<string> installedComponentNames)

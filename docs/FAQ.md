@@ -91,7 +91,7 @@ There are 93 direct targets. Use the command output as the authoritative name li
 
 ### What happens when I update a component?
 
-`update` overwrites the selected source template without showing a diff, merging changes, or asking for a force flag:
+`update` rewrites the selected components from the current templates and installs any dependencies they gained:
 
 ```bash
 shellui update button
@@ -99,7 +99,7 @@ shellui update button card
 shellui update --all
 ```
 
-Running `shellui update` without names also updates all installed components. Commit or back up local changes first.
+Running `shellui update` without names also updates all installed components. Files you have changed since the CLI wrote them are skipped; add `--force` to overwrite them. There is no diff or merge, so commit first.
 
 ### What happens when I remove a component?
 

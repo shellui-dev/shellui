@@ -130,7 +130,7 @@ shellui update --all
 shellui remove button card
 ```
 
-`update` overwrites the selected source files directly. It has no comparison, merge, or force step. Commit or back up custom changes before running it.
+`update` rewrites the selected source files and skips any you have changed (use `--force` to overwrite those). Commit before running it.
 
 `remove` accepts component names separated by spaces and has no options. It removes the named files, but it does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-01` and `dashboard-02` currently require manual removal from `Components/Layout`. Check references before removing a component that another component may use.
 

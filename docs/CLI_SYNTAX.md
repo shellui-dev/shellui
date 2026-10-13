@@ -20,7 +20,7 @@ shellui init [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--
 shellui add <name...> [--force] [--replace-layout]
 shellui list [--installed|--available]
 shellui remove <name...>
-shellui update [name...] [--all]
+shellui update [name...] [--all] [--force]
 shellui theme init <url-or-id> [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
 shellui theme apply <url-or-id> [--emit-override <path>]
 shellui theme update
@@ -153,9 +153,15 @@ shellui update button
 shellui update button card
 shellui update --all
 shellui update
+shellui update card --force
 ```
 
-Names are separated by spaces. With no names, or with `--all`, every installed component is updated. `update` overwrites files directly; there is no diff, merge, confirmation, or force option. Commit or back up local changes before updating.
+Names are separated by spaces. With no names, or with `--all`, every installed component is updated.
+
+- **Your changes are kept.** `shellui.json` records a hash of each file as the CLI wrote it. If a file has changed since, `update` skips it and says so; `--force` overwrites it. Files installed by a CLI older than 0.4.0-alpha.2 have no hash, so for those `update` keeps the blocks apps are meant to edit (`app-sidebar`, `sidebar-account`, the `dashboard-*` and `auth-*` layouts) when they differ from the template, and rewrites everything else.
+- **New dependencies are installed.** When a component gained dependencies since you installed it (for example `tabs` now needs `tab-models`), `update` adds them, with their NuGet packages and `_Imports.razor` usings, the same way `add` does.
+
+`update` has no diff or merge. Commit before updating so you can review the changes.
 
 ## `theme`
 
