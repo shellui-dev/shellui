@@ -80,7 +80,7 @@ The implemented command tree is:
 | `shellui add <components...>` | Install one or more direct targets and recursively install their registry dependencies. |
 | `shellui list` | List direct targets, with installed/available filtering. |
 | `shellui remove <components...>` | Remove selected installed source files and update `shellui.json`. |
-| `shellui update [components...]` | Rewrite selected installed source files, or all installed components with `--all`. |
+| `shellui update [components...]` | Rewrite selected installed source files, or all installed components with `--all`; skips files changed since install unless `--force`, and installs new dependencies. |
 | `shellui theme init <url-or-id>` | Initialize a project and apply a fetched theme in one operation. |
 | `shellui theme apply <url-or-id>` | Apply a theme to `wwwroot/input.css` or emit a standalone override. |
 | `shellui theme update` | Re-fetch the theme recorded in `shellui.theme.lock`. |

@@ -323,17 +323,22 @@ class Program
             "Update all installed components");
         command.AddOption(allOption);
 
-        command.SetHandler((components, all) =>
+        var forceOption = new Option<bool>(
+            "--force",
+            "Also overwrite components you have changed");
+        command.AddOption(forceOption);
+
+        command.SetHandler(async (components, all, force) =>
         {
             try
             {
-                ComponentManager.UpdateComponents(components, all);
+                await ComponentManager.UpdateComponents(components, all, force);
             }
             catch (Exception ex)
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
             }
-        }, componentsArg, allOption);
+        }, componentsArg, allOption, forceOption);
 
         return command;
     }

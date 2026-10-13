@@ -134,13 +134,13 @@ public class ComponentInstaller
         return Task.FromResult(result != InstallResult.Failed);
     }
 
-    public static void InstallComponent(string componentName, ComponentMetadata metadata, bool force, bool skipConfig = false)
+    public static bool InstallComponent(string componentName, ComponentMetadata metadata, bool force, bool skipConfig = false)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
         var configJson = File.ReadAllText(configPath);
         var config = JsonSerializer.Deserialize<ShellUIConfig>(configJson);
 
-        if (config == null) return;
+        if (config == null) return false;
 
         var projectInfo = ProjectDetector.DetectProject();
         var result = InstallComponentInternal(componentName, config, projectInfo, force);
@@ -150,6 +150,7 @@ public class ComponentInstaller
             var updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(configPath, updatedJson);
         }
+        return result != InstallResult.Failed;
     }
 
     public static bool EnsureShellUiJs()
@@ -193,10 +194,7 @@ public class ComponentInstaller
             return InstallResult.Failed;
         }
 
-        var basePath = metadata.IsLayoutBlock
-            ? Path.Combine(Directory.GetCurrentDirectory(), config.LayoutPath ?? "Components/Layout")
-            : Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath);
-        var componentPath = Path.GetFullPath(Path.Combine(basePath, metadata.FilePath));
+        var componentPath = InstalledFilePath(metadata, config);
         var existing = config.InstalledComponents.FirstOrDefault(c => c.Name == componentName);
 
         if (File.Exists(componentPath) && !force)
@@ -212,7 +210,7 @@ public class ComponentInstaller
 
                 content = content.Replace("YourProjectNamespace", projectInfo.RootNamespace);
                 File.WriteAllText(componentPath, content);
-                RecordInstalledComponent(config, metadata, componentName, resetCustomization: true);
+                RecordInstalledComponent(config, metadata, componentName, resetCustomization: true, ContentHash(content));
                 AnsiConsole.MarkupLine($"[green]Updated '{componentName}'[/] [dim](added sidebar interop)[/]");
                 return InstallResult.Success;
             }
@@ -231,22 +229,43 @@ public class ComponentInstaller
         }
 
         File.WriteAllText(componentPath, content);
-        RecordInstalledComponent(config, metadata, componentName, resetCustomization: true);
+        RecordInstalledComponent(config, metadata, componentName, resetCustomization: true, ContentHash(content));
         AnsiConsole.MarkupLine($"[green]Installed '{componentName}'[/] [dim]({metadata.FilePath})[/]");
         return InstallResult.Success;
+    }
+
+    internal static string InstalledFilePath(ComponentMetadata metadata, ShellUIConfig config)
+    {
+        var basePath = metadata.IsLayoutBlock
+            ? Path.Combine(Directory.GetCurrentDirectory(), config.LayoutPath ?? "Components/Layout")
+            : Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath);
+        return Path.GetFullPath(Path.Combine(basePath, metadata.FilePath));
+    }
+
+    // The template as install would write it into this project.
+    internal static string? RenderedContent(string componentName, string rootNamespace) =>
+        ComponentRegistry.GetComponentContent(componentName)?.Replace("YourProjectNamespace", rootNamespace);
+
+    // Line endings are normalized so a checkout that converts CRLF doesn't count as an edit.
+    public static string ContentHash(string content)
+    {
+        var bytes = System.Text.Encoding.UTF8.GetBytes(content.Replace("\r\n", "\n"));
+        return Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(bytes));
     }
 
     private static void RecordInstalledComponent(
         ShellUIConfig config,
         ComponentMetadata metadata,
         string componentName,
-        bool resetCustomization)
+        bool resetCustomization,
+        string? hash = null)
     {
         var existing = config.InstalledComponents.FirstOrDefault(c => c.Name == componentName);
         if (existing != null)
         {
             existing.Version = metadata.Version;
             if (resetCustomization) existing.IsCustomized = false;
+            if (hash != null) existing.Hash = hash;
             return;
         }
 
@@ -255,7 +274,8 @@ public class ComponentInstaller
             Name = componentName,
             Version = metadata.Version,
             InstalledAt = DateTime.UtcNow,
-            IsCustomized = false
+            IsCustomized = false,
+            Hash = hash
         });
     }
 
