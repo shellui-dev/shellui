@@ -100,14 +100,15 @@ public static class ComponentManager
             return;
         }
 
-        var installed = GetInstalledComponents();
-        var componentsPath = "Components/UI";
-
-        if (!Directory.Exists(componentsPath))
+        var config = JsonSerializer.Deserialize<ShellUIConfig>(File.ReadAllText(ConfigFileName));
+        if (config == null)
         {
-            AnsiConsole.MarkupLine("[red]Error:[/] Components directory not found.");
+            AnsiConsole.MarkupLine("[red]Error:[/] Failed to read shellui.json");
             return;
         }
+
+        var installed = config.InstalledComponents.Select(c => c.Name).ToList();
+        var removed = 0;
 
         AnsiConsole.WriteLine();
         AnsiConsole.Write(new Rule("[red]Removing Components[/]").RuleStyle("red dim"));
@@ -129,9 +130,9 @@ public static class ComponentManager
                 continue;
             }
 
-            if (normalizedName == "sidebar-js")
+            if (normalizedName == "sidebar-js" && ComponentRegistry.GetMetadata("sidebar-provider") is { } provider)
             {
-                var providerPath = Path.Combine(componentsPath, "SidebarProvider.razor");
+                var providerPath = ComponentInstaller.InstalledFilePath(provider, config);
                 if (File.Exists(providerPath) &&
                     File.ReadAllText(providerPath).Contains("shellui-sidebar.js", StringComparison.Ordinal))
                 {
@@ -140,25 +141,46 @@ public static class ComponentManager
                 }
             }
 
-            var componentPath = Path.Combine(componentsPath, metadata.FilePath);
-            
+            var componentPath = ComponentInstaller.InstalledFilePath(metadata, config);
             if (File.Exists(componentPath))
             {
                 File.Delete(componentPath);
                 AnsiConsole.MarkupLine($"[green]Removed:[/] {metadata.DisplayName}");
-                
-                installed.Remove(normalizedName);
             }
             else
             {
-                AnsiConsole.MarkupLine($"[yellow]Warning:[/] File not found: {componentPath}");
+                AnsiConsole.MarkupLine($"[green]Removed:[/] {metadata.DisplayName} [dim](its file was already gone)[/]");
+            }
+            installed.Remove(normalizedName);
+            removed++;
+
+            if (metadata.IsLayoutBlock)
+            {
+                var layout = Path.GetFileNameWithoutExtension(metadata.FilePath);
+                foreach (var file in FilesReferencing(layout))
+                    AnsiConsole.MarkupLine($"[yellow]Note:[/] {Markup.Escape(file)} still uses {layout}; point it at another layout.");
             }
         }
 
         UpdateConfig(installed);
 
         AnsiConsole.WriteLine();
-        AnsiConsole.MarkupLine($"[green]Successfully removed {componentNames.Length} component(s)[/]");
+        AnsiConsole.MarkupLine(removed > 0
+            ? $"[green]Removed {removed} component(s)[/]"
+            : "[yellow]Nothing removed[/]");
+    }
+
+    // Razor files that still name a type, so a removed layout doesn't break the build unnoticed.
+    internal static IEnumerable<string> FilesReferencing(string typeName)
+    {
+        var root = Directory.GetCurrentDirectory();
+        var pattern = new System.Text.RegularExpressions.Regex($@"\b{System.Text.RegularExpressions.Regex.Escape(typeName)}\b");
+        return Directory.EnumerateFiles(root, "*.razor", SearchOption.AllDirectories)
+            .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}") &&
+                        !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"))
+            .Where(f => pattern.IsMatch(File.ReadAllText(f)))
+            .Select(f => Path.GetRelativePath(root, f))
+            .OrderBy(f => f);
     }
 
     public static async Task UpdateComponents(string[] componentNames, bool updateAll, bool force = false)

@@ -132,7 +132,7 @@ shellui remove button card
 
 `update` rewrites the selected source files and skips any you have changed (use `--force` to overwrite those). Commit before running it.
 
-`remove` accepts component names separated by spaces and has no options. It removes the named files, but it does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-01` and `dashboard-02` currently require manual removal from `Components/Layout`. Check references before removing a component that another component may use.
+`remove` accepts component names separated by spaces and has no options. It removes the named files, but it does not perform reverse-dependency cleanup. For layout blocks such as `dashboard-02`, `remove` lists the files that still use the layout. Check references before removing a component that another component may use.
 
 ## Apply a theme
 
