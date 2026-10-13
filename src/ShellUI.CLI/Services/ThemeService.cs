@@ -102,8 +102,8 @@ public static class ThemeService
         sb.AppendLine(BeginMarker);
         sb.AppendLine($"/* Theme: {theme.Name} — fetched from tweakcn */");
 
-        WriteBlock(sb, ":root", theme.LightVars);
-        WriteBlock(sb, ".dark", theme.DarkVars);
+        WriteBlock(sb, ":root", "light", theme.LightVars);
+        WriteBlock(sb, ".dark", "dark", theme.DarkVars);
 
         if (theme.ThemeVars.Count > 0)
         {
@@ -118,11 +118,13 @@ public static class ThemeService
         return sb.ToString();
     }
 
-    private static void WriteBlock(StringBuilder sb, string selector, Dictionary<string, string> vars)
+    // color-scheme makes the browser's own controls (date popups, scrollbars, select lists) follow the theme.
+    private static void WriteBlock(StringBuilder sb, string selector, string colorScheme, Dictionary<string, string> vars)
     {
         if (vars.Count == 0) return;
         sb.AppendLine();
         sb.AppendLine($"{selector} {{");
+        sb.AppendLine($"  color-scheme: {colorScheme};");
         foreach (var (k, v) in vars.OrderBy(kv => kv.Key, StringComparer.Ordinal))
             sb.AppendLine($"  --{k}: {v};");
         sb.AppendLine("}");

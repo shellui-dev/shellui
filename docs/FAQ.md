@@ -91,7 +91,7 @@ There are 93 direct targets. Use the command output as the authoritative name li
 
 ### What happens when I update a component?
 
-`update` overwrites the selected source template without showing a diff, merging changes, or asking for a force flag:
+`update` rewrites the selected components from the current templates and installs any dependencies they gained:
 
 ```bash
 shellui update button
@@ -99,11 +99,11 @@ shellui update button card
 shellui update --all
 ```
 
-Running `shellui update` without names also updates all installed components. Commit or back up local changes first.
+Running `shellui update` without names also updates all installed components. Files you have changed since the CLI wrote them are skipped; add `--force` to overwrite them. There is no diff or merge, so commit first.
 
 ### What happens when I remove a component?
 
-`remove` deletes the named component files and updates `shellui.json`. It has no options and does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-01` and `dashboard-02` currently require manual removal from `Components/Layout` because remove is not yet layout-aware:
+`remove` deletes the named component files and updates `shellui.json`. It has no options and does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-02` are removed from `Components/Layout`, and `remove` lists the files that still use the layout (usually `Routes.razor`):
 
 ```bash
 shellui remove button

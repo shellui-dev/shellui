@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ShellUI.Core;
 
 namespace ShellUI.Core.Models;
@@ -28,6 +29,10 @@ public class InstalledComponent
     public required string Version { get; set; }
     public DateTime InstalledAt { get; set; } = DateTime.UtcNow;
     public bool IsCustomized { get; set; }
+
+    // SHA-256 of the file as the CLI wrote it; update compares against it to spot local edits.
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Hash { get; set; }
 }
 
 public enum ProjectType
