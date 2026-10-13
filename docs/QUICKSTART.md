@@ -44,7 +44,7 @@ shellui init --yes --tailwind standalone
 - `Components/_Imports.razor` when it is present
 - The host file used by the project
 
-Standalone mode downloads Tailwind `4.3.2` into `.shellui/bin/` and does not require Node.js. To use npm instead:
+Standalone mode downloads Tailwind `4.3.2` once per machine, into `~/.shellui/bin`, and does not require Node.js. To use npm instead:
 
 ```bash
 shellui init --yes --tailwind npm
@@ -152,7 +152,7 @@ shellui theme update
 - Use `shellui` for a global tool and `dotnet shellui` for a local manifest.
 - Run `shellui list` to verify a target name.
 - Check that `wwwroot/input.css` contains `@import "tailwindcss";`.
-- Check `.shellui/bin/` for standalone mode or run `npm install` for npm mode.
+- Check `~/.shellui/bin` for standalone mode or run `npm install` for npm mode.
 - Run `dotnet build` to invoke the generated Tailwind target.
 
 ## Related documentation

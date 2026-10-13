@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <ShellUIBinPath Condition="'$(ShellUIBinPath)' == ''">$(MSBuildProjectDirectory)\.shellui\bin</ShellUIBinPath>
+    <TailwindExecutable Condition="'$(OS)' == 'Windows_NT'">$(ShellUIBinPath)\tailwindcss.exe</TailwindExecutable>
+    <TailwindExecutable Condition="'$(OS)' != 'Windows_NT'">$(ShellUIBinPath)/tailwindcss</TailwindExecutable>
+    <TailwindInputCss Condition="'$(TailwindInputCss)' == ''">$(MSBuildProjectDirectory)\wwwroot\input.css</TailwindInputCss>
+    <TailwindOutputCss Condition="'$(TailwindOutputCss)' == ''">$(MSBuildProjectDirectory)\wwwroot\app.css</TailwindOutputCss>
+    <TailwindMinify Condition="'$(Configuration)' == 'Release'">--minify</TailwindMinify>
+    <TailwindMinify Condition="'$(Configuration)' != 'Release'"></TailwindMinify>
+    <TailwindTag>v4.3.2</TailwindTag>
+    <TailwindArch>$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant())</TailwindArch>
+    <TailwindPlatform Condition="$([MSBuild]::IsOSPlatform('Windows'))">windows-$(TailwindArch).exe</TailwindPlatform>
+    <TailwindPlatform Condition="$([MSBuild]::IsOSPlatform('Linux'))">linux-$(TailwindArch)</TailwindPlatform>
+    <TailwindPlatform Condition="$([MSBuild]::IsOSPlatform('OSX'))">macos-$(TailwindArch)</TailwindPlatform>
+  </PropertyGroup>
+
+  <Target Name="DownloadTailwindCLI" BeforeTargets="BeforeBuild" Condition="!Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)') AND '$(TailwindPlatform)' != ''">
+    <Message Importance="high" Text="Downloading the Tailwind CLI $(TailwindTag)..." />
+    <DownloadFile SourceUrl="https://github.com/tailwindlabs/tailwindcss/releases/download/$(TailwindTag)/tailwindcss-$(TailwindPlatform)" DestinationFolder="$(ShellUIBinPath)" DestinationFileName="$([System.IO.Path]::GetFileName('$(TailwindExecutable)'))" ContinueOnError="true" />
+    <Exec Command="chmod +x &quot;$(TailwindExecutable)&quot;" Condition="'$(OS)' != 'Windows_NT' AND Exists('$(TailwindExecutable)')" />
+  </Target>
+
+  <Target Name="WarnMissingTailwindCLI" BeforeTargets="BeforeBuild" Condition="!Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')">
+    <Warning Text="ShellUI: the Tailwind CLI is missing from $(ShellUIBinPath) and could not be downloaded, so wwwroot/app.css was not rebuilt." />
+  </Target>
+
+  <Target Name="BuildTailwindCSS" BeforeTargets="BeforeBuild" Condition="Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')">
+    <Message Importance="high" Text="Building Tailwind CSS..." />
+    <Exec Command="&quot;$(TailwindExecutable)&quot; -i &quot;$(TailwindInputCss)&quot; -o &quot;$(TailwindOutputCss)&quot; $(TailwindMinify)" />
+    <Message Importance="high" Text="Tailwind CSS built successfully!" />
+  </Target>
+
+  <Target Name="CleanTailwindCSS" AfterTargets="Clean" Condition="Exists('$(TailwindOutputCss)')">
+    <Message Importance="high" Text="Cleaning Tailwind CSS output..." />
+    <Delete Files="$(TailwindOutputCss)" />
+  </Target>
+</Project>
