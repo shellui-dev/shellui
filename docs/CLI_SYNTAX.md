@@ -76,6 +76,7 @@ shellui add button --force
 
 `--force` overwrites an existing component file. Dependencies are installed automatically; there is no separate dependency option.
 
+Some components need a NuGet package (`chart` needs `Blazor-ApexCharts`, `data-table` needs `System.Linq.Dynamic.Core`). `add` references it if the project doesn't, and raises an older version to the one ShellUI needs. A version that is already the same or newer is left as it is (including one set in `Directory.Packages.props`), as are floating versions such as `7.*`, ranges, and references whose version ShellUI can't find.
 ## `list`
 
 Lists the direct targets and their installation status.

@@ -371,6 +371,18 @@ public class ComponentInstaller
     private static async Task<List<NuGetDependency>> InstallNuGetDependenciesAsync(ProjectInfo projectInfo, List<NuGetDependency> deps)
     {
         var failed = new List<NuGetDependency>();
+
+        // dotnet add package --version sets that version even when the project has a newer one, so only add or raise.
+        var needed = new List<NuGetDependency>();
+        foreach (var dep in deps)
+        {
+            var existing = ExistingPackageVersion(projectInfo.ProjectPath, dep.PackageId);
+            if (existing != null && SatisfiesMinimum(existing, dep.Version))
+                AnsiConsole.MarkupLine($"[dim]Kept {dep.PackageId} {(existing.Length > 0 ? existing : "(version set elsewhere)")}; ShellUI needs {dep.Version} or later[/]");
+            else
+                needed.Add(dep);
+        }
+        deps = needed;
         if (deps.Count == 0) return failed;
 
         AnsiConsole.MarkupLine("");
@@ -419,6 +431,51 @@ public class ComponentInstaller
         }
 
         return failed;
+    }
+
+    // The version a project already references: from its PackageReference, or Directory.Packages.props under central
+    // package management. "" when referenced without a version we can find, null when not referenced.
+    internal static string? ExistingPackageVersion(string projectPath, string packageId)
+    {
+        if (!File.Exists(projectPath)) return null;
+        bool Matches(System.Xml.Linq.XElement e) =>
+            string.Equals((string?)e.Attribute("Include") ?? (string?)e.Attribute("Update"), packageId, StringComparison.OrdinalIgnoreCase);
+        string? VersionOf(System.Xml.Linq.XElement e) =>
+            (string?)e.Attribute("VersionOverride") ?? (string?)e.Attribute("Version")
+            ?? e.Elements().FirstOrDefault(c => c.Name.LocalName is "VersionOverride" or "Version")?.Value;
+
+        var reference = System.Xml.Linq.XDocument.Load(projectPath).Descendants()
+            .FirstOrDefault(e => e.Name.LocalName == "PackageReference" && Matches(e));
+        if (reference == null) return null;
+        if (VersionOf(reference) is { Length: > 0 } version) return version.Trim();
+
+        for (var dir = Path.GetDirectoryName(Path.GetFullPath(projectPath)); dir != null; dir = Path.GetDirectoryName(dir))
+        {
+            var props = Path.Combine(dir, "Directory.Packages.props");
+            if (!File.Exists(props)) continue;
+            var central = System.Xml.Linq.XDocument.Load(props).Descendants()
+                .FirstOrDefault(e => e.Name.LocalName == "PackageVersion" && Matches(e));
+            return central != null && VersionOf(central) is { Length: > 0 } pinned ? pinned.Trim() : "";
+        }
+        return "";
+    }
+
+    // Floating versions, ranges and unknown versions count as satisfied: the project chose them, so ShellUI leaves them.
+    internal static bool SatisfiesMinimum(string existing, string minimum)
+    {
+        if (existing.Length == 0 || existing.IndexOfAny(new[] { '*', '[', '(', '$' }) >= 0) return true;
+        static (Version Release, string? Pre) Parse(string v)
+        {
+            var dash = v.IndexOf('-');
+            var core = (dash < 0 ? v : v[..dash]).Split('+')[0];
+            var parts = core.Split('.').Select(p => int.TryParse(p, out var n) ? n : 0).Concat(new[] { 0, 0, 0, 0 }).Take(4).ToArray();
+            return (new Version(parts[0], parts[1], parts[2], parts[3]), dash < 0 ? null : v[(dash + 1)..]);
+        }
+        var (have, havePre) = Parse(existing);
+        var (need, needPre) = Parse(minimum);
+        if (have != need) return have > need;
+        if (havePre == null || needPre == null) return havePre == null;
+        return string.CompareOrdinal(havePre, needPre) >= 0;
     }
 
     // Consumer pages reference helper types such as ButtonVariant and CommandItem, which live in
