@@ -98,6 +98,50 @@ Object.assign(window.ShellUI, {
         }
     },
 
+    // A stack, so a dialog opened from a dialog traps Tab inside the top one.
+    _focusTraps: [],
+    _focusableSelector: 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]',
+    trapFocus: function (handle, element) {
+        const shell = window.ShellUI;
+        if (!element || shell._focusTraps.some(t => t.handle === handle)) return;
+        if (shell._focusTraps.length === 0) document.addEventListener("keydown", shell._onFocusTrapKeyDown, true);
+        shell._focusTraps.push({ handle: handle, element: element, previous: document.activeElement });
+    },
+    releaseFocus: function (handle) {
+        const shell = window.ShellUI;
+        const index = shell._focusTraps.findIndex(t => t.handle === handle);
+        if (index < 0) return;
+        const trap = shell._focusTraps.splice(index, 1)[0];
+        if (shell._focusTraps.length === 0) document.removeEventListener("keydown", shell._onFocusTrapKeyDown, true);
+        if (trap.previous && trap.previous.isConnected && typeof trap.previous.focus === "function") trap.previous.focus();
+    },
+    _onFocusTrapKeyDown: function (e) {
+        if (e.key !== "Tab") return;
+        const shell = window.ShellUI;
+        const trap = shell._focusTraps[shell._focusTraps.length - 1];
+        if (!trap || !trap.element.isConnected) return;
+        const root = trap.element;
+        const items = Array.from(root.querySelectorAll(shell._focusableSelector)).filter(el => el.getClientRects().length > 0);
+        const active = document.activeElement;
+        if (items.length === 0) {
+            e.preventDefault();
+            root.focus();
+            return;
+        }
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (!root.contains(active)) {
+            e.preventDefault();
+            (e.shiftKey ? last : first).focus();
+        } else if (e.shiftKey && (active === first || active === root)) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && active === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    },
+
     // Bubble phase: scrolling inside the dropdown doesn't fire, only page scroll does.
     _dismissHandlers: new Map(),
     onDismissEvents: function (handle, dotNetRef) {
@@ -130,5 +174,7 @@ export function registerShortcut(handle, key, ctrl, meta, shift, alt, dotNetRef)
 export function unregisterShortcut(handle) { return window.ShellUI.unregisterShortcut(handle); }
 export function lockBodyScroll() { return window.ShellUI.lockBodyScroll(); }
 export function unlockBodyScroll() { return window.ShellUI.unlockBodyScroll(); }
+export function trapFocus(handle, element) { return window.ShellUI.trapFocus(handle, element); }
+export function releaseFocus(handle) { return window.ShellUI.releaseFocus(handle); }
 export function onDismissEvents(handle, dotNetRef) { return window.ShellUI.onDismissEvents(handle, dotNetRef); }
 export function offDismissEvents(handle) { return window.ShellUI.offDismissEvents(handle); }
