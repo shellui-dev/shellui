@@ -129,6 +129,13 @@ public class TemplateSyncTests
     [InlineData("command-option", "CommandOption.razor")]
     [InlineData("command-empty", "CommandEmpty.razor")]
     [InlineData("command-separator", "CommandSeparator.razor")]
+    [InlineData("label", "Label.razor")]
+    [InlineData("file-upload", "FileUpload.razor")]
+    [InlineData("carousel-item", "CarouselItem.razor")]
+    [InlineData("menubar", "Menubar.razor")]
+    [InlineData("sheet-content", "SheetContent.razor")]
+    [InlineData("drawer-content", "DrawerContent.razor")]
+    [InlineData("sidebar-menu-button", "SidebarMenuButton.razor")]
     public void TemplateCodeBlock_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         if (AllowedDrift.ContainsKey(templateName)) return;
@@ -149,6 +156,29 @@ public class TemplateSyncTests
             $"Drift detected between live {razorFileName} and template {templateName}.\n" +
             $"This usually means someone updated one but not the other. Sync them, or add " +
             $"\"{templateName}\" to AllowedDrift in TemplateSyncTests with a reason.\n\n" +
+            DiffSummary(normalizedLive, normalizedTemplate));
+    }
+
+    [Theory]
+    [InlineData("label", "Label.razor")]
+    [InlineData("file-upload", "FileUpload.razor")]
+    [InlineData("carousel-item", "CarouselItem.razor")]
+    [InlineData("menubar", "Menubar.razor")]
+    [InlineData("sheet-content", "SheetContent.razor")]
+    [InlineData("drawer-content", "DrawerContent.razor")]
+    [InlineData("sidebar-menu-button", "SidebarMenuButton.razor")]
+    [InlineData("theme-toggle", "ThemeToggle.razor")]
+    public void TemplateMarkup_MatchesLiveLibrary(string templateName, string razorFileName)
+    {
+        var liveContent = File.ReadAllText(GetLiveRazorPath(razorFileName));
+        var templateContent = ComponentRegistry.GetComponentContent(templateName)
+            ?? throw new InvalidOperationException($"Template '{templateName}' not found in registry");
+
+        var normalizedLive = Normalize(ExtractMarkup(liveContent));
+        var normalizedTemplate = Normalize(ExtractMarkup(templateContent));
+
+        Assert.True(normalizedLive == normalizedTemplate,
+            $"Markup drift between live {razorFileName} and template {templateName}.\n\n" +
             DiffSummary(normalizedLive, normalizedTemplate));
     }
 
@@ -202,6 +232,15 @@ public class TemplateSyncTests
             }
         }
         return diffs.Length == 0 ? "(no per-line diff — file lengths differ)" : diffs.ToString();
+    }
+
+    // Everything before `@code`, without the @namespace and @using lines that differ by design.
+    private static string ExtractMarkup(string razor)
+    {
+        var match = Regex.Match(razor, @"@code\s*\{");
+        var head = match.Success ? razor.Substring(0, match.Index) : razor;
+        var lines = head.Split('\n').Where(l => !Regex.IsMatch(l.Trim(), @"^@(namespace|using)\b"));
+        return string.Join("\n", lines);
     }
 
     /// Body of the first `@code { }` block, or null if missing or unbalanced.

@@ -23,7 +23,7 @@ public static class ThemeToggleTemplate
 
 <button 
     @onclick=""ToggleTheme"" 
-    class=""inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 @(Variant == ""outline"" ? ""border border-input bg-background"" : """") hover:bg-accent hover:text-accent-foreground @(Size == ""sm"" ? ""h-8 w-8"" : Size == ""lg"" ? ""h-11 w-11"" : ""h-9 w-9"") @Class""
+    class=""@Shell.Cn(""inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground"", Variant == ""outline"" ? ""border border-input bg-background"" : """", Size == ""sm"" ? ""h-8 w-8"" : Size == ""lg"" ? ""h-11 w-11"" : ""h-9 w-9"", Class)""
     title=""Toggle theme""
     type=""button""
     @attributes=""AdditionalAttributes"">

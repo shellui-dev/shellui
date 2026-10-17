@@ -18,21 +18,15 @@ public class MenubarTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@(""flex h-10 items-center space-x-1 rounded-md border bg-background p-1 "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
+<div class=""@Shell.Cn(""flex h-10 items-center space-x-1 rounded-md border border-border bg-background p-1"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </div>
 
 @code {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
