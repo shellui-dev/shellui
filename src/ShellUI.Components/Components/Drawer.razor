@@ -1,4 +1,7 @@
 @namespace ShellUI.Components
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
 
 @if (UseCompositional)
 {
@@ -9,7 +12,7 @@
 else if (Open)
 {
     <div class="fixed inset-0 z-50 bg-black/80 animate-in fade-in-0" @onclick="Close"></div>
-    <div class="@DrawerVariants.Get(Side, Class)" @onclick:stopPropagation="true" @attributes="AdditionalAttributes">
+    <div @ref="_panel" tabindex="-1" role="dialog" aria-modal="true" @onkeydown="OnPanelKeyDownAsync" class="outline-none @DrawerVariants.Get(Side, Class)" @onclick:stopPropagation="true" @attributes="AdditionalAttributes">
             <div class="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted"></div>
             <div class="grid gap-1.5 p-4 text-center sm:text-left">
                 @if (!string.IsNullOrEmpty(Title))
@@ -55,4 +58,39 @@ else if (Open)
     {
         if (Open != value) { Open = value; await OpenChanged.InvokeAsync(Open); StateHasChanged(); }
     }
+
+    private ElementReference _panel;
+    private readonly string _trapId = Guid.NewGuid().ToString("N");
+    private bool _focused;
+    private bool _trapped;
+
+    private async Task OnPanelKeyDownAsync(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape") await Close();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var panelOpen = Open && !UseCompositional;
+        if (panelOpen && !_focused)
+        {
+            _focused = true;
+            try { await JS.InvokeVoidAsync("ShellUI.trapFocus", _trapId, _panel); _trapped = true; } catch { }
+            try { await _panel.FocusAsync(); } catch (InvalidOperationException) { }
+        }
+        else if (!panelOpen)
+        {
+            _focused = false;
+            await ReleaseFocusAsync();
+        }
+    }
+
+    private async Task ReleaseFocusAsync()
+    {
+        if (!_trapped) return;
+        _trapped = false;
+        try { await JS.InvokeVoidAsync("ShellUI.releaseFocus", _trapId); } catch { }
+    }
+
+    public async ValueTask DisposeAsync() => await ReleaseFocusAsync();
 }
