@@ -38,6 +38,8 @@ public class AlertDialogContentTemplate
     private bool _isLocked;
     private bool _focused;
     private ElementReference _content;
+    private readonly string _trapId = Guid.NewGuid().ToString(""N"");
+    private bool _trapped;
 
     // Escape dismisses an alert dialog as Cancel; the backdrop does not.
     private async Task OnKeyDownAsync(KeyboardEventArgs e)
@@ -51,9 +53,14 @@ public class AlertDialogContentTemplate
         if (isOpen && !_focused)
         {
             _focused = true;
+            try { await JS.InvokeVoidAsync(""ShellUI.trapFocus"", _trapId, _content); _trapped = true; } catch { }
             try { await _content.FocusAsync(); } catch (InvalidOperationException) { }
         }
-        else if (!isOpen) _focused = false;
+        else if (!isOpen)
+        {
+            _focused = false;
+            await ReleaseFocusAsync();
+        }
 
         var shouldBeLocked = Parent?.IsOpen == true;
         if (shouldBeLocked && !_isLocked)
@@ -66,8 +73,16 @@ public class AlertDialogContentTemplate
         }
     }
 
+    private async Task ReleaseFocusAsync()
+    {
+        if (!_trapped) return;
+        _trapped = false;
+        try { await JS.InvokeVoidAsync(""ShellUI.releaseFocus"", _trapId); } catch { }
+    }
+
     public async ValueTask DisposeAsync()
     {
+        await ReleaseFocusAsync();
         if (_isLocked)
         {
             try { await JS.InvokeVoidAsync(""ShellUI.unlockBodyScroll""); } catch { }
