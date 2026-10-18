@@ -17,7 +17,7 @@ public class TooltipTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative inline-block @ClassName @Class"" 
+<div class=""@Shell.Cn(""relative inline-block"", ClassName, Class)"" 
      @onmouseenter=""Show"" 
      @onmouseleave=""Hide""
      @attributes=""AdditionalAttributes"">
@@ -25,29 +25,19 @@ public class TooltipTemplate
     
     @if (_isVisible)
     {
-        <div class=""@(""absolute z-50 overflow-hidden rounded-md border border-border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 "" + (Placement == ""bottom"" ? ""top-full left-1/2 -translate-x-1/2 mt-2"" : Placement == ""left"" ? ""right-full top-1/2 -translate-y-1/2 mr-2"" : Placement == ""right"" ? ""left-full top-1/2 -translate-y-1/2 ml-2"" : ""bottom-full left-1/2 -translate-x-1/2 mb-2""))"">
+        <div class=""@Shell.Cn(""absolute z-50 overflow-hidden rounded-md border border-border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95"", GetPlacementClass())"">
             @Content
         </div>
     }
 </div>
 
 @code {
-    [Parameter]
-    public RenderFragment? Trigger { get; set; }
-    
-    [Parameter]
-    public RenderFragment? Content { get; set; }
-    
-    [Parameter]
-    public string Placement { get; set; } = ""top"";
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public RenderFragment? Trigger { get; set; }
+    [Parameter] public RenderFragment? Content { get; set; }
+    [Parameter] public string Placement { get; set; } = ""top"";
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -55,6 +45,14 @@ public class TooltipTemplate
     
     private void Show() => _isVisible = true;
     private void Hide() => _isVisible = false;
+    
+    private string GetPlacementClass() => Placement switch
+    {
+        ""bottom"" => ""top-full left-1/2 -translate-x-1/2 mt-2"",
+        ""left"" => ""right-full top-1/2 -translate-y-1/2 mr-2"",
+        ""right"" => ""left-full top-1/2 -translate-y-1/2 ml-2"",
+        _ => ""bottom-full left-1/2 -translate-x-1/2 mb-2""
+    };
 }
 ";
 }

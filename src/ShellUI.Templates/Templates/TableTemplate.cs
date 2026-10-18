@@ -18,23 +18,17 @@ public class TableTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative w-full overflow-auto @ClassName @Class"" @attributes=""AdditionalAttributes"">
+<div class=""@Shell.Cn(""relative w-full overflow-auto"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
     <table class=""w-full caption-bottom text-sm"">
         @ChildContent
     </table>
 </div>
 
 @code {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
