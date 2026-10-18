@@ -18,27 +18,19 @@ public class RadioGroupTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@ClassName @Class"" @attributes=""AdditionalAttributes"">
-    @ChildContent
+<div class=""@Shell.Cn(ClassName, Class)"" @attributes=""AdditionalAttributes"">
+    <CascadingValue Value=""this"">
+        @ChildContent
+    </CascadingValue>
 </div>
 
 @code {
-    [Parameter]
-    public string? Value { get; set; }
-    
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -48,6 +40,7 @@ public class RadioGroupTemplate
         {
             Value = value;
             await ValueChanged.InvokeAsync(value);
+            StateHasChanged();
         }
     }
 }
