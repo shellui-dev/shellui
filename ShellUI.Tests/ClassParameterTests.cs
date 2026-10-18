@@ -11,7 +11,7 @@ public class ClassParameterTests
 {
     private static readonly Regex DeclaresClassName = new(@"public string\?? ClassName\b");
     private static readonly Regex DeclaresClass = new(@"public string\? Class \{");
-    private static readonly Regex RendersClass = new(@"@Class\b|[,+]\s*Class\)");
+    private static readonly Regex RendersClass = new(@"@Class\b|[,+]\s*Class\s*\)");
 
     [Fact]
     public void EveryTemplateWithClassName_AlsoAcceptsAndRendersClass()

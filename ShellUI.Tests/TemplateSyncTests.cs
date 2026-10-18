@@ -136,13 +136,29 @@ public class TemplateSyncTests
     [InlineData("sheet-content", "SheetContent.razor")]
     [InlineData("drawer-content", "DrawerContent.razor")]
     [InlineData("sidebar-menu-button", "SidebarMenuButton.razor")]
+    [InlineData("table", "Table.razor")]
+    [InlineData("table-body", "TableBody.razor")]
+    [InlineData("table-cell", "TableCell.razor")]
+    [InlineData("table-head", "TableHead.razor")]
+    [InlineData("table-header", "TableHeader.razor")]
+    [InlineData("table-row", "TableRow.razor")]
+    [InlineData("separator", "Separator.razor")]
+    [InlineData("slider", "Slider.razor")]
+    [InlineData("navbar", "Navbar.razor")]
+    [InlineData("checkbox", "Checkbox.razor")]
+    [InlineData("switch", "Switch.razor")]
+    [InlineData("tooltip", "Tooltip.razor")]
+    [InlineData("date-range-picker", "DateRangePicker.razor")]
+    [InlineData("radio-group", "RadioGroup.razor")]
+    [InlineData("radio-group-item", "RadioGroupItem.razor")]
+    [InlineData("empty-state", "EmptyState.razor")]
     public void TemplateCodeBlock_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         if (AllowedDrift.ContainsKey(templateName)) return;
 
-        var liveContent = File.ReadAllText(GetLiveRazorPath(razorFileName));
-        var templateContent = ComponentRegistry.GetComponentContent(templateName)
-            ?? throw new InvalidOperationException($"Template '{templateName}' not found in registry");
+        var liveContent = WithoutClassNameAlias(File.ReadAllText(GetLiveRazorPath(razorFileName)));
+        var templateContent = WithoutClassNameAlias(ComponentRegistry.GetComponentContent(templateName)
+            ?? throw new InvalidOperationException($"Template '{templateName}' not found in registry"));
 
         var liveCode = ExtractCodeBlock(liveContent)
             ?? throw new InvalidOperationException($"Live {razorFileName} has no @code block");
@@ -168,11 +184,27 @@ public class TemplateSyncTests
     [InlineData("drawer-content", "DrawerContent.razor")]
     [InlineData("sidebar-menu-button", "SidebarMenuButton.razor")]
     [InlineData("theme-toggle", "ThemeToggle.razor")]
+    [InlineData("table", "Table.razor")]
+    [InlineData("table-body", "TableBody.razor")]
+    [InlineData("table-cell", "TableCell.razor")]
+    [InlineData("table-head", "TableHead.razor")]
+    [InlineData("table-header", "TableHeader.razor")]
+    [InlineData("table-row", "TableRow.razor")]
+    [InlineData("separator", "Separator.razor")]
+    [InlineData("slider", "Slider.razor")]
+    [InlineData("navbar", "Navbar.razor")]
+    [InlineData("checkbox", "Checkbox.razor")]
+    [InlineData("switch", "Switch.razor")]
+    [InlineData("tooltip", "Tooltip.razor")]
+    [InlineData("date-range-picker", "DateRangePicker.razor")]
+    [InlineData("radio-group", "RadioGroup.razor")]
+    [InlineData("radio-group-item", "RadioGroupItem.razor")]
+    [InlineData("empty-state", "EmptyState.razor")]
     public void TemplateMarkup_MatchesLiveLibrary(string templateName, string razorFileName)
     {
-        var liveContent = File.ReadAllText(GetLiveRazorPath(razorFileName));
-        var templateContent = ComponentRegistry.GetComponentContent(templateName)
-            ?? throw new InvalidOperationException($"Template '{templateName}' not found in registry");
+        var liveContent = WithoutClassNameAlias(File.ReadAllText(GetLiveRazorPath(razorFileName)));
+        var templateContent = WithoutClassNameAlias(ComponentRegistry.GetComponentContent(templateName)
+            ?? throw new InvalidOperationException($"Template '{templateName}' not found in registry"));
 
         var normalizedLive = Normalize(ExtractMarkup(liveContent));
         var normalizedTemplate = Normalize(ExtractMarkup(templateContent));
@@ -200,6 +232,13 @@ public class TemplateSyncTests
         var testDir = Path.GetDirectoryName(thisFile) ?? throw new InvalidOperationException("CallerFilePath is empty");
         var repoRoot = Path.GetFullPath(Path.Combine(testDir, ".."));
         return Path.Combine(repoRoot, "src", "ShellUI.Components", "Components", razorFileName);
+    }
+
+    // CLI templates keep the deprecated ClassName alias for existing projects; the package may not have it.
+    private static string WithoutClassNameAlias(string content)
+    {
+        var withoutParameter = Regex.Replace(content, @"^[ \t]*\[Parameter\]\s*public string ClassName \{ get; set; \} = ""\s*"";[ \t]*\r?\n", string.Empty, RegexOptions.Multiline);
+        return Regex.Replace(withoutParameter, @"\bClassName,\s*", string.Empty);
     }
 
     private static string Normalize(string code)
