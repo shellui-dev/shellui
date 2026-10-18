@@ -16,6 +16,9 @@ public class TemplateCompileTests
     [InlineData("alert-variants")]
     [InlineData("badge-variants")]
     [InlineData("button-variants")]
+    [InlineData("stepper-models")]
+    [InlineData("input-variants")]
+    [InlineData("textarea-variants")]
     public void CsharpTemplate_GeneratedContentParses(string componentName)
     {
         var content = ComponentRegistry.GetComponentContent(componentName);
