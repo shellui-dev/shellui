@@ -17,7 +17,7 @@ public class SliderTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""relative flex w-full touch-none select-none items-center @ClassName @Class"" @attributes=""AdditionalAttributes"">
+<div class=""@Shell.Cn(""relative flex w-full touch-none select-none items-center"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
     <input type=""range""
            min=""@Min""
            max=""@Max""
@@ -29,31 +29,15 @@ public class SliderTemplate
 </div>
 
 @code {
-    [Parameter]
-    public double Value { get; set; } = 50;
-    
-    [Parameter]
-    public EventCallback<double> ValueChanged { get; set; }
-    
-    [Parameter]
-    public double Min { get; set; } = 0;
-    
-    [Parameter]
-    public double Max { get; set; } = 100;
-    
-    [Parameter]
-    public double Step { get; set; } = 1;
-    
-    [Parameter]
-    public bool Disabled { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public double Value { get; set; } = 50;
+    [Parameter] public EventCallback<double> ValueChanged { get; set; }
+    [Parameter] public double Min { get; set; } = 0;
+    [Parameter] public double Max { get; set; } = 100;
+    [Parameter] public double Step { get; set; } = 1;
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     

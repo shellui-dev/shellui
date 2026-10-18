@@ -117,6 +117,24 @@ public class PackageBehaviorTests
     }
 
     [Fact]
+    public void RadioGroup_SelectsTheClickedItemButNotADisabledOne()
+    {
+        using var ctx = new BunitContext();
+        var changes = new List<string>();
+
+        var group = ctx.Render<RadioGroup>(p => p
+            .Add(c => c.ValueChanged, EventCallback.Factory.Create<string>(this, v => changes.Add(v)))
+            .AddChildContent<RadioGroupItem>(i => i.Add(c => c.Value, "a").AddChildContent("A"))
+            .AddChildContent<RadioGroupItem>(i => i.Add(c => c.Value, "b").Add(c => c.Disabled, true).AddChildContent("B")));
+
+        var buttons = group.FindAll("button");
+        buttons[1].Click();
+        buttons[0].Click();
+
+        Assert.Equal(new[] { "a" }, changes);
+    }
+
+    [Fact]
     public void TimePicker_ShowsASetValue()
     {
         using var ctx = new BunitContext();

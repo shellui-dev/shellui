@@ -17,21 +17,15 @@ public class TableRowTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<tr class=""border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted @ClassName @Class"" @attributes=""AdditionalAttributes"">
+<tr class=""@Shell.Cn(""border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </tr>
 
 @code {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }

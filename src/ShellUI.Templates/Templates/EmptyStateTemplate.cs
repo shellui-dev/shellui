@@ -16,10 +16,10 @@ public static class EmptyStateTemplate
     };
 
     public const string Content = """
-<div class="flex flex-col items-center justify-center py-12 text-center">
+<div class="@Shell.Cn("flex flex-col items-center justify-center py-12 text-center", Class)" @attributes="AdditionalAttributes">
     @if (!string.IsNullOrEmpty(Icon))
     {
-        <div class="mb-4">
+        <div class="mb-4 flex items-center justify-center rounded-full bg-muted/30 p-6">
             @((MarkupString)Icon)
         </div>
     }
@@ -55,7 +55,9 @@ public static class EmptyStateTemplate
     [Parameter] public string? Description { get; set; }
     [Parameter] public RenderFragment? Action { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
 """;
 }

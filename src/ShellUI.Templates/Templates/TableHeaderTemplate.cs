@@ -17,21 +17,15 @@ public class TableHeaderTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<thead class=""[&_tr]:border-b @ClassName @Class"" @attributes=""AdditionalAttributes"">
+<thead class=""@Shell.Cn(""[&_tr]:border-b"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
     @ChildContent
 </thead>
 
 @code {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }
