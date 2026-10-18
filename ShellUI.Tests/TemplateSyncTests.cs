@@ -16,7 +16,11 @@ public class TemplateSyncTests
     {
         // The package imports the shellui.js module; the template calls window.ShellUI.
         ["command-palette"] = "JS-interop path differs between package (module import) and CLI template (window.ShellUI global).",
-        ["input-otp"] = "JS-interop path differs between package (module import + fallback) and CLI template (window.ShellUI global)."
+        ["input-otp"] = "JS-interop path differs between package (module import + fallback) and CLI template (window.ShellUI global).",
+        ["copy-button"] = "JS-interop path differs between package (module import) and CLI template (window.ShellUI global).",
+        ["sidebar-provider"] = "JS-interop path differs: the package imports shellui-sidebar.js; the template calls window.ShellUI.initSidebar, since a dynamic import 404s once compiled into a consumer's class library.",
+        ["app-sidebar"] = "The template is the dashboard block that init rewrites with the app's routes; the package copy is a sample.",
+        ["resizable"] = "Neither copy resizes panels; both are to be replaced by a real resizable panel group."
     };
 
     [Theory]
@@ -152,6 +156,17 @@ public class TemplateSyncTests
     [InlineData("radio-group", "RadioGroup.razor")]
     [InlineData("radio-group-item", "RadioGroupItem.razor")]
     [InlineData("empty-state", "EmptyState.razor")]
+    [InlineData("pagination", "Pagination.razor")]
+    [InlineData("skeleton", "Skeleton.razor")]
+    [InlineData("scroll-area", "ScrollArea.razor")]
+    [InlineData("toast", "Toast.razor")]
+    [InlineData("time-picker", "TimePicker.razor")]
+    [InlineData("date-picker", "DatePicker.razor")]
+    [InlineData("navigation-menu-item", "NavigationMenuItem.razor")]
+    [InlineData("copy-button", "CopyButton.razor")]
+    [InlineData("sidebar-provider", "SidebarProvider.razor")]
+    [InlineData("app-sidebar", "AppSidebar.razor")]
+    [InlineData("resizable", "Resizable.razor")]
     public void TemplateCodeBlock_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         if (AllowedDrift.ContainsKey(templateName)) return;
@@ -200,6 +215,13 @@ public class TemplateSyncTests
     [InlineData("radio-group", "RadioGroup.razor")]
     [InlineData("radio-group-item", "RadioGroupItem.razor")]
     [InlineData("empty-state", "EmptyState.razor")]
+    [InlineData("pagination", "Pagination.razor")]
+    [InlineData("skeleton", "Skeleton.razor")]
+    [InlineData("scroll-area", "ScrollArea.razor")]
+    [InlineData("toast", "Toast.razor")]
+    [InlineData("time-picker", "TimePicker.razor")]
+    [InlineData("date-picker", "DatePicker.razor")]
+    [InlineData("navigation-menu-item", "NavigationMenuItem.razor")]
     public void TemplateMarkup_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         var liveContent = WithoutClassNameAlias(File.ReadAllText(GetLiveRazorPath(razorFileName)));
