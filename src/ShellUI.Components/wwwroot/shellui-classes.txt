@@ -306,9 +306,6 @@ rounded-lg
 rounded-md
 rounded-sm
 rounded-xl
-scrollbar-thin
-scrollbar-thumb-border
-scrollbar-track-transparent
 select-none
 shadow-2xl
 shadow-lg
