@@ -16,7 +16,7 @@ public static class StepperContentTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-@if (ParentStepper != null && ParentStepper.CurrentStep == Index)
+@if (ParentStepper != null && ParentStepper.ActiveStep == Index)
 {
     <div class=""mt-8"">
         @ChildContent

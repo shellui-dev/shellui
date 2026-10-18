@@ -18,10 +18,11 @@ public static class StepperStepTemplate
 
 @{
     var index = int.TryParse(Value, out var v) ? v : 0;
-    var isActive = ParentStepper?.CurrentStep == index;
+    var isActive = ParentStepper?.ActiveStep == index;
     var isCompleted = ParentStepper != null && index < ParentStepper.HighestStepReached;
     var isClickable = ParentStepper != null && index <= ParentStepper.HighestStepReached;
 
+    // Active wins over completed, so a revisited step shows as current.
     string stateClass;
     if (isActive)
         stateClass = ""border-primary bg-primary text-primary-foreground ring-2 ring-primary/20 ring-offset-2 ring-offset-background"";

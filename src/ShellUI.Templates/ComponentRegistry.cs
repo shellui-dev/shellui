@@ -250,6 +250,7 @@ public static class ComponentRegistry
         { "chat-input", ChatInputTemplate.Metadata },
         { "chat", ChatTemplate.Metadata },
         { "command-models", CommandModelsTemplate.Metadata },
+        { "stepper-models", StepperModelsTemplate.Metadata },
     };
 
     public static string? GetComponentContent(string componentName)
@@ -499,6 +500,7 @@ public static class ComponentRegistry
             "chat-input" => ChatInputTemplate.Content,
             "chat" => ChatTemplate.Content,
             "command-models" => CommandModelsTemplate.Content,
+            "stepper-models" => StepperModelsTemplate.Content,
             _ => null
         };
     }
