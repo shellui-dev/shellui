@@ -274,9 +274,6 @@ rounded-full
 rounded-lg
 rounded-md
 rounded-sm
-scrollbar-thin
-scrollbar-thumb-border
-scrollbar-track-transparent
 select-none
 shadow-lg
 shadow-md

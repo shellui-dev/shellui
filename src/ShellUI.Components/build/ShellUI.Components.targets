@@ -277,9 +277,6 @@
     <ShellUISafelistEntry Include="rounded-lg" />
     <ShellUISafelistEntry Include="rounded-md" />
     <ShellUISafelistEntry Include="rounded-sm" />
-    <ShellUISafelistEntry Include="scrollbar-thin" />
-    <ShellUISafelistEntry Include="scrollbar-thumb-border" />
-    <ShellUISafelistEntry Include="scrollbar-track-transparent" />
     <ShellUISafelistEntry Include="select-none" />
     <ShellUISafelistEntry Include="shadow-lg" />
     <ShellUISafelistEntry Include="shadow-md" />
