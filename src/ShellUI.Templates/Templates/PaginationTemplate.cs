@@ -18,23 +18,23 @@ public class PaginationTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<nav role=""navigation"" aria-label=""pagination"" class=""@(""flex items-center justify-center space-x-2 "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
+<nav role=""navigation"" aria-label=""pagination"" class=""@Shell.Cn(""mx-auto flex w-full justify-center"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
     @if (ChildContent != null)
     {
         @ChildContent
     }
     else
     {
-        <ul class=""flex items-center space-x-1 overflow-x-auto"">
+        <ul class=""flex flex-row items-center gap-1"">
             <li>
                 <button type=""button""
-                        @onclick=""Previous""
+                        @onclick=""PreviousPage""
                         disabled=""@(CurrentPage <= 1)""
-                        class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-2 sm:px-4 py-2 "" + (CurrentPage <= 1 ? ""opacity-50 cursor-not-allowed"" : ""hover:bg-accent hover:text-accent-foreground""))"">
+                        class=""@Shell.Cn(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-2.5 py-2 gap-1 sm:px-4 sm:pl-2.5"", CurrentPage <= 1 ? ""pointer-events-none opacity-50"" : ""hover:bg-accent hover:text-accent-foreground"")"">
                     <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
                         <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M15 19l-7-7 7-7"" />
                     </svg>
-                    <span class=""ml-2 hidden sm:inline"">Previous</span>
+                    <span class=""hidden sm:inline"">Previous</span>
                 </button>
             </li>
         
@@ -44,7 +44,7 @@ public class PaginationTemplate
                 <li>
                     <button type=""button""
                             @onclick=""@(() => GoToPage(pageNum))""
-                            class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 w-9 "" + (CurrentPage == pageNum ? ""border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"" : ""hover:bg-accent hover:text-accent-foreground""))"">
+                            class=""@Shell.Cn(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 w-9"", CurrentPage == pageNum ? ""border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"" : ""hover:bg-accent hover:text-accent-foreground"")"">
                         @pageNum
                     </button>
                 </li>
@@ -52,10 +52,10 @@ public class PaginationTemplate
         
             <li>
                 <button type=""button""
-                        @onclick=""Next""
+                        @onclick=""NextPage""
                         disabled=""@(CurrentPage >= TotalPages)""
-                        class=""@(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-2 sm:px-4 py-2 "" + (CurrentPage >= TotalPages ? ""opacity-50 cursor-not-allowed"" : ""hover:bg-accent hover:text-accent-foreground""))"">
-                    <span class=""mr-2 hidden sm:inline"">Next</span>
+                        class=""@Shell.Cn(""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-2.5 py-2 gap-1 sm:px-4 sm:pr-2.5"", CurrentPage >= TotalPages ? ""pointer-events-none opacity-50"" : ""hover:bg-accent hover:text-accent-foreground"")"">
+                    <span class=""hidden sm:inline"">Next</span>
                     <svg class=""h-4 w-4"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
                         <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M9 5l7 7-7 7"" />
                     </svg>
@@ -66,40 +66,29 @@ public class PaginationTemplate
 </nav>
 
 @code {
-    [Parameter]
-    public int CurrentPage { get; set; } = 1;
-    
-    [Parameter]
-    public int TotalPages { get; set; } = 1;
-    
-    [Parameter]
-    public EventCallback<int> OnPageChange { get; set; }
-
+    [Parameter] public int CurrentPage { get; set; } = 1;
+    [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
+    // Deprecated: use CurrentPageChanged or @bind-CurrentPage.
+    [Parameter] public EventCallback<int> OnPageChange { get; set; }
+    [Parameter] public int TotalPages { get; set; } = 1;
     // Set to build the pagination from PaginationContent, PaginationItem and PaginationLink.
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
     private async Task GoToPage(int page)
     {
-        if (page >= 1 && page <= TotalPages && page != CurrentPage)
-        {
-            CurrentPage = page;
-            await OnPageChange.InvokeAsync(page);
-        }
+        if (page < 1 || page > TotalPages || page == CurrentPage) return;
+        CurrentPage = page;
+        await CurrentPageChanged.InvokeAsync(page);
+        await OnPageChange.InvokeAsync(page);
     }
-    
-    private Task Previous() => GoToPage(CurrentPage - 1);
-    private Task Next() => GoToPage(CurrentPage + 1);
+
+    private Task PreviousPage() => GoToPage(CurrentPage - 1);
+    private Task NextPage() => GoToPage(CurrentPage + 1);
 }
 ";
 }
