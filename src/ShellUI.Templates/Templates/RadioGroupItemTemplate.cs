@@ -17,12 +17,13 @@ public class RadioGroupItemTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""flex items-center space-x-2 @ClassName @Class"" @attributes=""AdditionalAttributes"">
+<div class=""@Shell.Cn(""flex items-center space-x-2 py-1"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
     <button type=""button"" 
             @onclick=""OnClick""
             role=""radio""
             aria-checked=""@IsChecked""
-            class=""aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 @(IsChecked ? ""bg-primary"" : ""bg-background"")"">
+            disabled=""@Disabled""
+            class=""@Shell.Cn(""aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"", IsChecked ? ""bg-primary"" : ""bg-background"")"">
         @if (IsChecked)
         {
             <span class=""flex items-center justify-center"">
@@ -41,22 +42,13 @@ public class RadioGroupItemTemplate
 </div>
 
 @code {
-    [CascadingParameter]
-    private RadioGroup? RadioGroup { get; set; }
-    
-    [Parameter]
-    public string Value { get; set; } = """";
-    
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
+    [CascadingParameter] private RadioGroup? RadioGroup { get; set; }
+    [Parameter] public string Value { get; set; } = """";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
+    [Parameter] public bool Disabled { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -64,7 +56,7 @@ public class RadioGroupItemTemplate
     
     private async Task OnClick()
     {
-        if (RadioGroup != null)
+        if (RadioGroup != null && !Disabled)
         {
             await RadioGroup.SetValue(Value);
         }

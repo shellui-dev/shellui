@@ -20,11 +20,11 @@ public class DateRangePickerTemplate
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
-<div class=""@(""relative "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
+<div class=""@Shell.Cn(""relative"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
     <button type=""button""
             @onclick=""ToggleCalendar""
             disabled=""@Disabled""
-            class=""@(""flex h-10 w-full items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 "" + (Disabled ? ""opacity-50 cursor-not-allowed"" : """"))"">
+            class=""@Shell.Cn(""flex h-10 w-full items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"", Disabled ? ""opacity-50 cursor-not-allowed"" : """")"">
         <span class=""@(""flex-1 text-left "" + (StartDate == null && EndDate == null ? ""text-muted-foreground"" : """"))"">
             @GetDisplayText()
         </span>
@@ -90,39 +90,24 @@ public class DateRangePickerTemplate
     }
 </div>
 
+@if (_isOpen)
+{
+    <div class=""fixed inset-0 z-40"" @onclick=""CloseBackdrop""></div>
+}
+
 @code {
-    [Parameter]
-    public DateTime? StartDate { get; set; }
-    
-    [Parameter]
-    public EventCallback<DateTime?> StartDateChanged { get; set; }
-    
-    [Parameter]
-    public DateTime? EndDate { get; set; }
-    
-    [Parameter]
-    public EventCallback<DateTime?> EndDateChanged { get; set; }
-    
-    [Parameter]
-    public string Placeholder { get; set; } = ""Pick a date range"";
-    
-    [Parameter]
-    public bool AllowClear { get; set; } = true;
-    
-    [Parameter]
-    public bool Disabled { get; set; }
-
+    [Parameter] public DateTime? StartDate { get; set; }
+    [Parameter] public EventCallback<DateTime?> StartDateChanged { get; set; }
+    [Parameter] public DateTime? EndDate { get; set; }
+    [Parameter] public EventCallback<DateTime?> EndDateChanged { get; set; }
+    [Parameter] public string Placeholder { get; set; } = ""Pick a date range"";
+    [Parameter] public bool AllowClear { get; set; } = true;
+    [Parameter] public bool Disabled { get; set; }
     /// Close the calendar when the page scrolls; set false to keep it open.
-    [Parameter]
-    public bool CloseOnScroll { get; set; }
-
-    [Parameter]
-    public string? Class { get; set; }
-
+    [Parameter] public bool CloseOnScroll { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
     
@@ -253,11 +238,17 @@ public class DateRangePickerTemplate
         var firstDay = new DateTime(_currentMonth.Year, _currentMonth.Month, 1);
         var lastDay = firstDay.AddMonths(1).AddDays(-1);
         var startDayOfWeek = (int)firstDay.DayOfWeek;
-        
+
         for (int i = 0; i < startDayOfWeek; i++) days.Add(null);
         for (int day = 1; day <= lastDay.Day; day++) days.Add(new DateTime(_currentMonth.Year, _currentMonth.Month, day));
 
         return days;
+    }
+
+    private async Task CloseBackdrop()
+    {
+        _isOpen = false;
+        await UnregisterDismissAsync();
     }
 
     public async ValueTask DisposeAsync()
