@@ -185,6 +185,16 @@ shellui theme update
 
 ## Existing projects and troubleshooting
 
+### How do I override a component's classes?
+
+Pass them in `Class`. Components combine their own classes with yours through `Shell.Cn`, and when two classes set the same CSS property under the same variants, yours win:
+
+```razor
+<Button Class="px-8 bg-destructive">Delete</Button>
+```
+
+The button's own `px-4` and `bg-primary` are dropped, so you don't need Tailwind's `!` important modifier. Variants are separate: `hover:bg-primary/90` stays unless you also pass a `hover:bg-…` class. Classes `Cn` doesn't recognise are always kept.
+
 ### Can I use ShellUI in an existing Blazor app?
 
 Yes. Run the CLI from the project root:
