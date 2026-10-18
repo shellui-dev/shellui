@@ -163,6 +163,13 @@ public class TemplateSyncTests
     [InlineData("time-picker", "TimePicker.razor")]
     [InlineData("date-picker", "DatePicker.razor")]
     [InlineData("navigation-menu-item", "NavigationMenuItem.razor")]
+    [InlineData("stepper", "Stepper.razor")]
+    [InlineData("stepper-step", "StepperStep.razor")]
+    [InlineData("stepper-content", "StepperContent.razor")]
+    [InlineData("input", "Input.razor")]
+    [InlineData("textarea", "Textarea.razor")]
+    [InlineData("sheet", "Sheet.razor")]
+    [InlineData("drawer", "Drawer.razor")]
     [InlineData("copy-button", "CopyButton.razor")]
     [InlineData("sidebar-provider", "SidebarProvider.razor")]
     [InlineData("app-sidebar", "AppSidebar.razor")]
@@ -222,6 +229,13 @@ public class TemplateSyncTests
     [InlineData("time-picker", "TimePicker.razor")]
     [InlineData("date-picker", "DatePicker.razor")]
     [InlineData("navigation-menu-item", "NavigationMenuItem.razor")]
+    [InlineData("stepper", "Stepper.razor")]
+    [InlineData("stepper-step", "StepperStep.razor")]
+    [InlineData("stepper-content", "StepperContent.razor")]
+    [InlineData("input", "Input.razor")]
+    [InlineData("textarea", "Textarea.razor")]
+    [InlineData("sheet", "Sheet.razor")]
+    [InlineData("drawer", "Drawer.razor")]
     public void TemplateMarkup_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         var liveContent = WithoutClassNameAlias(File.ReadAllText(GetLiveRazorPath(razorFileName)));

@@ -16,12 +16,11 @@ public class SheetTemplate
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using YourProjectNamespace.Components.UI.Variants
 @using Microsoft.JSInterop
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
-@if (Compositional)
+@if (UseCompositional)
 {
     <CascadingValue Value=""this"" IsFixed=""true"">
         @ChildContent
@@ -65,9 +64,13 @@ else if (Open)
     [Parameter] public SheetSide Side { get; set; } = SheetSide.Right;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string? Class { get; set; }
-    [Parameter] public bool Compositional { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    // Compositional mode also turns on when Title and Description are both empty.
+    [Parameter] public bool Compositional { get; set; }
+
+    private bool UseCompositional => Compositional || (string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Description));
 
     private async Task Close()
     {
@@ -93,7 +96,7 @@ else if (Open)
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var panelOpen = Open && !Compositional;
+        var panelOpen = Open && !UseCompositional;
         if (panelOpen && !_focused)
         {
             _focused = true;

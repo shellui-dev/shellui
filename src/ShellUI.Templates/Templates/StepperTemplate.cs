@@ -12,52 +12,122 @@ public static class StepperTemplate
         Category = ComponentCategory.Navigation,
         FilePath = "Stepper.razor",
         Tags = new List<string> { "stepper", "steps", "progress", "wizard", "multi-step" },
-        Dependencies = new List<string> { "stepper-list", "stepper-step", "stepper-content" }
+        Dependencies = new List<string> { "stepper-models", "stepper-list", "stepper-step", "stepper-content" }
     };
 
     public const string Content = """
 @namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.Models
 
 <CascadingValue Value="this">
     <div class="@Shell.Cn("w-full", Class)">
-        @ChildContent
+        @if (StepItems.Count > 0)
+        {
+            @* Data-driven mode (StepItems) *@
+            <div class="flex items-start justify-between">
+                @for (int i = 0; i < StepItems.Count; i++)
+                {
+                    var step = StepItems[i];
+                    var isActive = i == _activeStep;
+                    var isCompleted = i < _highestStepReached;
+                    var isClickable = i <= _highestStepReached;
+                    var capturedIndex = i;
+
+                    string stateClass;
+                    if (isActive)
+                        stateClass = "border-primary bg-primary text-primary-foreground ring-2 ring-primary/20 ring-offset-2 ring-offset-background";
+                    else if (isCompleted)
+                        stateClass = "border-primary bg-primary/10 text-primary";
+                    else
+                        stateClass = "border-muted bg-background text-muted-foreground";
+
+                    <div class="flex flex-col items-center relative">
+                        <button type="button"
+                                class="@Shell.Cn("flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-medium transition-colors", stateClass, isClickable ? "cursor-pointer" : "cursor-not-allowed", isClickable && !isActive ? "hover:border-primary/50" : "")"
+                                disabled="@(!isClickable)"
+                                @onclick="async () => await GoToStepAsync(capturedIndex)">
+                            @if (isCompleted && !isActive)
+                            {
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            }
+                            else
+                            {
+                                @(i + 1)
+                            }
+                        </button>
+                        <div class="mt-4 text-center">
+                            <p class="@Shell.Cn("text-sm font-medium mb-2", isActive || isCompleted ? "text-foreground" : "text-muted-foreground")">@step.Title</p>
+                            @if (!string.IsNullOrEmpty(step.Description))
+                            {
+                                <p class="text-xs text-muted-foreground mb-1">@step.Description</p>
+                            }
+                        </div>
+                        @if (i < StepItems.Count - 1)
+                        {
+                            <div class="@Shell.Cn("absolute top-5 left-1/2 h-px w-24 -translate-y-1/2", isCompleted ? "bg-primary" : "bg-muted")" style="transform: translateX(50%);"></div>
+                        }
+                    </div>
+                }
+            </div>
+            @if (_activeStep < StepItems.Count)
+            {
+                <div class="mt-8">
+                    @StepItems[_activeStep].Content
+                </div>
+            }
+        }
+        else
+        {
+            @* Compositional mode (StepperList + StepperContent) *@
+            @ChildContent
+        }
+
         @if (ShowNavigation)
         {
             @if (NavigationContent != null)
             {
-                <div class="mt-6">@NavigationContent</div>
+                <div class="mt-6">
+                    @NavigationContent
+                </div>
             }
             else
             {
-            <div class="mt-6 flex justify-between">
-                <button type="button" class="@Shell.Cn("inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2", CurrentStep > 0 ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-muted text-muted-foreground")"
-                        disabled="@(CurrentStep == 0)"
-                        @onclick="PreviousStep">
-                    @PreviousText
-                </button>
-                @if (IsLastStep && ShowConfirmOnLast)
-                {
-                    <button type="button" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                            @onclick="HandleConfirm">
-                        @ConfirmText
+                <div class="mt-6 flex justify-between">
+                    <button type="button"
+                            class="@Shell.Cn("inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2", _activeStep > 0 ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-muted text-muted-foreground")"
+                            disabled="@(_activeStep == 0)"
+                            @onclick="PreviousStep">
+                        @PreviousText
                     </button>
-                }
-                else
-                {
-                    <button type="button" class="@Shell.Cn("inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2", !IsLastStep ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-muted text-muted-foreground")"
-                            disabled="@IsLastStep"
-                            @onclick="NextStep">
-                        @NextText
-                    </button>
-                }
-            </div>
+
+                    @if (IsLastStep && ShowConfirmOnLast)
+                    {
+                        <button type="button"
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                                @onclick="HandleConfirm">
+                            @ConfirmText
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="@Shell.Cn("inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2", !IsLastStep ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-muted text-muted-foreground")"
+                                disabled="@IsLastStep"
+                                @onclick="NextStep">
+                            @NextText
+                        </button>
+                    }
+                </div>
             }
         }
     </div>
 </CascadingValue>
 
 @code {
-    [Parameter] public int TotalSteps { get; set; } = 3;
+    [Parameter] public List<StepItem> StepItems { get; set; } = new();
+    [Parameter] public int TotalSteps { get; set; }
     [Parameter] public int CurrentStep { get; set; } = 0;
     [Parameter] public EventCallback<int> CurrentStepChanged { get; set; }
     [Parameter] public EventCallback OnConfirm { get; set; }
@@ -71,13 +141,19 @@ public static class StepperTemplate
     [Parameter] public string Class { get; set; } = string.Empty;
 
     private int _highestStepReached = 0;
-    private bool IsLastStep => CurrentStep >= TotalSteps - 1;
+    private int _activeStep = 0;
+    private bool _justNavigated;
 
     public int HighestStepReached => _highestStepReached;
-    public int StepCount => TotalSteps;
+    public int ActiveStep => _activeStep;
+    public int EffectiveStepCount => StepItems.Count > 0 ? StepItems.Count : (TotalSteps > 0 ? TotalSteps : 0);
+    public int StepCount => EffectiveStepCount;
+    private bool IsLastStep => _activeStep >= EffectiveStepCount - 1;
 
     protected override void OnParametersSet()
     {
+        if (!_justNavigated)
+            _activeStep = CurrentStep;
         if (CurrentStep > _highestStepReached)
             _highestStepReached = CurrentStep;
     }
@@ -85,34 +161,40 @@ public static class StepperTemplate
     public async Task GoToStepAsync(int step)
     {
         if (step > _highestStepReached || step < 0) return;
-        CurrentStep = step;
+        _justNavigated = true;
+        _activeStep = step;
         await CurrentStepChanged.InvokeAsync(step);
+        _justNavigated = false;
+        StateHasChanged();
     }
 
     private async Task PreviousStep()
     {
-        if (CurrentStep > 0)
-            await GoToStepAsync(CurrentStep - 1);
+        if (_activeStep > 0)
+            await GoToStepAsync(_activeStep - 1);
     }
 
     private async Task NextStep()
     {
-        if (CurrentStep < TotalSteps - 1)
+        if (_activeStep < EffectiveStepCount - 1)
         {
-            var nextStep = CurrentStep + 1;
+            var nextStep = _activeStep + 1;
             if (nextStep > _highestStepReached)
                 _highestStepReached = nextStep;
-            CurrentStep = nextStep;
+            _justNavigated = true;
+            _activeStep = nextStep;
             await CurrentStepChanged.InvokeAsync(nextStep);
+            _justNavigated = false;
+            StateHasChanged();
         }
     }
 
     private async Task HandleConfirm()
     {
-        if (TotalSteps > 0 && CurrentStep >= TotalSteps - 1)
+        if (EffectiveStepCount > 0 && _activeStep >= EffectiveStepCount - 1)
         {
-            if (_highestStepReached < TotalSteps - 1)
-                _highestStepReached = TotalSteps - 1;
+            if (_highestStepReached < EffectiveStepCount - 1)
+                _highestStepReached = EffectiveStepCount - 1;
             await OnConfirm.InvokeAsync();
         }
     }

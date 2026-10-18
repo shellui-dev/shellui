@@ -11,6 +11,8 @@ public static class ComponentRegistry
         { "shellui-js", ShellUIJsTemplate.Metadata },
         { "button", ButtonTemplate.Metadata },
         { "button-variants", ButtonVariantsTemplate.Metadata },
+        { "input-variants", InputVariantsTemplate.Metadata },
+        { "textarea-variants", TextareaVariantsTemplate.Metadata },
         { "theme-toggle", ThemeToggleTemplate.Metadata },
         { "input", InputTemplate.Metadata },
         { "card", CardTemplate.Metadata },
@@ -250,6 +252,7 @@ public static class ComponentRegistry
         { "chat-input", ChatInputTemplate.Metadata },
         { "chat", ChatTemplate.Metadata },
         { "command-models", CommandModelsTemplate.Metadata },
+        { "stepper-models", StepperModelsTemplate.Metadata },
     };
 
     public static string? GetComponentContent(string componentName)
@@ -260,6 +263,8 @@ public static class ComponentRegistry
             "shellui-js" => ShellUIJsTemplate.Content,
             "button" => ButtonTemplate.Content,
             "button-variants" => ButtonVariantsTemplate.Content,
+            "input-variants" => InputVariantsTemplate.Content,
+            "textarea-variants" => TextareaVariantsTemplate.Content,
             "theme-toggle" => ThemeToggleTemplate.Content,
             "input" => InputTemplate.Content,
             "card" => CardTemplate.Content,
@@ -499,6 +504,7 @@ public static class ComponentRegistry
             "chat-input" => ChatInputTemplate.Content,
             "chat" => ChatTemplate.Content,
             "command-models" => CommandModelsTemplate.Content,
+            "stepper-models" => StepperModelsTemplate.Content,
             _ => null
         };
     }

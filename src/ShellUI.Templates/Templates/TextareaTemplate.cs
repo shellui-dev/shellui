@@ -12,39 +12,53 @@ public static class TextareaTemplate
         Category = ComponentCategory.Form,
 
         FilePath = "Textarea.razor",
-        Dependencies = new List<string>()
+        Dependencies = new List<string> { "textarea-variants" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
 
-<textarea 
+<textarea
     value=""@Value""
     placeholder=""@Placeholder""
     disabled=""@Disabled""
+    readonly=""@ReadOnly""
+    class=""@ComputedClass""
+    @attributes=""AdditionalAttributes""
     @oninput=""HandleInput""
-    class=""flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50""
-    @attributes=""AdditionalAttributes""></textarea>
+    @onfocus=""HandleFocus""
+    @onblur=""HandleBlur""></textarea>
 
 @code {
-    [Parameter]
-    public string? Value { get; set; }
-
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
-
-    [Parameter]
-    public string? Placeholder { get; set; }
-
-    [Parameter]
-    public bool Disabled { get; set; }
-
+    [Parameter] public InputVariant Variant { get; set; } = InputVariant.Default;
+    [Parameter] public string Value { get; set; } = """";
+    [Parameter] public string Placeholder { get; set; } = """";
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public EventCallback<FocusEventArgs> OnFocus { get; set; }
+    [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
+    private string ComputedClass => TextareaVariants.Get(Variant, Class);
+
     private async Task HandleInput(ChangeEventArgs e)
     {
-        Value = e.Value?.ToString();
-        await ValueChanged.InvokeAsync(Value);
+        var newValue = e.Value?.ToString() ?? """";
+        Value = newValue;
+        await ValueChanged.InvokeAsync(newValue);
+    }
+
+    private async Task HandleFocus(FocusEventArgs e)
+    {
+        await OnFocus.InvokeAsync(e);
+    }
+
+    private async Task HandleBlur(FocusEventArgs e)
+    {
+        await OnBlur.InvokeAsync(e);
     }
 }
 ";

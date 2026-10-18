@@ -187,6 +187,29 @@ public class PackageBehaviorTests
     }
 
     [Fact]
+    public void CompositionalStepper_ShowsTheActiveStepAfterNext()
+    {
+        using var ctx = new BunitContext();
+        var changes = new List<int>();
+
+        var stepper = ctx.Render<Stepper>(p => p
+            .Add(c => c.TotalSteps, 2)
+            .Add(c => c.CurrentStepChanged, EventCallback.Factory.Create<int>(this, v => changes.Add(v)))
+            .AddChildContent<StepperList>(l => l
+                .AddChildContent<StepperStep>(s => s.Add(c => c.Value, "0").Add(c => c.Title, "Account"))
+                .AddChildContent<StepperStep>(s => s.Add(c => c.Value, "1").Add(c => c.Title, "Profile")))
+            .AddChildContent<StepperContent>(c => c.Add(x => x.Value, "0").AddChildContent("First"))
+            .AddChildContent<StepperContent>(c => c.Add(x => x.Value, "1").AddChildContent("Second")));
+
+        Assert.Contains("First", stepper.Markup);
+        stepper.FindAll("button").Single(b => b.TextContent.Trim() == "Next").Click();
+
+        Assert.Equal(new[] { 1 }, changes);
+        Assert.Contains("Second", stepper.Markup);
+        Assert.DoesNotContain("First", stepper.Markup);
+    }
+
+    [Fact]
     public void TimePicker_ShowsASetValue()
     {
         using var ctx = new BunitContext();
