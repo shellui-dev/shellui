@@ -64,6 +64,59 @@ public class PackageBehaviorTests
     }
 
     [Fact]
+    public void DialogContent_TrapsFocusWhileOpenAndReleasesItOnClose()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var dialog = ctx.Render<Dialog>(p => p
+            .Add(c => c.Open, true)
+            .AddChildContent<DialogContent>(c => c.AddChildContent("Body")));
+
+        var trap = ctx.JSInterop.VerifyInvoke("ShellUI.trapFocus");
+        ctx.JSInterop.VerifyNotInvoke("ShellUI.releaseFocus");
+
+        dialog.Render(p => p.Add(c => c.Open, false));
+
+        var release = ctx.JSInterop.VerifyInvoke("ShellUI.releaseFocus");
+        Assert.Equal(trap.Arguments[0], release.Arguments[0]);
+    }
+
+    [Fact]
+    public void SheetContent_TrapsFocusWhileOpen()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+
+        ctx.Render<Sheet>(p => p
+            .Add(c => c.Open, true)
+            .AddChildContent<SheetContent>(c => c.AddChildContent("Body")));
+
+        ctx.JSInterop.VerifyInvoke("ShellUI.trapFocus");
+    }
+
+    [Fact]
+    public void LegacySheet_TrapsFocusAndReleasesItWhenEscapeCloses()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        bool? open = null;
+
+        var sheet = ctx.Render<Sheet>(p => p
+            .Add(c => c.Open, true)
+            .Add(c => c.Title, "Settings")
+            .Add(c => c.OpenChanged, EventCallback.Factory.Create<bool>(this, v => open = v))
+            .AddChildContent("Body"));
+
+        ctx.JSInterop.VerifyInvoke("ShellUI.trapFocus");
+
+        sheet.Find("[role=dialog]").KeyDown(new KeyboardEventArgs { Key = "Escape" });
+
+        Assert.False(open);
+        ctx.JSInterop.VerifyInvoke("ShellUI.releaseFocus");
+    }
+
+    [Fact]
     public void TimePicker_ShowsASetValue()
     {
         using var ctx = new BunitContext();
