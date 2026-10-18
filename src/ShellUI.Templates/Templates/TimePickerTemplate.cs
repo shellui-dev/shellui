@@ -17,99 +17,107 @@ public class TimePickerTemplate
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@(""relative "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
+<div class=""@Shell.Cn(""relative"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
     <button type=""button""
-            @onclick=""TogglePicker""
+            @onclick=""Toggle""
             disabled=""@Disabled""
-            class=""@(""flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 "" + (Disabled ? ""opacity-50 cursor-not-allowed"" : """"))"">
-        <span class=""@(SelectedTime == null ? ""text-muted-foreground"" : """")"">
-            @(SelectedTime?.ToString(@""hh\:mm"") ?? Placeholder)
+            class=""@Shell.Cn(""flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"", Disabled ? ""cursor-not-allowed opacity-50"" : """")"">
+        <span class=""@(Current == null ? ""text-muted-foreground"" : """")"">
+            @(Current?.ToString(@""hh\:mm"") ?? Placeholder)
         </span>
         <svg class=""h-4 w-4 opacity-50"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
             <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"" />
         </svg>
     </button>
-    
-    @if (_isOpen)
+
+    @if (IsOpen)
     {
-        <div class=""absolute z-50 mt-1 rounded-md border bg-popover p-4 text-popover-foreground shadow-md w-64"">
-            <div class=""flex gap-2 mb-3"">
-                <div class=""flex-1"">
-                    <label class=""text-xs font-medium mb-1 block"">Hour</label>
-                    <select @bind=""selectedHour"" class=""flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"">
-                        @for (int h = 0; h < 24; h++)
-                        {
-                            <option value=""@h"">@h.ToString(""D2"")</option>
-                        }
-                    </select>
+        <div class=""absolute z-50 mt-1 w-64 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95"">
+            <div class=""space-y-4"">
+                <div class=""grid grid-cols-2 gap-4"">
+                    <div>
+                        <label class=""mb-1 block text-xs font-medium"">Hour</label>
+                        <select @bind=""selectedHour"" class=""flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"">
+                            @for (int h = 0; h < 24; h++)
+                            {
+                                <option value=""@h"">@h.ToString(""D2"")</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label class=""mb-1 block text-xs font-medium"">Minute</label>
+                        <select @bind=""selectedMinute"" class=""flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"">
+                            @foreach (var m in MinuteOptions)
+                            {
+                                <option value=""@m"">@m.ToString(""D2"")</option>
+                            }
+                        </select>
+                    </div>
                 </div>
-                <div class=""flex-1"">
-                    <label class=""text-xs font-medium mb-1 block"">Minute</label>
-                    <select @bind=""selectedMinute"" class=""flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"">
-                        @for (int m = 0; m < 60; m++)
-                        {
-                            <option value=""@m"">@m.ToString(""D2"")</option>
-                        }
-                    </select>
+                <div class=""flex justify-end gap-2"">
+                    <button type=""button"" @onclick=""Close"" class=""inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 px-4"">
+                        Cancel
+                    </button>
+                    <button type=""button"" @onclick=""ApplyTime"" class=""inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4"">
+                        Apply
+                    </button>
                 </div>
             </div>
-            <button type=""button""
-                    @onclick=""ApplyTime""
-                    class=""w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-9 px-4 py-2 bg-primary text-primary-foreground shadow hover:bg-primary/90"">
-                Apply
-            </button>
         </div>
     }
 </div>
 
-@code {
-    [Parameter]
-    public TimeSpan? SelectedTime { get; set; }
-    
-    [Parameter]
-    public EventCallback<TimeSpan?> SelectedTimeChanged { get; set; }
-    
-    [Parameter]
-    public string Placeholder { get; set; } = ""Pick a time"";
-    
-    [Parameter]
-    public int Step { get; set; } = 15;
-    
-    [Parameter]
-    public bool Disabled { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
+@if (IsOpen)
+{
+    <div class=""fixed inset-0 z-40"" @onclick=""Close""></div>
+}
 
+@code {
+    [Parameter] public TimeSpan? Value { get; set; }
+    [Parameter] public EventCallback<TimeSpan?> ValueChanged { get; set; }
+    // Deprecated: use Value or @bind-Value.
+    [Parameter] public TimeSpan? SelectedTime { get; set; }
+    // Deprecated: use ValueChanged.
+    [Parameter] public EventCallback<TimeSpan?> SelectedTimeChanged { get; set; }
+    [Parameter] public string Placeholder { get; set; } = ""Pick a time"";
+    // Minutes between the options in the minute list.
+    [Parameter] public int Step { get; set; } = 5;
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Class { get; set; }
     // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    [Parameter] public string ClassName { get; set; } = """";
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
-    private bool _isOpen;
-    private string selectedHour = ""0"";
-    private string selectedMinute = ""0"";
-    
-    protected override void OnParametersSet()
+
+    private bool IsOpen { get; set; }
+    private int selectedHour;
+    private int selectedMinute;
+
+    private TimeSpan? Current => Value ?? SelectedTime;
+
+    private IEnumerable<int> MinuteOptions =>
+        Enumerable.Range(0, 60).Where(m => m % Math.Max(1, Step) == 0 || m == selectedMinute);
+
+    private void Toggle()
     {
-        if (SelectedTime.HasValue)
+        if (!IsOpen)
         {
-            selectedHour = SelectedTime.Value.Hours.ToString();
-            selectedMinute = SelectedTime.Value.Minutes.ToString();
+            selectedHour = Current?.Hours ?? 0;
+            selectedMinute = Current?.Minutes ?? 0;
         }
+        IsOpen = !IsOpen;
     }
-    
-    private void TogglePicker() => _isOpen = !_isOpen;
-    
+
+    private void Close() => IsOpen = false;
+
     private async Task ApplyTime()
     {
-        var hour = int.Parse(selectedHour);
-        var minute = int.Parse(selectedMinute);
-        SelectedTime = new TimeSpan(hour, minute, 0);
-        _isOpen = false;
-        await SelectedTimeChanged.InvokeAsync(SelectedTime);
+        var time = new TimeSpan(selectedHour, selectedMinute, 0);
+        Value = time;
+        SelectedTime = time;
+        IsOpen = false;
+        await ValueChanged.InvokeAsync(time);
+        await SelectedTimeChanged.InvokeAsync(time);
     }
 }
 ";

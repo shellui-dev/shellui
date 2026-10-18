@@ -135,6 +135,58 @@ public class PackageBehaviorTests
     }
 
     [Fact]
+    public void Pagination_RaisesBothCallbacksAndIgnoresTheCurrentPage()
+    {
+        using var ctx = new BunitContext();
+        var bound = new List<int>();
+        var legacy = new List<int>();
+
+        var pagination = ctx.Render<Pagination>(p => p
+            .Add(c => c.CurrentPage, 2)
+            .Add(c => c.TotalPages, 3)
+            .Add(c => c.CurrentPageChanged, EventCallback.Factory.Create<int>(this, v => bound.Add(v)))
+            .Add(c => c.OnPageChange, EventCallback.Factory.Create<int>(this, v => legacy.Add(v))));
+
+        pagination.FindAll("button").Single(b => b.TextContent.Trim() == "2").Click();
+        pagination.FindAll("button").Single(b => b.TextContent.Trim() == "3").Click();
+
+        Assert.Equal(new[] { 3 }, bound);
+        Assert.Equal(new[] { 3 }, legacy);
+    }
+
+    [Fact]
+    public void DatePicker_PlacesTheFirstOfTheMonthUnderItsWeekday()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        // 1 October 2026 is a Thursday, so four blank cells precede it.
+        var picker = ctx.Render<DatePicker>(p => p.Add(c => c.Value, new DateTime(2026, 10, 15)));
+
+        picker.Find("button").Click();
+
+        var grid = picker.FindAll("div.grid.grid-cols-7")[1];
+        var cells = grid.Children;
+        Assert.Equal(4, cells.TakeWhile(c => c.TagName == "DIV").Count());
+        Assert.Equal("1", cells[4].TextContent.Trim());
+    }
+
+    [Theory]
+    [InlineData(null, null, "max-height: 400px;")]
+    [InlineData("200px", null, "height: 200px; max-height: none;")]
+    [InlineData(null, "300px", "max-height: 300px;")]
+    public void ScrollArea_SizesTheScrollingElement(string? height, string? maxHeight, string expected)
+    {
+        using var ctx = new BunitContext();
+
+        var area = ctx.Render<ScrollArea>(p => p
+            .Add(c => c.Height, height)
+            .Add(c => c.MaxHeight, maxHeight)
+            .AddChildContent("Body"));
+
+        Assert.Equal(expected, area.Find("div.overflow-auto").GetAttribute("style"));
+    }
+
+    [Fact]
     public void TimePicker_ShowsASetValue()
     {
         using var ctx = new BunitContext();

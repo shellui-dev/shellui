@@ -309,9 +309,6 @@
     <ShellUISafelistEntry Include="rounded-md" />
     <ShellUISafelistEntry Include="rounded-sm" />
     <ShellUISafelistEntry Include="rounded-xl" />
-    <ShellUISafelistEntry Include="scrollbar-thin" />
-    <ShellUISafelistEntry Include="scrollbar-thumb-border" />
-    <ShellUISafelistEntry Include="scrollbar-track-transparent" />
     <ShellUISafelistEntry Include="select-none" />
     <ShellUISafelistEntry Include="shadow-2xl" />
     <ShellUISafelistEntry Include="shadow-lg" />
@@ -335,6 +332,7 @@
     <ShellUISafelistEntry Include="slide-in-from-top" />
     <ShellUISafelistEntry Include="slide-in-from-top-2" />
     <ShellUISafelistEntry Include="sm:flex-row" />
+    <ShellUISafelistEntry Include="sm:inline" />
     <ShellUISafelistEntry Include="sm:inline-flex" />
     <ShellUISafelistEntry Include="sm:items-center" />
     <ShellUISafelistEntry Include="sm:justify-between" />

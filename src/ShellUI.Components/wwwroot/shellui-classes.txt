@@ -306,9 +306,6 @@ rounded-lg
 rounded-md
 rounded-sm
 rounded-xl
-scrollbar-thin
-scrollbar-thumb-border
-scrollbar-track-transparent
 select-none
 shadow-2xl
 shadow-lg
@@ -332,6 +329,7 @@ slide-in-from-right
 slide-in-from-top
 slide-in-from-top-2
 sm:flex-row
+sm:inline
 sm:inline-flex
 sm:items-center
 sm:justify-between
