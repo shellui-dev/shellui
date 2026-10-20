@@ -171,6 +171,7 @@ ShellUI uses semantic Blazor and Tailwind patterns, but accessibility depends on
 - [Quick start](docs/QUICKSTART.md)
 - [CLI syntax](docs/CLI_SYNTAX.md)
 - [Tailwind setup](docs/tailwind-setup.md)
+- [Using ShellUI from a Razor class library](docs/razor-class-library.md)
 - [Contributing](docs/CONTRIBUTING.md)
 - [Release notes](docs/RELEASE_NOTES.md)
 
