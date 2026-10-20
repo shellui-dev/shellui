@@ -113,7 +113,7 @@ Release tags use the `v` prefix, for example `v0.3.0-rc.2`. Pushing a `v*` tag r
 3. Merge, then on an up-to-date `main` run `pwsh ./prepare-release.ps1 -Version <base> -Suffix <suffix> -DryRun` (builds, tests and checks the notes section).
 4. Tag the merged commit and push the tag: `git tag v<version>` then `git push origin v<version>`.
 
-The release workflow fails before publishing when the tag does not match the version in `Directory.Build.props` or when the notes section is missing. NuGet versions cannot be deleted, only unlisted, so the version must be merged before tagging.
+The release workflow publishes with NuGet Trusted Publishing; the one-time GitHub and nuget.org setup, and the full release checklist, are in [docs/RELEASING.md](docs/RELEASING.md). The release workflow fails before publishing when the tag does not match the version in `Directory.Build.props` or when the notes section is missing. NuGet versions cannot be deleted, only unlisted, so the version must be merged before tagging.
 
 The verification commands are:
 

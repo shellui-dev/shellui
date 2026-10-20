@@ -5,9 +5,6 @@ on:
     tags:
       - 'v*'
 
-permissions:
-  contents: write
-
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
@@ -16,6 +13,11 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     if: github.event.repository.fork == false
+    # Must match the environment in the nuget.org Trusted Publishing policy (see docs/RELEASING.md).
+    environment: release
+    permissions:
+      contents: write   # GitHub Release
+      id-token: write   # OIDC token exchanged for a short-lived NuGet key
 
     steps:
     - uses: actions/checkout@v4
@@ -74,16 +76,25 @@ jobs:
     - name: Pack NuGet packages
       run: dotnet pack ShellUI.slnx --no-build --configuration Release -p:ContinuousIntegrationBuild=true
 
+    # Trusted Publishing: no stored key; the key this returns expires after an hour.
+    - name: NuGet login
+      id: nuget-login
+      uses: NuGet/login@v1
+      with:
+        user: ${{ secrets.NUGET_USER }}
+
     # Core and Templates are internal; only the CLI and Components are published.
     - name: Publish to NuGet
+      env:
+        NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
       run: |
-        dotnet nuget push src/ShellUI.CLI/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        dotnet nuget push src/ShellUI.CLI/bin/Release/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
         if ls src/ShellUI.CLI/bin/Release/*.snupkg 1> /dev/null 2>&1; then
-          dotnet nuget push src/ShellUI.CLI/bin/Release/*.snupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          dotnet nuget push src/ShellUI.CLI/bin/Release/*.snupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
         fi
-        dotnet nuget push src/ShellUI.Components/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        dotnet nuget push src/ShellUI.Components/bin/Release/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
         if ls src/ShellUI.Components/bin/Release/*.snupkg 1> /dev/null 2>&1; then
-          dotnet nuget push src/ShellUI.Components/bin/Release/*.snupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+          dotnet nuget push src/ShellUI.Components/bin/Release/*.snupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
         fi
 
     - name: Create GitHub Release
