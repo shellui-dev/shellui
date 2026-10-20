@@ -195,6 +195,10 @@ Pass them in `Class`. Components combine their own classes with yours through `S
 
 The button's own `px-4` and `bg-primary` are dropped, so you don't need Tailwind's `!` important modifier. Variants are separate: `hover:bg-primary/90` stays unless you also pass a `hover:bg-…` class. Classes `Cn` doesn't recognise are always kept.
 
+### Can I put ShellUI in a Razor class library shared by several apps?
+
+Yes, for example one library used by a Blazor Web App and a MAUI Blazor Hybrid app. Run `shellui init` in the library; it recognises a Razor class library and prints what each app needs: links to `_content/<Library>/app.css` and `shellui.js`, the theme script, `@source` lines for markup that lives in an app, and `prerender: false` for apps that restore state from browser storage. See [Using ShellUI from a Razor class library](razor-class-library.md).
+
 ### Can I use ShellUI in an existing Blazor app?
 
 Yes. Run the CLI from the project root:
