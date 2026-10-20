@@ -3,6 +3,7 @@ using ShellUI.Core.Models;
 using ShellUI.Templates;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Spectre.Console;
 
 namespace ShellUI.CLI.Services;
@@ -115,8 +116,11 @@ public class InitService
                 AnsiConsole.MarkupLine("[green]Configuration prepared[/]");
 
                 status("Setting up imports...");
-                var importsPath = Path.Combine(Directory.GetCurrentDirectory(), "Components", "_Imports.razor");
-                if (File.Exists(importsPath))
+                // Razor class libraries keep _Imports.razor at the project root.
+                var importsPath = new[] { Path.Combine("Components", "_Imports.razor"), "_Imports.razor" }
+                    .Select(p => Path.Combine(Directory.GetCurrentDirectory(), p))
+                    .FirstOrDefault(File.Exists);
+                if (importsPath != null)
                 {
                     var importsContent = File.ReadAllText(importsPath);
                     var usingStatement = $"@using {projectInfo.RootNamespace}.Components.UI";
@@ -124,7 +128,7 @@ public class InitService
                     if (!importsContent.Contains(usingStatement))
                     {
                         File.AppendAllText(importsPath, $"\n{usingStatement}\n");
-                        AnsiConsole.MarkupLine($"[green]Updated:[/] Components/_Imports.razor");
+                        AnsiConsole.MarkupLine($"[green]Updated:[/] {Path.GetRelativePath(Directory.GetCurrentDirectory(), importsPath)}");
                     }
                 }
 
@@ -533,8 +537,41 @@ public class InitService
             return;
         }
 
+        if (RazorClassLibraryAssetBase(projectInfo.ProjectPath) is { } assetBase)
+        {
+            AnsiConsole.MarkupLine("[cyan]This is a Razor class library.[/] Each app that uses it needs these steps:");
+            foreach (var step in RazorClassLibraryHostSteps(assetBase))
+                AnsiConsole.MarkupLine($"  {Markup.Escape(step)}");
+            return;
+        }
+
         AnsiConsole.MarkupLine("[yellow]No Components/App.razor or wwwroot/index.html found — skipped host bootstrap.[/]");
     }
+
+    internal const string RazorClassLibraryGuide = "https://github.com/shellui-dev/shellui/blob/main/docs/razor-class-library.md";
+
+    // The URL prefix a library's wwwroot is served under in the apps that reference it, or null when the
+    // project isn't a Razor class library (no host page of its own and no Program.cs).
+    internal static string? RazorClassLibraryAssetBase(string csprojPath)
+    {
+        if (!File.Exists(csprojPath)) return null;
+        var doc = XDocument.Load(csprojPath);
+        if (!string.Equals((string?)doc.Root?.Attribute("Sdk"), "Microsoft.NET.Sdk.Razor", StringComparison.OrdinalIgnoreCase)) return null;
+        if (File.Exists(Path.Combine(Path.GetDirectoryName(csprojPath)!, "Program.cs"))) return null;
+
+        string? Property(string name) => doc.Descendants(name).FirstOrDefault()?.Value.Trim() is { Length: > 0 } value ? value : null;
+        if (Property("StaticWebAssetBasePath") is { } basePath) return basePath.Trim('/');
+        return "_content/" + (Property("PackageId") ?? Property("AssemblyName") ?? Path.GetFileNameWithoutExtension(csprojPath));
+    }
+
+    internal static IReadOnlyList<string> RazorClassLibraryHostSteps(string assetBase) => new[]
+    {
+        $"1. In the app's host page (Components/App.razor, or wwwroot/index.html in a MAUI Blazor Hybrid or WebAssembly app), link <link rel=\"stylesheet\" href=\"{assetBase}/app.css\" /> and load <script src=\"{assetBase}/shellui.js\"></script> before the Blazor script. Don't copy app.css into the app.",
+        "2. Add the ShellUI theme script to the host page's <head>, so dark mode applies before the first paint.",
+        "3. Tailwind only scans this library: for classes in the app's own markup, add @source \"<path to the app>\"; to this library's wwwroot/input.css.",
+        "4. Apps that keep state in browser storage render without prerendering: new InteractiveServerRenderMode(prerender: false).",
+        $"Guide: {RazorClassLibraryGuide}",
+    };
 
     // Idempotent. Tags that already have attributes are left for the user.
     internal const string IdentityRenderMode =
