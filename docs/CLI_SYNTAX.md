@@ -98,7 +98,7 @@ shellui remove button
 shellui remove button card dialog
 ```
 
-Pass names separated by spaces. `remove` has no force flag or other options, does not prompt, and does not perform reverse-dependency cleanup. If another component still references a removed file, update that usage or remove the dependent component yourself. Layout blocks such as `dashboard-02` and `auth-01` are removed from `Components/Layout`, and `remove` lists any files that still use the layout (usually `Routes.razor`) so you can point them at another one.
+Pass names separated by spaces. `remove` has no force flag or other options, does not prompt, and does not perform reverse-dependency cleanup. If another component still references a removed file, update that usage or remove the dependent component yourself. Layout blocks such as `dashboard-02` are removed from `Components/Layout`, and `remove` lists any files that still use the layout (usually `Routes.razor`) so you can point them at another one.
 
 ## `update`
 
