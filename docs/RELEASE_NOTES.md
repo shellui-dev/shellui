@@ -1,5 +1,61 @@
 # ShellUI Release Notes
 
+# ShellUI v0.4.0-alpha.3 🧪
+
+> The third 0.4 prerelease. A component's `Class` now overrides its own classes, dialogs and sheets keep keyboard focus inside, `add` never downgrades your NuGet packages, and the CLI templates have been brought in line with the NuGet package, fixing several template bugs on the way. It also adds Razor class library support. It is a prerelease, so installs need `--version`. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
+
+## ✨ Improvements
+
+- **`Class` overrides a component's own classes.** `Shell.Cn` used to join strings, so `<Card Class="max-w-lg">` on a component that sets `max-w-md` put both on the element and the stylesheet decided. Now, when two classes set the same CSS property under the same variants, the later one (yours) wins, like tailwind-merge: `p-4` replaces an earlier `px-2`, text colour and text size stay separate, and unknown classes are kept. You no longer need the `!` modifier. The NuGet package and the CLI's `Shell.cs` share the same code.
+- **Focus stays inside open overlays.** `Dialog`, `AlertDialog`, `Sheet` and `Drawer` keep Tab and Shift+Tab inside while they're open, and return focus to where it was when they close. The legacy (non-compositional) `Sheet` and `Drawer` panels now also take focus and close on Escape.
+- **`add` never downgrades a NuGet package.** It used to set the exact version a component pins, so adding `chart` to an app on Blazor-ApexCharts 7 moved it back to 6.0.2. Now it reads the project's `PackageReference` (or `Directory.Packages.props`), adds a missing package or raises an older one, and leaves the same or newer, floating versions and ranges alone.
+- **Razor class libraries.** `init` recognises a library shared by several apps and prints what each app needs, with the library's `_content` path, and adds its `@using` to a root `_Imports.razor`. [Using ShellUI from a Razor class library](https://github.com/shellui-dev/shellui/blob/main/docs/razor-class-library.md) has the full setup for Blazor Web App and MAUI Blazor Hybrid hosts.
+
+## 🐛 Fixes: CLI templates now match the package
+
+The CLI templates and the NuGet package had drifted apart. They're reconciled (210 of 217 components identical, the rest differ by design), and a test now compares them. Bugs this fixed:
+
+- **`RadioGroup`** (template): clicking an item did nothing, because the group never passed itself to its items. `RadioGroupItem` also gains `Disabled`.
+- **`ScrollArea`** (template): long content was clipped instead of scrolling. `Height` and `MaxHeight` now size the scrolling element.
+- **`DatePicker`** (package): day 1 was always drawn under Sunday. It now sits under its real weekday, and the picker opens on the selected month.
+- **`TimePicker`**: `Step` now filters the minutes (it was ignored), the picker opens on the current value, and Cancel or an outside click closes it.
+- **`DateRangePicker`** (template) closes on an outside click; **`EmptyState`** (template) applies `Class`.
+- **`Sheet` and `Drawer`**: clicks inside the panel no longer reach parent click handlers; the close button shows when only `Description` is set; the templates switch to compositional mode by themselves (no `Compositional="true"` needed).
+- **`Label`** renders `For` as the `for` attribute; **`FileUpload`** uses an inline SVG icon instead of the Material Symbols font; **`CarouselItem`** handles zero slides.
+- **`Pagination`** supports `@bind-CurrentPage` in both copies and ignores clicks on the current page; **`Toast`** has success and warning variants, `Position`, auto-dismiss after `Duration` (0 keeps it open) and a labelled close button; **`Skeleton`** has `Variant` (`default`, `circle`, `text`); **`NavigationMenuItem`** is a dropdown when `Title` is set and a link or button otherwise.
+- `Table`, `Separator`, `Slider`, `Navbar`, `Checkbox`, `Switch`, `Tooltip`, `SidebarMenuButton`, `Menubar` and `ThemeToggle` templates now match the package's markup and classes.
+
+## ⚠️ Breaking changes (CLI templates, after `shellui update`)
+
+- **Input variants** moved out of the component: `Input.InputVariant.Error` is now `InputVariant.Error`, from the new `input-variants` template in `Components/UI/Variants` (like `ButtonVariant`). `Textarea` gains `Variant`, `ReadOnly`, `OnFocus` and `OnBlur` through `textarea-variants`.
+- **Stepper** parts read the stepper's `ActiveStep` instead of taking a `CurrentStep` parameter, and the template gains the package's data-driven `StepItems` mode (`StepItem` comes from the new `stepper-models` template).
+- **ScrollArea** drops its `scrollbar-*` classes, which needed a Tailwind plugin nobody shipped.
+- Still working but deprecated: `Pagination.OnPageChange` (use `@bind-CurrentPage`), `DatePicker.SelectedDate` and `TimePicker.SelectedTime` (use `Value` / `@bind-Value`).
+
+`shellui update` installs the new `input-variants`, `textarea-variants` and `stepper-models` templates for you, and skips files you've changed since installing them.
+
+## ⬆️ Upgrading from 0.4.0-alpha.2
+
+- **CLI:** update the tool, then run `shellui update`. Commit first so you can review the changes, and fix any `Input.InputVariant` and Stepper `CurrentStep` uses (see above).
+- **NuGet package:** update `ShellUI.Components` to `0.4.0-alpha.3`.
+- If you used `Class="…!"` to beat a component's own classes, you can drop the `!`.
+
+## 📦 Installation
+
+```bash
+# CLI (prerelease: the version is required)
+dotnet tool install -g ShellUI.CLI --version 0.4.0-alpha.3
+# or upgrade an existing install
+dotnet tool update -g ShellUI.CLI --version 0.4.0-alpha.3
+```
+
+```bash
+# NuGet package
+dotnet add package ShellUI.Components --version 0.4.0-alpha.3
+```
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.4.0-alpha.2...v0.4.0-alpha.3
+
 # ShellUI v0.4.0-alpha.2 🧪
 
 > The second 0.4 prerelease. It fixes `shellui update`, which could leave a project upgraded from 0.3 unable to build, and makes `update` keep the files you changed. The Tailwind CLI is now downloaded once per machine instead of into every project, and the download survives slow connections. It also fixes `remove`, the dark theme and the package `TimePicker`. It is a prerelease, so installs need `--version`. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).

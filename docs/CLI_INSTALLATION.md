@@ -5,7 +5,7 @@
 | Context | Version |
 |---|---|
 | Latest stable (recommended) | `0.3.4`, needs the .NET 10 runtime |
-| Prerelease | `0.4.0-alpha.2`, install with `--version 0.4.0-alpha.2` |
+| Prerelease | `0.4.0-alpha.3`, install with `--version 0.4.0-alpha.3` |
 | Previous stable | `0.2.1` |
 | Tailwind | `4.3.2` |
 
