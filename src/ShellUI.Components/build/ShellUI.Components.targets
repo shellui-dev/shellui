@@ -360,6 +360,7 @@
     <ShellUISafelistEntry Include="w-64" />
     <ShellUISafelistEntry Include="w-7" />
     <ShellUISafelistEntry Include="w-8" />
+    <ShellUISafelistEntry Include="w-9" />
     <ShellUISafelistEntry Include="w-[100px]" />
     <ShellUISafelistEntry Include="w-[70px]" />
     <ShellUISafelistEntry Include="w-fit" />
