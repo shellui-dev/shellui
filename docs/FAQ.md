@@ -6,7 +6,7 @@ Answers for the current ShellUI source and the currently published packages.
 
 ### Which version should I use?
 
-Use the latest stable release, `0.3.4`. It uses Tailwind CSS `4.3.2`. The `0.4.0-alpha.2` prerelease, with 93 direct component targets, needs `--version 0.4.0-alpha.2`:
+Use the latest stable release, `0.3.4`. It uses Tailwind CSS `4.3.2`. The `0.4.0-alpha.3` prerelease, with 93 direct component targets, needs `--version 0.4.0-alpha.3`:
 
 ```bash
 dotnet tool install -g ShellUI.CLI
@@ -145,7 +145,7 @@ A representative Tailwind and component record is:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.4.0-alpha.2",
+      "Version": "0.4.0-alpha.3",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
