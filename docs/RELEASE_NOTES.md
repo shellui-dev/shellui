@@ -1,5 +1,54 @@
 # ShellUI Release Notes
 
+# ShellUI v0.3.5
+
+> A patch release that brings the 0.4 prerelease fixes to the stable line. `init` no longer downloads the Tailwind CLI into every project, `update` keeps your changes, `add` never downgrades a NuGet package, a component's `Class` overrides its own classes, overlays keep keyboard focus inside, and several component bugs are fixed. It also adds Razor class library support.
+
+## 🛠️ CLI
+
+- **One Tailwind CLI per machine.** `init` used to download the 112 MB Tailwind CLI into every project, hold it in memory and give up after five minutes, so on a slow connection it failed and left the project half set up. The CLI now lives once in `~/.shellui/bin` (set `SHELLUI_CACHE_DIR` to move it), and `init` and the build both run it from there; a copy in a project's `.shellui/bin` still wins. Downloads resume after a dropped connection, retry, and only stop after 60 seconds without data. If the download fails, `init` finishes everything else and the next build tries again. `.shellui/` gets its own `.gitignore`, so the folder stays out of git.
+- **`update` keeps your changes.** `shellui.json` now records a hash of each file the CLI writes. `update` skips files you've changed since and says so (`--force` overwrites them), and installs dependencies a component gained since you added it, the same way `add` does. Files installed by an earlier CLI have no hash; for those, `update` keeps `app-sidebar` and the `dashboard-*` layouts when they differ from the template.
+- **`update` moves existing projects onto the shared Tailwind CLI.** It replaces a `Build/ShellUI.targets` written by an earlier CLI (unless you edited it) and deletes the project's copy of the Tailwind CLI when it is identical to the shared one.
+- **`remove` finds what `install` wrote.** It always looked in `Components/UI`, so it ignored a custom `ComponentsPath`, couldn't remove the dashboard layouts, and reported every name as removed. It now uses the install path, reports only what it removed, and lists files that still use a removed layout.
+- **`add` never downgrades a NuGet package.** It used to set the exact version a component pins, so adding `chart` to an app on Blazor-ApexCharts 7 moved it back to 6.0.2. Now it adds a missing package or raises an older one, and leaves the same or newer versions, floating versions and ranges alone (including `Directory.Packages.props`).
+- **Razor class libraries.** `init` recognises a library shared by several apps, prints what each app needs with the library's `_content` path, and adds its `@using` to a root `_Imports.razor`. [Using ShellUI from a Razor class library](https://github.com/shellui-dev/shellui/blob/main/docs/razor-class-library.md) covers Blazor Web App and MAUI Blazor Hybrid hosts.
+
+## ✨ Components (package and CLI templates)
+
+- **`Class` overrides a component's own classes.** `Shell.Cn` used to join strings, so `Class="max-w-lg"` on a component that sets `max-w-md` put both on the element and the stylesheet decided. Now, when two classes set the same CSS property under the same variants, the later one (yours) wins, like tailwind-merge: `p-4` replaces an earlier `px-2`, text colour and text size stay separate, and unknown classes are kept. You no longer need the `!` modifier. Run `shellui update shell` to get it in a CLI project.
+- **Focus stays inside open overlays.** `Dialog`, `AlertDialog`, `Sheet` and `Drawer` keep Tab and Shift+Tab inside while open and return focus to where it was when they close. The non-compositional `Sheet` and `Drawer` panels now also take focus and close on Escape.
+
+## 🐛 Fixes
+
+- **`RadioGroup`** (template): clicking an item did nothing, because the group never passed itself to its items. `RadioGroupItem` also gains `Disabled`.
+- **`ScrollArea`**: long content was clipped instead of scrolling. `Height` and `MaxHeight` now size the scrolling element. The `scrollbar-*` classes, which needed a Tailwind plugin nobody shipped, are gone.
+- **`DatePicker`** (package): day 1 was always drawn under Sunday. It now sits under its real weekday, and the picker opens on the selected month.
+- **`TimePicker`**: `Step` now filters the minutes (it was ignored), the picker opens on the current value, and Cancel or an outside click closes it.
+- **`DateRangePicker`** (template) closes on an outside click; **`EmptyState`** (template) applies `Class` and extra attributes.
+- **`Sheet` and `Drawer`**: clicks inside the panel no longer reach parent click handlers, and the `Sheet` close button shows when only `Description` is set.
+- **`Label`** (package) renders `For` as the `for` attribute; **`FileUpload`** (package) uses an inline SVG icon instead of the Material Symbols font; **`CarouselItem`** (template) handles zero slides.
+- Still working but deprecated: `DatePicker.SelectedDate` and `TimePicker.SelectedTime`. Use `Value` / `@bind-Value`.
+
+## ⬆️ Upgrading
+
+- **CLI:** update the tool, then run `shellui update` in each project. Commit first so you can review the changes. If the project still has a `.shellui/bin/tailwindcss` binary afterwards, you can delete it: the next build downloads the shared copy.
+- **NuGet package:** update `ShellUI.Components` to `0.3.5`.
+- If you used `Class="…!"` to beat a component's own classes, you can drop the `!`.
+
+## 📦 Installation
+
+```bash
+dotnet tool install -g ShellUI.CLI --version 0.3.5
+# or upgrade an existing install
+dotnet tool update -g ShellUI.CLI --version 0.3.5
+```
+
+```bash
+dotnet add package ShellUI.Components --version 0.3.5
+```
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.3.4...v0.3.5
+
 # ShellUI v0.3.4
 
 > A patch release with a `TimePicker` fix for the `ShellUI.Components` NuGet package and dark-theme fixes for both the package and the CLI.
