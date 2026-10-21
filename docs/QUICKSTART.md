@@ -1,6 +1,6 @@
 # ShellUI Quick Start
 
-This quick start uses ShellUI `0.3.4`: Tailwind CSS `4.3.2` and 76 direct component targets. The CLI needs the .NET 10 SDK and works in Blazor projects on .NET 8, 9 and 10.
+This quick start uses ShellUI `0.3.5`: Tailwind CSS `4.3.2` and 76 direct component targets. The CLI needs the .NET 10 SDK and works in Blazor projects on .NET 8, 9 and 10.
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ shellui init --yes --tailwind standalone
 - `Components/_Imports.razor` when it is present
 - The host file used by the project
 
-Standalone mode downloads Tailwind `4.3.2` into `.shellui/bin/` and does not require Node.js. To use npm instead:
+Standalone mode downloads Tailwind `4.3.2` once per machine, into `~/.shellui/bin`, and does not require Node.js. To use npm instead:
 
 ```bash
 shellui init --yes --tailwind npm
@@ -130,9 +130,9 @@ shellui update --all
 shellui remove button card
 ```
 
-`update` overwrites the selected source files directly. It has no comparison, merge, or force step. Commit or back up custom changes before running it.
+`update` rewrites the selected source files and skips any you have changed (use `--force` to overwrite those). Commit before running it.
 
-`remove` accepts component names separated by spaces and has no options. It removes the named files, but it does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-01` and `dashboard-02` currently require manual removal from `Components/Layout`. Check references before removing a component that another component may use.
+`remove` accepts component names separated by spaces and has no options. It removes the named files, but it does not perform reverse-dependency cleanup. For layout blocks such as `dashboard-02`, `remove` lists the files that still use the layout. Check references before removing a component that another component may use.
 
 ## Apply a theme
 
@@ -152,7 +152,7 @@ shellui theme update
 - Use `shellui` for a global tool and `dotnet shellui` for a local manifest.
 - Run `shellui list` to verify a target name.
 - Check that `wwwroot/input.css` contains `@import "tailwindcss";`.
-- Check `.shellui/bin/` for standalone mode or run `npm install` for npm mode.
+- Check `~/.shellui/bin` for standalone mode or run `npm install` for npm mode.
 - Run `dotnet build` to invoke the generated Tailwind target.
 
 ## Related documentation

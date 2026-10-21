@@ -49,6 +49,8 @@ public static class Program
         var csFiles = Directory.GetFiles(componentsRoot, "*.cs", SearchOption.AllDirectories)
             .Where(p => !p.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}")
                      && !p.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"))
+            // Shell.cs holds Cn's lookup tables, not classes any component renders.
+            .Where(p => Path.GetFileName(p) != "Shell.cs")
             .ToArray();
         return (razorFiles, csFiles);
     }

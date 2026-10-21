@@ -6,7 +6,7 @@ ShellUI uses one centralized version for the source templates, CLI tool, and pac
 
 | Scope | Value |
 |---|---|
-| Version | `0.3.4` |
+| Version | `0.3.5` |
 | Target framework | .NET 10 |
 | Tailwind version | `4.3.2` |
 
@@ -18,15 +18,15 @@ The root `Directory.Build.props` supplies the version:
 
 ```xml
 <PropertyGroup>
-  <ShellUIVersion>0.3.4</ShellUIVersion>
+  <ShellUIVersion>0.3.5</ShellUIVersion>
   <ShellUIVersionSuffix></ShellUIVersionSuffix>
 </PropertyGroup>
 ```
 
 `Directory.Build.props` composes the package and assembly metadata:
 
-- `Version` is `0.3.4`; with a suffix such as `rc.1` it becomes `0.3.4-rc.1`.
-- `AssemblyVersion` and `FileVersion` use the numeric base `0.3.4`.
+- `Version` is `0.3.5`; with a suffix such as `rc.1` it becomes `0.3.5-rc.1`.
+- `AssemblyVersion` and `FileVersion` use the numeric base `0.3.5`.
 - `InformationalVersion` includes the prerelease suffix.
 - Component metadata reads the centralized properties when running from the repository. `VersionHelper` uses assembly metadata as a fallback when its repository search does not find the solution file.
 
@@ -57,7 +57,7 @@ The CLI writes the computed version into `shellui.json` for each installed entry
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.3.4",
+      "Version": "0.3.5",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
@@ -113,7 +113,7 @@ Release tags use the `v` prefix, for example `v0.3.0-rc.2`. Pushing a `v*` tag r
 3. Merge, then on an up-to-date `main` run `pwsh ./prepare-release.ps1 -Version <base> -Suffix <suffix> -DryRun` (builds, tests and checks the notes section).
 4. Tag the merged commit and push the tag: `git tag v<version>` then `git push origin v<version>`.
 
-The release workflow fails before publishing when the tag does not match the version in `Directory.Build.props` or when the notes section is missing. NuGet versions cannot be deleted, only unlisted, so the version must be merged before tagging.
+The release workflow publishes with NuGet Trusted Publishing; the one-time GitHub and nuget.org setup, and the full release checklist, are in [docs/RELEASING.md](docs/RELEASING.md). The release workflow fails before publishing when the tag does not match the version in `Directory.Build.props` or when the notes section is missing. NuGet versions cannot be deleted, only unlisted, so the version must be merged before tagging.
 
 The verification commands are:
 

@@ -185,7 +185,6 @@ left-1/2
 left-2
 lg:space-x-8
 list-none
-material-symbols-outlined
 max-h-60
 max-h-[300px]
 max-w-sm
@@ -274,9 +273,6 @@ rounded-full
 rounded-lg
 rounded-md
 rounded-sm
-scrollbar-thin
-scrollbar-thumb-border
-scrollbar-track-transparent
 select-none
 shadow-lg
 shadow-md
@@ -309,7 +305,6 @@ space-x-2
 space-y-2
 space-y-4
 sr-only
-text-5xl
 text-[10px]
 text-[8px]
 text-accent-foreground
@@ -362,6 +357,7 @@ w-56
 w-64
 w-7
 w-8
+w-9
 w-[100px]
 w-[70px]
 w-fit

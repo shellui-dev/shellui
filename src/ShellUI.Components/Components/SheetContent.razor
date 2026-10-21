@@ -6,7 +6,7 @@
 @if (Parent?.Open == true)
 {
     <div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm animate-in fade-in-0" @onclick="Close"></div>
-    <div @ref="_content" tabindex="-1" role="dialog" aria-modal="true" @onkeydown="OnKeyDownAsync" class="outline-none @SheetVariants.Get(Parent.Side, Class)" @attributes="AdditionalAttributes">
+    <div @ref="_content" tabindex="-1" role="dialog" aria-modal="true" @onkeydown="OnKeyDownAsync" class="outline-none @SheetVariants.Get(Parent.Side, Class)" @onclick:stopPropagation="true" @attributes="AdditionalAttributes">
         <div class="flex flex-col gap-4 p-6">
             @ChildContent
         </div>
@@ -23,6 +23,8 @@
     private bool _isLocked;
     private bool _focused;
     private ElementReference _content;
+    private readonly string _trapId = Guid.NewGuid().ToString("N");
+    private bool _trapped;
 
     private async Task Close()
     {
@@ -40,9 +42,14 @@
         if (isOpen && !_focused)
         {
             _focused = true;
+            try { await JS.InvokeVoidAsync("ShellUI.trapFocus", _trapId, _content); _trapped = true; } catch { }
             try { await _content.FocusAsync(); } catch (InvalidOperationException) { }
         }
-        else if (!isOpen) _focused = false;
+        else if (!isOpen)
+        {
+            _focused = false;
+            await ReleaseFocusAsync();
+        }
 
         var shouldBeLocked = Parent?.Open == true;
         if (shouldBeLocked && !_isLocked)
@@ -55,8 +62,16 @@
         }
     }
 
+    private async Task ReleaseFocusAsync()
+    {
+        if (!_trapped) return;
+        _trapped = false;
+        try { await JS.InvokeVoidAsync("ShellUI.releaseFocus", _trapId); } catch { }
+    }
+
     public async ValueTask DisposeAsync()
     {
+        await ReleaseFocusAsync();
         if (_isLocked)
         {
             try { await JS.InvokeVoidAsync("ShellUI.unlockBodyScroll"); } catch { }

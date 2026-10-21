@@ -6,7 +6,7 @@ Answers for the current ShellUI source and the currently published packages.
 
 ### Which version should I use?
 
-Use `0.3.4`. It uses Tailwind CSS `4.3.2` and has 76 direct component targets:
+Use `0.3.5`. It uses Tailwind CSS `4.3.2` and has 76 direct component targets:
 
 ```bash
 dotnet tool install -g ShellUI.CLI
@@ -65,7 +65,7 @@ Not for standalone mode:
 shellui init --yes --tailwind standalone
 ```
 
-Standalone mode downloads the Tailwind `4.3.2` CLI into `.shellui/bin/` and integrates it with the generated build target.
+Standalone mode downloads the Tailwind `4.3.2` CLI once per machine (into `~/.shellui/bin`, or `SHELLUI_CACHE_DIR`) and the generated build target runs it from there. Projects hold no copy of the binary, and later projects set up offline. The binary is a build tool: it never ships with your app, which only gets the generated `app.css`.
 
 npm mode is also supported. It requires Node.js and npm:
 
@@ -91,7 +91,7 @@ There are 76 direct targets. Use the command output as the authoritative name li
 
 ### What happens when I update a component?
 
-`update` overwrites the selected source template without showing a diff, merging changes, or asking for a force flag:
+`update` rewrites the selected components from the current templates and installs any dependencies they gained:
 
 ```bash
 shellui update button
@@ -99,11 +99,11 @@ shellui update button card
 shellui update --all
 ```
 
-Running `shellui update` without names also updates all installed components. Commit or back up local changes first.
+Running `shellui update` without names also updates all installed components. Files you have changed since the CLI wrote them are skipped; add `--force` to overwrite them. There is no diff or merge, so commit first.
 
 ### What happens when I remove a component?
 
-`remove` deletes the named component files and updates `shellui.json`. It has no options and does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-01` and `dashboard-02` currently require manual removal from `Components/Layout` because remove is not yet layout-aware:
+`remove` deletes the named component files and updates `shellui.json`. It has no options and does not perform reverse-dependency cleanup. Layout blocks such as `dashboard-02` are removed from `Components/Layout`, and `remove` lists the files that still use the layout (usually `Routes.razor`):
 
 ```bash
 shellui remove button
@@ -145,7 +145,7 @@ A representative Tailwind and component record is:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.3.4",
+      "Version": "0.3.5",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
@@ -184,6 +184,20 @@ shellui theme update
 `theme apply` updates `wwwroot/input.css` unless `--emit-override` is used. The command records the source in `shellui.theme.lock`, and `theme update` re-fetches that source.
 
 ## Existing projects and troubleshooting
+
+### How do I override a component's classes?
+
+Pass them in `Class`. Components combine their own classes with yours through `Shell.Cn`, and when two classes set the same CSS property under the same variants, yours win:
+
+```razor
+<Button Class="px-8 bg-destructive">Delete</Button>
+```
+
+The button's own `px-4` and `bg-primary` are dropped, so you don't need Tailwind's `!` important modifier. Variants are separate: `hover:bg-primary/90` stays unless you also pass a `hover:bg-…` class. Classes `Cn` doesn't recognise are always kept.
+
+### Can I put ShellUI in a Razor class library shared by several apps?
+
+Yes, for example one library used by a Blazor Web App and a MAUI Blazor Hybrid app. Run `shellui init` in the library; it recognises a Razor class library and prints what each app needs: links to `_content/<Library>/app.css` and `shellui.js`, the theme script, `@source` lines for markup that lives in an app, and `prerender: false` for apps that restore state from browser storage. See [Using ShellUI from a Razor class library](razor-class-library.md).
 
 ### Can I use ShellUI in an existing Blazor app?
 
@@ -227,7 +241,7 @@ Check that `wwwroot/input.css` exists and starts with the Tailwind v4 import, th
 dotnet build
 ```
 
-For standalone mode, check `.shellui/bin/`. For npm mode, run `npm install`.
+For standalone mode, check `~/.shellui/bin`. For npm mode, run `npm install`.
 
 ## Package updates and licensing
 

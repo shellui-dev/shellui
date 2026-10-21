@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers CLI `0.3.4`: it runs on .NET 10, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has and 76 direct component targets. Older versions, such as `0.2.1`, lack some of these commands.
+This reference covers CLI `0.3.5`: it runs on .NET 10, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 76 direct component targets. Older versions, such as `0.2.1`, lack some of these commands.
 
 ## Command prefix
 
@@ -20,7 +20,7 @@ shellui init [--force] [--style <style>] [--tailwind standalone|npm] [--yes]
 shellui add <name...> [--force]
 shellui list [--installed|--available]
 shellui remove <name...>
-shellui update [name...] [--all]
+shellui update [name...] [--all] [--force]
 shellui theme init <url-or-id> [--force] [--style <style>] [--tailwind standalone|npm] [--yes]
 shellui theme apply <url-or-id> [--emit-override <path>]
 shellui theme update
@@ -58,7 +58,7 @@ Initialization creates or updates:
 
 `Components/Layout/` is created when a layout target is installed.
 
-Standalone mode stores the Tailwind executable in `.shellui/bin/`. npm mode installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm. The current CLI invokes npm through `cmd`; use standalone mode on non-Windows systems or run npm manually.
+Standalone mode downloads the Tailwind executable once per machine into `~/.shellui/bin` (set `SHELLUI_CACHE_DIR` to move it), and every project builds with that copy; a copy in a project's `.shellui/bin/` takes precedence. If the download fails, `init` still completes and the build retries it. npm mode installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm. The current CLI invokes npm through `cmd`; use standalone mode on non-Windows systems or run npm manually.
 
 ## `add`
 
@@ -76,6 +76,7 @@ shellui add button --force
 
 `--force` overwrites an existing component file. Dependencies are installed automatically; there is no separate dependency option.
 
+Some components need a NuGet package (`chart` needs `Blazor-ApexCharts`, `data-table` needs `System.Linq.Dynamic.Core`). `add` references it if the project doesn't, and raises an older version to the one ShellUI needs. A version that is already the same or newer is left as it is (including one set in `Directory.Packages.props`), as are floating versions such as `7.*`, ranges, and references whose version ShellUI can't find.
 ## `list`
 
 Lists the direct targets and their installation status.
@@ -97,7 +98,7 @@ shellui remove button
 shellui remove button card dialog
 ```
 
-Pass names separated by spaces. `remove` has no force flag or other options, does not prompt, and does not perform reverse-dependency cleanup. If another component still references a removed file, update that usage or remove the dependent component yourself. Layout blocks such as `dashboard-01` and `dashboard-02` currently require manual removal from `Components/Layout` because remove is not yet layout-aware.
+Pass names separated by spaces. `remove` has no force flag or other options, does not prompt, and does not perform reverse-dependency cleanup. If another component still references a removed file, update that usage or remove the dependent component yourself. Layout blocks such as `dashboard-02` are removed from `Components/Layout`, and `remove` lists any files that still use the layout (usually `Routes.razor`) so you can point them at another one.
 
 ## `update`
 
@@ -108,9 +109,15 @@ shellui update button
 shellui update button card
 shellui update --all
 shellui update
+shellui update card --force
 ```
 
-Names are separated by spaces. With no names, or with `--all`, every installed component is updated. `update` overwrites files directly; there is no diff, merge, confirmation, or force option. Commit or back up local changes before updating.
+Names are separated by spaces. With no names, or with `--all`, every installed component is updated.
+
+- **Your changes are kept.** `shellui.json` records a hash of each file as the CLI wrote it. If a file has changed since, `update` skips it and says so; `--force` overwrites it. Files installed by a CLI older than 0.3.5 have no hash, so for those `update` keeps the blocks apps are meant to edit (`app-sidebar` and the `dashboard-*` layouts) when they differ from the template, and rewrites everything else.
+- **New dependencies are installed.** When a component gained dependencies since you installed it (for example `tabs` now needs `tab-models`), `update` adds them, with their NuGet packages and `_Imports.razor` usings, the same way `add` does.
+
+`update` has no diff or merge. Commit before updating so you can review the changes.
 
 ## `theme`
 
@@ -155,8 +162,9 @@ Run it from the project root after a theme has been applied.
 | `wwwroot/input.css` | Tailwind v4 input and theme variables |
 | `wwwroot/app.css` | Generated Tailwind output |
 | `tailwind.config.js` | Project content globs and dark-mode setting |
-| `.shellui/bin/tailwindcss` | Standalone CLI on macOS/Linux |
-| `.shellui/bin/tailwindcss.exe` | Standalone CLI on Windows |
+| `~/.shellui/bin/tailwindcss-<version>-<platform>` | Standalone CLI, shared by every project on the machine |
+| `.shellui/.gitignore` | Keeps `.shellui/` out of git |
+| `.shellui/bin/tailwindcss(.exe)` | Optional per-project CLI, used instead of the shared one |
 | `Build/ShellUI.targets` | MSBuild integration |
 | `shellui.json` | ShellUI project configuration |
 | `shellui.theme.lock` | Theme source and integrity record |
@@ -205,7 +213,7 @@ Representative fields look like this:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.3.4",
+      "Version": "0.3.5",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }
@@ -237,7 +245,7 @@ shellui add button,card
 - Run `shellui list` to verify a target name.
 - Confirm `wwwroot/input.css` exists and contains `@import "tailwindcss";`.
 - Run `dotnet build` to invoke the generated Tailwind build target.
-- In standalone mode, check `.shellui/bin/`; in npm mode, run `npm install`.
+- In standalone mode, check `~/.shellui/bin`; in npm mode, run `npm install`.
 
 ## Related documentation
 

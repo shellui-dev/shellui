@@ -188,7 +188,6 @@
     <ShellUISafelistEntry Include="left-2" />
     <ShellUISafelistEntry Include="lg:space-x-8" />
     <ShellUISafelistEntry Include="list-none" />
-    <ShellUISafelistEntry Include="material-symbols-outlined" />
     <ShellUISafelistEntry Include="max-h-60" />
     <ShellUISafelistEntry Include="max-h-[300px]" />
     <ShellUISafelistEntry Include="max-w-sm" />
@@ -277,9 +276,6 @@
     <ShellUISafelistEntry Include="rounded-lg" />
     <ShellUISafelistEntry Include="rounded-md" />
     <ShellUISafelistEntry Include="rounded-sm" />
-    <ShellUISafelistEntry Include="scrollbar-thin" />
-    <ShellUISafelistEntry Include="scrollbar-thumb-border" />
-    <ShellUISafelistEntry Include="scrollbar-track-transparent" />
     <ShellUISafelistEntry Include="select-none" />
     <ShellUISafelistEntry Include="shadow-lg" />
     <ShellUISafelistEntry Include="shadow-md" />
@@ -312,7 +308,6 @@
     <ShellUISafelistEntry Include="space-y-2" />
     <ShellUISafelistEntry Include="space-y-4" />
     <ShellUISafelistEntry Include="sr-only" />
-    <ShellUISafelistEntry Include="text-5xl" />
     <ShellUISafelistEntry Include="text-[10px]" />
     <ShellUISafelistEntry Include="text-[8px]" />
     <ShellUISafelistEntry Include="text-accent-foreground" />
@@ -365,6 +360,7 @@
     <ShellUISafelistEntry Include="w-64" />
     <ShellUISafelistEntry Include="w-7" />
     <ShellUISafelistEntry Include="w-8" />
+    <ShellUISafelistEntry Include="w-9" />
     <ShellUISafelistEntry Include="w-[100px]" />
     <ShellUISafelistEntry Include="w-[70px]" />
     <ShellUISafelistEntry Include="w-fit" />
