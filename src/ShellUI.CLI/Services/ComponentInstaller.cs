@@ -10,7 +10,7 @@ public class ComponentInstaller
 {
     private const string ShellUiJsSidebarApiMarker = "initSidebar: function (handle, dotNetRef)";
 
-    public static async Task<bool> InstallComponents(string[] components, bool force, LayoutSwitch layoutSwitch = LayoutSwitch.Ask)
+    public static async Task<bool> InstallComponents(string[] components, bool force, LayoutSwitch layoutSwitch = LayoutSwitch.Ask, string[]? except = null)
     {
         var configPath = Path.Combine(Directory.GetCurrentDirectory(), "shellui.json");
 
@@ -37,6 +37,26 @@ public class ComponentInstaller
         {
             componentList.AddRange(comp.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
         }
+        var addAll = componentList.RemoveAll(c => c.Equals("all", StringComparison.OrdinalIgnoreCase)) > 0;
+        if (addAll)
+            componentList.AddRange(LibraryComponents().Where(name => !componentList.Contains(name, StringComparer.OrdinalIgnoreCase)));
+        if (except is { Length: > 0 })
+        {
+            var skip = except.SelectMany(e => e.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            foreach (var name in skip.Where(n => ComponentRegistry.GetMetadata(n) == null))
+                AnsiConsole.MarkupLine($"[yellow]Unknown component in --except:[/] {Markup.Escape(name)}");
+            componentList.RemoveAll(skip.Contains);
+            // Leaving out chart also leaves out bar-chart and the rest, so its NuGet package isn't added.
+            var dependents = componentList.Where(name => DependsOnAny(name, skip)).ToList();
+            if (dependents.Count > 0)
+            {
+                componentList.RemoveAll(dependents.Contains);
+                AnsiConsole.MarkupLine($"[dim]Also left out, because they need an excluded component: {Markup.Escape(string.Join(", ", dependents))}[/]");
+            }
+        }
+        if (addAll)
+            AnsiConsole.MarkupLine($"[blue]Adding all {componentList.Count} components[/] [dim](layout blocks such as dashboard-02 and auth-01 are left out; add them by name)[/]");
         if (componentList.Any(DashboardSetup.Layouts.ContainsKey) && DashboardSetup.IsIdentityApp(Directory.GetCurrentDirectory()))
             componentList.Add("sidebar-account");
 
@@ -48,7 +68,7 @@ public class ComponentInstaller
         var requestedPackages = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var pendingNuGetDeps = new List<NuGetDependency>();
 
-        foreach (var componentName in componentList)
+        foreach (var componentName in addAll ? Enumerable.Empty<string>() : componentList)
         {
             var metadata = ComponentRegistry.GetMetadata(componentName);
             if (metadata != null && metadata.Dependencies?.Any() == true)
@@ -113,6 +133,21 @@ public class ComponentInstaller
 
         return failedComponents.Count == 0 && failedPackages.Count == 0;
     }
+
+    internal static bool DependsOnAny(string name, IReadOnlySet<string> names, HashSet<string>? seen = null)
+    {
+        seen ??= new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (!seen.Add(name)) return false;
+        var dependencies = ComponentRegistry.GetMetadata(name)?.Dependencies ?? new List<string>();
+        return dependencies.Any(d => names.Contains(d) || DependsOnAny(d, names, seen));
+    }
+
+    // What `add all` installs: every target `list` shows except the layout blocks, which rewire the app.
+    internal static IEnumerable<string> LibraryComponents() =>
+        ComponentRegistry.Components.Values
+            .Where(m => m.IsAvailable && !m.IsLayoutBlock)
+            .Select(m => m.Name)
+            .OrderBy(name => name, StringComparer.Ordinal);
 
     public static Task<bool> InstallComponentForInitAsync(
         string componentName,
@@ -243,11 +278,12 @@ public class ComponentInstaller
         return InstallResult.Success;
     }
 
-    internal static string InstalledFilePath(ComponentMetadata metadata, ShellUIConfig config)
+    internal static string InstalledFilePath(ComponentMetadata metadata, ShellUIConfig config, string? root = null)
     {
+        root ??= Directory.GetCurrentDirectory();
         var basePath = metadata.IsLayoutBlock
-            ? Path.Combine(Directory.GetCurrentDirectory(), config.LayoutPath ?? "Components/Layout")
-            : Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath);
+            ? Path.Combine(root, config.LayoutPath ?? "Components/Layout")
+            : Path.Combine(root, config.ComponentsPath);
         return Path.GetFullPath(Path.Combine(basePath, metadata.FilePath));
     }
 
@@ -259,7 +295,7 @@ public class ComponentInstaller
     public static string ContentHash(string content)
     {
         var bytes = System.Text.Encoding.UTF8.GetBytes(content.Replace("\r\n", "\n"));
-        return Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(bytes));
+        return Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(bytes)).ToLowerInvariant();
     }
 
     private static void RecordInstalledComponent(

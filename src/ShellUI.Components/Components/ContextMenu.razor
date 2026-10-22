@@ -25,12 +25,12 @@
                         }
                         else
                         {
-                            <button class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
+                            <button class="@Shell.Cn("relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50", item.Destructive ? "text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive" : null)"
                                     disabled="@item.Disabled"
                                     @onclick="() => SelectItem(item)">
                                 @if (!string.IsNullOrEmpty(item.Icon))
                                 {
-                                    <span class="mr-2 flex shrink-0 items-center justify-center text-muted-foreground" style="width: 0.875rem; height: 0.875rem;">@((MarkupString)item.Icon)</span>
+                                    <span class="mr-2 flex shrink-0 items-center justify-center @(item.Destructive ? "text-destructive" : "text-muted-foreground")" style="width: 0.875rem; height: 0.875rem;">@((MarkupString)item.Icon)</span>
                                 }
                                 <span class="flex-1">@item.Label</span>
                                 @if (!string.IsNullOrEmpty(item.Shortcut))

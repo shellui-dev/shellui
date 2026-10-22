@@ -5,9 +5,11 @@ namespace ShellUI.CLI.Services;
 
 public class ProjectDetector
 {
-    public static ProjectInfo DetectProject()
+    public static ProjectInfo DetectProject() => DetectProject(Directory.GetCurrentDirectory());
+
+    public static ProjectInfo DetectProject(string directory)
     {
-        var csprojFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.csproj");
+        var csprojFiles = Directory.GetFiles(directory, "*.csproj");
         
         if (csprojFiles.Length == 0)
         {

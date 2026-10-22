@@ -25,13 +25,13 @@ public static class ContextMenuOptionTemplate
 else
 {
     <button type=""button""
-            class=""relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50""
+            class=""@Shell.Cn(""relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"", Destructive ? ""text-destructive hover:bg-destructive/10 hover:text-destructive focus:bg-destructive/10 focus:text-destructive"" : null)""
             disabled=""@Disabled""
             @onclick=""HandleClick""
             @attributes=""AdditionalAttributes"">
         @if (IconContent != null)
         {
-            <span class=""mr-2 flex shrink-0 items-center justify-center text-muted-foreground"" style=""width: 0.875rem; height: 0.875rem;"">@IconContent</span>
+            <span class=""mr-2 flex shrink-0 items-center justify-center @(Destructive ? ""text-destructive"" : ""text-muted-foreground"")"" style=""width: 0.875rem; height: 0.875rem;"">@IconContent</span>
         }
         <span class=""flex-1"">@ChildContent</span>
         @if (!string.IsNullOrEmpty(Shortcut))
@@ -47,6 +47,7 @@ else
     [Parameter] public RenderFragment? IconContent { get; set; }
     [Parameter] public string? Shortcut { get; set; }
     [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool Destructive { get; set; }
     [Parameter] public bool IsSeparator { get; set; }
     [Parameter] public string? Value { get; set; }
     [Parameter] public EventCallback OnClick { get; set; }

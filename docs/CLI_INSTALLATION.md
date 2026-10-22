@@ -4,12 +4,12 @@
 
 | Context | Version |
 |---|---|
-| Latest stable (recommended) | `0.3.4`, needs the .NET 10 runtime |
+| Latest stable (recommended) | `0.3.5`, needs the .NET 10 runtime |
 | Prerelease | `0.4.0-alpha.3`, install with `--version 0.4.0-alpha.3` |
 | Previous stable | `0.2.1` |
 | Tailwind | `4.3.2` |
 
-The tool needs the .NET 10 runtime. The projects it sets up can target .NET 8, 9 or 10.
+The tool runs on .NET 8 or later (`0.4.0-alpha.3` and the 0.3 line need the .NET 10 runtime). The projects it sets up can target .NET 8, 9 or 10.
 
 ## Global installation
 
@@ -44,7 +44,7 @@ The manifest is `.config/dotnet-tools.json` and uses the installed package versi
   "isRoot": true,
   "tools": {
     "shellui.cli": {
-      "version": "0.3.4",
+      "version": "0.3.5",
       "commands": ["shellui"]
     }
   }
@@ -65,7 +65,7 @@ Commit the manifest so every developer and CI job uses the same tool version.
 
 ## Building from source
 
-The repository targets `net10.0`. Build it with the .NET 10 SDK:
+The repository targets `net8.0` and `net10.0`. Build it with the .NET 10 SDK; running the tests on both frameworks also needs the .NET 8 runtime:
 
 ```bash
 dotnet --version

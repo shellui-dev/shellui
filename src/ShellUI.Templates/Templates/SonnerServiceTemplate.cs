@@ -26,6 +26,7 @@ public class SonnerToastItem
     // Zero or negative disables auto-dismiss (toast stays until manually closed).
     public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(4);
     public DateTime CreatedAt { get; } = DateTime.UtcNow;
+    public bool Dismissing { get; internal set; }
 }
 
 public interface ISonnerService
@@ -37,6 +38,7 @@ public interface ISonnerService
     void Info(string message, string? description = null, TimeSpan? duration = null);
     void Warning(string message, string? description = null, TimeSpan? duration = null);
     void Remove(string id);
+    void Clear();
 }
 
 public class SonnerService : ISonnerService
@@ -75,10 +77,23 @@ public class SonnerService : ISonnerService
     public void Warning(string message, string? description = null, TimeSpan? duration = null)
         => Show(message, description, ""warning"", duration);
 
-    public void Remove(string id)
+    // Matches the toast's duration-300 transition, so the fade finishes before removal.
+    private static readonly TimeSpan ExitDuration = TimeSpan.FromMilliseconds(300);
+
+    public void Remove(string id) => _ = DismissAsync(_toasts.Where(t => t.Id == id).ToList());
+
+    public void Clear() => _ = DismissAsync(_toasts.ToList());
+
+    private async Task DismissAsync(List<SonnerToastItem> toasts)
     {
-        var removed = _toasts.RemoveAll(t => t.Id == id);
-        if (removed > 0) OnChange?.Invoke();
+        toasts.RemoveAll(t => t.Dismissing);
+        if (toasts.Count == 0) return;
+        foreach (var toast in toasts) toast.Dismissing = true;
+        OnChange?.Invoke();
+
+        try { await Task.Delay(ExitDuration); } catch { }
+        foreach (var toast in toasts) _toasts.Remove(toast);
+        OnChange?.Invoke();
     }
 
     private async Task AutoDismissAsync(string id, TimeSpan delay)

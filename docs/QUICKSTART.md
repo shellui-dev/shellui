@@ -1,10 +1,10 @@
 # ShellUI Quick Start
 
-This quick start uses ShellUI `0.4.0-alpha.3`, a prerelease, with Tailwind CSS `4.3.2`. The CLI needs the .NET 10 SDK and works in Blazor projects on .NET 8, 9 and 10.
+This quick start uses ShellUI `0.4.0-alpha.3`, a prerelease, with Tailwind CSS `4.3.2`. The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10.
 
 ## Prerequisites
 
-- .NET 10 SDK
+- .NET 8 SDK or later
 - A Blazor project
 - The `ShellUI.CLI` tool
 - Node.js and npm only when choosing `--tailwind npm`

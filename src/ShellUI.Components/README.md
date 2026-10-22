@@ -8,13 +8,11 @@ Prefer to own and edit the component source? Use the [ShellUI CLI](https://www.n
 
 ## Install
 
-Requires a .NET 10 project:
+Works in .NET 8, 9 and 10 projects:
 
 ```bash
 dotnet add package ShellUI.Components
 ```
-
-On .NET 8 or 9, use the [ShellUI CLI](https://www.nuget.org/packages/ShellUI.CLI) instead. The source it installs builds on .NET 8, 9 and 10.
 
 ## Set up
 

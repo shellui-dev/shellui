@@ -24,18 +24,18 @@
 
 | Channel | Version | Notes |
 |---|---|---|
-| Latest stable (recommended) | `0.3.4` | Tailwind CSS `4.3.2` |
+| Latest stable (recommended) | `0.3.5` | Tailwind CSS `4.3.2` |
 | Prerelease | `0.4.0-alpha.3` | This branch; install with `--version 0.4.0-alpha.3` |
 
-The CLI needs the .NET 10 SDK and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 10 only; on .NET 8 or 9, use the CLI.
+The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 8, 9 and 10. (`0.4.0-alpha.3` and the 0.3 line need .NET 10 for both.)
 
-`main` is the 0.4 line, so this README and `docs/` describe `0.4.0-alpha.3`, including features that are not in a stable release yet, such as `shellui init --dashboard` and the auth blocks. For the stable version, read the [v0.3.4 docs](https://github.com/shellui-dev/shellui/tree/v0.3.4). Prereleases need `--version` to install.
+`main` is the 0.4 line, so this README and `docs/` describe `0.4.0-alpha.3`, including features that are not in a stable release yet, such as `shellui init --dashboard` and the auth blocks. For the stable version, read the [v0.3.5 docs](https://github.com/shellui-dev/shellui/tree/v0.3.5). Prereleases need `--version` to install.
 
 ShellUI is pre-1.0, so APIs and generated output can still change between minor versions. Validate it in your target Blazor and hosting environments before relying on it.
 
 ## Capabilities
 
-- The CLI commands are `init`, `add`, `list`, `remove`, and `update`, plus `theme init`, `theme apply`, and `theme update`.
+- The CLI commands are `init`, `add`, `list`, `remove`, `update` and `doctor`, plus `theme init`, `theme apply`, and `theme update`.
 - The component registry has **243 entries**: **93 direct install targets** and **150 hidden dependency entries**. `list` shows direct targets; `add` resolves hidden dependencies.
 - `0.4.0-alpha.1` adds `kbd`, `aspect-ratio`, `button-group`, `toggle-group`, `input-group`, `number-input`, `stat-card`, `timeline`, `tree-view`, `qr-code`, `image-viewer`, `chat`, `chat-message`, `chat-input`, and the `auth-01`, `auth-02` and `auth-03` blocks.
 - `0.3.0` added `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
@@ -45,8 +45,8 @@ ShellUI is pre-1.0, so APIs and generated output can still change between minor 
 
 ## Requirements
 
-- The .NET 10 SDK
-- A Blazor project on .NET 8, 9 or 10 with the CLI, or on .NET 10 with the NuGet package
+- The .NET 8 SDK or later
+- A Blazor project on .NET 8, 9 or 10, with the CLI or the NuGet package
 - Tailwind CSS `4.3.2` via either:
   - the standalone CLI, which does not require Node.js; or
   - npm, which requires Node.js and npm

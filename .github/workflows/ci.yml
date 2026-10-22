@@ -25,6 +25,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
+          8.0.x
           10.0.x
 
     - name: Restore dependencies
@@ -220,6 +221,20 @@ jobs:
         grep -Fq 'hover\:bg-accent' "$BUNDLE" || (echo "ERROR: bundle missing hover:bg-accent modifier rule"; exit 1)
         grep -Fq 'state=open' "$BUNDLE" || (echo "ERROR: bundle missing data-[state=open] arbitrary-value modifier"; exit 1)
         grep -Fq 'px-2\.5' "$BUNDLE" || (echo "ERROR: bundle missing Badge padding — .cs variant scan regression?"; exit 1)
+
+        # The package also ships net8.0 and net9.0 builds.
+        for fw in net8.0 net9.0; do
+          cd "$TMPDIR/app"
+          dotnet new blazor -o "NuGetSmoke-$fw" -f "$fw" --no-restore
+          cd "NuGetSmoke-$fw"
+          cp ../NuGetSmoke/NuGet.config .
+          dotnet add package ShellUI.Components --prerelease
+          echo '@using ShellUI.Components' >> Components/_Imports.razor
+          echo '@page "/shellui"' > Components/Pages/ShellUISmoke.razor
+          echo '<Button>Save</Button> <Card><CardContent>ok</CardContent></Card>' >> Components/Pages/ShellUISmoke.razor
+          dotnet build -c Debug
+          test -f wwwroot/shellui-classes.txt
+        done
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4

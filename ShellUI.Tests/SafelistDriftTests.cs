@@ -40,6 +40,28 @@ public class SafelistDriftTests
     }
 
     [Fact]
+    public void Generator_HarvestsClassesInRazorExpressions()
+    {
+        var file = Path.Combine(Path.GetTempPath(), $"safelist-{Guid.NewGuid():N}.razor");
+        File.WriteAllLines(file, new[]
+        {
+            "<div class=\"@Shell.Cn(\"fixed translate-y-[-50%] sm:rounded-lg\", Class)\"></div>",
+            "<span class=\"flex @(Active ? \"text-destructive\" : \"text-muted-foreground\")\"></span>",
+            "@code { string Tone(string v) => v switch { \"ok\" => \"bg-green-500/20\", _ => \"bg-background\" }; }",
+        });
+        try
+        {
+            var classes = Program.GenerateSafelist(new[] { file });
+            foreach (var expected in new[] { "translate-y-[-50%]", "sm:rounded-lg", "text-destructive", "text-muted-foreground", "bg-green-500/20", "bg-background" })
+                Assert.Contains(expected, classes);
+        }
+        finally
+        {
+            File.Delete(file);
+        }
+    }
+
+    [Fact]
     public void GeneratedTargetsFile_IsValidXml()
     {
         // XML 1.0 forbids `--` in comments, and strict MSBuild versions reject the file (MSB4024).

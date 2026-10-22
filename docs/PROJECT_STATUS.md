@@ -5,7 +5,7 @@
 | Area | Current fact |
 |---|---|
 | Version | See `Directory.Build.props` |
-| Framework | .NET 10 (`net10.0`) |
+| Framework | .NET 8 and .NET 10 (`net8.0;net10.0`); `ShellUI.Components` also `net9.0` |
 | Tailwind CSS | `4.3.2` |
 | Solution | `ShellUI.slnx` with six projects |
 | Demo | `NET10/BlazorInteractiveServer/BlazorInteractiveServer.csproj`, outside the solution |

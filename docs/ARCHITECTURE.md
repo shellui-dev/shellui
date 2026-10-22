@@ -7,7 +7,7 @@ This document describes the ShellUI source tree.
 | Area | Current value |
 |---|---|
 | Version | See `Directory.Build.props` |
-| Target framework | .NET 10 (`net10.0`) |
+| Target framework | .NET 8 and .NET 10 (`net8.0;net10.0`); `ShellUI.Components` also `net9.0` |
 | Tailwind CSS | `4.3.2` |
 | Solution | `ShellUI.slnx` |
 | Solution projects | 6 |
@@ -30,7 +30,7 @@ flowchart LR
         Safelist[ShellUI.SafelistGenerator<br/>internal build utility]
     end
 
-    Project[Consumer project<br/>net10.0]
+    Project[Consumer project<br/>net8.0 to net10.0]
     Demo[NET10/BlazorInteractiveServer<br/>demo outside the solution]
 
     Developer --> CLI

@@ -4,7 +4,7 @@
 
 ## Packaging status
 
-This project targets .NET 10.
+This project targets .NET 8 and .NET 10.
 
 `ShellUI.Templates` sets `IsPackable` to `false` and is not published to NuGet. Do not run `dotnet add package ShellUI.Templates`. The only packable ShellUI projects are:
 

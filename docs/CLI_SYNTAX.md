@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers CLI `0.4.0-alpha.3` (prerelease): it runs on .NET 10, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 93 direct component targets. Some options, such as `--dashboard`, are not in the stable 0.3.4; see the [v0.3.4 reference](https://github.com/shellui-dev/shellui/blob/v0.3.4/docs/CLI_SYNTAX.md) for that version.
+This reference covers CLI `0.4.0-alpha.3` (prerelease): it runs on .NET 8 or later (`0.4.0-alpha.3` itself needs .NET 10), sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 93 direct component targets. Some options, such as `--dashboard`, are not in the stable 0.3.4; see the [v0.3.4 reference](https://github.com/shellui-dev/shellui/blob/v0.3.4/docs/CLI_SYNTAX.md) for that version.
 
 ## Command prefix
 
@@ -17,10 +17,11 @@ shellui --version
 
 ```text
 shellui init [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
-shellui add <name...> [--force] [--replace-layout]
+shellui add <name...>|all [--force] [--replace-layout] [--except <name...>]
 shellui list [--installed|--available]
 shellui remove <name...>
 shellui update [name...] [--all] [--force]
+shellui doctor
 shellui theme init <url-or-id> [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
 shellui theme apply <url-or-id> [--emit-override <path>]
 shellui theme update
@@ -79,11 +80,15 @@ shellui add button card dialog
 shellui add button,card,dialog
 shellui add button,card dialog
 shellui add button --force
+shellui add all
+shellui add all --except chart,qr-code
 ```
 
 `add` accepts space-separated names, comma-separated names, and a mixture of both. Use the exact target names printed by `shellui list`.
 
 `--force` overwrites an existing component file. Dependencies are installed automatically; there is no separate dependency option.
+
+`shellui add all` installs the whole component library: every target `shellui list` shows except the layout blocks (`dashboard-01`, `dashboard-02`, `auth-01`, `auth-02`, `auth-03`), which rewire the app and are added by name. Components already installed are skipped. `--except` leaves components out (space or comma-separated), along with anything that needs them: `--except chart` also leaves out `bar-chart`, `line-chart` and the other charts, so `Blazor-ApexCharts` isn't added.
 
 Some components need a NuGet package (`chart` needs `Blazor-ApexCharts`, `data-table` needs `System.Linq.Dynamic.Core`, `qr-code` needs `QRCoder`). `add` references it if the project doesn't, and raises an older version to the one ShellUI needs. A version that is already the same or newer is left as it is (including one set in `Directory.Packages.props`), as are floating versions such as `7.*`, ranges, and references whose version ShellUI can't find.
 
@@ -164,6 +169,24 @@ Names are separated by spaces. With no names, or with `--all`, every installed c
 - **New dependencies are installed.** When a component gained dependencies since you installed it (for example `tabs` now needs `tab-models`), `update` adds them, with their NuGet packages and `_Imports.razor` usings, the same way `add` does.
 
 `update` has no diff or merge. Commit before updating so you can review the changes.
+
+## `doctor`
+
+Checks the project's ShellUI setup and prints a fix for each problem it finds:
+
+```bash
+shellui doctor
+```
+
+- `shellui.json` is valid and `ComponentsPath` exists.
+- The Tailwind CLI is available (the shared copy in `~/.shellui/bin`, a project copy, or the npm packages), `Build/ShellUI.targets` exists, and `wwwroot/app.css` is newer than `input.css` and the components.
+- The host page (`Components/App.razor` or `wwwroot/index.html`) links `app.css`, loads `shellui.js` and has the theme script.
+- An interactive render mode is set in `App.razor`. When only some pages set one, components on the other pages don't respond to clicks.
+- Every installed component's file exists and its dependencies are installed.
+- `_Imports.razor` has the ShellUI `@using` lines.
+- The project doesn't use the `ShellUI.Components` package and CLI-installed components together.
+
+It exits with code 1 when it finds a problem, so it can run in CI. Warnings, such as a stale `app.css`, don't change the exit code. In a Razor class library it skips the host page checks, which apply to each app that uses the library.
 
 ## `theme`
 
@@ -287,6 +310,7 @@ shellui add button,card
 
 ## Troubleshooting
 
+- Run `shellui doctor`; it checks the setup and says how to fix what it finds.
 - If the command is not found, use `shellui` for a global tool or `dotnet shellui` for a local manifest.
 - Run `shellui list` to verify a target name.
 - Confirm `wwwroot/input.css` exists and contains `@import "tailwindcss";`.
