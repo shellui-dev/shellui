@@ -6,7 +6,7 @@ ShellUI uses one centralized version for the source templates, CLI tool, and pac
 
 | Scope | Value |
 |---|---|
-| Version | `0.4.0-alpha.3` (prerelease; latest stable `0.3.4`) |
+| Version | `0.4.0-alpha.3` (prerelease; latest stable `0.3.5`) |
 | Target framework | .NET 8 and .NET 10 (`ShellUI.Components` also .NET 9) |
 | Tailwind version | `4.3.2` |
 

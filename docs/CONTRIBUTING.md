@@ -1,6 +1,6 @@
 # Contributing to ShellUI
 
-ShellUI targets .NET 10 and Tailwind CSS `4.3.2`. This guide describes the contribution and verification workflow; releases are covered in [VERSIONING_STRATEGY.md](../VERSIONING_STRATEGY.md) and [RELEASING.md](RELEASING.md).
+ShellUI targets .NET 8 and .NET 10 and Tailwind CSS `4.3.2`. This guide describes the contribution and verification workflow; releases are covered in [VERSIONING_STRATEGY.md](../VERSIONING_STRATEGY.md) and [RELEASING.md](RELEASING.md).
 
 ## Contribution Policy
 
