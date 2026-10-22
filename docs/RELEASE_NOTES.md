@@ -1,5 +1,33 @@
 # ShellUI Release Notes
 
+# ShellUI v0.3.6
+
+> A small patch: both packages now show the ShellUI logo on nuget.org, and the `ShellUI.Components` safelist includes the classes it was missing.
+
+## 🐛 Fixes
+
+- **Safelist:** `shellui-classes.txt`, which apps building their own Tailwind CSS from the package use, was missing 181 classes the components render: every class passed to `Shell.Cn("...")` inside a `class` attribute, plus those in conditional expressions. Among them were the dialog's centring (`translate-x-[-50%]`, `translate-y-[-50%]`), `sm:rounded-lg` and the Sonner variant colours, so in those apps dialogs weren't centred. The precompiled `shellui-all.css` wasn't affected.
+- **Package icon:** `ShellUI.CLI` and `ShellUI.Components` showed nuget.org's default icon. They now use the ShellUI logo.
+
+## ⬆️ Upgrading
+
+- **NuGet package:** update `ShellUI.Components` to `0.3.6`. If you build your own Tailwind CSS from `shellui-classes.txt`, rebuild it afterwards.
+- **CLI:** update the tool to `0.3.6`. Nothing changes in projects it set up.
+
+## 📦 Installation
+
+```bash
+dotnet tool install -g ShellUI.CLI --version 0.3.6
+# or upgrade an existing install
+dotnet tool update -g ShellUI.CLI --version 0.3.6
+```
+
+```bash
+dotnet add package ShellUI.Components --version 0.3.6
+```
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.3.5...v0.3.6
+
 # ShellUI v0.3.5
 
 > A patch release that brings the 0.4 prerelease fixes to the stable line. `init` no longer downloads the Tailwind CLI into every project, `update` keeps your changes, `add` never downgrades a NuGet package, a component's `Class` overrides its own classes, overlays keep keyboard focus inside, and several component bugs are fixed. It also adds Razor class library support.

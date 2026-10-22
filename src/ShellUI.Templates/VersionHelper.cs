@@ -51,7 +51,7 @@ public static class VersionHelper
             return _cachedVersion;
         }
 
-        return "0.3.5";
+        return "0.3.6";
     }
 
     private static string? FindSolutionRoot()

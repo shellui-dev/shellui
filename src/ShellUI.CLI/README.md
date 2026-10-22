@@ -68,10 +68,10 @@ dotnet watch
 
 ## Documentation
 
-- [README](https://github.com/shellui-dev/shellui/blob/v0.3.5/README.md)
-- [CLI reference](https://github.com/shellui-dev/shellui/blob/v0.3.5/docs/CLI_SYNTAX.md)
-- [Release notes](https://github.com/shellui-dev/shellui/blob/v0.3.5/docs/RELEASE_NOTES.md)
+- [README](https://github.com/shellui-dev/shellui/blob/v0.3.6/README.md)
+- [CLI reference](https://github.com/shellui-dev/shellui/blob/v0.3.6/docs/CLI_SYNTAX.md)
+- [Release notes](https://github.com/shellui-dev/shellui/blob/v0.3.6/docs/RELEASE_NOTES.md)
 
 ## License
 
-[MIT](https://github.com/shellui-dev/shellui/blob/v0.3.5/LICENSE.txt)
+[MIT](https://github.com/shellui-dev/shellui/blob/v0.3.6/LICENSE.txt)
