@@ -1,0 +1,52 @@
+@namespace BlazorInteractiveServer.Components.UI
+
+<div class="@Shell.Cn("rounded-lg border border-border bg-background text-sm", Class)" @attributes="AdditionalAttributes">
+    <button type="button"
+            @onclick="Toggle"
+            aria-expanded="@(_open ? "true" : "false")"
+            class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <span class="@Shell.Cn("font-medium", IsStreaming ? "animate-pulse" : "")">@Label</span>
+        <svg class="@Shell.Cn("ml-auto h-4 w-4 shrink-0 transition-transform duration-200", _open ? "rotate-180" : "")" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+    @if (_open)
+    {
+        <div class="whitespace-pre-wrap border-t border-border px-3 py-2 leading-relaxed text-muted-foreground">@(Text)@ChildContent</div>
+    }
+</div>
+
+@code {
+    [Parameter] public string? Text { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    // Opens while streaming and closes when streaming ends.
+    [Parameter] public bool IsStreaming { get; set; }
+    // How long the model thought, shown once streaming ends.
+    [Parameter] public TimeSpan? Duration { get; set; }
+    // Replaces the "Thinking…" / "Thought for …" label.
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public bool DefaultOpen { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _open;
+    private bool? _wasStreaming;
+
+    private string Label => Title ?? (IsStreaming ? "Thinking…" : Duration is { } d ? $"Thought for {Seconds(d)}" : "Reasoning");
+
+    private static string Seconds(TimeSpan d)
+    {
+        var s = Math.Max(1, (int)Math.Round(d.TotalSeconds));
+        return s == 1 ? "1 second" : $"{s} seconds";
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (_wasStreaming == IsStreaming) return;
+        _open = _wasStreaming == null ? DefaultOpen || IsStreaming : IsStreaming;
+        _wasStreaming = IsStreaming;
+    }
+
+    private void Toggle() => _open = !_open;
+}

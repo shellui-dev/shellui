@@ -433,7 +433,7 @@
     },
     {
       "Name": "shellui-js",
-      "Version": "0.3.0-rc.2",
+      "Version": "0.4.0-alpha.3",
       "InstalledAt": "2026-09-26T17:01:28.0644172Z",
       "IsCustomized": false
     },
@@ -472,6 +472,61 @@
       "Version": "0.3.0-rc.2",
       "InstalledAt": "2026-09-26T18:08:10.295392Z",
       "IsCustomized": false
+    },
+    {
+      "Name": "prompt-suggestions",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-22T20:46:37.5789814Z",
+      "IsCustomized": false,
+      "Hash": "b6762d46232eeba7629d42bb9f87aa423fc81c66796ff482989fdaf985eba5c0"
+    },
+    {
+      "Name": "reasoning",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-22T20:46:37.5817583Z",
+      "IsCustomized": false,
+      "Hash": "e8dab11b6ae7a630bdffb4e2d79d91ef9b886c917e40101a67baad2571d1c612"
+    },
+    {
+      "Name": "tool-call",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-22T20:46:37.5831327Z",
+      "IsCustomized": false,
+      "Hash": "c1a6b64422c3a0246e9a77c753f4a75ecfaccebb5440513621a5879031aa0bfd"
+    },
+    {
+      "Name": "form-message",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-22T20:46:37.5847002Z",
+      "IsCustomized": false,
+      "Hash": "1b8d9f7946d86a75225b7621fffd3962d65e77df037f3eca9bbbe72c39589ac9"
+    },
+    {
+      "Name": "field",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-22T20:46:37.5875642Z",
+      "IsCustomized": false,
+      "Hash": "c81bf713314272c48cfafbb665ccd4a38bf1aeefc59ad43ce32a5dc8c1a05e6b"
+    },
+    {
+      "Name": "json-viewer-node",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-22T20:46:37.5900247Z",
+      "IsCustomized": false,
+      "Hash": "1d5458f4785f751fd365d01039720627098834b62353f0dea20a8ae77e352aa9"
+    },
+    {
+      "Name": "copy-button",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-22T20:46:37.5949889Z",
+      "IsCustomized": false
+    },
+    {
+      "Name": "json-viewer",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-22T20:46:37.5961373Z",
+      "IsCustomized": false,
+      "Hash": "3c8be5c6eab39cf83cace12e187720489f44a7b26e246db1aa2992438939a126"
     }
   ],
   "ProjectType": 1

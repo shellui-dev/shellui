@@ -1,0 +1,57 @@
+@namespace BlazorInteractiveServer.Components.UI
+@using System.Text.Json
+
+<div class="@Shell.Cn("relative overflow-auto rounded-lg border border-border bg-background p-3 font-mono text-xs leading-relaxed", Class)" @attributes="AdditionalAttributes">
+    @if (_error != null)
+    {
+        <p class="text-destructive">@_error</p>
+    }
+    else if (_root is { } root)
+    {
+        @if (ShowCopy)
+        {
+            <CopyButton Text="@_formatted" Class="absolute right-2 top-2 h-7 w-7 bg-background" />
+        }
+        @* Keyed on the source so new JSON resets which nodes are open. *@
+        <JsonViewerNode @key="_source" Element="root" ExpandDepth="ExpandDepth" />
+    }
+</div>
+
+@code {
+    [Parameter] public string? Json { get; set; }
+    // Serialized with System.Text.Json when Json is not set.
+    [Parameter] public object? Value { get; set; }
+    // Levels open on first render; deeper objects and arrays start collapsed.
+    [Parameter] public int ExpandDepth { get; set; } = 2;
+    [Parameter] public bool ShowCopy { get; set; } = true;
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private static readonly JsonSerializerOptions Indented = new() { WriteIndented = true };
+
+    private string? _source;
+    private JsonElement? _root;
+    private string? _formatted;
+    private string? _error;
+
+    protected override void OnParametersSet()
+    {
+        var source = Json ?? (Value == null ? null : JsonSerializer.Serialize(Value));
+        if (source == _source) return;
+        _source = source;
+        _root = null;
+        _error = null;
+        if (string.IsNullOrWhiteSpace(source)) return;
+        try
+        {
+            using var doc = JsonDocument.Parse(source);
+            _root = doc.RootElement.Clone();
+            _formatted = JsonSerializer.Serialize(_root.Value, Indented);
+        }
+        catch (JsonException ex)
+        {
+            _error = $"Invalid JSON: {ex.Message}";
+        }
+    }
+}
