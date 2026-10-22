@@ -175,6 +175,7 @@
     <ShellUISafelistEntry Include="focus-within:ring-offset-2" />
     <ShellUISafelistEntry Include="focus-within:ring-ring" />
     <ShellUISafelistEntry Include="focus:bg-accent" />
+    <ShellUISafelistEntry Include="focus:bg-destructive/10" />
     <ShellUISafelistEntry Include="focus:bg-primary" />
     <ShellUISafelistEntry Include="focus:border-ring" />
     <ShellUISafelistEntry Include="focus:outline-none" />
@@ -183,6 +184,7 @@
     <ShellUISafelistEntry Include="focus:ring-offset-2" />
     <ShellUISafelistEntry Include="focus:ring-ring" />
     <ShellUISafelistEntry Include="focus:text-accent-foreground" />
+    <ShellUISafelistEntry Include="focus:text-destructive" />
     <ShellUISafelistEntry Include="focus:text-primary-foreground" />
     <ShellUISafelistEntry Include="font-bold" />
     <ShellUISafelistEntry Include="font-medium" />
@@ -260,6 +262,7 @@
     <ShellUISafelistEntry Include="hover:bg-accent" />
     <ShellUISafelistEntry Include="hover:bg-accent/50" />
     <ShellUISafelistEntry Include="hover:bg-blue-600" />
+    <ShellUISafelistEntry Include="hover:bg-destructive/10" />
     <ShellUISafelistEntry Include="hover:bg-destructive/80" />
     <ShellUISafelistEntry Include="hover:bg-destructive/90" />
     <ShellUISafelistEntry Include="hover:bg-green-600" />
@@ -373,6 +376,7 @@
     <ShellUISafelistEntry Include="my-1" />
     <ShellUISafelistEntry Include="object-contain" />
     <ShellUISafelistEntry Include="object-cover" />
+    <ShellUISafelistEntry Include="opacity-0" />
     <ShellUISafelistEntry Include="opacity-25" />
     <ShellUISafelistEntry Include="opacity-50" />
     <ShellUISafelistEntry Include="opacity-70" />

@@ -32,7 +32,7 @@ public class SonnerTemplate
         var stackClass = i > 0 ? (IsTop ? ""-mt-20 group-hover:mt-0"" : ""-mb-20 group-hover:mb-0"") : """";
         <div @key=""toast.Id""
              style=""z-index: @(i + 1)""
-             class=""@stackClass @GetToastClasses(toast.Variant) pointer-events-auto relative flex min-w-0 w-full items-center gap-3 overflow-hidden rounded-lg p-4 shadow-lg transition-all duration-300 motion-reduce:transition-none animate-in fade-in-0 motion-reduce:animate-none @SonnerVariants.GetToastAnimation(Position) shrink-0"">
+             class=""@stackClass @GetToastClasses(toast.Variant) relative flex min-w-0 w-full items-center gap-3 overflow-hidden rounded-lg p-4 shadow-lg transition-all duration-300 motion-reduce:transition-none animate-in fade-in-0 motion-reduce:animate-none @SonnerVariants.GetToastAnimation(Position) shrink-0 @(toast.Dismissing ? ""opacity-0 pointer-events-none"" : ""pointer-events-auto"")"">
             <div class=""grid flex-1 gap-1"">
                 @if (!string.IsNullOrEmpty(toast.Message))
                 {

@@ -1,6 +1,7 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
 using ShellUI.Components;
 using ShellUI.Components.Models;
 
@@ -217,5 +218,48 @@ public class PackageBehaviorTests
         var picker = ctx.Render<TimePicker>(p => p.Add(c => c.Value, new TimeSpan(9, 5, 0)));
 
         Assert.Contains("09:05", picker.Markup);
+    }
+
+    [Fact]
+    public async Task Sonner_ClearFadesEveryToastThenRemovesIt()
+    {
+        using var ctx = new BunitContext();
+        ctx.Services.AddShellUISonner();
+        var service = ctx.Services.GetRequiredService<ShellUI.Components.Services.SonnerService>();
+        var sonner = ctx.Render<Sonner>();
+
+        await sonner.InvokeAsync(() => service.Show("Saved", duration: TimeSpan.Zero));
+        await sonner.InvokeAsync(() => service.Error("Failed", duration: TimeSpan.Zero));
+        await sonner.InvokeAsync(service.Clear);
+
+        Assert.All(service.Toasts, t => Assert.True(t.Dismissing));
+        Assert.Equal(2, sonner.FindAll(".opacity-0").Count);
+        sonner.WaitForAssertion(() => Assert.Empty(service.Toasts));
+        Assert.DoesNotContain("Saved", sonner.Markup);
+    }
+
+    [Fact]
+    public void ContextMenuOption_Destructive_ReplacesTheAccentColours()
+    {
+        using var ctx = new BunitContext();
+        var option = ctx.Render<ContextMenuOption>(p => p.Add(c => c.Destructive, true).Add(c => c.ChildContent, "Delete"));
+
+        var classes = option.Find("button").ClassList;
+        Assert.Contains("text-destructive", classes);
+        Assert.Contains("hover:bg-destructive/10", classes);
+        Assert.DoesNotContain("hover:bg-accent", classes);
+    }
+
+    [Fact]
+    public void ContextMenu_DestructiveItem_IsRed()
+    {
+        using var ctx = new BunitContext();
+        var menu = ctx.Render<ContextMenu>(p => p
+            .Add(c => c.IsOpen, true)
+            .Add(c => c.Items, new List<ContextMenuItem> { new() { Label = "Edit" }, new() { Label = "Delete", Destructive = true } }));
+
+        var buttons = menu.FindAll("button");
+        Assert.DoesNotContain("text-destructive", buttons[0].ClassList);
+        Assert.Contains("text-destructive", buttons[1].ClassList);
     }
 }

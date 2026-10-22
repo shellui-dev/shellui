@@ -172,6 +172,7 @@ focus-within:ring-2
 focus-within:ring-offset-2
 focus-within:ring-ring
 focus:bg-accent
+focus:bg-destructive/10
 focus:bg-primary
 focus:border-ring
 focus:outline-none
@@ -180,6 +181,7 @@ focus:ring-2
 focus:ring-offset-2
 focus:ring-ring
 focus:text-accent-foreground
+focus:text-destructive
 focus:text-primary-foreground
 font-bold
 font-medium
@@ -257,6 +259,7 @@ has-[[data-variant=inset]]:bg-sidebar
 hover:bg-accent
 hover:bg-accent/50
 hover:bg-blue-600
+hover:bg-destructive/10
 hover:bg-destructive/80
 hover:bg-destructive/90
 hover:bg-green-600
@@ -370,6 +373,7 @@ mx-auto
 my-1
 object-contain
 object-cover
+opacity-0
 opacity-25
 opacity-50
 opacity-70
