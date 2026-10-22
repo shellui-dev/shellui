@@ -262,4 +262,122 @@ public class PackageBehaviorTests
         Assert.DoesNotContain("text-destructive", buttons[0].ClassList);
         Assert.Contains("text-destructive", buttons[1].ClassList);
     }
+
+    [Fact]
+    public void PromptSuggestions_RaisesTheClickedSuggestion()
+    {
+        using var ctx = new BunitContext();
+        var picked = new List<string>();
+
+        var chips = ctx.Render<PromptSuggestions>(p => p
+            .Add(c => c.Suggestions, new[] { "Summarise this", "Write a test" })
+            .Add(c => c.OnSelect, EventCallback.Factory.Create<string>(this, v => picked.Add(v))));
+
+        chips.FindAll("button")[1].Click();
+
+        Assert.Equal(new[] { "Write a test" }, picked);
+    }
+
+    [Fact]
+    public void Reasoning_OpensWhileStreamingAndClosesWhenDone()
+    {
+        using var ctx = new BunitContext();
+
+        var reasoning = ctx.Render<Reasoning>(p => p
+            .Add(c => c.IsStreaming, true)
+            .Add(c => c.Text, "Looking at the data"));
+
+        Assert.Contains("Thinking", reasoning.Find("button").TextContent);
+        Assert.Contains("Looking at the data", reasoning.Markup);
+
+        reasoning.Render(p => p
+            .Add(c => c.IsStreaming, false)
+            .Add(c => c.Duration, TimeSpan.FromSeconds(3)));
+
+        Assert.Contains("Thought for 3 seconds", reasoning.Find("button").TextContent);
+        Assert.DoesNotContain("Looking at the data", reasoning.Markup);
+
+        reasoning.Find("button").Click();
+        Assert.Contains("Looking at the data", reasoning.Markup);
+    }
+
+    [Theory]
+    [InlineData("running", "Running", "text-primary")]
+    [InlineData("done", "Done", "text-emerald-600")]
+    [InlineData("error", "Error", "text-destructive")]
+    [InlineData("pending", "Pending", "text-muted-foreground")]
+    public void ToolCall_ShowsItsState(string state, string label, string colour)
+    {
+        using var ctx = new BunitContext();
+
+        var tool = ctx.Render<ToolCall>(p => p.Add(c => c.Name, "search").Add(c => c.State, state));
+
+        var badge = tool.FindAll("button span").Single(s => s.TextContent.Trim() == label);
+        Assert.Contains(colour, badge.ClassList);
+    }
+
+    [Fact]
+    public void ToolCall_ShowsArgumentsAndResultWhenOpened()
+    {
+        using var ctx = new BunitContext();
+
+        var tool = ctx.Render<ToolCall>(p => p
+            .Add(c => c.Name, "search")
+            .Add(c => c.Arguments, "{\"q\":\"blazor\"}")
+            .Add(c => c.Result, "3 results"));
+
+        Assert.DoesNotContain("3 results", tool.Markup);
+        tool.Find("button").Click();
+
+        Assert.Contains("{\"q\":\"blazor\"}", tool.Markup);
+        Assert.Contains("3 results", tool.Markup);
+    }
+
+    [Fact]
+    public void Field_LinksTheLabelAndShowsDescriptionAndError()
+    {
+        using var ctx = new BunitContext();
+
+        var field = ctx.Render<Field>(p => p
+            .Add(c => c.Label, "Email")
+            .Add(c => c.LabelFor, "email")
+            .Add(c => c.Required, true)
+            .Add(c => c.Description, "We never share it.")
+            .Add(c => c.Error, "Email is required.")
+            .AddChildContent("<input id=\"email\" />"));
+
+        Assert.Equal("email", field.Find("label").GetAttribute("for"));
+        Assert.Contains("*", field.Find("label").TextContent);
+        Assert.Contains("We never share it.", field.Markup);
+        Assert.Equal("Email is required.", field.Find("p.text-destructive").TextContent.Trim());
+    }
+
+    [Fact]
+    public void JsonViewer_RendersTheTreeAndCollapsesBeyondExpandDepth()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var viewer = ctx.Render<JsonViewer>(p => p
+            .Add(c => c.Json, "{\"name\":\"ShellUI\",\"tags\":[\"blazor\",\"ui\"],\"meta\":{\"stars\":42}}")
+            .Add(c => c.ExpandDepth, 1));
+
+        Assert.Contains("\"ShellUI\"", viewer.Markup);
+        Assert.Contains("2 items", viewer.Markup);
+        Assert.DoesNotContain("42", viewer.Markup);
+
+        viewer.FindAll("button[aria-expanded]").Single(b => b.TextContent.Contains("meta")).Click();
+
+        Assert.Contains("42", viewer.Markup);
+    }
+
+    [Fact]
+    public void JsonViewer_ReportsInvalidJson()
+    {
+        using var ctx = new BunitContext();
+
+        var viewer = ctx.Render<JsonViewer>(p => p.Add(c => c.Json, "{ nope"));
+
+        Assert.Contains("Invalid JSON", viewer.Find("p.text-destructive").TextContent);
+    }
 }
