@@ -32,7 +32,7 @@ The runnable demo at `NET10/BlazorInteractiveServer/BlazorInteractiveServer.cspr
 
 ## Prerequisites
 
-- .NET 10 SDK. `global.json` requests SDK `10.0.100` with feature-band roll-forward.
+- .NET 10 SDK. `global.json` requests SDK `10.0.100` with feature-band roll-forward. The projects also target `net8.0`, so running the tests on both frameworks needs the .NET 8 runtime.
 - Git.
 - Node.js and npm only when using the npm Tailwind method. The standalone method does not require Node.js.
 

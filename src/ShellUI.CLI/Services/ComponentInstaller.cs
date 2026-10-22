@@ -259,7 +259,7 @@ public class ComponentInstaller
     public static string ContentHash(string content)
     {
         var bytes = System.Text.Encoding.UTF8.GetBytes(content.Replace("\r\n", "\n"));
-        return Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(bytes));
+        return Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(bytes)).ToLowerInvariant();
     }
 
     private static void RecordInstalledComponent(

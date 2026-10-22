@@ -4,7 +4,7 @@ This is a qualitative comparison, not a benchmark report. Library features, pack
 
 ## Current ShellUI snapshot
 
-- **Target framework:** .NET 10
+- **Target framework:** .NET 8, 9 and 10
 - **Tailwind CSS:** `4.3.2`
 - **CLI inventory:** 93 direct targets, 243 registry entries, and 150 hidden entries
 - **Distribution:** the CLI copies source into an application; the repository also contains the packable `ShellUI.Components` package

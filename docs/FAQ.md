@@ -12,7 +12,7 @@ Use the latest stable release, `0.3.4`. It uses Tailwind CSS `4.3.2`. The `0.4.0
 dotnet tool install -g ShellUI.CLI
 ```
 
-The CLI needs the .NET 10 SDK and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 10 only; on .NET 8 or 9, use the CLI.
+The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 8, 9 and 10. (`0.4.0-alpha.3` and the 0.3 line need .NET 10 for both.)
 
 ### Which command prefix should I use?
 
