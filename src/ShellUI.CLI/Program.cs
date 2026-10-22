@@ -228,7 +228,7 @@ class Program
         
         var componentsArg = new Argument<string[]>(
             "components",
-            "Component name(s) to add (space or comma-separated)")
+            "Component name(s) to add (space or comma-separated), or all for the whole library")
         {
             Arity = ArgumentArity.OneOrMore
         };
@@ -242,11 +242,19 @@ class Program
         var replaceLayoutOption = CreateReplaceLayoutOption();
         command.AddOption(replaceLayoutOption);
 
-        command.SetHandler(async (components, force, replaceLayout) =>
+        var exceptOption = new Option<string[]>(
+            "--except",
+            "Component(s) to leave out, for example with all (space or comma-separated)")
+        {
+            AllowMultipleArgumentsPerToken = true
+        };
+        command.AddOption(exceptOption);
+
+        command.SetHandler(async (components, force, replaceLayout, except) =>
         {
             try
             {
-                if (!await ComponentInstaller.InstallComponents(components, force, replaceLayout ? LayoutSwitch.Always : LayoutSwitch.Ask))
+                if (!await ComponentInstaller.InstallComponents(components, force, replaceLayout ? LayoutSwitch.Always : LayoutSwitch.Ask, except))
                     Environment.Exit(1);
             }
             catch (Exception ex)
@@ -254,7 +262,7 @@ class Program
                 AnsiConsole.MarkupLine($"[red]Error:[/] {ex.Message.Replace("[", "[[").Replace("]", "]]")}");
                 Environment.Exit(1);
             }
-        }, componentsArg, forceOption, replaceLayoutOption);
+        }, componentsArg, forceOption, replaceLayoutOption, exceptOption);
 
         return command;
     }
