@@ -64,6 +64,7 @@ public static class Program
             if (file.EndsWith(".razor", StringComparison.OrdinalIgnoreCase))
             {
                 ExtractClasses(text, classes);
+                ExtractFromRazorExpressions(text, classes);
             }
             else if (file.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
             {
@@ -86,7 +87,7 @@ public static class Program
 
     private static bool LooksLikeClassList(string s)
     {
-        if (s.Length == 0 || s.Length > 500) return false;
+        if (s.Length == 0 || s.Length > 2000) return false;
         // `=` outside `[…]` implies key=value pairs, not class strings.
         if (s.Contains("://") || s.Contains('<') || s.Contains('>') || s.Contains('{')
             || s.Contains(';') || s.Contains('=') && !s.Contains('[')
@@ -150,6 +151,20 @@ public static class Program
     private static readonly Regex ClassAttributeRegex = new(
         "class\\s*=\\s*\"(?<value>[^\"]*)\"",
         RegexOptions.Compiled);
+
+    // Shell.Cn arguments, ternaries and switch arms, which the class attribute regex cuts off at their first quote.
+    private static readonly Regex RazorExpressionLiteralRegex = new(
+        "(?<=[(,?:=>]\\s*)\"(?<lit>[^\"@]*)\"",
+        RegexOptions.Compiled);
+
+    private static void ExtractFromRazorExpressions(string content, SortedSet<string> sink)
+    {
+        foreach (Match lit in RazorExpressionLiteralRegex.Matches(content))
+        {
+            var value = lit.Groups["lit"].Value;
+            if (LooksLikeClassList(value)) HarvestTokens(value, sink);
+        }
+    }
 
     private static readonly Regex StringLiteralRegex = new(
         "\"(?<lit>[^\"]*)\"",
