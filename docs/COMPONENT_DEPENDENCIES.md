@@ -4,10 +4,10 @@
 
 ## Registry snapshot
 
-- **243** total registry entries
-- **93** direct CLI targets (`IsAvailable = true`)
-- **150** hidden entries (`IsAvailable = false`)
-- `shellui list` displays the 93 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
+- **252** total registry entries
+- **98** direct CLI targets (`IsAvailable = true`)
+- **154** hidden entries (`IsAvailable = false`)
+- `shellui list` displays the 98 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
 `Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
 
@@ -45,10 +45,13 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `drawer` | `drawer-variants`, `drawer-trigger`, `drawer-content`, `drawer-header`, `drawer-title`, `drawer-description`, `drawer-footer`, `drawer-close` | — |
 | `dropdown` | `dropdown-trigger`, `dropdown-content`, `dropdown-item` | — |
 | `empty-state` | `button` | — |
+| `field` | `form-message` | — |
 | `file-upload` | `shellui-js` | — |
 | `form` | `label`, `input`, `button`, `form-field`, `form-item`, `form-label`, `form-control`, `form-description`, `form-message` | — |
 | `hover-card` | `hover-card-trigger`, `hover-card-content` | — |
+| `input` | `input-variants` | — |
 | `input-otp` | `shellui-js` | — |
+| `json-viewer` | `json-viewer-node`, `copy-button` | — |
 | `line-chart` | `chart` | — |
 | `menubar` | `menubar-item`, `menubar-menu`, `menubar-trigger`, `menubar-content`, `menubar-separator` | — |
 | `multi-series-chart` | `chart`, `chart-series` | — |
@@ -64,9 +67,10 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `sheet` | `sheet-variants`, `sheet-trigger`, `sheet-content`, `sheet-header`, `sheet-title`, `sheet-description`, `sheet-footer`, `sheet-close` | — |
 | `sidebar` | `shell`, `sidebar-models`, `sidebar-provider`, `sidebar-header`, `sidebar-content`, `sidebar-footer`, `sidebar-group`, `sidebar-group-label`, `sidebar-group-content`, `sidebar-menu`, `sidebar-menu-item`, `sidebar-menu-button`, `sidebar-menu-sub`, `sidebar-menu-sub-item`, `sidebar-menu-sub-button`, `sidebar-menu-action`, `sidebar-menu-badge`, `sidebar-separator`, `sidebar-trigger`, `sidebar-inset`, `sidebar-rail` | — |
 | `sonner` | `sonner-variants`, `sonner-service` | — |
-| `stepper` | `stepper-list`, `stepper-step`, `stepper-content` | — |
+| `stepper` | `stepper-models`, `stepper-list`, `stepper-step`, `stepper-content` | — |
 | `table` | `table-header`, `table-body`, `table-row`, `table-cell`, `table-head` | — |
 | `tabs` | `tabs-list`, `tabs-trigger`, `tabs-content`, `tab-models` | — |
+| `textarea` | `textarea-variants` | — |
 | `theme-toggle` | `shellui-js` | — |
 | `timeline` | `timeline-item` | — |
 | `toggle` | `toggle-variants` | — |
