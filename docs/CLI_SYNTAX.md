@@ -17,10 +17,11 @@ shellui --version
 
 ```text
 shellui init [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
-shellui add <name...> [--force] [--replace-layout]
+shellui add <name...>|all [--force] [--replace-layout] [--except <name...>]
 shellui list [--installed|--available]
 shellui remove <name...>
 shellui update [name...] [--all] [--force]
+shellui doctor
 shellui theme init <url-or-id> [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
 shellui theme apply <url-or-id> [--emit-override <path>]
 shellui theme update
@@ -169,6 +170,24 @@ Names are separated by spaces. With no names, or with `--all`, every installed c
 
 `update` has no diff or merge. Commit before updating so you can review the changes.
 
+## `doctor`
+
+Checks the project's ShellUI setup and prints a fix for each problem it finds:
+
+```bash
+shellui doctor
+```
+
+- `shellui.json` is valid and `ComponentsPath` exists.
+- The Tailwind CLI is available (the shared copy in `~/.shellui/bin`, a project copy, or the npm packages), `Build/ShellUI.targets` exists, and `wwwroot/app.css` is newer than `input.css` and the components.
+- The host page (`Components/App.razor` or `wwwroot/index.html`) links `app.css`, loads `shellui.js` and has the theme script.
+- An interactive render mode is set in `App.razor`. When only some pages set one, components on the other pages don't respond to clicks.
+- Every installed component's file exists and its dependencies are installed.
+- `_Imports.razor` has the ShellUI `@using` lines.
+- The project doesn't use the `ShellUI.Components` package and CLI-installed components together.
+
+It exits with code 1 when it finds a problem, so it can run in CI. Warnings, such as a stale `app.css`, don't change the exit code. In a Razor class library it skips the host page checks, which apply to each app that uses the library.
+
 ## `theme`
 
 The theme commands fetch a public tweakcn theme by URL or theme ID and write its CSS variables into the project.
@@ -291,6 +310,7 @@ shellui add button,card
 
 ## Troubleshooting
 
+- Run `shellui doctor`; it checks the setup and says how to fix what it finds.
 - If the command is not found, use `shellui` for a global tool or `dotnet shellui` for a local manifest.
 - Run `shellui list` to verify a target name.
 - Confirm `wwwroot/input.css` exists and contains `@import "tailwindcss";`.

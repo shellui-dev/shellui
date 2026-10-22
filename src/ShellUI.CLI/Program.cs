@@ -24,6 +24,7 @@ class Program
         rootCommand.AddCommand(CreateRemoveCommand());
         rootCommand.AddCommand(CreateUpdateCommand());
         rootCommand.AddCommand(CreateThemeCommand());
+        rootCommand.AddCommand(CreateDoctorCommand());
 
         return await rootCommand.InvokeAsync(args);
     }
@@ -264,6 +265,24 @@ class Program
             }
         }, componentsArg, forceOption, replaceLayoutOption, exceptOption);
 
+        return command;
+    }
+
+    static Command CreateDoctorCommand()
+    {
+        var command = new Command("doctor", "Check the project's ShellUI setup and say how to fix problems");
+        command.SetHandler(context =>
+        {
+            try
+            {
+                context.ExitCode = DoctorService.Run();
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error:[/] {Markup.Escape(ex.Message)}");
+                context.ExitCode = 1;
+            }
+        });
         return command;
     }
 

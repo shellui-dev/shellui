@@ -278,11 +278,12 @@ public class ComponentInstaller
         return InstallResult.Success;
     }
 
-    internal static string InstalledFilePath(ComponentMetadata metadata, ShellUIConfig config)
+    internal static string InstalledFilePath(ComponentMetadata metadata, ShellUIConfig config, string? root = null)
     {
+        root ??= Directory.GetCurrentDirectory();
         var basePath = metadata.IsLayoutBlock
-            ? Path.Combine(Directory.GetCurrentDirectory(), config.LayoutPath ?? "Components/Layout")
-            : Path.Combine(Directory.GetCurrentDirectory(), config.ComponentsPath);
+            ? Path.Combine(root, config.LayoutPath ?? "Components/Layout")
+            : Path.Combine(root, config.ComponentsPath);
         return Path.GetFullPath(Path.Combine(basePath, metadata.FilePath));
     }
 
