@@ -29,9 +29,55 @@
             }
         </ChildContent>
         <Footer>
+            @if (_messages.Count == 1)
+            {
+                <PromptSuggestions Suggestions="_suggestions" OnSelect="SendAsync" Disabled="_thinking" Class="mb-3" />
+            }
             <ChatInput @bind-Value="_draft" OnSubmit="SendAsync" IsLoading="_thinking" />
         </Footer>
     </Chat>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <div>
+            <h2 class="text-2xl font-semibold mb-1 text-card-foreground">Reasoning &amp; Tool Call</h2>
+            <p class="text-sm text-muted-foreground">Reasoning opens while it streams and folds away when done. The tool call goes from running to done.</p>
+        </div>
+        <Button Variant="ButtonVariant.Outline" OnClick="RunAgentAsync" Disabled="_agentRunning">@(_agentRunning ? "Running…" : "Run")</Button>
+    </div>
+    <div class="space-y-3">
+        <Reasoning Text="@_reasoning" IsStreaming="_reasoningStreaming" Duration="_reasoningTime" />
+        <ToolCall Name="search_docs" State="@_toolState" Arguments="@ToolArguments" Result="@_toolResult" />
+        <ToolCall Name="send_email" State="error" Arguments="@("{ \"to\": \"team@example.com\" }")" Error="SMTP server refused the connection." />
+    </div>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-1 text-card-foreground">Field</h2>
+    <p class="text-sm text-muted-foreground mb-4">Label, control, description and error as one unit. Submit with the email empty to see validation.</p>
+    <EditForm Model="_signup" OnValidSubmit="() => _signedUp = true" class="grid max-w-md gap-4">
+        <DataAnnotationsValidator />
+        <Field Label="Email" LabelFor="field-email" Required="true" Description="We'll only use it for release notes." For="() => _signup.Email">
+            <Input id="field-email" @bind-Value="_signup.Email" Placeholder="you@example.com" />
+        </Field>
+        <Field Label="Weekly digest" Description="A short summary every Monday." Orientation="horizontal">
+            <Switch @bind-Checked="_signup.Digest" />
+        </Field>
+        <div class="flex items-center gap-3">
+            <Button Type="submit">Subscribe</Button>
+            @if (_signedUp)
+            {
+                <span class="text-sm text-muted-foreground">Subscribed.</span>
+            }
+        </div>
+    </EditForm>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-1 text-card-foreground">JSON Viewer</h2>
+    <p class="text-sm text-muted-foreground mb-4">Two levels open by default. Click a key to fold it, or copy the whole document.</p>
+    <JsonViewer Value="_sampleJson" Class="max-h-80" />
 </section>
 
 <section class="border border-border rounded-lg p-6 bg-card mt-6">
@@ -155,6 +201,64 @@
     private string? _selectedFile = "Chat.razor";
 
     private const string SampleImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500'><defs><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%2393c5fd'/><stop offset='1' stop-color='%23fde68a'/></linearGradient></defs><rect width='800' height='500' fill='url(%23s)'/><circle cx='620' cy='140' r='60' fill='%23fbbf24'/><path d='M0 380 L200 220 L360 360 L520 240 L800 400 L800 500 L0 500 Z' fill='%2334d399'/><path d='M0 430 L260 300 L460 440 L800 330 L800 500 L0 500 Z' fill='%23059669'/></svg>";
+
+    private readonly string[] _suggestions = { "What is ShellUI?", "Show me a dialog example", "How do I add a theme?" };
+
+    private string? _reasoning;
+    private bool _reasoningStreaming;
+    private TimeSpan? _reasoningTime;
+    private string _toolState = "pending";
+    private string? _toolResult;
+    private bool _agentRunning;
+    private const string ToolArguments = "{ \"query\": \"dialog focus trap\", \"limit\": 3 }";
+
+    private async Task RunAgentAsync()
+    {
+        _agentRunning = true;
+        _reasoning = "";
+        _reasoningTime = null;
+        _toolState = "pending";
+        _toolResult = null;
+        _reasoningStreaming = true;
+        var started = DateTime.UtcNow;
+        foreach (var word in "The user wants to know how dialogs keep focus. I should search the docs for the focus trap, then summarise what Tab does inside an open dialog.".Split(' '))
+        {
+            _reasoning += word + " ";
+            StateHasChanged();
+            await Task.Delay(90);
+        }
+        _reasoningStreaming = false;
+        _reasoningTime = DateTime.UtcNow - started;
+        _toolState = "running";
+        StateHasChanged();
+        await Task.Delay(1500);
+        _toolResult = "[\n  \"overlays/dialog.md#focus\",\n  \"guides/accessibility.md\",\n  \"changelog.md#0-3-5\"\n]";
+        _toolState = "done";
+        _agentRunning = false;
+    }
+
+    private sealed class SignupModel
+    {
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Email is required.")]
+        [System.ComponentModel.DataAnnotations.EmailAddress(ErrorMessage = "Enter a valid email address.")]
+        public string Email { get; set; } = "";
+
+        public bool Digest { get; set; } = true;
+    }
+
+    private readonly SignupModel _signup = new();
+    private bool _signedUp;
+
+    private readonly object _sampleJson = new
+    {
+        name = "ShellUI",
+        version = "0.4.0-alpha.3",
+        stable = false,
+        stars = 42,
+        targets = new[] { "net8.0", "net10.0" },
+        theme = new { radius = "0.5rem", colors = new { primary = "oklch(0.21 0.006 285.88)", destructive = "oklch(0.58 0.24 28.48)" } },
+        homepage = (string?)null
+    };
 
     private async Task SendAsync(string text)
     {

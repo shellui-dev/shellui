@@ -170,6 +170,12 @@ public class TemplateSyncTests
     [InlineData("textarea", "Textarea.razor")]
     [InlineData("sheet", "Sheet.razor")]
     [InlineData("drawer", "Drawer.razor")]
+    [InlineData("prompt-suggestions", "PromptSuggestions.razor")]
+    [InlineData("reasoning", "Reasoning.razor")]
+    [InlineData("tool-call", "ToolCall.razor")]
+    [InlineData("field", "Field.razor")]
+    [InlineData("json-viewer", "JsonViewer.razor")]
+    [InlineData("json-viewer-node", "JsonViewerNode.razor")]
     [InlineData("copy-button", "CopyButton.razor")]
     [InlineData("sidebar-provider", "SidebarProvider.razor")]
     [InlineData("app-sidebar", "AppSidebar.razor")]
@@ -236,6 +242,12 @@ public class TemplateSyncTests
     [InlineData("textarea", "Textarea.razor")]
     [InlineData("sheet", "Sheet.razor")]
     [InlineData("drawer", "Drawer.razor")]
+    [InlineData("prompt-suggestions", "PromptSuggestions.razor")]
+    [InlineData("reasoning", "Reasoning.razor")]
+    [InlineData("tool-call", "ToolCall.razor")]
+    [InlineData("field", "Field.razor")]
+    [InlineData("json-viewer", "JsonViewer.razor")]
+    [InlineData("json-viewer-node", "JsonViewerNode.razor")]
     public void TemplateMarkup_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         var liveContent = WithoutClassNameAlias(File.ReadAllText(GetLiveRazorPath(razorFileName)));

@@ -30,6 +30,7 @@
     <ShellUISafelistEntry Include="bg-card" />
     <ShellUISafelistEntry Include="bg-current" />
     <ShellUISafelistEntry Include="bg-destructive" />
+    <ShellUISafelistEntry Include="bg-destructive/10" />
     <ShellUISafelistEntry Include="bg-emerald-500/10" />
     <ShellUISafelistEntry Include="bg-green-50" />
     <ShellUISafelistEntry Include="bg-green-500" />
@@ -86,10 +87,13 @@
     <ShellUISafelistEntry Include="dark:bg-green-900/30" />
     <ShellUISafelistEntry Include="dark:bg-yellow-900/20" />
     <ShellUISafelistEntry Include="dark:bg-yellow-900/30" />
+    <ShellUISafelistEntry Include="dark:text-amber-400" />
     <ShellUISafelistEntry Include="dark:text-blue-100" />
     <ShellUISafelistEntry Include="dark:text-emerald-400" />
     <ShellUISafelistEntry Include="dark:text-green-100" />
     <ShellUISafelistEntry Include="dark:text-red-400" />
+    <ShellUISafelistEntry Include="dark:text-sky-400" />
+    <ShellUISafelistEntry Include="dark:text-violet-400" />
     <ShellUISafelistEntry Include="dark:text-yellow-100" />
     <ShellUISafelistEntry Include="data-[disabled]:opacity-50" />
     <ShellUISafelistEntry Include="data-[disabled]:pointer-events-none" />
@@ -354,9 +358,11 @@
     <ShellUISafelistEntry Include="min-w-[12rem]" />
     <ShellUISafelistEntry Include="min-w-[640px]" />
     <ShellUISafelistEntry Include="min-w-[8rem]" />
+    <ShellUISafelistEntry Include="ml-0.5" />
     <ShellUISafelistEntry Include="ml-1" />
     <ShellUISafelistEntry Include="ml-2" />
     <ShellUISafelistEntry Include="ml-4" />
+    <ShellUISafelistEntry Include="ml-[5px]" />
     <ShellUISafelistEntry Include="ml-auto" />
     <ShellUISafelistEntry Include="motion-reduce:animate-none" />
     <ShellUISafelistEntry Include="motion-reduce:transition-none" />
@@ -512,6 +518,7 @@
     <ShellUISafelistEntry Include="space-y-0.5" />
     <ShellUISafelistEntry Include="space-y-1.5" />
     <ShellUISafelistEntry Include="space-y-2" />
+    <ShellUISafelistEntry Include="space-y-3" />
     <ShellUISafelistEntry Include="space-y-4" />
     <ShellUISafelistEntry Include="space-y-6" />
     <ShellUISafelistEntry Include="sr-only" />
@@ -524,6 +531,7 @@
     <ShellUISafelistEntry Include="text-[11px]" />
     <ShellUISafelistEntry Include="text-[8px]" />
     <ShellUISafelistEntry Include="text-accent-foreground" />
+    <ShellUISafelistEntry Include="text-amber-700" />
     <ShellUISafelistEntry Include="text-base" />
     <ShellUISafelistEntry Include="text-blue-700" />
     <ShellUISafelistEntry Include="text-card-foreground" />
@@ -531,6 +539,7 @@
     <ShellUISafelistEntry Include="text-destructive" />
     <ShellUISafelistEntry Include="text-destructive-foreground" />
     <ShellUISafelistEntry Include="text-emerald-600" />
+    <ShellUISafelistEntry Include="text-emerald-700" />
     <ShellUISafelistEntry Include="text-foreground" />
     <ShellUISafelistEntry Include="text-foreground/70" />
     <ShellUISafelistEntry Include="text-green-700" />
@@ -548,7 +557,9 @@
     <ShellUISafelistEntry Include="text-sidebar-foreground" />
     <ShellUISafelistEntry Include="text-sidebar-foreground/70" />
     <ShellUISafelistEntry Include="text-sidebar-primary-foreground" />
+    <ShellUISafelistEntry Include="text-sky-700" />
     <ShellUISafelistEntry Include="text-sm" />
+    <ShellUISafelistEntry Include="text-violet-700" />
     <ShellUISafelistEntry Include="text-white" />
     <ShellUISafelistEntry Include="text-xl" />
     <ShellUISafelistEntry Include="text-xs" />
@@ -565,6 +576,7 @@
     <ShellUISafelistEntry Include="top-right" />
     <ShellUISafelistEntry Include="touch-none" />
     <ShellUISafelistEntry Include="tracking-tight" />
+    <ShellUISafelistEntry Include="tracking-wide" />
     <ShellUISafelistEntry Include="transition-[grid-template-rows]" />
     <ShellUISafelistEntry Include="transition-[left,right,width]" />
     <ShellUISafelistEntry Include="transition-[width,height,padding]" />
@@ -615,6 +627,7 @@
     <ShellUISafelistEntry Include="w-px" />
     <ShellUISafelistEntry Include="whitespace-nowrap" />
     <ShellUISafelistEntry Include="whitespace-pre-line" />
+    <ShellUISafelistEntry Include="whitespace-pre-wrap" />
     <ShellUISafelistEntry Include="width:" />
     <ShellUISafelistEntry Include="z-10" />
     <ShellUISafelistEntry Include="z-40" />

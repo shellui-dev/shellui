@@ -14,16 +14,16 @@
 
 Hidden entries are not counted as direct targets. They can still be installed recursively when a parent target declares them.
 
-### Implemented direct targets (93)
+### Implemented direct targets (98)
 
 The following categories describe the direct targets in the current registry, not a promise about future scope.
 
-- [x] **Form (26):** Button, ButtonGroup, ChatInput, Checkbox, Combobox, DataPicker, DatePicker, DateRangePicker, FileUpload, Form, Input, InputGroup, InputOTP, Label, MultiSelect, NumberInput, RadioGroup, Select, Slider, Switch, TagInput, Textarea, TimePicker, Toggle, ToggleGroup, TypedSelect
+- [x] **Form (27):** Button, ButtonGroup, ChatInput, Checkbox, Combobox, DataPicker, DatePicker, DateRangePicker, Field, FileUpload, Form, Input, InputGroup, InputOTP, Label, MultiSelect, NumberInput, RadioGroup, Select, Slider, Switch, TagInput, Textarea, TimePicker, Toggle, ToggleGroup, TypedSelect
 - [x] **Layout (16):** Accordion, AspectRatio, AuthLayout01, AuthLayout02, AuthLayout03, Breadcrumb, Card, Collapsible, DashboardLayout01, DashboardLayout02, LinkCard, Navbar, Resizable, ScrollArea, Separator, Sidebar
 - [x] **Feedback (9):** Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
 - [x] **Overlay (9):** AlertDialog, Command, CommandPalette, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
 - [x] **Navigation (8):** ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs, TreeView
-- [x] **Data Display (21):** AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, Chat, ChatMessage, DataTable, DonutChart, LineChart, MultiSeriesChart, PieChart, QrCode, RadarChart, RadialChart, StatCard, Table, Timeline
+- [x] **Data Display (25):** AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, Chat, ChatMessage, DataTable, DonutChart, JsonViewer, LineChart, MultiSeriesChart, PieChart, PromptSuggestions, QrCode, RadarChart, RadialChart, Reasoning, StatCard, Table, Timeline, ToolCall
 - [x] **Typography (1):** Kbd
 - [x] **Media (1):** ImageViewer
 - [x] **Utility (2):** CopyButton, ThemeToggle
@@ -42,6 +42,10 @@ The following categories describe the direct targets in the current registry, no
 - [x] **QrCode** — QR code rendered as SVG (QRCoder)
 - [x] **ImageViewer** — thumbnail with zoomable lightbox
 - [x] **Chat, ChatMessage, ChatInput** — AI chat panel, message bubbles with streaming indicator, and a prompt input (Enter sends, Shift+Enter adds a newline)
+- [x] **PromptSuggestions** — clickable suggestion chips for an empty chat
+- [x] **Reasoning, ToolCall** — collapsible blocks for streamed model reasoning and tool calls (pending, running, done, error)
+- [x] **Field** — label, control, description and validation message as one unit
+- [x] **JsonViewer** — collapsible, highlighted JSON tree with copy
 
 ## ShellDocs (done)
 
@@ -86,13 +90,10 @@ These are unscheduled ideas. They are not current registry targets, and no date 
 
 ### AI
 
-- [ ] **PromptSuggestions** — clickable suggestion chips for empty chats
-- [ ] **Reasoning / ToolCall** — collapsible blocks for model reasoning and tool results
 - [ ] **CodeBlock (ShellUI)** — copyable code block for chat responses
 
 ### Forms and input
 
-- [ ] **Field** — label, description and validation message wrapper
 - [ ] **ColorPicker** — swatches and HEX/RGB input
 - [ ] **Rating** — star rating input
 - [ ] **SignaturePad** — draw-to-sign canvas
@@ -103,7 +104,6 @@ These are unscheduled ideas. They are not current registry targets, and no date 
 - [ ] **InfiniteScroll** — load more on scroll
 - [ ] **KanbanBoard** — drag-and-drop columns and cards
 - [ ] **SortableList** — drag-and-drop reordering
-- [ ] **JsonViewer** — collapsible JSON tree with copy
 
 ### Media
 

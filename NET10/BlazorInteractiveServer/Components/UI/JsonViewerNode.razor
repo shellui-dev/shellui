@@ -1,0 +1,83 @@
+@namespace BlazorInteractiveServer.Components.UI
+@using System.Text.Json
+
+<div>
+    @if (IsContainer)
+    {
+        <button type="button"
+                @onclick="Toggle"
+                aria-expanded="@(_open ? "true" : "false")"
+                class="inline-flex items-center gap-1 rounded-sm text-left hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+            <svg class="@Shell.Cn("h-3 w-3 shrink-0 text-muted-foreground transition-transform", _open ? "rotate-90" : "")" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+            @if (Name != null)
+            {
+                <span><span class="text-sky-700 dark:text-sky-400">"@Name"</span><span class="text-muted-foreground">:</span></span>
+            }
+            @if (_open)
+            {
+                <span class="text-muted-foreground">@Open</span>
+            }
+            else
+            {
+                <span class="text-muted-foreground">@Open @Summary @(Close)@Comma</span>
+            }
+        </button>
+        @if (_open)
+        {
+            <div class="ml-[5px] border-l border-border pl-3">
+                @foreach (var (child, name, index) in Children)
+                {
+                    <JsonViewerNode Element="child" Name="@name" Depth="Depth + 1" ExpandDepth="ExpandDepth" Last="index == Count - 1" />
+                }
+            </div>
+            <span class="ml-4 text-muted-foreground">@(Close)@Comma</span>
+        }
+    }
+    else
+    {
+        <span class="ml-4">
+            @if (Name != null)
+            {
+                <span class="text-sky-700 dark:text-sky-400">"@Name"</span><span class="text-muted-foreground">: </span>
+            }
+            <span class="@ValueClass">@Element.GetRawText()</span><span class="text-muted-foreground">@Comma</span>
+        </span>
+    }
+</div>
+
+@code {
+    [Parameter] public JsonElement Element { get; set; }
+    // The property name, or null for array items and the root.
+    [Parameter] public string? Name { get; set; }
+    [Parameter] public int Depth { get; set; }
+    [Parameter] public int ExpandDepth { get; set; } = 2;
+    [Parameter] public bool Last { get; set; } = true;
+
+    private bool _open;
+
+    private bool IsObject => Element.ValueKind == JsonValueKind.Object;
+    private bool IsContainer => IsObject || Element.ValueKind == JsonValueKind.Array;
+    private int Count => IsObject ? Element.EnumerateObject().Count() : IsContainer ? Element.GetArrayLength() : 0;
+    private string Open => IsObject ? "{" : "[";
+    private string Close => IsObject ? "}" : "]";
+    private string Comma => Last ? "" : ",";
+    private string Summary => IsObject ? (Count == 1 ? "1 key" : $"{Count} keys") : (Count == 1 ? "1 item" : $"{Count} items");
+
+    private IEnumerable<(JsonElement Child, string? Name, int Index)> Children => IsObject
+        ? Element.EnumerateObject().Select((p, i) => (p.Value, (string?)p.Name, i))
+        : Element.EnumerateArray().Select((e, i) => (e, (string?)null, i));
+
+    private string ValueClass => Element.ValueKind switch
+    {
+        JsonValueKind.String => "text-emerald-700 dark:text-emerald-400",
+        JsonValueKind.Number => "text-amber-700 dark:text-amber-400",
+        JsonValueKind.True or JsonValueKind.False => "text-violet-700 dark:text-violet-400",
+        _ => "text-muted-foreground"
+    };
+
+    protected override void OnInitialized() => _open = Depth < ExpandDepth;
+
+    private void Toggle() => _open = !_open;
+}

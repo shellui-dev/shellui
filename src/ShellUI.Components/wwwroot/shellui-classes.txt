@@ -27,6 +27,7 @@ bg-border
 bg-card
 bg-current
 bg-destructive
+bg-destructive/10
 bg-emerald-500/10
 bg-green-50
 bg-green-500
@@ -83,10 +84,13 @@ dark:bg-green-900/20
 dark:bg-green-900/30
 dark:bg-yellow-900/20
 dark:bg-yellow-900/30
+dark:text-amber-400
 dark:text-blue-100
 dark:text-emerald-400
 dark:text-green-100
 dark:text-red-400
+dark:text-sky-400
+dark:text-violet-400
 dark:text-yellow-100
 data-[disabled]:opacity-50
 data-[disabled]:pointer-events-none
@@ -351,9 +355,11 @@ min-w-8
 min-w-[12rem]
 min-w-[640px]
 min-w-[8rem]
+ml-0.5
 ml-1
 ml-2
 ml-4
+ml-[5px]
 ml-auto
 motion-reduce:animate-none
 motion-reduce:transition-none
@@ -509,6 +515,7 @@ space-x-4
 space-y-0.5
 space-y-1.5
 space-y-2
+space-y-3
 space-y-4
 space-y-6
 sr-only
@@ -521,6 +528,7 @@ text-[10px]
 text-[11px]
 text-[8px]
 text-accent-foreground
+text-amber-700
 text-base
 text-blue-700
 text-card-foreground
@@ -528,6 +536,7 @@ text-center
 text-destructive
 text-destructive-foreground
 text-emerald-600
+text-emerald-700
 text-foreground
 text-foreground/70
 text-green-700
@@ -545,7 +554,9 @@ text-sidebar-accent-foreground
 text-sidebar-foreground
 text-sidebar-foreground/70
 text-sidebar-primary-foreground
+text-sky-700
 text-sm
+text-violet-700
 text-white
 text-xl
 text-xs
@@ -562,6 +573,7 @@ top-full
 top-right
 touch-none
 tracking-tight
+tracking-wide
 transition-[grid-template-rows]
 transition-[left,right,width]
 transition-[width,height,padding]
@@ -612,6 +624,7 @@ w-max
 w-px
 whitespace-nowrap
 whitespace-pre-line
+whitespace-pre-wrap
 width:
 z-10
 z-40
