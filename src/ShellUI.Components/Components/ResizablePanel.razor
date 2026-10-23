@@ -1,0 +1,35 @@
+@namespace ShellUI.Components
+@using System.Globalization
+@implements IDisposable
+
+<div data-panel
+     data-size="@Format(Size)"
+     data-min-size="@Format(MinSize)"
+     data-max-size="@Format(MaxSize)"
+     style="@($"flex: {Format(Size)} 1 0px;")"
+     class="@Shell.Cn("overflow-hidden", Class)"
+     @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code {
+    [CascadingParameter] private ResizablePanelGroup? Group { get; set; }
+    // Starting size in percent; panels without one share what's left.
+    [Parameter] public double? DefaultSize { get; set; }
+    [Parameter] public double MinSize { get; set; }
+    [Parameter] public double MaxSize { get; set; } = 100;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private double Size => Group?.SizeOf(this) ?? DefaultSize ?? 100;
+
+    private static string Format(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
+
+    protected override void OnInitialized() => Group?.Register(this);
+
+    internal void Refresh() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => Group?.Unregister(this);
+}

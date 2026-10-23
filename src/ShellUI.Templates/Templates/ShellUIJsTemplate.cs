@@ -255,6 +255,95 @@ Object.assign(window.ShellUI, {
         }
         document.removeEventListener("keydown", h.handleKeydown);
         this._sidebarHandlers.delete(handle);
+    },
+
+    // The browser moves the panels during a drag or key press and reports the sizes once, so it never waits on the server.
+    _resizeHandles: new Map(),
+    initResizeHandle: function (handle, element, dotNetRef) {
+        const shell = window.ShellUI;
+        shell.disposeResizeHandle(handle);
+        if (!element) return;
+        const context = () => {
+            const group = element.parentElement;
+            if (!group || element.dataset.disabled === "true") return null;
+            const panels = Array.from(group.children).filter(c => c.hasAttribute("data-panel"));
+            const index = Array.from(group.children).filter(c => c.hasAttribute("data-handle")).indexOf(element);
+            const before = panels[index], after = panels[index + 1];
+            if (!before || !after) return null;
+            const read = (panel, key, fallback) => { const v = parseFloat(panel.dataset[key]); return isNaN(v) ? fallback : v; };
+            const sizes = panels.map(p => read(p, "size", 0));
+            const pair = sizes[index] + sizes[index + 1];
+            return {
+                vertical: group.dataset.direction === "vertical",
+                panels, index, before, after, sizes, pair,
+                min: Math.max(read(before, "minSize", 0), pair - read(after, "maxSize", 100)),
+                max: Math.min(read(before, "maxSize", 100), pair - read(after, "minSize", 0))
+            };
+        };
+        const apply = (ctx, size) => {
+            size = Math.min(ctx.max, Math.max(ctx.min, size));
+            ctx.sizes[ctx.index] = size;
+            ctx.sizes[ctx.index + 1] = ctx.pair - size;
+            ctx.before.style.flexGrow = ctx.sizes[ctx.index];
+            ctx.after.style.flexGrow = ctx.sizes[ctx.index + 1];
+            element.setAttribute("aria-valuenow", Math.round(size));
+        };
+        const commit = (ctx) => dotNetRef.invokeMethodAsync("OnLayoutChanged", ctx.sizes).catch(() => {});
+        const onPointerDown = (e) => {
+            if (e.button !== 0) return;
+            const ctx = context();
+            if (!ctx) return;
+            const total = ctx.panels.reduce((sum, p) => sum + (ctx.vertical ? p.offsetHeight : p.offsetWidth), 0);
+            if (!total) return;
+            e.preventDefault();
+            const start = ctx.vertical ? e.clientY : e.clientX;
+            const startSize = ctx.sizes[ctx.index];
+            element.setPointerCapture(e.pointerId);
+            element.dataset.dragging = "true";
+            document.body.style.cursor = ctx.vertical ? "row-resize" : "col-resize";
+            document.body.style.userSelect = "none";
+            const onMove = (m) => apply(ctx, startSize + ((ctx.vertical ? m.clientY : m.clientX) - start) / total * 100);
+            const onUp = () => {
+                element.removeEventListener("pointermove", onMove);
+                element.removeEventListener("pointerup", onUp);
+                element.removeEventListener("pointercancel", onUp);
+                delete element.dataset.dragging;
+                document.body.style.cursor = "";
+                document.body.style.userSelect = "";
+                commit(ctx);
+            };
+            element.addEventListener("pointermove", onMove);
+            element.addEventListener("pointerup", onUp);
+            element.addEventListener("pointercancel", onUp);
+        };
+        const onKeyDown = (e) => {
+            const ctx = context();
+            if (!ctx) return;
+            const step = parseFloat(element.dataset.step) || 10;
+            const back = ctx.vertical ? "ArrowUp" : "ArrowLeft";
+            const forward = ctx.vertical ? "ArrowDown" : "ArrowRight";
+            const current = ctx.sizes[ctx.index];
+            let size;
+            if (e.key === back) size = current - step;
+            else if (e.key === forward) size = current + step;
+            else if (e.key === "Home") size = ctx.min;
+            else if (e.key === "End") size = ctx.max;
+            else return;
+            e.preventDefault();
+            apply(ctx, size);
+            commit(ctx);
+        };
+        element.addEventListener("pointerdown", onPointerDown);
+        element.addEventListener("keydown", onKeyDown);
+        shell._resizeHandles.set(handle, { element, onPointerDown, onKeyDown });
+    },
+    disposeResizeHandle: function (handle) {
+        const shell = window.ShellUI;
+        const h = shell._resizeHandles.get(handle);
+        if (!h) return;
+        h.element.removeEventListener("pointerdown", h.onPointerDown);
+        h.element.removeEventListener("keydown", h.onKeyDown);
+        shell._resizeHandles.delete(handle);
     }
 });
 """;

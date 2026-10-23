@@ -1,7 +1,15 @@
 active:scale-[0.98]
 after:-inset-2
+after:-translate-x-1/2
+after:-translate-y-1/2
 after:absolute
+after:h-1
+after:inset-x-0
+after:inset-y-0
+after:left-1/2
 after:md:hidden
+after:top-1/2
+after:w-1
 align-middle
 animate-bounce
 animate-in
@@ -76,9 +84,11 @@ bottom-left
 bottom-right
 break-words
 caption-bottom
+cursor-col-resize
 cursor-default
 cursor-not-allowed
 cursor-pointer
+cursor-row-resize
 dark:bg-blue-900/30
 dark:bg-green-900/20
 dark:bg-green-900/30
@@ -169,6 +179,7 @@ focus-visible:outline-none
 focus-visible:ring-1
 focus-visible:ring-2
 focus-visible:ring-destructive
+focus-visible:ring-offset-1
 focus-visible:ring-offset-2
 focus-visible:ring-offset-background
 focus-visible:ring-ring

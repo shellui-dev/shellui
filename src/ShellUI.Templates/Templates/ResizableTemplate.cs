@@ -2,40 +2,100 @@ using ShellUI.Core.Models;
 
 namespace ShellUI.Templates.Templates;
 
-public class ResizableTemplate
+public static class ResizableTemplate
 {
     public static ComponentMetadata Metadata => new()
     {
         Name = "resizable",
         DisplayName = "Resizable",
-        Description = "Resizable panel component",
+        Description = "Resizable panel group with draggable, keyboard-accessible handles",
         Category = ComponentCategory.Layout,
-        FilePath = "Resizable.razor",
-
+        FilePath = "ResizablePanelGroup.razor",
+        Dependencies = new List<string> { "resizable-panel", "resizable-handle", "shellui-js" },
         Tags = new List<string> { "layout", "resizable", "panel", "split" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
 
-<div class=""@(""resize overflow-auto rounded-md border border-border bg-card p-4 "" + ClassName + "" "" + Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
+<CascadingValue Value=""this"" IsFixed=""true"">
+    <div data-panel-group
+         data-direction=""@(IsVertical ? ""vertical"" : ""horizontal"")""
+         class=""@Shell.Cn(""flex h-full w-full"", IsVertical ? ""flex-col"" : """", Class)""
+         @attributes=""AdditionalAttributes"">
+        @ChildContent
+    </div>
+</CascadingValue>
 
 @code {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    
-    [Parameter]
-    public string? Class { get; set; }
-
-    // Deprecated: use Class.
-    [Parameter]
-    public string ClassName { get; set; } = """";
-    
+    // ""horizontal"" or ""vertical"".
+    [Parameter] public string Direction { get; set; } = ""horizontal"";
+    // Percent a focused handle moves per arrow key press.
+    [Parameter] public double KeyboardStep { get; set; } = 10;
+    // Raised after a drag or key press with every panel's size in percent.
+    [Parameter] public EventCallback<double[]> OnLayout { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private readonly List<ResizablePanel> _panels = new();
+    private readonly List<ResizableHandle> _handles = new();
+    private double[]? _sizes;
+
+    public bool IsVertical => string.Equals(Direction, ""vertical"", StringComparison.OrdinalIgnoreCase);
+
+    // Each panel's size in percent.
+    public IReadOnlyList<double> Layout => Sizes;
+
+    private double[] Sizes => _sizes ??= InitialSizes();
+
+    internal void Register(ResizablePanel panel)
+    {
+        _panels.Add(panel);
+        _sizes = null;
+    }
+
+    internal void Unregister(ResizablePanel panel)
+    {
+        if (_panels.Remove(panel)) _sizes = null;
+    }
+
+    // A handle sits between the panel registered before it and the next one.
+    internal int Register(ResizableHandle handle)
+    {
+        _handles.Add(handle);
+        return _panels.Count - 1;
+    }
+
+    internal void Unregister(ResizableHandle handle) => _handles.Remove(handle);
+
+    internal double SizeOf(ResizablePanel panel)
+    {
+        var index = _panels.IndexOf(panel);
+        return index < 0 || index >= Sizes.Length ? 0 : Sizes[index];
+    }
+
+    internal double SizeAt(int index) => index < 0 || index >= Sizes.Length ? 0 : Sizes[index];
+
+    internal async Task SetLayoutAsync(double[] sizes)
+    {
+        if (sizes.Length != _panels.Count) return;
+        _sizes = sizes;
+        foreach (var panel in _panels) panel.Refresh();
+        foreach (var handle in _handles) handle.Refresh();
+        await OnLayout.InvokeAsync(sizes);
+    }
+
+    // Panels with a DefaultSize keep it; the rest share what's left.
+    private double[] InitialSizes()
+    {
+        var given = _panels.Where(p => p.DefaultSize.HasValue).Sum(p => p.DefaultSize!.Value);
+        var open = _panels.Count(p => !p.DefaultSize.HasValue);
+        var share = open == 0 ? 0 : Math.Max(0, 100 - given) / open;
+        var sizes = _panels.Select(p => p.DefaultSize ?? share).ToArray();
+        var total = sizes.Sum();
+        return total <= 0 ? sizes : sizes.Select(s => s * 100 / total).ToArray();
+    }
 }
 ";
 }
-
-
