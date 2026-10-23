@@ -81,6 +81,34 @@
 </section>
 
 <section class="border border-border rounded-lg p-6 bg-card mt-6">
+    <h2 class="text-2xl font-semibold mb-1 text-card-foreground">Resizable</h2>
+    <p class="text-sm text-muted-foreground mb-4">Drag a handle, or focus it with Tab and use the arrow keys, Home and End. Layout: @string.Join(" / ", _layout.Select(s => $"{s:0}%"))</p>
+    <div class="h-72 overflow-hidden rounded-lg border border-border">
+        <ResizablePanelGroup OnLayout="sizes => _layout = sizes">
+            <ResizablePanel DefaultSize="20" MinSize="15" MaxSize="35">
+                <div class="flex h-full items-center justify-center p-4 text-sm font-medium">Sidebar</div>
+            </ResizablePanel>
+            <ResizableHandle WithHandle="true" />
+            <ResizablePanel MinSize="30">
+                <ResizablePanelGroup Direction="vertical">
+                    <ResizablePanel DefaultSize="65">
+                        <div class="flex h-full items-center justify-center p-4 text-sm font-medium">Editor</div>
+                    </ResizablePanel>
+                    <ResizableHandle WithHandle="true" />
+                    <ResizablePanel MinSize="15">
+                        <div class="flex h-full items-center justify-center p-4 text-sm font-medium">Terminal</div>
+                    </ResizablePanel>
+                </ResizablePanelGroup>
+            </ResizablePanel>
+            <ResizableHandle />
+            <ResizablePanel DefaultSize="25">
+                <div class="flex h-full items-center justify-center p-4 text-sm font-medium">Inspector</div>
+            </ResizablePanel>
+        </ResizablePanelGroup>
+    </div>
+</section>
+
+<section class="border border-border rounded-lg p-6 bg-card mt-6">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Toggle Group &amp; Button Group</h2>
     <div class="space-y-4">
         <div class="flex flex-wrap items-center gap-4">
@@ -245,6 +273,8 @@
 
         public bool Digest { get; set; } = true;
     }
+
+    private IReadOnlyList<double> _layout = new[] { 20d, 55d, 25d };
 
     private readonly SignupModel _signup = new();
     private bool _signedUp;

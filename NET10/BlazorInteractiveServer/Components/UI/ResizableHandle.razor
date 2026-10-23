@@ -1,0 +1,66 @@
+@namespace BlazorInteractiveServer.Components.UI
+@using System.Globalization
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div @ref="_element"
+     data-handle
+     data-step="@(Group?.KeyboardStep.ToString(CultureInfo.InvariantCulture))"
+     data-disabled="@(Disabled ? "true" : null)"
+     role="separator"
+     tabindex="@(Disabled ? "-1" : "0")"
+     aria-orientation="@(IsVertical ? "horizontal" : "vertical")"
+     aria-valuemin="0"
+     aria-valuemax="100"
+     aria-valuenow="@((int)Math.Round(Group?.SizeAt(_index) ?? 0))"
+     class="@Shell.Cn("relative flex shrink-0 items-center justify-center bg-border ring-offset-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1", IsVertical ? "h-px w-full after:absolute after:inset-x-0 after:top-1/2 after:h-1 after:-translate-y-1/2" : "w-px after:absolute after:inset-y-0 after:left-1/2 after:w-1 after:-translate-x-1/2", Disabled ? "" : IsVertical ? "cursor-row-resize" : "cursor-col-resize", Class)"
+     @attributes="AdditionalAttributes">
+    @if (WithHandle)
+    {
+        <div class="@Shell.Cn("z-10 flex items-center justify-center rounded-sm border border-border bg-border", IsVertical ? "h-3 w-4" : "h-4 w-3")">
+            <svg class="@Shell.Cn("h-2.5 w-2.5", IsVertical ? "rotate-90" : "")" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="12" r="1" /><circle cx="9" cy="5" r="1" /><circle cx="9" cy="19" r="1" />
+                <circle cx="15" cy="12" r="1" /><circle cx="15" cy="5" r="1" /><circle cx="15" cy="19" r="1" />
+            </svg>
+        </div>
+    }
+</div>
+
+@code {
+    [CascadingParameter] private ResizablePanelGroup? Group { get; set; }
+    // Shows a grip on the handle.
+    [Parameter] public bool WithHandle { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private readonly string _id = Guid.NewGuid().ToString("N");
+    private ElementReference _element;
+    private DotNetObjectReference<ResizableHandle>? _ref;
+    private int _index;
+
+    private bool IsVertical => Group?.IsVertical ?? false;
+
+    protected override void OnInitialized() => _index = Group?.Register(this) ?? 0;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || Group == null) return;
+        _ref = DotNetObjectReference.Create(this);
+        try { await JS.InvokeVoidAsync("ShellUI.initResizeHandle", _id, _element, _ref); } catch { }
+    }
+
+    [JSInvokable]
+    public Task OnLayoutChanged(double[] sizes) => Group?.SetLayoutAsync(sizes) ?? Task.CompletedTask;
+
+    internal void Refresh() => InvokeAsync(StateHasChanged);
+
+    public async ValueTask DisposeAsync()
+    {
+        Group?.Unregister(this);
+        try { await JS.InvokeVoidAsync("ShellUI.disposeResizeHandle", _id); } catch { }
+        _ref?.Dispose();
+    }
+}
