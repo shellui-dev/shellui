@@ -19,8 +19,7 @@ public class TemplateSyncTests
         ["input-otp"] = "JS-interop path differs between package (module import + fallback) and CLI template (window.ShellUI global).",
         ["copy-button"] = "JS-interop path differs between package (module import) and CLI template (window.ShellUI global).",
         ["sidebar-provider"] = "JS-interop path differs: the package imports shellui-sidebar.js; the template calls window.ShellUI.initSidebar, since a dynamic import 404s once compiled into a consumer's class library.",
-        ["app-sidebar"] = "The template is the dashboard block that init rewrites with the app's routes; the package copy is a sample.",
-        ["resizable"] = "Neither copy resizes panels; both are to be replaced by a real resizable panel group."
+        ["app-sidebar"] = "The template is the dashboard block that init rewrites with the app's routes; the package copy is a sample."
     };
 
     [Theory]
@@ -179,7 +178,9 @@ public class TemplateSyncTests
     [InlineData("copy-button", "CopyButton.razor")]
     [InlineData("sidebar-provider", "SidebarProvider.razor")]
     [InlineData("app-sidebar", "AppSidebar.razor")]
-    [InlineData("resizable", "Resizable.razor")]
+    [InlineData("resizable", "ResizablePanelGroup.razor")]
+    [InlineData("resizable-panel", "ResizablePanel.razor")]
+    [InlineData("resizable-handle", "ResizableHandle.razor")]
     public void TemplateCodeBlock_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         if (AllowedDrift.ContainsKey(templateName)) return;
@@ -248,6 +249,9 @@ public class TemplateSyncTests
     [InlineData("field", "Field.razor")]
     [InlineData("json-viewer", "JsonViewer.razor")]
     [InlineData("json-viewer-node", "JsonViewerNode.razor")]
+    [InlineData("resizable", "ResizablePanelGroup.razor")]
+    [InlineData("resizable-panel", "ResizablePanel.razor")]
+    [InlineData("resizable-handle", "ResizableHandle.razor")]
     public void TemplateMarkup_MatchesLiveLibrary(string templateName, string razorFileName)
     {
         var liveContent = WithoutClassNameAlias(File.ReadAllText(GetLiveRazorPath(razorFileName)));

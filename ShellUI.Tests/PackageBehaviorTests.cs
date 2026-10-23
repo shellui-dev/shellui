@@ -371,6 +371,65 @@ public class PackageBehaviorTests
         Assert.Contains("42", viewer.Markup);
     }
 
+    private static IRenderedComponent<ResizablePanelGroup> RenderPanels(BunitContext ctx, string direction, Action<double[]>? onLayout = null) =>
+        ctx.Render<ResizablePanelGroup>(p => p
+            .Add(c => c.Direction, direction)
+            .Add(c => c.OnLayout, EventCallback.Factory.Create<double[]>(new object(), v => onLayout?.Invoke(v)))
+            .AddChildContent<ResizablePanel>(x => x.Add(c => c.DefaultSize, 20).Add(c => c.MinSize, 10).AddChildContent("Nav"))
+            .AddChildContent<ResizableHandle>(x => x.Add(c => c.WithHandle, true))
+            .AddChildContent<ResizablePanel>(x => x.AddChildContent("Main"))
+            .AddChildContent<ResizableHandle>()
+            .AddChildContent<ResizablePanel>(x => x.AddChildContent("Aside")));
+
+    [Fact]
+    public void ResizablePanelGroup_SharesWhatIsLeftBetweenPanelsWithoutADefault()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var group = RenderPanels(ctx, "horizontal");
+
+        Assert.Equal(new[] { 20d, 40d, 40d }, group.Instance.Layout);
+        var panels = group.FindAll("[data-panel]");
+        Assert.Equal("flex: 20 1 0px;", panels[0].GetAttribute("style"));
+        Assert.Equal("10", panels[0].GetAttribute("data-min-size"));
+        Assert.Equal("40", panels[1].GetAttribute("data-size"));
+    }
+
+    [Fact]
+    public void ResizableHandle_IsASeparatorWiredToTheBrowser()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var group = RenderPanels(ctx, "vertical");
+
+        var handles = group.FindAll("[role=separator]");
+        Assert.Equal(2, handles.Count);
+        Assert.Equal("horizontal", handles[0].GetAttribute("aria-orientation"));
+        Assert.Equal("20", handles[0].GetAttribute("aria-valuenow"));
+        Assert.Equal("40", handles[1].GetAttribute("aria-valuenow"));
+        Assert.Contains("cursor-row-resize", handles[0].ClassList);
+        Assert.Equal(2, ctx.JSInterop.Invocations.Count(i => i.Identifier == "ShellUI.initResizeHandle"));
+    }
+
+    [Fact]
+    public async Task ResizableHandle_AppliesTheLayoutTheBrowserReports()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        double[]? reported = null;
+
+        var group = RenderPanels(ctx, "horizontal", v => reported = v);
+        var handle = group.FindComponents<ResizableHandle>()[0];
+
+        await group.InvokeAsync(() => handle.Instance.OnLayoutChanged(new[] { 35d, 25d, 40d }));
+
+        Assert.Equal(new[] { 35d, 25d, 40d }, reported);
+        Assert.Equal("flex: 35 1 0px;", group.FindAll("[data-panel]")[0].GetAttribute("style"));
+        Assert.Equal("35", group.FindAll("[role=separator]")[0].GetAttribute("aria-valuenow"));
+    }
+
     [Fact]
     public void JsonViewer_ReportsInvalidJson()
     {

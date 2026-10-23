@@ -3,8 +3,16 @@
   <ItemGroup>
     <ShellUISafelistEntry Include="active:scale-[0.98]" />
     <ShellUISafelistEntry Include="after:-inset-2" />
+    <ShellUISafelistEntry Include="after:-translate-x-1/2" />
+    <ShellUISafelistEntry Include="after:-translate-y-1/2" />
     <ShellUISafelistEntry Include="after:absolute" />
+    <ShellUISafelistEntry Include="after:h-1" />
+    <ShellUISafelistEntry Include="after:inset-x-0" />
+    <ShellUISafelistEntry Include="after:inset-y-0" />
+    <ShellUISafelistEntry Include="after:left-1/2" />
     <ShellUISafelistEntry Include="after:md:hidden" />
+    <ShellUISafelistEntry Include="after:top-1/2" />
+    <ShellUISafelistEntry Include="after:w-1" />
     <ShellUISafelistEntry Include="align-middle" />
     <ShellUISafelistEntry Include="animate-bounce" />
     <ShellUISafelistEntry Include="animate-in" />
@@ -79,9 +87,11 @@
     <ShellUISafelistEntry Include="bottom-right" />
     <ShellUISafelistEntry Include="break-words" />
     <ShellUISafelistEntry Include="caption-bottom" />
+    <ShellUISafelistEntry Include="cursor-col-resize" />
     <ShellUISafelistEntry Include="cursor-default" />
     <ShellUISafelistEntry Include="cursor-not-allowed" />
     <ShellUISafelistEntry Include="cursor-pointer" />
+    <ShellUISafelistEntry Include="cursor-row-resize" />
     <ShellUISafelistEntry Include="dark:bg-blue-900/30" />
     <ShellUISafelistEntry Include="dark:bg-green-900/20" />
     <ShellUISafelistEntry Include="dark:bg-green-900/30" />
@@ -172,6 +182,7 @@
     <ShellUISafelistEntry Include="focus-visible:ring-1" />
     <ShellUISafelistEntry Include="focus-visible:ring-2" />
     <ShellUISafelistEntry Include="focus-visible:ring-destructive" />
+    <ShellUISafelistEntry Include="focus-visible:ring-offset-1" />
     <ShellUISafelistEntry Include="focus-visible:ring-offset-2" />
     <ShellUISafelistEntry Include="focus-visible:ring-offset-background" />
     <ShellUISafelistEntry Include="focus-visible:ring-ring" />

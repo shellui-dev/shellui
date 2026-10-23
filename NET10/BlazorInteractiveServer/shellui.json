@@ -435,7 +435,8 @@
       "Name": "shellui-js",
       "Version": "0.4.0-alpha.3",
       "InstalledAt": "2026-09-26T17:01:28.0644172Z",
-      "IsCustomized": false
+      "IsCustomized": false,
+      "Hash": "9c3ba9f1ae9021769b3974e7291f2cc630b0adda780a74449b20c38887817107"
     },
     {
       "Name": "command-palette",
@@ -527,6 +528,27 @@
       "InstalledAt": "2026-10-22T20:46:37.5961373Z",
       "IsCustomized": false,
       "Hash": "3c8be5c6eab39cf83cace12e187720489f44a7b26e246db1aa2992438939a126"
+    },
+    {
+      "Name": "resizable-panel",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-23T04:15:19.5653945Z",
+      "IsCustomized": false,
+      "Hash": "134292069d4b021761c388e1e60e6511b60edbfdbb6c0a16f4525bc9a665879a"
+    },
+    {
+      "Name": "resizable-handle",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-23T04:15:19.5668845Z",
+      "IsCustomized": false,
+      "Hash": "2638781d970ac7214ca2c91e53c726ac6cc99126afccdca9faa4f826897d2dd4"
+    },
+    {
+      "Name": "resizable",
+      "Version": "0.4.0-alpha.3",
+      "InstalledAt": "2026-10-23T04:15:19.5687157Z",
+      "IsCustomized": false,
+      "Hash": "daa562195351bf7d92bea2d3859d51f158e5b36379daf761f8697cb2769fda85"
     }
   ],
   "ProjectType": 1
