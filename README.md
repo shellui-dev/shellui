@@ -36,7 +36,7 @@ ShellUI is pre-1.0, so APIs and generated output can still change between minor 
 ## Capabilities
 
 - The CLI commands are `init`, `add`, `list`, `remove`, `update` and `doctor`, plus `theme init`, `theme apply`, and `theme update`.
-- The component registry has **252 entries**: **98 direct install targets** and **154 hidden dependency entries**. `list` shows direct targets; `add` resolves hidden dependencies.
+- The component registry has **254 entries**: **98 direct install targets** and **156 hidden dependency entries**. `list` shows direct targets; `add` resolves hidden dependencies.
 - `0.4.0-alpha.1` adds `kbd`, `aspect-ratio`, `button-group`, `toggle-group`, `input-group`, `number-input`, `stat-card`, `timeline`, `tree-view`, `qr-code`, `image-viewer`, `chat`, `chat-message`, `chat-input`, and the `auth-01`, `auth-02` and `auth-03` blocks.
 - `0.3.0` added `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
 - `ShellUI.Components` supports a release-generated precompiled CSS bundle and a generated safelist for existing Tailwind builds.

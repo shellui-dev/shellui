@@ -4,9 +4,9 @@
 
 ## Registry snapshot
 
-- **252** total registry entries
+- **254** total registry entries
 - **98** direct CLI targets (`IsAvailable = true`)
-- **154** hidden entries (`IsAvailable = false`)
+- **156** hidden entries (`IsAvailable = false`)
 - `shellui list` displays the 98 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
 `Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
@@ -63,6 +63,7 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `radar-chart` | `chart` | — |
 | `radial-chart` | `chart` | — |
 | `radio-group` | `radio-group-item` | — |
+| `resizable` | `resizable-panel`, `resizable-handle`, `shellui-js` | — |
 | `select` | `select-trigger`, `select-content`, `select-item` | — |
 | `sheet` | `sheet-variants`, `sheet-trigger`, `sheet-content`, `sheet-header`, `sheet-title`, `sheet-description`, `sheet-footer`, `sheet-close` | — |
 | `sidebar` | `shell`, `sidebar-models`, `sidebar-provider`, `sidebar-header`, `sidebar-content`, `sidebar-footer`, `sidebar-group`, `sidebar-group-label`, `sidebar-group-content`, `sidebar-menu`, `sidebar-menu-item`, `sidebar-menu-button`, `sidebar-menu-sub`, `sidebar-menu-sub-item`, `sidebar-menu-sub-button`, `sidebar-menu-action`, `sidebar-menu-badge`, `sidebar-separator`, `sidebar-trigger`, `sidebar-inset`, `sidebar-rail` | — |
