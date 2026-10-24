@@ -1,0 +1,60 @@
+using ShellUI.Core.Models;
+
+namespace ShellUI.Templates.Templates;
+
+public class ChartFrameTemplate
+{
+    public static ComponentMetadata Metadata => new()
+    {
+        Name = "chart-frame",
+        DisplayName = "Chart Frame",
+        Description = "Card with a title and subtitle for composing your own ShellCharts chart",
+        Category = ComponentCategory.DataDisplay,
+        FilePath = "ChartFrame.razor",
+        Dependencies = new List<string> { "chart-variants", "chart-styles" },
+        NuGetDependencies = new List<NuGetDependency>
+        {
+            new() { PackageId = "ShellCharts.Blazor", Version = "0.1.0-alpha" }
+        },
+        Variants = new List<string> { "default", "colorful", "monochrome" },
+        Tags = new List<string> { "chart", "card", "data", "visualization", "shellcharts" }
+    };
+
+    public static string Content => @"@namespace YourProjectNamespace.Components.UI
+@using YourProjectNamespace.Components.UI.Variants
+
+<div class=""@Shell.Cn(""border border-border bg-card text-card-foreground p-6 [border-radius:var(--radius)] [box-shadow:var(--shadow)]"", Class)"" style=""@Style"">
+    @if (Title is not null || Subtitle is not null)
+    {
+        <div class=""mb-4 grid gap-1"">
+            @if (Title is not null)
+            {
+                <h3 class=""font-semibold leading-none"">@Title</h3>
+            }
+            @if (Subtitle is not null)
+            {
+                <p class=""text-sm text-muted-foreground"">@Subtitle</p>
+            }
+        </div>
+    }
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+
+    [Parameter] public string? Subtitle { get; set; }
+
+    [Parameter] public string? Class { get; set; }
+
+    [Parameter] public string? Width { get; set; }
+
+    /// <summary>Colorful and Monochrome swap the theme's --chart-1 … --chart-5 for their own palette.</summary>
+    [Parameter] public ChartTheme Theme { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private string Style => (Width is null ? """" : $""width:{Width};"") + ChartVariants.Palette(Theme);
+}
+";
+}

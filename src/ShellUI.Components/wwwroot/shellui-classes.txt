@@ -487,13 +487,6 @@ shadow-lg
 shadow-md
 shadow-sm
 shadow-xl
-shellui-chart-tooltip
-shellui-chart-tooltip-body
-shellui-chart-tooltip-label
-shellui-chart-tooltip-marker
-shellui-chart-tooltip-row
-shellui-chart-tooltip-title
-shellui-chart-tooltip-value
 shellui-loading
 shrink-0
 size-4
@@ -599,8 +592,6 @@ translate-x-[-50%]
 translate-x-px
 translate-y-[-50%]
 underline-offset-4
-var(--border
-var(--muted
 var(--sidebar-width
 var(--sidebar-width-icon
 w-1.5
