@@ -90,7 +90,7 @@ shellui add all --except chart,qr-code
 
 `shellui add all` installs the whole component library: every target `shellui list` shows except the layout blocks (`dashboard-01`, `dashboard-02`, `auth-01`, `auth-02`, `auth-03`), which rewire the app and are added by name. Components already installed are skipped. `--except` leaves components out (space or comma-separated), along with anything that needs them: `--except chart` also leaves out `bar-chart`, `line-chart` and the other charts, so `Blazor-ApexCharts` isn't added.
 
-Some components need a NuGet package (`chart` needs `Blazor-ApexCharts`, `data-table` needs `System.Linq.Dynamic.Core`, `qr-code` needs `QRCoder`). `add` references it if the project doesn't, and raises an older version to the one ShellUI needs. A version that is already the same or newer is left as it is (including one set in `Directory.Packages.props`), as are floating versions such as `7.*`, ranges, and references whose version ShellUI can't find.
+Some components need a NuGet package (`chart` needs `ShellCharts.Blazor`, `data-table` needs `System.Linq.Dynamic.Core`, `qr-code` needs `QRCoder`). `add` references it if the project doesn't, and raises an older version to the one ShellUI needs. A version that is already the same or newer is left as it is (including one set in `Directory.Packages.props`), as are floating versions such as `7.*`, ranges, and references whose version ShellUI can't find.
 
 ### Dashboard layouts
 

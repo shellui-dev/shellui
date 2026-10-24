@@ -7,7 +7,7 @@
 - **254** total registry entries
 - **98** direct CLI targets (`IsAvailable = true`)
 - **156** hidden entries (`IsAvailable = false`)
-- `shellui list` displays the 98 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
+- `shellui list` displays the 99 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
 `Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
 
@@ -29,7 +29,8 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `callout` | `callout-variants` | — |
 | `card` | `card-header`, `card-title`, `card-description`, `card-content`, `card-footer` | — |
 | `carousel` | `carousel-item`, `carousel-content`, `carousel-previous`, `carousel-next`, `carousel-dots`, `carousel-list`, `carousel-slide` | — |
-| `chart` | `chart-variants`, `chart-styles` | `Blazor-ApexCharts` `6.0.2` |
+| `chart` | `chart-variants`, `chart-styles`, `chart-frame` | `ShellCharts.Blazor` `0.1.0-alpha` |
+| `chart-frame` | `chart-variants`, `chart-styles` | `ShellCharts.Blazor` `0.1.0-alpha` |
 | `chart-series` | `chart` | — |
 | `chat` | `chat-message`, `chat-input` | — |
 | `collapsible` | `collapsible-trigger`, `collapsible-content` | — |
