@@ -8,48 +8,28 @@ public class PieChartTemplate
     {
         Name = "pie-chart",
         DisplayName = "Pie Chart",
-        Description = "Pie chart component using ApexCharts with ShellUI theming",
+        Description = "Pie chart component using ShellCharts with ShellUI theming",
         Category = ComponentCategory.DataDisplay,
         FilePath = "PieChart.razor",
         Dependencies = new List<string> { "chart" },
         Variants = new List<string> { "default", "colorful", "monochrome" },
-        Tags = new List<string> { "chart", "pie", "data", "visualization", "apexcharts" }
+        Tags = new List<string> { "chart", "pie", "data", "visualization", "shellcharts" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using ApexCharts
+@using ShellCharts
 @inherits Chart<TItem>
-@typeparam TItem where TItem : class
+@typeparam TItem
 
-<div class=""@ComputedClass border border-border bg-card text-card-foreground overflow-hidden [border-radius:var(--radius)] [box-shadow:var(--shadow)]"" data-chart-theme=""@Theme.ToString().ToLower()"">
-    <ApexChart TItem=""TItem""
-               Title=""@Title""
-               Options=""@ChartOptions""
-               Height=""@Height""
-               Width=""@Width"">
-        <ApexPointSeries TItem=""TItem""
-                         Items=""Data""
-                         Name=""@Name""
-                         SeriesType=""SeriesType.Pie""
-                         XValue=""@XValue""
-                         YValue=""@YValue"" />
-    </ApexChart>
-</div>
-
-@code {
-    [Parameter] public IEnumerable<TItem>? Data { get; set; }
-    [Parameter] public string Name { get; set; } = ""Data"";
-    [Parameter] public Func<TItem, object>? XValue { get; set; }
-    [Parameter] public Func<TItem, decimal?>? YValue { get; set; }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        if (ChartOptions.Chart != null)
+<ChartFrame Title=""@Title"" Subtitle=""@Subtitle"" Class=""@Class"" Width=""@Width"" Theme=""Theme"">
+    <ChartContainer Data=""Data"" Height=""PlotHeight"" AriaLabel=""@(Title ?? Name)"">
+        <Pie TItem=""TItem"" DataKey=""Value"" NameKey=""Category"" Name=""@Name"" />
+        <ChartTooltip />
+        @if (ShowLegend)
         {
-            ChartOptions.Chart.Type = ApexCharts.ChartType.Pie;
+            <ChartLegend />
         }
-    }
-}
+    </ChartContainer>
+</ChartFrame>
 ";
 }

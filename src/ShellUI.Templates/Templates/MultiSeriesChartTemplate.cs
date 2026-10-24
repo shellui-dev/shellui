@@ -13,22 +13,32 @@ public class MultiSeriesChartTemplate
         FilePath = "MultiSeriesChart.razor",
         Dependencies = new List<string> { "chart", "chart-series" },
         Variants = new List<string> { "default", "colorful", "monochrome" },
-        Tags = new List<string> { "chart", "multi-series", "data", "visualization", "apexcharts" }
+        Tags = new List<string> { "chart", "multi-series", "data", "visualization", "shellcharts" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using ApexCharts
+@using ShellCharts
 @inherits Chart<TItem>
-@typeparam TItem where TItem : class
+@typeparam TItem
+@attribute [CascadingTypeParameter(nameof(TItem))]
 
-<div class=""@ComputedClass"" data-chart-theme=""@Theme.ToString().ToLower()"">
-    <ApexChart TItem=""TItem""
-               Title=""@Title""
-               Options=""@ChartOptions""
-               Height=""@Height""
-               Width=""@Width"">
+<ChartFrame Title=""@Title"" Subtitle=""@Subtitle"" Class=""@Class"" Width=""@Width"" Theme=""Theme"">
+    <ChartContainer Data=""Data"" Height=""PlotHeight"" AriaLabel=""@Title"">
+        <CartesianGrid />
+        <XAxis TItem=""TItem"" TKey=""string"" DataKey=""Category"" />
+        <YAxis />
         @ChildContent
-    </ApexChart>
-</div>
+        <ChartTooltip />
+        @if (ShowLegend)
+        {
+            <ChartLegend />
+        }
+    </ChartContainer>
+</ChartFrame>
+
+@code {
+    /// <summary>The <see cref=""ChartSeries{TItem}""/>, which all share this chart's <c>Data</c> and <c>XValue</c>.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}
 ";
 }

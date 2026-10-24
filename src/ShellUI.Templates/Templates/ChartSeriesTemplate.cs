@@ -13,26 +13,38 @@ public class ChartSeriesTemplate
         FilePath = "ChartSeries.razor",
         Dependencies = new List<string> { "chart" },
         Variants = new List<string> { "line", "bar", "area", "pie" },
-        Tags = new List<string> { "chart", "series", "data", "visualization", "apexcharts" }
+        Tags = new List<string> { "chart", "series", "data", "visualization", "shellcharts" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using ApexCharts
-@typeparam TItem where TItem : class
+@using YourProjectNamespace.Components.UI.Variants
+@using ShellCharts
+@typeparam TItem
 
-<ApexPointSeries TItem=""TItem""
-                 Items=""Data""
-                 Name=""@Name""
-                 SeriesType=""@SeriesType""
-                 XValue=""@XValue""
-                 YValue=""@YValue"" />
+@switch (SeriesType)
+{
+    case SeriesType.Area:
+        <Area TItem=""TItem"" DataKey=""Value"" Name=""@Name"" Stack=""@Stack"" />
+        break;
+    case SeriesType.Bar:
+        <Bar TItem=""TItem"" DataKey=""Value"" Name=""@Name"" Stack=""@Stack"" />
+        break;
+    default:
+        <Line TItem=""TItem"" DataKey=""Value"" Name=""@Name"" Stack=""@Stack"" />
+        break;
+}
 
 @code {
-    [Parameter] public IEnumerable<TItem>? Data { get; set; }
     [Parameter] public string Name { get; set; } = ""Series"";
+
     [Parameter] public SeriesType SeriesType { get; set; } = SeriesType.Line;
-    [Parameter] public Func<TItem, object>? XValue { get; set; }
+
     [Parameter] public Func<TItem, decimal?>? YValue { get; set; }
+
+    /// <summary>Series with the same stack key are drawn on top of each other.</summary>
+    [Parameter] public string? Stack { get; set; }
+
+    private double? Value(TItem item) => (double?)YValue?.Invoke(item);
 }
 ";
 }
