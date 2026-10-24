@@ -33,23 +33,12 @@ public class ChartStylesRegistryTests
     }
 
     [Fact]
-    public void ChartStyles_ContentCoversCustomTooltipAndApexClasses()
+    public void ChartStyles_ImportsTheShellChartsStylesheet()
     {
         var content = ComponentRegistry.GetComponentContent("chart-styles");
         Assert.NotNull(content);
-        Assert.Contains(".shellui-chart-tooltip", content);
-        Assert.Contains(".shellui-chart-tooltip-title", content);
-        Assert.Contains(".shellui-chart-tooltip-body", content);
-        Assert.Contains(".shellui-chart-tooltip-row", content);
-        Assert.Contains(".shellui-chart-tooltip-marker", content);
-        Assert.Contains(".shellui-chart-tooltip-label", content);
-        Assert.Contains(".shellui-chart-tooltip-value", content);
-        Assert.Contains(".apexcharts-tooltip", content);
-        Assert.Contains(".apexcharts-legend", content);
-        Assert.Contains(".apexcharts-xaxis-label", content);
-        Assert.Contains("var(--popover", content);
-        Assert.Contains("var(--foreground", content);
-        Assert.Contains("var(--border", content);
+        // charts.css is served from /css/, so the package's static assets are one level up.
+        Assert.Contains("@import url(\"../_content/ShellCharts.Blazor/shellcharts.css\")", content);
     }
 }
 
