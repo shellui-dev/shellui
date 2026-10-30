@@ -38,10 +38,12 @@ dotnet watch
 | Command | Purpose |
 |---|---|
 | `init` | Set up ShellUI and Tailwind in the current project |
-| `add <names...>` | Install components and their dependencies |
-| `list` | List the 93 components, with `--installed` or `--available` filters |
+| `add <names...>` | Install components and their dependencies (`add all` for the whole library) |
+| `list` | List the 98 components and blocks, with `--installed` or `--available` filters |
 | `remove <names...>` | Delete installed component files |
-| `update [names...]` | Rewrite installed components from the current templates (`--all` for every one) |
+| `update [names...]` | Rewrite installed components from the current templates (all of them when no names are given) |
+| `doctor` | Check the project's ShellUI setup and say how to fix each problem |
+| `migrate [names...]` | Rewrite your pages for template API changes, showing a diff and asking first |
 | `theme init <url-or-id>` | Run `init`, then apply a [tweakcn](https://tweakcn.com) theme |
 | `theme apply <url-or-id>` | Apply a tweakcn theme to `wwwroot/input.css`, or write an override file with `--emit-override <path>` |
 | `theme update` | Re-apply the theme recorded in `shellui.theme.lock` |
@@ -55,7 +57,7 @@ dotnet watch
 - `--replace-layout` switches to the dashboard even when the app has a custom layout.
 - `--style` is recorded in `shellui.json`. All styles currently install the same templates.
 
-`add` accepts names separated by spaces or commas, and `--force` overwrites existing files. `update` and `add --force` overwrite your copies, so commit customized components first. `add dashboard-01` or `add dashboard-02` also makes the dashboard the default layout and builds its sidebar links from your pages. `remove` does not handle dashboard layouts; delete those from `Components/Layout/` yourself.
+`add` accepts names separated by spaces or commas, and `--force` overwrites existing files. `add all` installs every component except the layout blocks (`dashboard-*`, `auth-*`), and `--except <names...>` leaves out components and everything that needs them. `update` skips files you have changed since the CLI wrote them; `update --force` and `add --force` overwrite your copies, so commit customized components first. After `update`, `migrate` rewrites your own pages for template API changes (`--dry-run` to only show them, `--yes` to skip the prompt). `add dashboard-01` or `add dashboard-02` also makes the dashboard the default layout and builds its sidebar links from your pages. `remove` deletes a layout block's file from `Components/Layout/` and lists the files that still use it, such as `Routes.razor`.
 
 ## Generated files
 
