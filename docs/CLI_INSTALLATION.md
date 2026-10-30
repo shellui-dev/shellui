@@ -4,12 +4,11 @@
 
 | Context | Version |
 |---|---|
-| Latest stable (recommended) | `0.3.5`, needs the .NET 10 runtime |
-| Prerelease | `0.4.0-alpha.3`, install with `--version 0.4.0-alpha.3` |
-| Previous stable | `0.2.1` |
+| Latest stable (recommended) | `0.4.0` |
+| Previous stable | `0.3.6`, needs the .NET 10 runtime |
 | Tailwind | `4.3.2` |
 
-The tool runs on .NET 8 or later (`0.4.0-alpha.3` and the 0.3 line need the .NET 10 runtime). The projects it sets up can target .NET 8, 9 or 10.
+The tool runs on .NET 8 or later (the 0.3 line and the 0.4 prereleases need the .NET 10 runtime). The projects it sets up can target .NET 8, 9 or 10.
 
 ## Global installation
 

@@ -24,12 +24,12 @@
 
 | Channel | Version | Notes |
 |---|---|---|
-| Latest stable (recommended) | `0.3.5` | Tailwind CSS `4.3.2` |
-| Prerelease | `0.4.0-alpha.3` | This branch; install with `--version 0.4.0-alpha.3` |
+| Latest stable (recommended) | `0.4.0` | Tailwind CSS `4.3.2` |
+| Previous stable | `0.3.6` | Patches come from `release/v0.3` |
 
-The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 8, 9 and 10. (`0.4.0-alpha.3` and the 0.3 line need .NET 10 for both.)
+The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 8, 9 and 10. (The 0.3 line and the 0.4 prereleases need .NET 10 for both.)
 
-`main` is the 0.4 line, so this README and `docs/` describe `0.4.0-alpha.3`, including features that are not in a stable release yet, such as `shellui init --dashboard` and the auth blocks. For the stable version, read the [v0.3.5 docs](https://github.com/shellui-dev/shellui/tree/v0.3.5). Prereleases need `--version` to install.
+This README and `docs/` describe `0.4.0`. For 0.3, read the [v0.3.6 docs](https://github.com/shellui-dev/shellui/tree/v0.3.6).
 
 ShellUI is pre-1.0, so APIs and generated output can still change between minor versions. Validate it in your target Blazor and hosting environments before relying on it.
 
@@ -37,7 +37,7 @@ ShellUI is pre-1.0, so APIs and generated output can still change between minor 
 
 - The CLI commands are `init`, `add`, `list`, `remove`, `update`, `doctor` and `migrate`, plus `theme init`, `theme apply`, and `theme update`.
 - The component registry has **254 entries**: **98 direct install targets** and **156 hidden dependency entries**. `list` shows direct targets; `add` resolves hidden dependencies.
-- `0.4.0-alpha.1` adds `kbd`, `aspect-ratio`, `button-group`, `toggle-group`, `input-group`, `number-input`, `stat-card`, `timeline`, `tree-view`, `qr-code`, `image-viewer`, `chat`, `chat-message`, `chat-input`, and the `auth-01`, `auth-02` and `auth-03` blocks.
+- `0.4.0` adds `kbd`, `aspect-ratio`, `button-group`, `toggle-group`, `input-group`, `number-input`, `stat-card`, `timeline`, `tree-view`, `qr-code`, `image-viewer`, `chat`, `chat-message`, `chat-input`, `prompt-suggestions`, `reasoning`, `tool-call`, `field`, `json-viewer`, and the `auth-01`, `auth-02` and `auth-03` blocks. `resizable` is now a real resizable panel group.
 - `0.3.0` added `typed-select`, `command-palette`, `data-picker`, `multi-select`, `tag-input`, `donut-chart`, `radar-chart`, and `radial-chart`.
 - `ShellUI.Components` supports a release-generated precompiled CSS bundle and a generated safelist for existing Tailwind builds.
 - The CLI can install source with Tailwind's standalone executable or an npm-based build. The current Tailwind baseline is `4.3.2`.
