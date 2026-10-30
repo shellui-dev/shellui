@@ -3,7 +3,7 @@
   <!-- One version for every ShellUI package -->
   <PropertyGroup>
     <ShellUIVersion>0.4.0</ShellUIVersion>
-    <ShellUIVersionSuffix>alpha.3</ShellUIVersionSuffix>
+    <ShellUIVersionSuffix></ShellUIVersionSuffix>
   </PropertyGroup>
 
   <PropertyGroup>

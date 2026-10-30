@@ -6,7 +6,7 @@ ShellUI uses one centralized version for the source templates, CLI tool, and pac
 
 | Scope | Value |
 |---|---|
-| Version | `0.4.0-alpha.3` (prerelease; latest stable `0.3.5`) |
+| Version | `0.4.0` (stable; previous stable `0.3.6`) |
 | Target framework | .NET 8 and .NET 10 (`ShellUI.Components` also .NET 9) |
 | Tailwind version | `4.3.2` |
 
@@ -19,13 +19,13 @@ The root `Directory.Build.props` supplies the version:
 ```xml
 <PropertyGroup>
   <ShellUIVersion>0.4.0</ShellUIVersion>
-  <ShellUIVersionSuffix>alpha.3</ShellUIVersionSuffix>
+  <ShellUIVersionSuffix></ShellUIVersionSuffix>
 </PropertyGroup>
 ```
 
 `Directory.Build.props` composes the package and assembly metadata:
 
-- `Version` becomes `0.4.0-alpha.3` with the suffix above, and `0.4.0` without one.
+- `Version` is `0.4.0` with the empty suffix above; a suffix such as `alpha.3` makes it `0.4.0-alpha.3`.
 - `AssemblyVersion` and `FileVersion` use the numeric base `0.4.0`.
 - `InformationalVersion` includes the prerelease suffix.
 - Component metadata reads the centralized properties when running from the repository. `VersionHelper` uses assembly metadata as a fallback when its repository search does not find the solution file.
@@ -57,7 +57,7 @@ The CLI writes the computed version into `shellui.json` for each installed entry
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.4.0-alpha.3",
+      "Version": "0.4.0",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false
     }

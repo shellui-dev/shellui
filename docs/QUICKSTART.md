@@ -1,6 +1,6 @@
 # ShellUI Quick Start
 
-This quick start uses ShellUI `0.4.0-alpha.3`, a prerelease, with Tailwind CSS `4.3.2`. The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10.
+This quick start uses ShellUI `0.4.0` with Tailwind CSS `4.3.2`. The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ dotnet --version
 A global tool is invoked as `shellui`:
 
 ```bash
-dotnet tool install -g ShellUI.CLI --version 0.4.0-alpha.3
+dotnet tool install -g ShellUI.CLI
 shellui --version
 ```
 

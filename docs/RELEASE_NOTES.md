@@ -1,5 +1,67 @@
 # ShellUI Release Notes
 
+# ShellUI v0.4.0
+
+> The 0.4 stable release. Compared with 0.3 it adds 19 components and three sign-in page blocks, compositional parts for eight more, `shellui add all`, `doctor` and `migrate`, .NET 8 and 9 support, and a CLI that keeps your changes on `update`. This section sums up the whole 0.4 line; the alpha sections below have the details. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
+
+## ✨ New in 0.4
+
+- **Components.** `kbd`, `aspect-ratio`, `button-group`, `toggle-group`, `input-group`, `number-input`, `stat-card`, `timeline`, `tree-view`, `qr-code`, `image-viewer`, `chat`, `chat-message` and `chat-input` (0.4.0-alpha.1), and since alpha.3:
+  - **`prompt-suggestions`**: clickable suggestion chips for an empty chat.
+  - **`reasoning`**: a collapsible block that streams a model's thinking, open while `IsStreaming` and folded to "Thought for N seconds" after.
+  - **`tool-call`**: a tool's name with a pending, running, done or error badge; it opens to show the arguments, result or error.
+  - **`field`**: label, control, description and validation message as one unit, vertical or horizontal; `For` shows the `EditForm`'s messages.
+  - **`json-viewer`**: a highlighted, foldable JSON tree from a string or any object, with a copy button.
+  - **`resizable`** is now a real panel group: `ResizablePanelGroup`, `ResizablePanel` (`DefaultSize`, `MinSize`, `MaxSize`) and `ResizableHandle`, dragged with the pointer or moved with the arrow keys, Home and End. The browser moves the panels and reports the sizes once, so dragging doesn't wait on Blazor Server. The old `Resizable` stays in the package, deprecated.
+- **Blocks.** `init --dashboard 01|02` wires a dashboard layout into the app, and the new `auth-01`, `auth-02` and `auth-03` blocks give apps that use ASP.NET Core Identity their own sign-in pages.
+- **Compositional parts** for AlertDialog, Breadcrumb, Command, Form, Menubar, Pagination, Sheet and Drawer. Each mode is opt-in, so existing markup keeps working.
+- **`SonnerService.Clear()`** and **`Destructive`** context menu items.
+- **.NET 8 and 9.** The CLI runs on .NET 8 or later, and `ShellUI.Components` targets .NET 8, 9 and 10. The 0.3 line needed .NET 10.
+
+## 🛠️ CLI
+
+- **`shellui add all`** installs every component except the page blocks; `--except` leaves out a component and everything that depends on it.
+- **`shellui doctor`** checks the project's setup and says how to fix each problem; it exits 1 on errors, so it can run in CI.
+- **`shellui migrate`** rewrites your pages for template API changes after `update`: `Input.InputVariant.X`, the DatePicker and TimePicker `Selected*` parameters and `Pagination.OnPageChange`. It shows each changed line and asks first (`--dry-run`, `--yes`), and points out `Calendar` handlers that need a `DateTime?`.
+- **`update` keeps your changes** and installs dependencies a component gained since you added it. **`add` never downgrades** a NuGet package. **`remove`** follows your `ComponentsPath`.
+- **One Tailwind CLI per machine** in `~/.shellui/bin`, with resumable downloads, instead of a copy in every project.
+- **Razor class libraries:** `init` recognises a library shared by several apps.
+
+## 🐛 Fixes since 0.4.0-alpha.3
+
+- **`add` hung on .NET 8 and 9 apps.** The CLI waited for `dotnet add package`, npm and Tailwind to exit before reading their output, so once a process wrote more than a pipe buffer both sides waited forever. `shellui add all` stopped on restoring Blazor-ApexCharts. Output is now read while the process runs.
+- **The CLI didn't start on a machine with only .NET 9** (or a newer runtime). It now rolls forward to any .NET 8 or later runtime.
+- **`doctor` said `app.css` was stale right after a build.** Tailwind skips writing unchanged output, so the file kept an old timestamp. The build now touches it; `update` brings the change to projects set up by alpha.2 and alpha.3.
+- **`list --installed`** said "0 available" (and `--available` "0 installed"). The summary now counts every target.
+- **Safelist:** classes passed to `Shell.Cn("…")` and literals in ternaries never reached `shellui-classes.txt`, so 198 classes were missing for apps that build their own Tailwind CSS from the package.
+- Everything fixed in 0.3.5 and 0.3.6 is included.
+
+## ⚠️ Breaking changes from 0.3
+
+- **`Calendar.SelectedDateChanged`** is `EventCallback<DateTime?>`. Handlers that take a `DateTime` must take a `DateTime?` (`shellui migrate` lists them).
+- **CLI templates, after `shellui update`:** `Input.InputVariant` is now `InputVariant` (new `input-variants` template); Stepper parts read the stepper's `ActiveStep` instead of a `CurrentStep` parameter; `ScrollArea` drops its `scrollbar-*` classes; `shellui add resizable` installs the panel group. `shellui migrate` fixes the `InputVariant` uses.
+- Still working but deprecated: `Pagination.OnPageChange`, `DatePicker.SelectedDate`, `TimePicker.SelectedTime` and the old `Resizable`. `shellui migrate` moves you off the first three.
+
+## ⬆️ Upgrading
+
+- **CLI:** `dotnet tool update -g ShellUI.CLI`, then in each project commit, run `shellui update`, then `shellui migrate`, and build. `shellui doctor` checks the result.
+- **NuGet package:** update `ShellUI.Components` to `0.4.0`. If you handle `Calendar.SelectedDateChanged`, change the handler's parameter to `DateTime?`.
+- If you used `Class="…!"` to beat a component's own classes, you can drop the `!`.
+
+## 📦 Installation
+
+```bash
+dotnet tool install -g ShellUI.CLI
+# or upgrade an existing install
+dotnet tool update -g ShellUI.CLI
+```
+
+```bash
+dotnet add package ShellUI.Components
+```
+
+**Full Changelog**: https://github.com/shellui-dev/shellui/compare/v0.3.6...v0.4.0
+
 # ShellUI v0.4.0-alpha.3 🧪
 
 > The third 0.4 prerelease. A component's `Class` now overrides its own classes, dialogs and sheets keep keyboard focus inside, `add` never downgrades your NuGet packages, and the CLI templates have been brought in line with the NuGet package, fixing several template bugs on the way. It also adds Razor class library support. It is a prerelease, so installs need `--version`. Report issues via [GitHub Issues](https://github.com/shellui-dev/shellui/issues).
