@@ -17,6 +17,8 @@
     <Nullable>enable</Nullable>
     
     <PackAsTool>true</PackAsTool>
+    <!-- Runs on .NET 9 and newer runtimes too, not only the 8 and 10 it is built for. -->
+    <RollForward>Major</RollForward>
     <ToolCommandName>shellui</ToolCommandName>
     <PackageId>ShellUI.CLI</PackageId>
     <PackageReadmeFile>README.md</PackageReadmeFile>
