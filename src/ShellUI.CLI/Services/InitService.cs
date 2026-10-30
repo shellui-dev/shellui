@@ -265,23 +265,8 @@ public class InitService
         try
         {
             // cmd /c is the reliable way to run npm on Windows
-            var startInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = "cmd",
-                Arguments = "/c npm --version",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            using var process = System.Diagnostics.Process.Start(startInfo);
-            if (process == null) return false;
-
-            await process.WaitForExitAsync();
-            var output = await process.StandardOutput.ReadToEndAsync();
-
-            return process.ExitCode == 0 && !string.IsNullOrEmpty(output.Trim());
+            var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo("cmd", "/c npm --version"));
+            return result is { ExitCode: 0 } && !string.IsNullOrEmpty(result.Output.Trim());
         }
         catch
         {
@@ -291,28 +276,12 @@ public class InitService
 
     private static async Task RunNpmCommandAsync(params string[] args)
     {
-        var startInfo = new System.Diagnostics.ProcessStartInfo
-        {
-            FileName = "cmd",
-            Arguments = $"/c npm {string.Join(" ", args)}",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
+        var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo("cmd", $"/c npm {string.Join(" ", args)}"))
+            ?? throw new Exception("Failed to start npm process");
 
-        using var process = System.Diagnostics.Process.Start(startInfo);
-        if (process == null)
+        if (result.ExitCode != 0)
         {
-            throw new Exception("Failed to start npm process");
-        }
-
-        await process.WaitForExitAsync();
-
-        if (process.ExitCode != 0)
-        {
-            var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"npm command failed: {error}");
+            throw new Exception($"npm command failed: {result.Error}");
         }
     }
 
@@ -321,63 +290,32 @@ public class InitService
         var inputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "input.css");
         var outputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "app.css");
 
-        var startInfo = new System.Diagnostics.ProcessStartInfo
-        {
-            FileName = "cmd",
-            Arguments = $"/c npx @tailwindcss/cli -i \"{inputCssPath}\" -o \"{outputCssPath}\" --minify",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
+        var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo("cmd", $"/c npx @tailwindcss/cli -i \"{inputCssPath}\" -o \"{outputCssPath}\" --minify"))
+            ?? throw new Exception("Failed to start npx process");
 
-        using var process = System.Diagnostics.Process.Start(startInfo);
-        if (process == null)
+        if (result.ExitCode != 0)
         {
-            throw new Exception("Failed to start npx process");
-        }
-
-        await process.WaitForExitAsync();
-
-        if (process.ExitCode != 0)
-        {
-            var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"npx @tailwindcss/cli failed: {error}");
+            throw new Exception($"npx @tailwindcss/cli failed: {result.Error}");
         }
     }
 
     private static async Task RunTailwindBuildAsync(string tailwindPath, string inputPath, string outputPath)
     {
-        var startInfo = new System.Diagnostics.ProcessStartInfo
-        {
-            FileName = tailwindPath,
-            Arguments = $"-i \"{inputPath}\" -o \"{outputPath}\" --minify",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
+        var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo(tailwindPath, $"-i \"{inputPath}\" -o \"{outputPath}\" --minify"))
+            ?? throw new Exception("Failed to start Tailwind CSS process");
 
-        using var process = System.Diagnostics.Process.Start(startInfo);
-        if (process == null)
+        if (result.ExitCode != 0)
         {
-            throw new Exception("Failed to start Tailwind CSS process");
-        }
-
-        await process.WaitForExitAsync();
-
-        if (process.ExitCode != 0)
-        {
-            var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"Tailwind CSS build failed: {error}");
+            throw new Exception($"Tailwind CSS build failed: {result.Error}");
         }
     }
 
-    // Build/ShellUI.targets exactly as earlier CLIs wrote it for standalone Tailwind (LF-normalized SHA-256): 0.0.1–0.3.4, then 0.4.0-alpha.1.
+    // Build/ShellUI.targets exactly as earlier CLIs wrote it for standalone Tailwind (LF-normalized SHA-256): 0.0.1–0.3.4, 0.4.0-alpha.1, then 0.4.0-alpha.2–alpha.3.
     private static readonly string[] PreviousStandaloneTargets =
     {
         "eace414bc927d6274976e888cd1de742efd82ee3142f1cabaea3b1f3e188455e",
         "f42811cbd3bdad588c3389de9a0f706b7ac59331848a027b99c30a5765aea5f9",
+        "0f2b51772790f4ffb3c461c70c8517222c4cc726ee9b099b748c5809443bd3e0",
     };
 
     // Brings a standalone project set up by an earlier CLI onto the shared Tailwind CLI; returns what changed.
@@ -424,6 +362,8 @@ public class InitService
   <Target Name=""BuildTailwindCSS"" BeforeTargets=""BeforeBuild"" Condition=""Exists('$(TailwindInputCss)')"">
     <Message Importance=""high"" Text=""Building Tailwind CSS with npm..."" />
     <Exec Command=""$(NpmExecutable) @tailwindcss/cli -i &quot;$(TailwindInputCss)&quot; -o &quot;$(TailwindOutputCss)&quot; $(TailwindMinify)"" />
+    <!-- Tailwind skips writing unchanged output; touching it shows the CSS is current. -->
+    <Touch Files=""$(TailwindOutputCss)"" ContinueOnError=""true"" />
     <Message Importance=""high"" Text=""Tailwind CSS built successfully!"" />
   </Target>
 
@@ -475,6 +415,8 @@ public class InitService
   <Target Name=""BuildTailwindCSS"" BeforeTargets=""BeforeBuild"" Condition=""Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')"">
     <Message Importance=""high"" Text=""Building Tailwind CSS..."" />
     <Exec Command=""&quot;$(TailwindExecutable)&quot; -i &quot;$(TailwindInputCss)&quot; -o &quot;$(TailwindOutputCss)&quot; $(TailwindMinify)"" />
+    <!-- Tailwind skips writing unchanged output; touching it shows the CSS is current. -->
+    <Touch Files=""$(TailwindOutputCss)"" ContinueOnError=""true"" />
     <Message Importance=""high"" Text=""Tailwind CSS built successfully!"" />
   </Target>
 
