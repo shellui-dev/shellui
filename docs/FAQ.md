@@ -148,7 +148,7 @@ A representative Tailwind and component record is:
       "Version": "0.4.0",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false,
-      "Hash": "<SHA-256 of the file as the CLI wrote it>"
+      "Hash": "3b1f9c0e7a52d84f6e2c19ab07d4e5f8c6a3b2d1e0f9a8b7c6d5e4f3a2b1c0d9"
     }
   ],
   "ProjectType": 1

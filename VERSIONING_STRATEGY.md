@@ -60,14 +60,14 @@ The CLI writes the computed version into `shellui.json` for each installed entry
       "Version": "0.4.0",
       "InstalledAt": "2026-01-01T00:00:00Z",
       "IsCustomized": false,
-      "Hash": "<SHA-256 of the file as the CLI wrote it>"
+      "Hash": "3b1f9c0e7a52d84f6e2c19ab07d4e5f8c6a3b2d1e0f9a8b7c6d5e4f3a2b1c0d9"
     }
   ],
   "ProjectType": 1
 }
 ```
 
-The timestamp is illustrative. A copied component is source owned by the consumer, so its recorded version identifies the registry release used at install or update time; it does not automatically track a later package publication.
+The timestamp and hash are illustrative. A copied component is source owned by the consumer, so its recorded version identifies the registry release used at install or update time; it does not automatically track a later package publication.
 
 Theme data has a separate lock file. `shellui.theme.lock` records the theme source URL, content hash, theme name, and application time. That lock controls `theme update` and is independent of the component version.
 
