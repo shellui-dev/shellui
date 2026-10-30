@@ -18,7 +18,7 @@ For a production Blazor application, use either the standalone or npm workflow a
 
 ## Prerequisites
 
-- .NET 10.0 SDK
+- .NET 8 SDK or later
 - A Blazor project
 - Node.js and npm only when using the npm method
 
@@ -38,13 +38,13 @@ Run this from the project directory:
 shellui init
 ```
 
-The default standalone method downloads the Tailwind 4.3.2 standalone executable into `.shellui/bin`, creates the CSS entry point and output file, wires an MSBuild target, and creates the ShellUI component folders. To choose npm explicitly:
+The default standalone method downloads the Tailwind 4.3.2 standalone executable once per machine into `~/.shellui/bin`, creates the CSS entry point and output file, wires an MSBuild target, and creates the ShellUI component folders. To choose npm explicitly:
 
 ```text
 shellui init --tailwind npm --yes
 ```
 
-Other initialization options include `--style`, `--force`, and `--yes`. The current CLI's npm setup invokes npm through `cmd`; use standalone mode on non-Windows systems or run the npm commands manually.
+Other initialization options include `--style`, `--force`, `--yes`, `--dashboard` and `--replace-layout`. The current CLI's npm setup invokes npm through `cmd`; use standalone mode on non-Windows systems or run the npm commands manually.
 
 ### Add and manage components
 
@@ -56,6 +56,8 @@ shellui add <components>
 shellui list
 shellui remove <components>
 shellui update [components]
+shellui doctor
+shellui migrate [components]
 shellui theme init <url>
 shellui theme apply <url>
 shellui theme update

@@ -308,14 +308,15 @@ Representative fields look like this:
       "Name": "button",
       "Version": "0.4.0",
       "InstalledAt": "2026-01-01T00:00:00Z",
-      "IsCustomized": false
+      "IsCustomized": false,
+      "Hash": "3b1f9c0e7a52d84f6e2c19ab07d4e5f8c6a3b2d1e0f9a8b7c6d5e4f3a2b1c0d9"
     }
   ],
   "ProjectType": 1
 }
 ```
 
-`ProjectType` is serialized as the enum value; `1` is `BlazorServer`. `IsCustomized` is metadata, not a merge mechanism. `update` still overwrites the file.
+`ProjectType` is serialized as the enum value; `1` is `BlazorServer`. `Hash` is what `update` compares the file with to spot your changes (entries written before 0.4.0-alpha.2 have none), and `update` sets `IsCustomized` on a file it skips for that reason. Neither is a merge mechanism; `update --force` still overwrites the file.
 
 ## Common workflow
 

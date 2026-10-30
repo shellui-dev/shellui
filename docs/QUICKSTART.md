@@ -68,7 +68,7 @@ Dependencies are copied automatically. Use `--force` to overwrite an existing co
 shellui add button --force
 ```
 
-Use the exact names shown by `shellui list`. There are 93 direct targets; dependency-only registry entries are not direct targets.
+Use the exact names shown by `shellui list`. There are 98 direct targets; dependency-only registry entries are not direct targets.
 
 ## Use a component
 
@@ -95,7 +95,8 @@ Edit `wwwroot/input.css`, not the generated `wwwroot/app.css`. The current v4 in
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --primary: oklch(0.55 0.22 264.53);
+  color-scheme: light;
+  --primary: oklch(0 0 0);
   --primary-foreground: oklch(1 0 0);
 }
 
