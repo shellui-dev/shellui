@@ -310,11 +310,12 @@ public class InitService
         }
     }
 
-    // Build/ShellUI.targets exactly as earlier CLIs wrote it for standalone Tailwind (LF-normalized SHA-256): 0.0.1–0.3.4, then 0.4.0-alpha.1.
+    // Build/ShellUI.targets exactly as earlier CLIs wrote it for standalone Tailwind (LF-normalized SHA-256): 0.0.1–0.3.4, 0.4.0-alpha.1, then 0.4.0-alpha.2–alpha.3.
     private static readonly string[] PreviousStandaloneTargets =
     {
         "eace414bc927d6274976e888cd1de742efd82ee3142f1cabaea3b1f3e188455e",
         "f42811cbd3bdad588c3389de9a0f706b7ac59331848a027b99c30a5765aea5f9",
+        "0f2b51772790f4ffb3c461c70c8517222c4cc726ee9b099b748c5809443bd3e0",
     };
 
     // Brings a standalone project set up by an earlier CLI onto the shared Tailwind CLI; returns what changed.
@@ -361,6 +362,8 @@ public class InitService
   <Target Name=""BuildTailwindCSS"" BeforeTargets=""BeforeBuild"" Condition=""Exists('$(TailwindInputCss)')"">
     <Message Importance=""high"" Text=""Building Tailwind CSS with npm..."" />
     <Exec Command=""$(NpmExecutable) @tailwindcss/cli -i &quot;$(TailwindInputCss)&quot; -o &quot;$(TailwindOutputCss)&quot; $(TailwindMinify)"" />
+    <!-- Tailwind skips writing unchanged output; touching it shows the CSS is current. -->
+    <Touch Files=""$(TailwindOutputCss)"" ContinueOnError=""true"" />
     <Message Importance=""high"" Text=""Tailwind CSS built successfully!"" />
   </Target>
 
@@ -412,6 +415,8 @@ public class InitService
   <Target Name=""BuildTailwindCSS"" BeforeTargets=""BeforeBuild"" Condition=""Exists('$(TailwindExecutable)') AND Exists('$(TailwindInputCss)')"">
     <Message Importance=""high"" Text=""Building Tailwind CSS..."" />
     <Exec Command=""&quot;$(TailwindExecutable)&quot; -i &quot;$(TailwindInputCss)&quot; -o &quot;$(TailwindOutputCss)&quot; $(TailwindMinify)"" />
+    <!-- Tailwind skips writing unchanged output; touching it shows the CSS is current. -->
+    <Touch Files=""$(TailwindOutputCss)"" ContinueOnError=""true"" />
     <Message Importance=""high"" Text=""Tailwind CSS built successfully!"" />
   </Target>
 
