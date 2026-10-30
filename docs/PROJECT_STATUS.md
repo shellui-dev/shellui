@@ -33,19 +33,21 @@ add
 list
 remove
 update
+doctor
+migrate
 theme init
 theme apply
 theme update
 ```
 
-`init` configures a Blazor project, Tailwind, host bootstrap assets, `shellui.json`, and MSBuild integration. `add` installs direct targets and their dependencies. `list` exposes the public direct targets. `remove` and `update` operate on installed source. The theme commands fetch themes from tweakcn, update a managed CSS region or an override file, and record `shellui.theme.lock` for `theme update`.
+`init` configures a Blazor project, Tailwind, host bootstrap assets, `shellui.json`, and MSBuild integration. `add` installs direct targets and their dependencies. `list` exposes the public direct targets. `remove` and `update` operate on installed source. `doctor` checks the project's setup and `migrate` rewrites the app's own pages for template API changes. The theme commands fetch themes from tweakcn, update a managed CSS region or an override file, and record `shellui.theme.lock` for `theme update`.
 
 ### Registry and components
 
-`ComponentRegistry` has 243 entries:
+`ComponentRegistry` has 254 entries:
 
-- 93 direct targets with `IsAvailable = true`.
-- 150 hidden entries with `IsAvailable = false`, generally installed as dependencies or assets.
+- 98 direct targets with `IsAvailable = true`.
+- 156 hidden entries with `IsAvailable = false`, generally installed as dependencies or assets.
 
 The direct-target count is the number shown by the normal public list. The hidden count is not a second public library; it represents the sub-components, variants, models, services, and assets needed to make the direct targets work.
 
@@ -118,7 +120,7 @@ For a published tool or package, select the version available in the intended ch
 
 ```bash
 dotnet tool install -g ShellUI.CLI --version <published-version>
-dotnet add package ShellUI.Components --version <published-version> --prerelease
+dotnet add package ShellUI.Components --version <published-version>
 ```
 
 To test a checkout, build the CLI locally and install that package with the version from `Directory.Build.props`:

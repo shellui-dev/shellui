@@ -87,10 +87,12 @@ New CLI sidebar installs use the host-loaded `shellui.js`; the legacy `sidebar-j
 | Command | Purpose |
 |---|---|
 | `init` | Set up ShellUI, Tailwind, host wiring, and the generated project structure |
-| `add <components...>` | Install one or more direct targets and their hidden dependencies |
+| `add <components...>` | Install one or more direct targets (or `all`) and their hidden dependencies |
 | `list` | List direct targets, installed targets, or targets still available |
 | `remove <components...>` | Remove named installed components |
-| `update [components...]` | Reinstall named or all installed templates |
+| `update [components...]` | Reinstall named or all installed templates, skipping files you changed unless `--force` |
+| `doctor` | Check the project's setup and say how to fix each problem |
+| `migrate [components...]` | Rewrite your pages for template API changes |
 | `theme init <url-or-id>` | Initialize a project and apply a tweakcn theme |
 | `theme apply <url-or-id>` | Apply a theme to `wwwroot/input.css` or emit override CSS |
 | `theme update` | Re-fetch the source recorded in `shellui.theme.lock` |

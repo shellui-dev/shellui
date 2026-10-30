@@ -23,7 +23,7 @@ The direct-target count is the number users invoke with `shellui add`. It is not
 | CLI workflow | Yes | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison |
 | Accessibility status | Semantic markup is used; no current WCAG conformance claim | Not audited here | Not audited here | Not audited here | Not audited here | Not audited here |
 | Bundle/performance status | No current reproducible benchmark published | No current benchmark published here | No current benchmark published here | No current benchmark published here | No current benchmark published here | No current benchmark published here |
-| Community status | Current project is an alpha snapshot; no comparable size claim | See the current project community | See the current project community | See the current project community | See the current project community | See the current project community |
+| Community status | Pre-1.0 project; no comparable size claim | See the current project community | See the current project community | See the current project community | See the current project community | See the current project community |
 
 The “not audited here” cells are intentional. They avoid presenting stale component counts, community metrics, or performance estimates as if they were current facts.
 

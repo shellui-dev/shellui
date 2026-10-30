@@ -2,14 +2,14 @@
 
 **Goal:** Build the components and tooling needed for a Tailwind-first Blazor design system.
 
-.NET 10 · Tailwind CSS `4.3.2`
+.NET 8, 9 and 10 · Tailwind CSS `4.3.2`
 
 ## Current inventory
 
-`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **243 entries**:
+`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **254 entries**:
 
-- **93 direct CLI targets** shown by `shellui list`
-- **150 hidden entries** for sub-components, variants, models, services, and support assets
+- **98 direct CLI targets** shown by `shellui list`
+- **156 hidden entries** for sub-components, variants, models, services, and support assets
 - **Packable projects:** `ShellUI.CLI` and `ShellUI.Components`
 
 Hidden entries are not counted as direct targets. They can still be installed recursively when a parent target declares them.
@@ -81,6 +81,13 @@ The current registry provides explicit sub-components for these parent component
 - [x] **ContextMenu** — `ContextMenuTrigger`, `ContextMenuContent`, `ContextMenuOption`
 - [x] **NavigationMenu** — `NavList`, `NavItem`, `NavTrigger`, `NavContent`
 - [x] **Carousel** — `CarouselList`, `CarouselSlide`
+- [x] **AlertDialog** — `AlertDialogTrigger`, `AlertDialogContent`, `AlertDialogHeader`, `AlertDialogTitle`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogAction`, `AlertDialogCancel` (0.4)
+- [x] **Breadcrumb** — `BreadcrumbList`, `BreadcrumbItem`, `BreadcrumbLink`, `BreadcrumbPage`, `BreadcrumbSeparator`, `BreadcrumbEllipsis` (0.4)
+- [x] **Command** — `CommandInput`, `CommandList`, `CommandGroup`, `CommandOption`, `CommandEmpty`, `CommandSeparator` (0.4)
+- [x] **Form** — `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormDescription`, `FormMessage` (0.4)
+- [x] **Menubar** — `MenubarMenu`, `MenubarTrigger`, `MenubarContent`, `MenubarItem`, `MenubarSeparator` (0.4)
+- [x] **Pagination** — `PaginationContent`, `PaginationItem`, `PaginationLink`, `PaginationPrevious`, `PaginationNext`, `PaginationEllipsis` (0.4)
+- [x] **Resizable** — `ResizablePanelGroup`, `ResizablePanel`, `ResizableHandle` (0.4; the old `Resizable` is deprecated)
 
 The intended pattern is explicit child components, cascaded state and callbacks, value/label parameters, and Tailwind utility classes matching the shadcn-style API.
 

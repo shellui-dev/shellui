@@ -1,10 +1,10 @@
 # Contributing to ShellUI
 
-ShellUI targets .NET 8 and .NET 10 and Tailwind CSS `4.3.2`. This guide describes the contribution and verification workflow; releases are covered in [VERSIONING_STRATEGY.md](../VERSIONING_STRATEGY.md) and [RELEASING.md](RELEASING.md).
+ShellUI targets .NET 8 and .NET 10 (`ShellUI.Components` also .NET 9) and Tailwind CSS `4.3.2`. This guide describes the contribution and verification workflow; releases are covered in [VERSIONING_STRATEGY.md](../VERSIONING_STRATEGY.md) and [RELEASING.md](RELEASING.md).
 
 ## Contribution Policy
 
-ShellUI is an active alpha project. Focused bug fixes, documentation corrections, tests, and component or CLI improvements are welcome through GitHub issues and pull requests.
+ShellUI is an active pre-1.0 project. Focused bug fixes, documentation corrections, tests, and component or CLI improvements are welcome through GitHub issues and pull requests.
 
 Before starting a substantial new component, a new distribution path, or a change to the registry contract:
 
@@ -13,7 +13,7 @@ Before starting a substantial new component, a new distribution path, or a chang
 3. Agree on the smallest useful scope before implementing a large change.
 4. Keep the change compatible with the current architecture unless the proposal explicitly changes that architecture.
 
-Alpha software can change its APIs and generated source. An issue or pull request is not a promise that a feature will be accepted, scheduled, or released. There is no response-time or adoption target in this policy.
+Pre-1.0 software can change its APIs and generated source. An issue or pull request is not a promise that a feature will be accepted, scheduled, or released. There is no response-time or adoption target in this policy.
 
 Implemented features should be described as implemented. Ideas that have no implementation or release assignment belong in an issue or in the unscheduled section below, not in current-status documentation.
 
@@ -45,7 +45,7 @@ dotnet restore ShellUI.slnx
 dotnet build ShellUI.slnx --configuration Release
 ```
 
-The CLI supports the implemented commands `init`, `add`, `list`, `remove`, `update`, `theme init`, `theme apply`, and `theme update`. Use a local build when testing changes; do not substitute an older published CLI merely because it is easier to install.
+The CLI supports the implemented commands `init`, `add`, `list`, `remove`, `update`, `doctor`, `migrate`, `theme init`, `theme apply`, and `theme update`. Use a local build when testing changes; do not substitute an older published CLI merely because it is easier to install.
 
 The precompiled CSS and safelist are generated as part of the CI workflow. When changing component CSS, variant helpers, or safelist inputs, regenerate the safelist and then build the bundle:
 
@@ -93,7 +93,7 @@ For a component change:
 
 1. Update the live component and its generated template together.
 2. Update registry metadata, dependencies, `FilePath`, variants, and NuGet dependencies when the public contract changes.
-3. Preserve the distinction between direct targets and hidden dependency entries. The current registry has 243 entries, including 93 direct targets and 150 hidden entries.
+3. Preserve the distinction between direct targets and hidden dependency entries. The current registry has 254 entries, including 98 direct targets and 156 hidden entries.
 4. Use the Tailwind `4.3.2` variable and utility conventions already used by the project.
 5. Add or update tests that exercise the changed registry, template, or CLI behavior.
 6. Review keyboard and assistive-technology behavior without claiming a blanket accessibility conformance level that the repository does not test.

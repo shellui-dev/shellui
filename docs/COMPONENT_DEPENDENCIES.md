@@ -87,7 +87,7 @@ Several entries are deliberately hidden from `shellui list` while remaining part
 - `button-variants` is hidden and is required by `button`.
 - `card-header`, `card-title`, `card-description`, `card-content`, and `card-footer` are hidden card sub-components, not independent public card targets.
 - `shell` is a hidden utility installed during `shellui init` and used by the sidebar graph.
-- `shellui-js` is a hidden JavaScript support asset. It is used by `copy-button`, `file-upload`, `input-otp`, `theme-toggle`, `command-palette`, and the hidden `sidebar-provider`; it is not a standalone public component.
+- `shellui-js` is a hidden JavaScript support asset. It is used by `copy-button`, `file-upload`, `input-otp`, `theme-toggle`, `command-palette`, `resizable`, and the hidden `sidebar-provider`; it is not a standalone public component.
 - `data-table-models`, `chart-variants`, `chart-styles`, `context-menu-models`, and similar entries are hidden support templates used by their registered parents.
 
 A hidden entry can have an empty `Dependencies` list while still being required by a parent. For example, the metadata for `shellui-js` describes the asset itself; it does not turn every component that uses the asset into a dependency of the asset.
