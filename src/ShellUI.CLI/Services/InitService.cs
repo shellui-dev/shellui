@@ -265,23 +265,8 @@ public class InitService
         try
         {
             // cmd /c is the reliable way to run npm on Windows
-            var startInfo = new System.Diagnostics.ProcessStartInfo
-            {
-                FileName = "cmd",
-                Arguments = "/c npm --version",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            using var process = System.Diagnostics.Process.Start(startInfo);
-            if (process == null) return false;
-
-            await process.WaitForExitAsync();
-            var output = await process.StandardOutput.ReadToEndAsync();
-
-            return process.ExitCode == 0 && !string.IsNullOrEmpty(output.Trim());
+            var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo("cmd", "/c npm --version"));
+            return result is { ExitCode: 0 } && !string.IsNullOrEmpty(result.Output.Trim());
         }
         catch
         {
@@ -291,28 +276,12 @@ public class InitService
 
     private static async Task RunNpmCommandAsync(params string[] args)
     {
-        var startInfo = new System.Diagnostics.ProcessStartInfo
-        {
-            FileName = "cmd",
-            Arguments = $"/c npm {string.Join(" ", args)}",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
+        var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo("cmd", $"/c npm {string.Join(" ", args)}"))
+            ?? throw new Exception("Failed to start npm process");
 
-        using var process = System.Diagnostics.Process.Start(startInfo);
-        if (process == null)
+        if (result.ExitCode != 0)
         {
-            throw new Exception("Failed to start npm process");
-        }
-
-        await process.WaitForExitAsync();
-
-        if (process.ExitCode != 0)
-        {
-            var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"npm command failed: {error}");
+            throw new Exception($"npm command failed: {result.Error}");
         }
     }
 
@@ -321,55 +290,23 @@ public class InitService
         var inputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "input.css");
         var outputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "app.css");
 
-        var startInfo = new System.Diagnostics.ProcessStartInfo
-        {
-            FileName = "cmd",
-            Arguments = $"/c npx @tailwindcss/cli -i \"{inputCssPath}\" -o \"{outputCssPath}\" --minify",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
+        var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo("cmd", $"/c npx @tailwindcss/cli -i \"{inputCssPath}\" -o \"{outputCssPath}\" --minify"))
+            ?? throw new Exception("Failed to start npx process");
 
-        using var process = System.Diagnostics.Process.Start(startInfo);
-        if (process == null)
+        if (result.ExitCode != 0)
         {
-            throw new Exception("Failed to start npx process");
-        }
-
-        await process.WaitForExitAsync();
-
-        if (process.ExitCode != 0)
-        {
-            var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"npx @tailwindcss/cli failed: {error}");
+            throw new Exception($"npx @tailwindcss/cli failed: {result.Error}");
         }
     }
 
     private static async Task RunTailwindBuildAsync(string tailwindPath, string inputPath, string outputPath)
     {
-        var startInfo = new System.Diagnostics.ProcessStartInfo
-        {
-            FileName = tailwindPath,
-            Arguments = $"-i \"{inputPath}\" -o \"{outputPath}\" --minify",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
+        var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo(tailwindPath, $"-i \"{inputPath}\" -o \"{outputPath}\" --minify"))
+            ?? throw new Exception("Failed to start Tailwind CSS process");
 
-        using var process = System.Diagnostics.Process.Start(startInfo);
-        if (process == null)
+        if (result.ExitCode != 0)
         {
-            throw new Exception("Failed to start Tailwind CSS process");
-        }
-
-        await process.WaitForExitAsync();
-
-        if (process.ExitCode != 0)
-        {
-            var error = await process.StandardError.ReadToEndAsync();
-            throw new Exception($"Tailwind CSS build failed: {error}");
+            throw new Exception($"Tailwind CSS build failed: {result.Error}");
         }
     }
 

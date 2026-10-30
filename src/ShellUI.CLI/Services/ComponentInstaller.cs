@@ -438,32 +438,26 @@ public class ComponentInstaller
             var startInfo = new System.Diagnostics.ProcessStartInfo
             {
                 FileName = "dotnet",
-                ArgumentList = { "add", projectInfo.ProjectPath, "package", dep.PackageId, "--version", dep.Version },
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
+                ArgumentList = { "add", projectInfo.ProjectPath, "package", dep.PackageId, "--version", dep.Version }
             };
 
             try
             {
-                using var process = System.Diagnostics.Process.Start(startInfo);
-                if (process == null)
+                var result = await ProcessRunner.RunAsync(startInfo);
+                if (result == null)
                 {
                     AnsiConsole.MarkupLine($"[yellow]Warning:[/] could not start `dotnet add package` for {dep.PackageId}");
                     failed.Add(dep);
                     continue;
                 }
 
-                await process.WaitForExitAsync();
-
-                if (process.ExitCode == 0)
+                if (result.ExitCode == 0)
                 {
                     AnsiConsole.MarkupLine($"[green]Added:[/] {dep.PackageId} {dep.Version}");
                 }
                 else
                 {
-                    var err = (await process.StandardError.ReadToEndAsync()).Trim();
+                    var err = result.Error.Trim();
                     AnsiConsole.MarkupLine($"[yellow]Warning:[/] failed to add {dep.PackageId}: {err.Replace("[", "[[").Replace("]", "]]")}");
                     failed.Add(dep);
                 }
