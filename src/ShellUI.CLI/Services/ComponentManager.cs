@@ -55,7 +55,10 @@ public static class ComponentManager
             if (!component.IsAvailable) continue;
 
             bool isInstalled = installed.Contains(component.Name);
-            
+            // Counted before filtering so the summary is the same with --installed or --available.
+            if (isInstalled) installedCount++;
+            else availableCount++;
+
             if (showOnlyInstalled && !isInstalled) continue;
             if (showOnlyAvailable && isInstalled) continue;
 
@@ -72,9 +75,6 @@ public static class ComponentManager
             cells.Add($"[blue]{component.Category}[/]");
             if (showDescription) cells.Add($"[dim]{Markup.Escape(component.Description)}[/]");
             table.AddRow(cells.ToArray());
-
-            if (isInstalled) installedCount++;
-            else availableCount++;
         }
         
         AnsiConsole.Write(table);

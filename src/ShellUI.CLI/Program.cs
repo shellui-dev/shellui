@@ -25,6 +25,7 @@ class Program
         rootCommand.AddCommand(CreateUpdateCommand());
         rootCommand.AddCommand(CreateThemeCommand());
         rootCommand.AddCommand(CreateDoctorCommand());
+        rootCommand.AddCommand(CreateMigrateCommand());
 
         return await rootCommand.InvokeAsync(args);
     }
@@ -283,6 +284,43 @@ class Program
                 context.ExitCode = 1;
             }
         });
+        return command;
+    }
+
+    static Command CreateMigrateCommand()
+    {
+        var command = new Command("migrate", "Rewrite your pages for template API changes, showing a diff and asking first");
+
+        var componentsArg = new Argument<string[]>(
+            "components",
+            $"Component(s) to migrate (empty = all): {string.Join(", ", MigrateService.Components)}")
+        {
+            Arity = ArgumentArity.ZeroOrMore
+        };
+        command.AddArgument(componentsArg);
+
+        var dryRunOption = new Option<bool>("--dry-run", "Show the changes without writing them");
+        command.AddOption(dryRunOption);
+
+        var yesOption = new Option<bool>("--yes", "Write the changes without asking");
+        command.AddOption(yesOption);
+
+        command.SetHandler(context =>
+        {
+            try
+            {
+                context.ExitCode = MigrateService.Run(
+                    context.ParseResult.GetValueForArgument(componentsArg),
+                    context.ParseResult.GetValueForOption(dryRunOption),
+                    context.ParseResult.GetValueForOption(yesOption));
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]Error:[/] {Markup.Escape(ex.Message)}");
+                context.ExitCode = 1;
+            }
+        });
+
         return command;
     }
 

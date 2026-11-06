@@ -77,15 +77,17 @@ The implemented command tree is:
 | Command | Responsibility |
 |---|---|
 | `shellui init` | Detect a Blazor project, configure Tailwind, install bootstrap assets, create `shellui.json`, patch the host, and create the MSBuild integration. |
-| `shellui add <components...>` | Install one or more direct targets and recursively install their registry dependencies. |
+| `shellui add <components...>` | Install one or more direct targets (or `all`) and recursively install their registry dependencies. |
 | `shellui list` | List direct targets, with installed/available filtering. |
 | `shellui remove <components...>` | Remove selected installed source files and update `shellui.json`. |
 | `shellui update [components...]` | Rewrite selected installed source files, or all installed components with `--all`; skips files changed since install unless `--force`, and installs new dependencies. |
+| `shellui doctor` | Check `shellui.json`, Tailwind, the host page, render mode, installed files and usings; print a fix for each problem and exit 1 on errors. |
+| `shellui migrate [components...]` | Rewrite the app's own `.razor` and `.cs` files for template API changes, showing a diff and asking first. |
 | `shellui theme init <url-or-id>` | Initialize a project and apply a fetched theme in one operation. |
 | `shellui theme apply <url-or-id>` | Apply a theme to `wwwroot/input.css` or emit a standalone override. |
 | `shellui theme update` | Re-fetch the theme recorded in `shellui.theme.lock`. |
 
-`init` accepts `--force`, `--style`, `--tailwind standalone|npm`, and `--yes`. `add` accepts space- or comma-separated component names and `--force`. The command surface above is the current implementation; commands not listed here are not part of the current CLI.
+`init` accepts `--force`, `--style`, `--tailwind standalone|npm`, `--yes`, `--dashboard 01|02|none`, and `--replace-layout`. `add` accepts space- or comma-separated component names, `--force`, `--replace-layout`, and `--except`. The command surface above is the current implementation; commands not listed here are not part of the current CLI.
 
 ## Registry Model and Counts
 
@@ -107,10 +109,10 @@ A dependency entry is still real source and is written to the consumer project w
 4. The installer walks `Dependencies` recursively before writing the requested target. Hidden entries are installed through this walk rather than being presented as normal public targets.
 5. The installer retrieves the template content, substitutes the consumer namespace, and writes it according to the metadata `FilePath` under `Components/UI`, `Components/Layout`, or a project `wwwroot` path.
 6. Required NuGet dependencies are collected during the walk and added once per package after source files are written. CSS assets are linked into the host when applicable.
-7. The installer records each installed name, computed version, installation time, and customization state in `shellui.json`.
+7. The installer records each installed name, computed version, installation time, customization state, and a hash of the written file in `shellui.json`.
 8. The generated MSBuild integration runs Tailwind during the consumer build, producing the configured CSS output.
 
-`remove` deletes the selected installed file and removes its record. The current remove path is optimized for regular component targets; layout blocks should be removed manually from `Components/Layout` until layout-aware removal is implemented. `update` rewrites selected source from the current registry and records the installed version. Theme commands use a separate managed CSS region and write `shellui.theme.lock`; theme updates re-fetch the recorded source rather than changing the component version.
+`remove` deletes the selected installed file and removes its record. For a layout block it deletes the file from `Components/Layout` and lists the `.razor` files that still reference the layout; it does not undo the layout wiring. `update` rewrites selected source from the current registry and records the installed version. Theme commands use a separate managed CSS region and write `shellui.theme.lock`; theme updates re-fetch the recorded source rather than changing the component version.
 
 ## Build and Test Flow
 

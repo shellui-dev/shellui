@@ -1,6 +1,6 @@
 # ShellUI Quick Start
 
-This quick start uses ShellUI `0.4.0-alpha.3`, a prerelease, with Tailwind CSS `4.3.2`. The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10.
+This quick start uses ShellUI `0.4.0` with Tailwind CSS `4.3.2`. The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ dotnet --version
 A global tool is invoked as `shellui`:
 
 ```bash
-dotnet tool install -g ShellUI.CLI --version 0.4.0-alpha.3
+dotnet tool install -g ShellUI.CLI
 shellui --version
 ```
 
@@ -68,7 +68,7 @@ Dependencies are copied automatically. Use `--force` to overwrite an existing co
 shellui add button --force
 ```
 
-Use the exact names shown by `shellui list`. There are 93 direct targets; dependency-only registry entries are not direct targets.
+Use the exact names shown by `shellui list`. There are 98 direct targets; dependency-only registry entries are not direct targets.
 
 ## Use a component
 
@@ -95,7 +95,8 @@ Edit `wwwroot/input.css`, not the generated `wwwroot/app.css`. The current v4 in
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --primary: oklch(0.55 0.22 264.53);
+  color-scheme: light;
+  --primary: oklch(0 0 0);
   --primary-foreground: oklch(1 0 0);
 }
 

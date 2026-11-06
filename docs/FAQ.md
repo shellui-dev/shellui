@@ -6,13 +6,13 @@ Answers for the current ShellUI source and the currently published packages.
 
 ### Which version should I use?
 
-Use the latest stable release, `0.3.5`. It uses Tailwind CSS `4.3.2`. The `0.4.0-alpha.3` prerelease, with 93 direct component targets, needs `--version 0.4.0-alpha.3`:
+Use the latest stable release, `0.4.0`. It uses Tailwind CSS `4.3.2` and has 98 direct component targets:
 
 ```bash
 dotnet tool install -g ShellUI.CLI
 ```
 
-The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 8, 9 and 10. (`0.4.0-alpha.3` and the 0.3 line need .NET 10 for both.)
+The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 8, 9 and 10. (The 0.3 line and the 0.4 prereleases need .NET 10 for both.)
 
 ### Which command prefix should I use?
 
@@ -49,7 +49,7 @@ shellui add button,input,card
 shellui add button,card dialog
 ```
 
-Use the exact names printed by `shellui list`. Dependency-only entries are installed automatically and are not counted among the 93 direct targets.
+Use the exact names printed by `shellui list`. Dependency-only entries are installed automatically and are not counted among the 98 direct targets.
 
 ### Which names should I use?
 
@@ -87,7 +87,7 @@ shellui list --installed
 shellui list --available
 ```
 
-There are 93 direct targets. Use the command output as the authoritative name list.
+There are 98 direct targets. Use the command output as the authoritative name list.
 
 ### What happens when I update a component?
 
@@ -145,16 +145,17 @@ A representative Tailwind and component record is:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.4.0-alpha.3",
+      "Version": "0.4.0",
       "InstalledAt": "2026-01-01T00:00:00Z",
-      "IsCustomized": false
+      "IsCustomized": false,
+      "Hash": "3b1f9c0e7a52d84f6e2c19ab07d4e5f8c6a3b2d1e0f9a8b7c6d5e4f3a2b1c0d9"
     }
   ],
   "ProjectType": 1
 }
 ```
 
-`IsCustomized` is metadata only. It does not provide a merge workflow, and `update` overwrites the file.
+`IsCustomized` is metadata only. It does not provide a merge workflow: `update` skips a file you have changed since the CLI wrote it, and `update --force` overwrites it.
 
 ### Which files does `init` create or update?
 
@@ -247,7 +248,7 @@ For standalone mode, check `~/.shellui/bin`. For npm mode, run `npm install`.
 
 ### How do I update the NuGet package?
 
-Pass the version explicitly:
+Run the same command again; without `--version` it moves the reference to the latest stable release:
 
 ```bash
 dotnet add package ShellUI.Components

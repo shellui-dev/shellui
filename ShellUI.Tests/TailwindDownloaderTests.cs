@@ -134,6 +134,7 @@ public class TailwindDownloaderTests : IDisposable
     [Theory]
     [InlineData("ShellUI-0.3.4.targets.txt")]
     [InlineData("ShellUI-0.4.0-alpha.1.targets.txt")]
+    [InlineData("ShellUI-0.4.0-alpha.3.targets.txt")]
     public void Update_ReplacesATargetsFileAnEarlierCliWrote(string fixture)
     {
         var path = WriteTargets(Fixture(fixture));

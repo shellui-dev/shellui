@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers CLI `0.4.0-alpha.3` (prerelease): it runs on .NET 8 or later (`0.4.0-alpha.3` itself needs .NET 10), sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 98 direct component targets. Some options, such as `--dashboard`, are not in the stable 0.3.4; see the [v0.3.4 reference](https://github.com/shellui-dev/shellui/blob/v0.3.4/docs/CLI_SYNTAX.md) for that version.
+This reference covers CLI `0.4.0`: it runs on .NET 8 or later, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 98 direct component targets. For 0.3, see the [v0.3.6 reference](https://github.com/shellui-dev/shellui/blob/v0.3.6/docs/CLI_SYNTAX.md).
 
 ## Command prefix
 
@@ -22,6 +22,7 @@ shellui list [--installed|--available]
 shellui remove <name...>
 shellui update [name...] [--all] [--force]
 shellui doctor
+shellui migrate [name...] [--dry-run] [--yes]
 shellui theme init <url-or-id> [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
 shellui theme apply <url-or-id> [--emit-override <path>]
 shellui theme update
@@ -168,7 +169,7 @@ Names are separated by spaces. With no names, or with `--all`, every installed c
 - **Your changes are kept.** `shellui.json` records a hash of each file as the CLI wrote it. If a file has changed since, `update` skips it and says so; `--force` overwrites it. Files installed by a CLI older than 0.4.0-alpha.2 have no hash, so for those `update` keeps the blocks apps are meant to edit (`app-sidebar`, `sidebar-account`, the `dashboard-*` and `auth-*` layouts) when they differ from the template, and rewrites everything else.
 - **New dependencies are installed.** When a component gained dependencies since you installed it (for example `tabs` now needs `tab-models`), `update` adds them, with their NuGet packages and `_Imports.razor` usings, the same way `add` does.
 
-`update` has no diff or merge. Commit before updating so you can review the changes.
+`update` has no diff or merge. Commit before updating so you can review the changes. When a template's API changed, run `shellui migrate` afterwards to update your pages.
 
 ## `doctor`
 
@@ -187,6 +188,29 @@ shellui doctor
 - The project doesn't use the `ShellUI.Components` package and CLI-installed components together.
 
 It exits with code 1 when it finds a problem, so it can run in CI. Warnings, such as a stale `app.css`, don't change the exit code. In a Razor class library it skips the host page checks, which apply to each app that uses the library.
+
+## `migrate`
+
+Rewrites your own pages for template API changes listed in the release notes, after `shellui update` has replaced the components:
+
+```bash
+shellui migrate --dry-run
+shellui migrate
+shellui migrate date-picker pagination
+shellui migrate --yes
+```
+
+It reads the project's `.razor` and `.cs` files (not the installed components under `ComponentsPath`, or `bin`, `obj` and `node_modules`), shows each changed line, and asks before writing. `--dry-run` only shows the changes; `--yes` writes them without asking, and is required when the terminal isn't interactive. With no names it runs every migration.
+
+| Name | Change |
+|---|---|
+| `input` | `Input.InputVariant.Error` → `InputVariant.Error` (0.4.0-alpha.3) |
+| `date-picker` | `SelectedDate`, `SelectedDateChanged` and `@bind-SelectedDate` → `Value`, `ValueChanged` and `@bind-Value`, on `<DatePicker>` only (0.4.0-alpha.3) |
+| `time-picker` | the same for `<TimePicker>`'s `SelectedTime` (0.4.0-alpha.3) |
+| `pagination` | `OnPageChange` → `CurrentPageChanged`, except on a tag that already uses `@bind-CurrentPage` (0.4.0-alpha.3) |
+| `calendar` | Reports handlers of `Calendar.SelectedDateChanged` that take a `DateTime`; they need a `DateTime?` since 0.4.0-alpha.1. Nothing is rewritten. |
+
+Commit first, then build the app afterwards.
 
 ## `theme`
 
@@ -282,16 +306,17 @@ Representative fields look like this:
   "InstalledComponents": [
     {
       "Name": "button",
-      "Version": "0.4.0-alpha.3",
+      "Version": "0.4.0",
       "InstalledAt": "2026-01-01T00:00:00Z",
-      "IsCustomized": false
+      "IsCustomized": false,
+      "Hash": "3b1f9c0e7a52d84f6e2c19ab07d4e5f8c6a3b2d1e0f9a8b7c6d5e4f3a2b1c0d9"
     }
   ],
   "ProjectType": 1
 }
 ```
 
-`ProjectType` is serialized as the enum value; `1` is `BlazorServer`. `IsCustomized` is metadata, not a merge mechanism. `update` still overwrites the file.
+`ProjectType` is serialized as the enum value; `1` is `BlazorServer`. `Hash` is what `update` compares the file with to spot your changes (entries written before 0.4.0-alpha.2 have none), and `update` sets `IsCustomized` on a file it skips for that reason. Neither is a merge mechanism; `update --force` still overwrites the file.
 
 ## Common workflow
 
