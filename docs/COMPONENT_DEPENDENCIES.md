@@ -29,7 +29,8 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `callout` | `callout-variants` | — |
 | `card` | `card-header`, `card-title`, `card-description`, `card-content`, `card-footer` | — |
 | `carousel` | `carousel-item`, `carousel-content`, `carousel-previous`, `carousel-next`, `carousel-dots`, `carousel-list`, `carousel-slide` | — |
-| `chart` | `chart-variants`, `chart-styles` | `Blazor-ApexCharts` `6.0.2` |
+| `chart` | `chart-variants`, `chart-styles`, `chart-frame` | `ShellCharts.Blazor` `0.1.0-alpha` |
+| `chart-frame` | `chart-variants`, `chart-styles` | `ShellCharts.Blazor` `0.1.0-alpha` |
 | `chart-series` | `chart` | — |
 | `chat` | `chat-message`, `chat-input` | — |
 | `collapsible` | `collapsible-trigger`, `collapsible-content` | — |

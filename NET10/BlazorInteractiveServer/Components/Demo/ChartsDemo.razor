@@ -1,6 +1,5 @@
 @using BlazorInteractiveServer.Components.UI
 @using BlazorInteractiveServer.Components.UI.Variants
-@using ApexCharts
 
 <section class="border border-border rounded-lg p-6 bg-card">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Bar Chart</h2>
@@ -49,21 +48,19 @@
 
 <section class="border border-border rounded-lg p-6 bg-card mt-6">
     <h2 class="text-2xl font-semibold mb-4 text-card-foreground">Multi-Series Chart</h2>
-    <MultiSeriesChart TItem="SalesData"
+    <MultiSeriesChart TItem="MonthlyResult"
+                       Data="Results"
+                       XValue="e => e.Month"
                        Title="Revenue vs Profit"
                        Height="300px">
-        <ChartSeries TItem="SalesData"
-                     Data="SalesData"
+        <ChartSeries TItem="MonthlyResult"
                      Name="Revenue"
                      SeriesType="SeriesType.Bar"
-                     XValue="e => e.Month"
-                     YValue="e => e.Amount" />
-        <ChartSeries TItem="SalesData"
-                     Data="ProfitData"
+                     YValue="e => e.Revenue" />
+        <ChartSeries TItem="MonthlyResult"
                      Name="Profit"
                      SeriesType="SeriesType.Line"
-                     XValue="e => e.Month"
-                     YValue="e => e.Amount" />
+                     YValue="e => e.Profit" />
     </MultiSeriesChart>
 </section>
 
@@ -138,11 +135,12 @@
 
 @code {
     private List<SalesData> SalesData { get; set; } = new();
-    private List<SalesData> ProfitData { get; set; } = new();
+    private List<MonthlyResult> Results { get; set; } = new();
     private List<CategoryData> CategoryData { get; set; } = new();
     private List<SkillItem> Skills { get; set; } = new();
     private List<ProgressItem> Progress { get; set; } = new();
 
+    public class MonthlyResult { public string Month { get; set; } = ""; public decimal Revenue { get; set; } public decimal Profit { get; set; } }
     public class SkillItem { public string Skill { get; set; } = ""; public decimal Level { get; set; } }
     public class ProgressItem { public string Label { get; set; } = ""; public decimal Value { get; set; } }
 
@@ -158,14 +156,15 @@
             new SalesData { Month = "Jun", Amount = 220 }
         };
 
-        ProfitData = new List<SalesData>
+        // Every series in a multi-series chart reads the same items, one per month.
+        Results = new List<MonthlyResult>
         {
-            new SalesData { Month = "Jan", Amount = 40 },
-            new SalesData { Month = "Feb", Amount = 50 },
-            new SalesData { Month = "Mar", Amount = 60 },
-            new SalesData { Month = "Apr", Amount = 70 },
-            new SalesData { Month = "May", Amount = 55 },
-            new SalesData { Month = "Jun", Amount = 80 }
+            new MonthlyResult { Month = "Jan", Revenue = 120, Profit = 40 },
+            new MonthlyResult { Month = "Feb", Revenue = 150, Profit = 50 },
+            new MonthlyResult { Month = "Mar", Revenue = 180, Profit = 60 },
+            new MonthlyResult { Month = "Apr", Revenue = 200, Profit = 70 },
+            new MonthlyResult { Month = "May", Revenue = 170, Profit = 55 },
+            new MonthlyResult { Month = "Jun", Revenue = 220, Profit = 80 }
         };
 
         CategoryData = new List<CategoryData>

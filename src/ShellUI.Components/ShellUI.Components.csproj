@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.1" />
-    <PackageReference Include="Blazor-ApexCharts" Version="6.0.2" />
+    <PackageReference Include="ShellCharts.Blazor" Version="0.1.0-alpha" />
     <PackageReference Include="QRCoder" Version="1.8.0" />
   </ItemGroup>
 

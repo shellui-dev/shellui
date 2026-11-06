@@ -8,50 +8,29 @@ public class RadarChartTemplate
     {
         Name = "radar-chart",
         DisplayName = "Radar Chart",
-        Description = "Radar chart component using ApexCharts with ShellUI theming",
+        Description = "Radar chart component using ShellCharts with ShellUI theming",
         Category = ComponentCategory.DataDisplay,
         FilePath = "RadarChart.razor",
         Dependencies = new List<string> { "chart" },
-        Tags = new List<string> { "chart", "radar", "data", "visualization", "apexcharts" }
+        Tags = new List<string> { "chart", "radar", "data", "visualization", "shellcharts" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using ApexCharts
+@using ShellCharts
 @inherits Chart<TItem>
-@typeparam TItem where TItem : class
+@typeparam TItem
 
-<div class=""@ComputedClass border border-border bg-card text-card-foreground overflow-hidden [border-radius:var(--radius)] [box-shadow:var(--shadow)]"" data-chart-theme=""@Theme.ToString().ToLower()"">
-    <ApexChart TItem=""TItem""
-               Title=""@Title""
-               Options=""@ChartOptions""
-               Height=""@Height""
-               Width=""@Width"">
-        <ApexPointSeries TItem=""TItem""
-                         Items=""Data""
-                         Name=""@Name""
-                         SeriesType=""SeriesType.Radar""
-                         XValue=""@XValue""
-                         YValue=""@YValue"" />
-    </ApexChart>
-</div>
-
-@code {
-    [Parameter] public IEnumerable<TItem>? Data { get; set; }
-    [Parameter] public string Name { get; set; } = ""Data"";
-    [Parameter] public Func<TItem, object>? XValue { get; set; }
-    [Parameter] public Func<TItem, decimal?>? YValue { get; set; }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        // Radar tooltips only trigger per point, and without FollowCursor they are pinned to the top of the chart.
-        if (ChartOptions.Tooltip != null)
+<ChartFrame Title=""@Title"" Subtitle=""@Subtitle"" Class=""@Class"" Width=""@Width"" Theme=""Theme"">
+    <ChartContainer Data=""Data"" Height=""PlotHeight"" AriaLabel=""@(Title ?? Name)"">
+        <PolarGrid />
+        <PolarAngleAxis TItem=""TItem"" DataKey=""Category"" />
+        <Radar TItem=""TItem"" DataKey=""Value"" Name=""@Name"" />
+        <ChartTooltip />
+        @if (ShowLegend)
         {
-            ChartOptions.Tooltip.Shared = false;
-            ChartOptions.Tooltip.Intersect = true;
-            ChartOptions.Tooltip.FollowCursor = true;
+            <ChartLegend />
         }
-    }
-}
+    </ChartContainer>
+</ChartFrame>
 ";
 }

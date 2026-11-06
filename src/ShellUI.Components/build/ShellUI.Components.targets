@@ -490,13 +490,6 @@
     <ShellUISafelistEntry Include="shadow-md" />
     <ShellUISafelistEntry Include="shadow-sm" />
     <ShellUISafelistEntry Include="shadow-xl" />
-    <ShellUISafelistEntry Include="shellui-chart-tooltip" />
-    <ShellUISafelistEntry Include="shellui-chart-tooltip-body" />
-    <ShellUISafelistEntry Include="shellui-chart-tooltip-label" />
-    <ShellUISafelistEntry Include="shellui-chart-tooltip-marker" />
-    <ShellUISafelistEntry Include="shellui-chart-tooltip-row" />
-    <ShellUISafelistEntry Include="shellui-chart-tooltip-title" />
-    <ShellUISafelistEntry Include="shellui-chart-tooltip-value" />
     <ShellUISafelistEntry Include="shellui-loading" />
     <ShellUISafelistEntry Include="shrink-0" />
     <ShellUISafelistEntry Include="size-4" />
@@ -602,8 +595,6 @@
     <ShellUISafelistEntry Include="translate-x-px" />
     <ShellUISafelistEntry Include="translate-y-[-50%]" />
     <ShellUISafelistEntry Include="underline-offset-4" />
-    <ShellUISafelistEntry Include="var(--border" />
-    <ShellUISafelistEntry Include="var(--muted" />
     <ShellUISafelistEntry Include="var(--sidebar-width" />
     <ShellUISafelistEntry Include="var(--sidebar-width-icon" />
     <ShellUISafelistEntry Include="w-1.5" />

@@ -91,7 +91,7 @@ jobs:
 
         shellui add chart pie-chart dashboard-02 data-table --force
 
-        grep -q 'Blazor-ApexCharts' SmokeApp.csproj || (echo "shellui add chart did not add Blazor-ApexCharts NuGet dep"; exit 1)
+        grep -q 'ShellCharts.Blazor' SmokeApp.csproj || (echo "shellui add chart did not add the ShellCharts.Blazor NuGet dep"; exit 1)
         grep -q 'System.Linq.Dynamic.Core' SmokeApp.csproj || (echo "shellui add data-table did not add System.Linq.Dynamic.Core NuGet dep"; exit 1)
 
         test -f Components/UI/Models/DataTableModels.cs || (echo "shellui add data-table did not install data-table-models"; exit 1)
