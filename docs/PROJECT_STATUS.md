@@ -57,7 +57,6 @@ The direct-target count is the number shown by the normal public list. The hidde
 - Both standalone and npm Tailwind workflows are implemented.
 - The generated MSBuild integration rebuilds the configured CSS during a consumer build.
 - `theme init`, `theme apply`, and `theme update` are current commands, not planned features.
-- The CLI's npm setup currently invokes npm through `cmd`; standalone mode is the portable path for non-Windows contributors.
 
 ### Tests and CI
 

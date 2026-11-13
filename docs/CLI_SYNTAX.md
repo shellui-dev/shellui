@@ -69,7 +69,7 @@ In apps created with `--auth Individual`, `init` renders the `/Account` pages st
 
 With `--dashboard`, `init` then runs `shellui add dashboard-02` (or `dashboard-01`), including the layout wiring described under [Dashboard layouts](#dashboard-layouts).
 
-Standalone mode downloads the Tailwind executable once per machine into `~/.shellui/bin` (set `SHELLUI_CACHE_DIR` to move it), and every project builds with that copy; a copy in a project's `.shellui/bin/` takes precedence. If the download fails, `init` still completes and the build retries it. npm mode installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm. The current CLI invokes npm through `cmd`; use standalone mode on non-Windows systems or run npm manually.
+Standalone mode downloads the Tailwind executable once per machine into `~/.shellui/bin` (set `SHELLUI_CACHE_DIR` to move it), and every project builds with that copy; a copy in a project's `.shellui/bin/` takes precedence. If the download fails, `init` still completes and the build retries it. npm mode installs `tailwindcss@^4.3.2` and `@tailwindcss/cli@^4.3.2` and requires Node.js and npm.
 
 ## `add`
 

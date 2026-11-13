@@ -50,7 +50,7 @@ dotnet watch
 
 `init` options:
 
-- `--tailwind standalone|npm` selects how Tailwind is installed. `standalone` needs no Node.js. npm mode runs npm through `cmd`, so it only works on Windows.
+- `--tailwind standalone|npm` selects how Tailwind is installed. `standalone` needs no Node.js. npm mode needs Node.js and npm.
 - `--yes` runs without prompts; Tailwind defaults to `standalone`.
 - `--force` re-initializes a project that already has `shellui.json`.
 - `--dashboard 02|01|none` sets up a dashboard layout (sticky or scrolling header) and makes it the default layout. Without the option, `init` asks; `--yes` alone means none.
