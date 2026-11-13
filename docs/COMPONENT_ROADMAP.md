@@ -2,7 +2,7 @@
 
 **Goal:** Build the components and tooling needed for a Tailwind-first Blazor design system.
 
-.NET 8, 9 and 10 · Tailwind CSS `4.3.2`
+.NET 8, 9, 10 and 11 · Tailwind CSS `4.3.2`
 
 ## Current inventory
 

@@ -4,7 +4,7 @@ This is a qualitative comparison, not a benchmark report. Library features, pack
 
 ## Current ShellUI snapshot
 
-- **Target framework:** .NET 8, 9 and 10
+- **Target framework:** .NET 8, 9, 10 and 11
 - **Tailwind CSS:** `4.3.2`
 - **CLI inventory:** 98 direct targets, 254 registry entries, and 156 hidden entries
 - **Distribution:** the CLI copies source into an application; the repository also contains the packable `ShellUI.Components` package
@@ -52,7 +52,7 @@ Choose ShellUI when the project benefits from:
 - Direct ownership and editing of copied Blazor component source
 - Tailwind CSS as the styling foundation
 - A CLI workflow similar to copy-based component libraries
-- Component source for .NET 8, 9 and 10 projects that can be adapted for a particular application
+- Component source for .NET 8, 9, 10 and 11 projects that can be adapted for a particular application
 - Explicit control over generated code and dependencies
 
 These are workflow and architecture characteristics, not a claim that ShellUI has more features, better performance, or broader compatibility than every packaged library.

@@ -7,7 +7,7 @@ This document describes the ShellUI source tree.
 | Area | Current value |
 |---|---|
 | Version | See `Directory.Build.props` |
-| Target framework | .NET 8 and .NET 10 (`net8.0;net10.0`); `ShellUI.Components` also `net9.0` |
+| Target framework | .NET 8 and .NET 10 (`net8.0;net10.0`); `ShellUI.Components` also `net9.0` and `net11.0` |
 | Tailwind CSS | `4.3.2` |
 | Solution | `ShellUI.slnx` |
 | Solution projects | 6 |
@@ -116,7 +116,7 @@ A dependency entry is still real source and is written to the consumer project w
 
 ## Build and Test Flow
 
-The repository uses the .NET 10 SDK selected by `global.json`. Node.js is optional: standalone Tailwind uses the downloaded CLI, while the npm method requires Node.js.
+The repository uses the .NET 11 SDK selected by `global.json`. Node.js is optional: standalone Tailwind uses the downloaded CLI, while the npm method requires Node.js.
 
 ```bash
 dotnet restore ShellUI.slnx

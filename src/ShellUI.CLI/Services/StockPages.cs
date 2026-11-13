@@ -7,7 +7,7 @@ namespace ShellUI.CLI.Services;
 // init removes Bootstrap; unmodified sample pages get ShellUI's Tailwind classes and edited ones are only reported.
 public static class StockPages
 {
-    // `dotnet new blazor` pages for net8.0/net9.0/net10.0 across --interactivity, --all-interactive and --auth.
+    // `dotnet new blazor` pages for net8.0 through net11.0 across --interactivity, --all-interactive and --auth.
     private static readonly Dictionary<string, HashSet<string>> StockHashes = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Home.razor"] = new(StringComparer.Ordinal) { "ae4681c90c84510d13bf2a66fdb86d78d60412cfec5e611c9c226d79592229a2" },
@@ -25,9 +25,15 @@ public static class StockPages
             "b9246ba86447cae02e41128b1438eb45ccaf1084369acab794a174778a78e675",
             "cbe95cabef0a65002c4f180c812f2de1bc1e526a779b4906a4ae122db232e5bc",
             "f28be79c3d24e11bc2687974c27fb4814c2647305146bfca44fc5be29469baf9",
-            "febc623de76daa44cf9e05497c9f938fd999b0952daba5080d5b1cda20ca8b63"
+            "febc623de76daa44cf9e05497c9f938fd999b0952daba5080d5b1cda20ca8b63",
+            "52e4764a2f5c9b498572848bc0898e2ac1d946d35854eaf6d4d4b89db070ad26",
+            "8717f449bdea57046bd63c2adeffe07dd2c8efcd8454268ab4b71cdfebc13055"
         },
-        ["Error.razor"] = new(StringComparer.Ordinal) { "0401924993372cfaa232b06ab63e5d91e1e6bf14618244c6c92df5124d6ca109" },
+        ["Error.razor"] = new(StringComparer.Ordinal)
+        {
+            "0401924993372cfaa232b06ab63e5d91e1e6bf14618244c6c92df5124d6ca109",
+            "4ee858935ce2d7edced5314d898b4f37e790203ded744edd5cc9028695568127"
+        },
         ["NotFound.razor"] = new(StringComparer.Ordinal) { "de247b81953d245d07af36d09e794f44ffda9fffe73e9fd39387ed93ceb8653e" },
         ["Auth.razor"] = new(StringComparer.Ordinal)
         {

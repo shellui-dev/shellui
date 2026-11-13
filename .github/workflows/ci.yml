@@ -27,6 +27,7 @@ jobs:
         dotnet-version: |
           8.0.x
           10.0.x
+          11.0.x
 
     - name: Restore dependencies
       run: dotnet restore ShellUI.slnx
@@ -121,6 +122,7 @@ jobs:
         grep -q 'typeof(Layout.DashboardLayout02)' Components/Routes.razor || (echo "init --dashboard 02 did not switch Routes.razor"; exit 1)
         test ! -e Components/Layout/MainLayout.razor || (echo "stock MainLayout.razor was not removed"; exit 1)
         test ! -e Components/Layout/NavMenu.razor || (echo "stock NavMenu.razor was not removed"; exit 1)
+        test ! -e Components/Layout/NavMenu.razor.js || (echo "stock NavMenu.razor.js (.NET 11) was not removed"; exit 1)
         grep -q 'id="blazor-error-ui"' Components/App.razor || (echo "the error bar was not added to App.razor"; exit 1)
         grep -q '"/counter"' Components/UI/AppSidebar.razor || (echo "AppSidebar links were not built from the pages"; exit 1)
         dotnet build -c Debug
@@ -146,9 +148,13 @@ jobs:
         print(" ".join(names))
         PY
         )
-        # The CLI's source must build in .NET 8 and 9 projects too, and hyphenated names test the namespace sanitizing.
-        for fw in net10.0 net9.0 net8.0; do
-          cd "$TMPDIR/app"
+        # The CLI's source must build in .NET 8, 9 and 10 projects too, and hyphenated names test the namespace sanitizing.
+        # The .NET 11 SDK's template only creates net11.0 apps, so the older ones use the .NET 10 SDK.
+        for fw in net11.0 net10.0 net9.0 net8.0; do
+          mkdir -p "$TMPDIR/app/$fw" && cd "$TMPDIR/app/$fw"
+          if [ "$fw" != net11.0 ]; then
+            echo '{ "sdk": { "version": "10.0.100", "rollForward": "latestFeature" } }' > global.json
+          fi
           dotnet new blazor -o "AllApp-$fw" -f "$fw" --no-restore
           cd "AllApp-$fw"
           shellui init --tailwind standalone --yes

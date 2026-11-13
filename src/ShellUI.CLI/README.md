@@ -6,7 +6,7 @@
 
 ## Install
 
-The tool runs on .NET 8 or later. The projects it sets up can target .NET 8, 9 or 10:
+The tool runs on .NET 8 or later. The projects it sets up can target .NET 8, 9, 10 or 11:
 
 ```bash
 dotnet tool install --global ShellUI.CLI

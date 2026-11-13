@@ -15,6 +15,9 @@ public class AccountPagesTests
     [InlineData("net10", "Shared/ManageNavMenu.razor")]
     [InlineData("net8", "Pages/Login.razor")]
     [InlineData("net8", "Shared/ManageLayout.razor")]
+    [InlineData("net10", "Pages/ForgotPassword.razor")]
+    [InlineData("net11", "Pages/Login.razor")]
+    [InlineData("net11", "Shared/StatusMessage.razor")]
     public void Restyle_RemovesBootstrapFromStockPages(string framework, string file)
     {
         var content = Fixture(framework, file);
