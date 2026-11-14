@@ -2,8 +2,10 @@
 <div class="@($"absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 {Class}")">
     @for (int i = 0; i < TotalSlides; i++)
     {
-        <button class="@($"h-2 w-2 rounded-full transition-colors {(i == CurrentSlide ? "bg-primary" : "bg-muted")}")"
-                @onclick="() => OnDotClick.InvokeAsync(i)">
+        // The click handler runs after the loop, so it needs its own copy of i.
+        var index = i;
+        <button class="@($"h-2 w-2 rounded-full transition-colors {(index == CurrentSlide ? "bg-primary" : "bg-muted")}")"
+                @onclick="() => OnDotClick.InvokeAsync(index)">
         </button>
     }
 </div>
