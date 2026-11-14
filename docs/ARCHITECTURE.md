@@ -87,7 +87,7 @@ The implemented command tree is:
 | `shellui theme apply <url-or-id>` | Apply a theme to `wwwroot/input.css` or emit a standalone override. |
 | `shellui theme update` | Re-fetch the theme recorded in `shellui.theme.lock`. |
 
-`init` accepts `--force`, `--style`, `--tailwind standalone|npm`, `--yes`, `--dashboard 01|02|none`, and `--replace-layout`. `add` accepts space- or comma-separated component names, `--force`, `--replace-layout`, and `--except`. The command surface above is the current implementation; commands not listed here are not part of the current CLI.
+`init` accepts `--force`, `--tailwind standalone|npm`, `--yes`, `--dashboard 01|02|none`, and `--replace-layout`. `add` accepts space- or comma-separated component names, `--force`, `--replace-layout`, and `--except`. The command surface above is the current implementation; commands not listed here are not part of the current CLI.
 
 ## Registry Model and Counts
 

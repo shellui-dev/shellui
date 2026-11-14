@@ -44,7 +44,7 @@ The default standalone method downloads the Tailwind 4.3.2 standalone executable
 shellui init --tailwind npm --yes
 ```
 
-Other initialization options include `--style`, `--force`, `--yes`, `--dashboard` and `--replace-layout`.
+Other initialization options include `--force`, `--yes`, `--dashboard` and `--replace-layout`.
 
 ### Add and manage components
 

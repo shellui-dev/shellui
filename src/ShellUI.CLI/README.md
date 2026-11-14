@@ -55,7 +55,6 @@ dotnet watch
 - `--force` re-initializes a project that already has `shellui.json`.
 - `--dashboard 02|01|none` sets up a dashboard layout (sticky or scrolling header) and makes it the default layout. Without the option, `init` asks; `--yes` alone means none.
 - `--replace-layout` switches to the dashboard even when the app has a custom layout.
-- `--style` is recorded in `shellui.json`. All styles currently install the same templates.
 
 `add` accepts names separated by spaces or commas, and `--force` overwrites existing files. `add all` installs every component except the layout blocks (`dashboard-*`, `auth-*`), and `--except <names...>` leaves out components and everything that needs them. `update` skips files you have changed since the CLI wrote them; `update --force` and `add --force` overwrite your copies, so commit customized components first. After `update`, `migrate` rewrites your own pages for template API changes (`--dry-run` to only show them, `--yes` to skip the prompt). `add dashboard-01` or `add dashboard-02` also makes the dashboard the default layout and builds its sidebar links from your pages. `remove` deletes a layout block's file from `Components/Layout/` and lists the files that still use it, such as `Routes.razor`.
 

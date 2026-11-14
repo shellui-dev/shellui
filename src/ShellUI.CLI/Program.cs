@@ -48,8 +48,7 @@ class Program
         command.AddArgument(urlArg);
 
         var forceOpt = new Option<bool>("--force", "Reinitialize even if already initialized");
-        var styleOpt = new Option<string>("--style", getDefaultValue: () => "default",
-            "Component style: default, new-york, minimal");
+        var styleOpt = CreateStyleOption();
         var tailwindOpt = new Option<string?>("--tailwind", "Tailwind method: standalone (default with --yes) or npm");
         var yesOpt = new Option<bool>("--yes", "Non-interactive mode with default options");
         var dashboardOpt = CreateDashboardOption();
@@ -85,6 +84,12 @@ class Program
     static Option<string?> CreateDashboardOption() => new(
         "--dashboard",
         "Set up the dashboard layout: 02 (sticky header), 01 (scrolling header) or none. Prompts when omitted; --yes alone means none");
+
+    // ShellUI has one style, so --style changes nothing; it's still accepted so existing scripts keep working.
+    static Option<string> CreateStyleOption() => new("--style", getDefaultValue: () => "default", "Has no effect")
+    {
+        IsHidden = true
+    };
 
     static Option<bool> CreateReplaceLayoutOption() => new(
         "--replace-layout",
@@ -185,10 +190,7 @@ class Program
         var forceOption = new Option<bool>(
             "--force",
             "Reinitialize even if already initialized");
-        var styleOption = new Option<string>(
-            "--style",
-            getDefaultValue: () => "default",
-            "Choose component style (default, new-york, minimal)");
+        var styleOption = CreateStyleOption();
         var tailwindOption = new Option<string?>(
             "--tailwind",
             "Choose Tailwind method: standalone (default with --yes) or npm");
