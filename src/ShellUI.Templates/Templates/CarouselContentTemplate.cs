@@ -15,15 +15,6 @@ public static class CarouselContentTemplate
         Tags = new List<string> { "carousel", "content", "wrapper" }
     };
 
-    public const string Content = """
-<div class="@($"relative flex w-full {Class}")">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string Class { get; set; } = string.Empty;
-}
-""";
+    public static string Content => ComponentSource.Read("Components/CarouselContent.razor");
 }
 
