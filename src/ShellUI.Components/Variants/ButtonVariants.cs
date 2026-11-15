@@ -40,12 +40,12 @@ public static class ButtonVariants
         { ButtonSize.Icon, "h-10 w-10" }
     };
 
-    public static string Get(ButtonVariant variant = ButtonVariant.Default, 
-                             ButtonSize size = ButtonSize.Default, 
+    public static string Get(ButtonVariant variant = ButtonVariant.Default,
+                             ButtonSize size = ButtonSize.Default,
                              string? className = null)
     {
         var baseClasses = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
-        
+
         return Shell.Cn(
             baseClasses,
             VariantClasses.GetValueOrDefault(variant, VariantClasses[ButtonVariant.Default]),
@@ -54,4 +54,3 @@ public static class ButtonVariants
         );
     }
 }
-

@@ -15,53 +15,7 @@ public static class TextareaTemplate
         Dependencies = new List<string> { "textarea-variants" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using YourProjectNamespace.Components.UI.Variants
-
-<textarea
-    value=""@Value""
-    placeholder=""@Placeholder""
-    disabled=""@Disabled""
-    readonly=""@ReadOnly""
-    class=""@ComputedClass""
-    @attributes=""AdditionalAttributes""
-    @oninput=""HandleInput""
-    @onfocus=""HandleFocus""
-    @onblur=""HandleBlur""></textarea>
-
-@code {
-    [Parameter] public InputVariant Variant { get; set; } = InputVariant.Default;
-    [Parameter] public string Value { get; set; } = """";
-    [Parameter] public string Placeholder { get; set; } = """";
-    [Parameter] public bool Disabled { get; set; }
-    [Parameter] public bool ReadOnly { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter] public EventCallback<string> ValueChanged { get; set; }
-    [Parameter] public EventCallback<FocusEventArgs> OnFocus { get; set; }
-    [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private string ComputedClass => TextareaVariants.Get(Variant, Class);
-
-    private async Task HandleInput(ChangeEventArgs e)
-    {
-        var newValue = e.Value?.ToString() ?? """";
-        Value = newValue;
-        await ValueChanged.InvokeAsync(newValue);
-    }
-
-    private async Task HandleFocus(FocusEventArgs e)
-    {
-        await OnFocus.InvokeAsync(e);
-    }
-
-    private async Task HandleBlur(FocusEventArgs e)
-    {
-        await OnBlur.InvokeAsync(e);
-    }
-}
-";
+    public static string Content => ComponentSource.Read("Components/Textarea.razor", variantsNamespace: true);
 }
 
 

@@ -15,17 +15,5 @@ public static class CommandModelsTemplate
         Dependencies = new List<string>()
     };
 
-    public static string Content => @"namespace YourProjectNamespace.Components.Models;
-
-public class CommandItem
-{
-    public string Title { get; set; } = """";
-    public string? Description { get; set; }
-    public string? Icon { get; set; }
-    public string? Shortcut { get; set; }
-    public string? Group { get; set; }
-    public Func<Task>? Action { get; set; }
-}
-
-";
+    public static string Content => ComponentSource.Read("Models/CommandModels.cs");
 }

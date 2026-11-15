@@ -15,26 +15,7 @@ public static class ProgressTemplate
         Dependencies = new List<string>()
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@Shell.Cn(""relative w-full overflow-hidden rounded-full bg-secondary"", Class)"" style=""height: @Height"" @attributes=""AdditionalAttributes"">
-    <div class=""h-full bg-primary transition-all"" style=""width: @(Math.Clamp(Value, 0, 100))%""></div>
-</div>
-
-@code {
-    [Parameter]
-    public int Value { get; set; } = 0;
-
-    [Parameter]
-    public string Height { get; set; } = ""0.5rem"";
-
-    [Parameter]
-    public string? Class { get; set; }
-
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/Progress.razor");
 }
 
 
