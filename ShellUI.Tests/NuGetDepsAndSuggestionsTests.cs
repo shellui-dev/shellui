@@ -59,11 +59,11 @@ public class NuGetDependenciesTests
     }
 
     [Fact]
-    public void Chart_DeclaresBlazorApexCharts()
+    public void Chart_DeclaresShellCharts()
     {
         var metadata = ComponentRegistry.GetMetadata("chart");
         Assert.NotNull(metadata);
-        Assert.Contains(metadata!.NuGetDependencies, p => p.PackageId == "Blazor-ApexCharts");
+        Assert.Contains(metadata!.NuGetDependencies, p => p.PackageId == "ShellCharts.Blazor");
     }
 
     [Theory]
@@ -75,7 +75,7 @@ public class NuGetDependenciesTests
     [InlineData("area-chart")]
     [InlineData("line-chart")]
     [InlineData("multi-series-chart")]
-    public void ChartVariants_TransitivelyPullInBlazorApexCharts(string componentName)
+    public void ChartTypes_TransitivelyPullInShellCharts(string componentName)
     {
         // Chart types get the NuGet package through their `chart` dependency.
         var metadata = ComponentRegistry.GetMetadata(componentName);

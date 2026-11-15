@@ -35,7 +35,7 @@ public class TemplateCompileTests
     }
 
     [Theory]
-    [InlineData("pie-chart")]
+    [InlineData("chart")]
     [InlineData("dashboard-02")]
     [InlineData("button")]
     [InlineData("dialog")]
@@ -194,7 +194,7 @@ public class TemplateCompileTests
 
     private static readonly (string Namespace, string Package)[] ThirdPartyNamespaces =
     {
-        ("ApexCharts", "Blazor-ApexCharts"),
+        ("ShellCharts", "ShellCharts.Blazor"),
         ("System.Linq.Dynamic.Core", "System.Linq.Dynamic.Core")
     };
 

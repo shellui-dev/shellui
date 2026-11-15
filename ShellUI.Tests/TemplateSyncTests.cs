@@ -30,9 +30,6 @@ public class TemplateSyncTests
     [InlineData("multi-select", "MultiSelect.razor")]
     [InlineData("tag-input", "TagInput.razor")]
     [InlineData("command-palette", "CommandPalette.razor")]
-    [InlineData("donut-chart", "DonutChart.razor")]
-    [InlineData("radar-chart", "RadarChart.razor")]
-    [InlineData("radial-chart", "RadialChart.razor")]
     [InlineData("kbd", "Kbd.razor")]
     [InlineData("aspect-ratio", "AspectRatio.razor")]
     [InlineData("button-group", "ButtonGroup.razor")]
@@ -264,6 +261,29 @@ public class TemplateSyncTests
         Assert.True(normalizedLive == normalizedTemplate,
             $"Markup drift between live {razorFileName} and template {templateName}.\n\n" +
             DiffSummary(normalizedLive, normalizedTemplate));
+    }
+
+    // The charts are mostly markup with no @code block, so the whole file must match.
+    [Theory]
+    [InlineData("chart", "Chart.razor")]
+    [InlineData("chart-frame", "ChartFrame.razor")]
+    [InlineData("chart-series", "ChartSeries.razor")]
+    [InlineData("line-chart", "LineChart.razor")]
+    [InlineData("area-chart", "AreaChart.razor")]
+    [InlineData("bar-chart", "BarChart.razor")]
+    [InlineData("pie-chart", "PieChart.razor")]
+    [InlineData("donut-chart", "DonutChart.razor")]
+    [InlineData("radar-chart", "RadarChart.razor")]
+    [InlineData("radial-chart", "RadialChart.razor")]
+    [InlineData("multi-series-chart", "MultiSeriesChart.razor")]
+    public void ChartTemplate_MatchesLiveLibrary(string templateName, string razorFileName)
+    {
+        var projectNamespaces = new Regex(@"^\s*@(namespace|using)\s+(ShellUI|YourProjectNamespace)\.\S*\s*$", RegexOptions.Multiline);
+        var live = Normalize(projectNamespaces.Replace(File.ReadAllText(GetLiveRazorPath(razorFileName)), string.Empty));
+        var template = Normalize(projectNamespaces.Replace(ComponentRegistry.GetComponentContent(templateName)
+            ?? throw new InvalidOperationException($"Template '{templateName}' not found in registry"), string.Empty));
+
+        Assert.True(live == template, $"Drift between live {razorFileName} and template {templateName}.\n\n" + DiffSummary(live, template));
     }
 
     [Fact]

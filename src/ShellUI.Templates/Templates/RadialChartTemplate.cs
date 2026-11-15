@@ -8,38 +8,28 @@ public class RadialChartTemplate
     {
         Name = "radial-chart",
         DisplayName = "Radial Chart",
-        Description = "Radial bar chart component using ApexCharts with ShellUI theming",
+        Description = "Radial bar chart component using ShellCharts with ShellUI theming",
         Category = ComponentCategory.DataDisplay,
         FilePath = "RadialChart.razor",
         Dependencies = new List<string> { "chart" },
-        Tags = new List<string> { "chart", "radial", "data", "visualization", "apexcharts" }
+        Tags = new List<string> { "chart", "radial", "data", "visualization", "shellcharts" }
     };
 
     public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using ApexCharts
+@using ShellCharts
 @inherits Chart<TItem>
-@typeparam TItem where TItem : class
+@typeparam TItem
 
-<div class=""@ComputedClass border border-border bg-card text-card-foreground overflow-hidden [border-radius:var(--radius)] [box-shadow:var(--shadow)]"" data-chart-theme=""@Theme.ToString().ToLower()"">
-    <ApexChart TItem=""TItem""
-               Title=""@Title""
-               Options=""@ChartOptions""
-               Height=""@Height""
-               Width=""@Width"">
-        <ApexPointSeries TItem=""TItem""
-                         Items=""Data""
-                         Name=""@Name""
-                         SeriesType=""SeriesType.RadialBar""
-                         XValue=""@XValue""
-                         YValue=""@YValue"" />
-    </ApexChart>
-</div>
-
-@code {
-    [Parameter] public IEnumerable<TItem>? Data { get; set; }
-    [Parameter] public string Name { get; set; } = ""Progress"";
-    [Parameter] public Func<TItem, object>? XValue { get; set; }
-    [Parameter] public Func<TItem, decimal?>? YValue { get; set; }
-}
+@* Values are percentages: 100 fills a ring. *@
+<ChartFrame Title=""@Title"" Subtitle=""@Subtitle"" Class=""@Class"" Width=""@Width"" Theme=""Theme"">
+    <ChartContainer Data=""Data"" Height=""PlotHeight"" AriaLabel=""@(Title ?? Name)"">
+        <RadialBar TItem=""TItem"" DataKey=""Value"" NameKey=""Category"" Name=""@Name"" Max=""100"" Background />
+        <ChartTooltip />
+        @if (ShowLegend)
+        {
+            <ChartLegend />
+        }
+    </ChartContainer>
+</ChartFrame>
 ";
 }
