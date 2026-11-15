@@ -1,6 +1,6 @@
 # ShellUI CLI Syntax
 
-This reference covers CLI `0.4.0`: it runs on .NET 8 or later, sets up Blazor projects on .NET 8, 9 and 10, uses Tailwind CSS `4.3.2`, and has 98 direct component targets. For 0.3, see the [v0.3.6 reference](https://github.com/shellui-dev/shellui/blob/v0.3.6/docs/CLI_SYNTAX.md).
+This reference covers CLI `0.4.0`: it runs on .NET 8 or later, sets up Blazor projects on .NET 8, 9, 10 and 11, uses Tailwind CSS `4.3.2`, and has 98 direct component targets. For 0.3, see the [v0.3.6 reference](https://github.com/shellui-dev/shellui/blob/v0.3.6/docs/CLI_SYNTAX.md).
 
 ## Command prefix
 
@@ -99,7 +99,7 @@ Some components need a NuGet package (`chart` needs `Blazor-ApexCharts`, `data-t
 
 - `Routes.razor` gets `DefaultLayout="typeof(Layout.DashboardLayout02)"`. Switching between the two dashboards is automatic.
 - If the app uses a custom layout, or a `MainLayout` that was modified, the CLI asks before switching. Without a terminal it leaves the layout alone and prints a hint; pass `--replace-layout` to switch anyway.
-- The stock `MainLayout` and `NavMenu` files (and their `.razor.css`) are deleted only when they are byte-identical to `dotnet new blazor` output for .NET 8, 9 or 10 and nothing else references them. Modified files are kept with a warning.
+- The stock `MainLayout` and `NavMenu` files (and their `.razor.css`, plus .NET 11's `NavMenu.razor.js`) are deleted only when they are byte-identical to `dotnet new blazor` output for .NET 8, 9, 10 or 11 and nothing else references them. Modified files are kept with a warning.
 - Pages that pin `@layout MainLayout`, such as the .NET 10 `NotFound` page, move to the dashboard layout.
 - The Blazor error bar (`blazor-error-ui`) moves from `MainLayout` into `App.razor`.
 - `AppSidebar` links are built from the app's `@page` routes. Parameterized routes, `/Account/*`, `/Error` and `/not-found` are skipped. Links you have edited are left alone.
@@ -125,7 +125,7 @@ shellui add auth-01
 Adding one:
 
 - Sets `@layout` in `Components/Account/Pages/_Imports.razor`, so those pages render without the dashboard sidebar. The account management pages under `Account/Manage` keep the app's layout. Adding another auth block switches to it.
-- Restyles the Identity pages that are unchanged from `dotnet new blazor` for .NET 8, 9 or 10 with ShellUI's button, input and alert styles. Pages you have edited are kept and listed.
+- Restyles the Identity pages that are unchanged from `dotnet new blazor` for .NET 8, 9, 10 or 11 with ShellUI's button, input and alert styles. Pages you have edited are kept and listed.
 
 The layouts show a placeholder logo and "My App"; edit the installed `AuthLayout0x.razor` to brand them.
 

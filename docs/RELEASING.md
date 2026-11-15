@@ -49,7 +49,7 @@ bash scripts/extract-release-notes.sh 0.4.0
 
 - If component CSS changed, regenerate the safelist (`dotnet run --project tools/ShellUI.SafelistGenerator -- …`, full command in VERSIONING_STRATEGY.md).
 - `pwsh ./prepare-release.ps1 -Version 0.4.0 -DryRun` (add `-Suffix alpha.1` for a prerelease) builds, tests and checks the notes section.
-- Pack both projects to a local folder, install the CLI from it into a tool path, and run `shellui init` and `shellui add` in fresh apps on .NET 8, 9 and 10 (all direct targets together, app named `my-app`).
+- Pack both projects to a local folder, install the CLI from it into a tool path, and run `shellui init` and `shellui add` in fresh apps on .NET 8, 9, 10 and 11 (all direct targets together, app named `my-app`).
 - Use the packed `ShellUI.Components` in a fresh app and click through the components the release changed, in light and dark mode.
 - Delete the local test packages from `~/.nuget/packages` afterwards, so later restores fetch the published ones.
 

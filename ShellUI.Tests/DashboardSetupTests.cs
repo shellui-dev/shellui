@@ -87,6 +87,9 @@ public class DashboardSetupTests
     [InlineData("net10", "NavMenu.razor.css")]
     [InlineData("net8", "MainLayout.razor")]
     [InlineData("net8", "NavMenu.razor")]
+    [InlineData("net11", "NavMenu.razor")]
+    [InlineData("net11", "NavMenu.razor.css")]
+    [InlineData("net11", "NavMenu.razor.js")]
     public void IsStockContent_RecognizesTemplateOutput_ForAnyProjectName(string framework, string file)
     {
         foreach (var name in new[] { "Contoso.Shop", "A", "App" })

@@ -15,6 +15,8 @@ public class StockPagesTests
     [InlineData("net10", "Weather.razor")]
     [InlineData("net10", "Error.razor")]
     [InlineData("net8", "Weather.razor")]
+    [InlineData("net11", "Weather.razor")]
+    [InlineData("net11", "Error.razor")]
     public void Restyle_ReplacesBootstrapInStockPages(string framework, string file)
     {
         var content = Fixture(framework, file);

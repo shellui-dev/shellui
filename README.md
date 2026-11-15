@@ -27,7 +27,7 @@
 | Latest stable (recommended) | `0.4.0` | Tailwind CSS `4.3.2` |
 | Previous stable | `0.3.6` | Patches come from `release/v0.3` |
 
-The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10. The `ShellUI.Components` NuGet package targets .NET 8, 9 and 10. (The 0.3 line and the 0.4 prereleases need .NET 10 for both.)
+The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9, 10 and 11. The `ShellUI.Components` NuGet package targets .NET 8, 9, 10 and 11. (The 0.3 line and the 0.4 prereleases need .NET 10 for both.)
 
 This README and `docs/` describe `0.4.0`. For 0.3, read the [v0.3.6 docs](https://github.com/shellui-dev/shellui/tree/v0.3.6).
 
@@ -46,7 +46,7 @@ ShellUI is pre-1.0, so APIs and generated output can still change between minor 
 ## Requirements
 
 - The .NET 8 SDK or later
-- A Blazor project on .NET 8, 9 or 10, with the CLI or the NuGet package
+- A Blazor project on .NET 8, 9, 10 or 11, with the CLI or the NuGet package
 - Tailwind CSS `4.3.2` via either:
   - the standalone CLI, which does not require Node.js; or
   - npm, which requires Node.js and npm

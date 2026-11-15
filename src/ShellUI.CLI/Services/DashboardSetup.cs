@@ -22,7 +22,7 @@ public static class DashboardSetup
 
     internal const string StockProjectName = "ShellStockProbe";
 
-    // `dotnet new blazor` for net8.0/net9.0/net10.0 across --interactivity, --all-interactive, --auth and --empty, after NormalizeStock.
+    // `dotnet new blazor` for net8.0 through net11.0 across --interactivity, --all-interactive, --auth and --empty, after NormalizeStock.
     private static readonly Dictionary<string, HashSet<string>> StockHashes = new(StringComparer.OrdinalIgnoreCase)
     {
         ["MainLayout.razor"] = new(StringComparer.Ordinal)
@@ -50,15 +50,25 @@ public static class DashboardSetup
             "a020cfd72aedbdffc131c929f9257ed35f0b359a23a8ee691551a92cf2894743",
             "b7b968c84028e0d855091f60db00349099594254e75afd2eac11592f2559d474",
             "c6b71e7459510a281e9177ed4e0be7b7fe9ccc4248615bc282d77bb73271c860",
-            "f6bdc02b2599e90105e5515ba6f579b31dcb02d9b100b72577e7d6939a9bafe5"
+            "f6bdc02b2599e90105e5515ba6f579b31dcb02d9b100b72577e7d6939a9bafe5",
+            "14a26dde4bae10c383bf4f9b3ce666baf5cfd43c9c7b52529bb57c6c57ffd2d1",
+            "514a1d43afc17498f592dc832fdb502f00f8b2ee3d859d259fb066fe6467a9ce",
+            "926a75463bae2754a98d0c8644f8ffa9c601f8b60680ffc26e56b8e742b38ea8",
+            "dfc186c0cb81551c65bb68592f9ddf3659755cd3f1f1a180e7f7690d4a5c18e8",
+            "e15bda0152fb57eccad261783d59963f60bb49f8e8912c03ac662218e877d780",
+            "f1001e8a60699dc5265214f84846aaefcd9794dfa2564d73875d0b39058c8a00"
         },
         ["NavMenu.razor.css"] = new(StringComparer.Ordinal)
         {
             "4db5ecd06678f42f1c2fd32887ba74e0a790bec15407d381853f7ce7320aa66b",
             "5542c1c9e78ed89c670306c4cbd975cc1ca47d14560029bf63e554bf8b23abb8",
             "7b623080b93bbd68c171e657f5555f4197c9537d20b92ae3254dfbc5b9eaea21",
-            "9570d629a7155ae9a77bcdd856d70e4b46887391c90ebed05d5662ae35a6ead1"
-        }
+            "9570d629a7155ae9a77bcdd856d70e4b46887391c90ebed05d5662ae35a6ead1",
+            "0d8d54cab2b664da8d26385ebec858537a588b88e4177cdd7954b6172fb1c716",
+            "ca066b0248dcf93203b21d49f9c862738acd0373570be5420fb9a20f1f6c2c32"
+        },
+        // .NET 11 moved the menu's close-on-click into a module next to NavMenu.razor.
+        ["NavMenu.razor.js"] = new(StringComparer.Ordinal) { "764faebe013b3736be2aa3cc073dfd48fb5e419c0d045109f658ba09d040ad55" }
     };
 
     private static readonly Regex RouteViewPattern = new(@"<(Authorize)?RouteView\b", RegexOptions.Compiled);
@@ -272,7 +282,7 @@ public static class DashboardSetup
 
     private static void RemoveStockGroup(string cwd, string layoutDir, string component, List<string> changes, List<string> notes)
     {
-        var files = new[] { $"{component}.razor", $"{component}.razor.css" }
+        var files = new[] { $"{component}.razor", $"{component}.razor.css", $"{component}.razor.js" }
             .Select(f => Path.Combine(layoutDir, f))
             .Where(File.Exists)
             .ToList();

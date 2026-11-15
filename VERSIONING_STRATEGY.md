@@ -7,7 +7,7 @@ ShellUI uses one centralized version for the source templates, CLI tool, and pac
 | Scope | Value |
 |---|---|
 | Version | `0.4.0` (stable; previous stable `0.3.6`) |
-| Target framework | .NET 8 and .NET 10 (`ShellUI.Components` also .NET 9) |
+| Target framework | .NET 8 and .NET 10 (`ShellUI.Components` also .NET 9 and 11) |
 | Tailwind version | `4.3.2` |
 
 `0.3.0-rc.1` was the last release built only for .NET 9. `0.3.0-rc.2` through `0.3.6` and the 0.4 prereleases need .NET 10; `0.4.0` supports .NET 8, 9 and 10.
@@ -154,7 +154,7 @@ The unified version applies to the source system and the two packable artifacts.
 
 ## Compatibility Boundaries
 
-- The repository builds with the .NET 10 SDK. The CLI, Core and Templates target .NET 8 and .NET 10 (the CLI rolls forward to newer runtimes), and `ShellUI.Components` targets .NET 8, 9 and 10. This strategy does not claim support for a target framework that is not configured in the current projects.
+- The repository builds with the .NET 11 SDK. The CLI, Core and Templates target .NET 8 and .NET 10 (the CLI rolls forward to newer runtimes), and `ShellUI.Components` targets .NET 8, 9, 10 and 11. This strategy does not claim support for a target framework that is not configured in the current projects.
 - Tailwind CSS `4.3.2` is the current generated-CSS baseline.
 - The CLI and the NuGet RCL are separate consumption paths, but a project that combines them should use versions from the same ShellUI release line.
 - CLI-installed files are copied into the consumer project and remain subject to the consumer's own edits. Updating them is an explicit CLI operation, not an automatic package update.
@@ -162,4 +162,4 @@ The unified version applies to the source system and the two packable artifacts.
 
 ## Summary
 
-The version is centralized in `Directory.Build.props`, targeting .NET 8 and .NET 10 (`ShellUI.Components` also .NET 9) and Tailwind CSS `4.3.2`. `ShellUI.CLI` and `ShellUI.Components` are the only packable artifacts. Prerelease versions must be selected explicitly.
+The version is centralized in `Directory.Build.props`, targeting .NET 8 and .NET 10 (`ShellUI.Components` also .NET 9 and 11) and Tailwind CSS `4.3.2`. `ShellUI.CLI` and `ShellUI.Components` are the only packable artifacts. Prerelease versions must be selected explicitly.

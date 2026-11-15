@@ -8,7 +8,7 @@
 | Previous stable | `0.3.6`, needs the .NET 10 runtime |
 | Tailwind | `4.3.2` |
 
-The tool runs on .NET 8 or later (the 0.3 line and the 0.4 prereleases need the .NET 10 runtime). The projects it sets up can target .NET 8, 9 or 10.
+The tool runs on .NET 8 or later (the 0.3 line and the 0.4 prereleases need the .NET 10 runtime). The projects it sets up can target .NET 8, 9, 10 or 11.
 
 ## Global installation
 
@@ -64,7 +64,7 @@ Commit the manifest so every developer and CI job uses the same tool version.
 
 ## Building from source
 
-The repository targets `net8.0` and `net10.0`. Build it with the .NET 10 SDK; running the tests on both frameworks also needs the .NET 8 runtime:
+The repository targets `net8.0` and `net10.0`. Build it with the .NET 11 SDK; running the tests on every framework also needs the .NET 8 and .NET 10 runtimes:
 
 ```bash
 dotnet --version

@@ -7,7 +7,7 @@ namespace ShellUI.CLI.Services;
 // init removes Bootstrap; unmodified Identity pages get ShellUI's Button, Input and Alert classes and edited ones are reported.
 public static class AccountPages
 {
-    // `dotnet new blazor --auth Individual` for net8.0/net9.0/net10.0 and every interactivity option, hashed after Normalize.
+    // `dotnet new blazor --auth Individual` for net8.0 through net11.0 and every interactivity option, hashed after Normalize.
     private static readonly Dictionary<string, HashSet<string>> StockHashes = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Pages/AccessDenied.razor"] = new(StringComparer.Ordinal) { "b6109bf4a8706bb962cf64c45f67571aca2cbc9a45d2ffebb63d7cf4bc74b626" },
@@ -19,19 +19,23 @@ public static class AccountPages
         ["Pages/ConfirmEmailChange.razor"] = new(StringComparer.Ordinal)
         {
             "5263b5c2d262ce8555ac3fa6b474772a0e31e0d980972a6f61debe2963889874",
-            "d689f04ee7510c53193df567163765ad0aeb80c911880aa7d5ff3487a05b3918"
+            "d689f04ee7510c53193df567163765ad0aeb80c911880aa7d5ff3487a05b3918",
+            "01d2bc0f197789ada37f1ce44b53dc5eedc536daa2bfa95384489171aa431dac"
         },
         ["Pages/ExternalLogin.razor"] = new(StringComparer.Ordinal)
         {
             "2170aea76f696f655e94fe614c33200c78dd3a955b11b81f12b67fbbbcea1a3f",
             "62e4ec0107d81e5d1829beb7d7bb2df0324e795bb4a8857d05720a8dd0852306",
-            "6fc645d7deb82670172d2dc1f3ab1e9c6f45f64bf570f3e9f95aafe851da2fd5"
+            "6fc645d7deb82670172d2dc1f3ab1e9c6f45f64bf570f3e9f95aafe851da2fd5",
+            "95c58a897c88e3d86120ca5833a7afe315906c917cd6b4c9fc6abb528e326065"
         },
         ["Pages/ForgotPassword.razor"] = new(StringComparer.Ordinal)
         {
             "5053ecbb6b9d836388491fdda1d5d7a1534a31224eaa32e83b6b0f15d2954e8d",
             "6bf4a0ab8ffd045a645ba45d813aa8d3a78c80c909959b10c4d99917a22538da",
-            "e63a3097ff744175ec91c7059ecb540a355484b4c708fdb1546dd6aac74b2f36"
+            "e63a3097ff744175ec91c7059ecb540a355484b4c708fdb1546dd6aac74b2f36",
+            "c2622d802e9d86c31172ca7e445ebc217351cfac33c060081453422be323e325",
+            "525b5f1d5ee1a3d77cf30693e55ae7fc804936d3dd10b2921b448c0219a11c37"
         },
         ["Pages/ForgotPasswordConfirmation.razor"] = new(StringComparer.Ordinal)
         {
@@ -43,7 +47,11 @@ public static class AccountPages
             "19b56fd47b9b95acbf09b259793ac8c702ca11c201742d200f77d5ba7c012a96",
             "6375738630c240a80afe3e1b3e799a2811f4321cff1301c979bd7fe1399a62f1"
         },
-        ["Pages/InvalidUser.razor"] = new(StringComparer.Ordinal) { "285b6a382eab7f48d6340d0f9a65a7285a8ea5329a699709cce7dcd5fdad520e" },
+        ["Pages/InvalidUser.razor"] = new(StringComparer.Ordinal)
+        {
+            "285b6a382eab7f48d6340d0f9a65a7285a8ea5329a699709cce7dcd5fdad520e",
+            "d1844a2e7a348cf26a4606980e85574060acb3f34034743bdf2a2fc707c8d833"
+        },
         ["Pages/Lockout.razor"] = new(StringComparer.Ordinal)
         {
             "469e986117725dc7f49edb72ce14b317ad4b6cb95583142f5141c84846c7eb32",
@@ -53,94 +61,118 @@ public static class AccountPages
         {
             "0e5eb7e1ef66dd84026fad8fc254bf994117dd2934388a6b228c74fe6eb68b6c",
             "3e9068fc3d32ebfeb9b5d5873b6c5083c00c5babcc61e010309ba703bd884e0d",
-            "e11c78b3ddb87480e7bc6b14b9c8e006ab313a028da865b4cfc5cb258ced33c6"
+            "e11c78b3ddb87480e7bc6b14b9c8e006ab313a028da865b4cfc5cb258ced33c6",
+            "cef6788e3dc487cdaa6be82c86deb9b66169fa06e30b5b0e4a4c63817d6c89d4"
         },
         ["Pages/LoginWith2fa.razor"] = new(StringComparer.Ordinal)
         {
             "3d7907a51eb1e610dd1047a4b67774da2ac9509b8b9f4a554e57fa7c13c0e867",
             "bd8337ce2f31c255df3c8a0e64e08855e563bd283e930f6f2c0b53530268f667",
-            "e2728080c241e022781d6e24fc1c9b1bc408f23dad0cd5c67f5cec715e9c2f35"
+            "e2728080c241e022781d6e24fc1c9b1bc408f23dad0cd5c67f5cec715e9c2f35",
+            "6fb7b3dcb4cb2e6a6396a101f1e8f2a9b68d0d36c293a8970521f61937e3c8c0"
         },
         ["Pages/LoginWithRecoveryCode.razor"] = new(StringComparer.Ordinal)
         {
             "9a7b775fb0fbeae7757c07ebe7fa88bd69071cf182c9bcc8d9853832a4ee654f",
             "b4724a2118e31135dce481b7f9280dea2ee03df5efee96517f78016db6050012",
-            "d3987452d4ed72842d8ab9da24b811923a943aa8a84308a9b7fc6980826472de"
+            "d3987452d4ed72842d8ab9da24b811923a943aa8a84308a9b7fc6980826472de",
+            "88a44f374515e0b7cfb346eccc1a5f8097835fe0831c9f705a929acecfefed7f"
         },
         ["Pages/Manage/ChangePassword.razor"] = new(StringComparer.Ordinal)
         {
             "65b42b8849bbad1435a91e6745f88601cd62bb7361c0b35abf1beabcb36c6f3c",
             "74ef2785beb8153240612b94c35d56a5b6d920bfc33c3fd4bcdc16d7c270773f",
-            "ddf28a69da05c15b0b58c06ed60ac749760ddace24180dcf20b38e43271b4f4f"
+            "ddf28a69da05c15b0b58c06ed60ac749760ddace24180dcf20b38e43271b4f4f",
+            "112b76f0a9eca3f6360877a67f48a212c50ddd67f7aa689fede05dfd68d72925"
         },
         ["Pages/Manage/DeletePersonalData.razor"] = new(StringComparer.Ordinal)
         {
             "297fd574621f11597dd71a5b8598dbe5c3a19c3cb665a3505b2698979ed4ae5c",
             "2afd3abf4a94a09f2d2a8aca213bf999a1d55c79cdba6e343e4e84d75a39b005",
-            "99ceff259f9c6315cead560a29cacee54a9c73cc350f059d79c1c96485ddb17f"
+            "99ceff259f9c6315cead560a29cacee54a9c73cc350f059d79c1c96485ddb17f",
+            "b36994b325017a93de6658dc89d1506aeaca0a10964dfb3e30762bdda1329c71"
         },
         ["Pages/Manage/Disable2fa.razor"] = new(StringComparer.Ordinal)
         {
             "4f940f7b8871956e32b59822e7a78fdbb107f542cdf18d24ca007ac470ad77f1",
-            "6d14e673a473ce33b274287acf1acd03f1ca52cca18efb8f73108e2d630a42f2"
+            "6d14e673a473ce33b274287acf1acd03f1ca52cca18efb8f73108e2d630a42f2",
+            "75b049b54073a387204658b46f490af7a657c96cc6ec7d37326c280ad7af98c7"
         },
         ["Pages/Manage/Email.razor"] = new(StringComparer.Ordinal)
         {
             "81918687ef7ba8925321532cfc02ae78b2303809b1b6a0b94c592365e424d646",
             "a816c45c996e2a2db21775da93858a3db261c9416442bf78e376f53b426d5424",
-            "cd4a3e01a35d0b1f59088ecdef8d7496bd147b0c7e72fe080f0207148f0f9b77"
+            "cd4a3e01a35d0b1f59088ecdef8d7496bd147b0c7e72fe080f0207148f0f9b77",
+            "78da0d81308aceaaabf3d6c17a7ccdb5e6ce201aacc329ff15db15550f5de899"
         },
         ["Pages/Manage/EnableAuthenticator.razor"] = new(StringComparer.Ordinal)
         {
             "1d5f0148c5bc85ff2b17f7acbdfffd3a87f50e6b059ab9fb9830f081ac77ee5b",
             "69a1a925d591b871045274f5face85c1e5c1bb8ca769bda05074dd5b2ec90ded",
-            "dde6c58980dbf1ed582b042391e94a9ac35271feb479545f03be510ba454312b"
+            "dde6c58980dbf1ed582b042391e94a9ac35271feb479545f03be510ba454312b",
+            "5f4f650af0db88c404653ca6d67eccd90b8e7f0c0f9b88eaf9266d903ca959a4"
         },
         ["Pages/Manage/ExternalLogins.razor"] = new(StringComparer.Ordinal)
         {
             "03a4c82975f6d0ae8e32cc43d749c3da6d5cbc5ef0c44ae851e8dc662d270a54",
-            "640a28f70f27c4f382e2d7dff1e972b4e376ea2b7f6a38e89ed6f7c25edc7404"
+            "640a28f70f27c4f382e2d7dff1e972b4e376ea2b7f6a38e89ed6f7c25edc7404",
+            "e4533307fdbcf6803a6ebc34d5019fb5b529dce9eb7a3d08e6de28e2f6b4e884"
         },
         ["Pages/Manage/GenerateRecoveryCodes.razor"] = new(StringComparer.Ordinal)
         {
             "7297a499efa1e89a4c82521ebbebe75d522cf8ddae7b018387ca494f57af2bec",
-            "b252c7dc03946cb0a8fa620a3f9e433937d98f1bce39118f5137bdfcdac8037e"
+            "b252c7dc03946cb0a8fa620a3f9e433937d98f1bce39118f5137bdfcdac8037e",
+            "70856e6a47d945a7376e95e563f4d76a9af0deb99dc61b5512294a68cfb73038"
         },
         ["Pages/Manage/Index.razor"] = new(StringComparer.Ordinal)
         {
             "3b44bb0cda2ebf94d475241647e1c5b1a06ee3d8e9e758128af9551fde8766b7",
             "4dfb4be606a212b18620ca5f499069d63ea0b138b43915a37c2c9298b0cf489e",
-            "7029a2d3a766e569d30050ea7a1fa35c622f8f9082090963e080944de1e63800"
+            "7029a2d3a766e569d30050ea7a1fa35c622f8f9082090963e080944de1e63800",
+            "c889c61fc14db92aea81cc7d59b35e0b399b19f71af1abf95f81255d49197df2"
         },
-        ["Pages/Manage/Passkeys.razor"] = new(StringComparer.Ordinal) { "2887ff8db7f40fbd207763942b0ac0c4286d7a6094d12ccc37e25f5941d94f4f" },
+        ["Pages/Manage/Passkeys.razor"] = new(StringComparer.Ordinal)
+        {
+            "2887ff8db7f40fbd207763942b0ac0c4286d7a6094d12ccc37e25f5941d94f4f",
+            "34a00bbabb4b3f2066553305ea242bb55c014df407f41eac68e5105434585375"
+        },
         ["Pages/Manage/PersonalData.razor"] = new(StringComparer.Ordinal)
         {
             "049f1eee3d298f4a75a006c10869500d34be195d5bd5e2b57aba79849c795c9d",
-            "2af37ab52bc87caaf5d6d38a5670a77534eb23a8158a1878f93c33b2ac4c64ec"
+            "2af37ab52bc87caaf5d6d38a5670a77534eb23a8158a1878f93c33b2ac4c64ec",
+            "fdfb0d2d2dd21da51b67fb1d51131e68cb13b10e7493bad7c6d1aa7333ae6b59"
         },
-        ["Pages/Manage/RenamePasskey.razor"] = new(StringComparer.Ordinal) { "d7260ab13e73f04bedae5affc695d5eec2f82c8c210a913a5d72c5623e5040a6" },
+        ["Pages/Manage/RenamePasskey.razor"] = new(StringComparer.Ordinal)
+        {
+            "d7260ab13e73f04bedae5affc695d5eec2f82c8c210a913a5d72c5623e5040a6",
+            "2bbc9f0fe1c571e561cb1a98a67ed71d316018d4985dab4625ff6e750f681b0b"
+        },
         ["Pages/Manage/ResetAuthenticator.razor"] = new(StringComparer.Ordinal)
         {
             "267cef205ebf7675dcc334e1a9e67659465eb67ae7b3d7c6cf3dc393262929d9",
-            "f2fcba0e007184f416ba726b02d804557f1a6da2aeaec7d0b0e90bd3d65d5dd8"
+            "f2fcba0e007184f416ba726b02d804557f1a6da2aeaec7d0b0e90bd3d65d5dd8",
+            "76acfd795fce2c93bd94ae1ebcf631b950f3527a231efb18915411014b6c5361"
         },
         ["Pages/Manage/SetPassword.razor"] = new(StringComparer.Ordinal)
         {
             "0bcbe17a16e1951aa73f68173495a8c80c577cfe08646a983ca81f51f89329cf",
             "b900d9e0937e07de101be5ac3b01dd3be36e7200eb95c248aef30d55b67ec71f",
-            "ea58057070f27fa73cb02e17376148e2a6d2e34e1961ffc9b539f84efd482626"
+            "ea58057070f27fa73cb02e17376148e2a6d2e34e1961ffc9b539f84efd482626",
+            "d2e64ef2a011815f22366c23cf4ed61a33fa5d50407a1d7605eded75d6188ed8"
         },
         ["Pages/Manage/TwoFactorAuthentication.razor"] = new(StringComparer.Ordinal)
         {
             "198321c9815c183c395418a13677682eff6b53b100cfa96fdfac78946f45c6d7",
-            "be60a9dc1f5280c3ed49b4db06af55c77f939a2d0556cbbfdf51ea6a7e08c52a"
+            "be60a9dc1f5280c3ed49b4db06af55c77f939a2d0556cbbfdf51ea6a7e08c52a",
+            "9e8ac524803751fcc8e5e26beda16afcbd7aa7d9a60673cee0dc242a4a396a3b"
         },
         ["Pages/Manage/_Imports.razor"] = new(StringComparer.Ordinal) { "3e222370c041c607a47d00cf66676a54b647446b8bbd24284170dcc698ffb365" },
         ["Pages/Register.razor"] = new(StringComparer.Ordinal)
         {
             "5a6cc61bb9ef9303744e93aaf5710516995744c8ae816f5097ac2f4e3ecae045",
             "740eee29369bb3134aeaf0ac46d868099279920b63fc97a098697edb37a9d828",
-            "c468cc4906e60d31322a4fef6ac843d9749193913102c97fd1ed83e1e3f7cc28"
+            "c468cc4906e60d31322a4fef6ac843d9749193913102c97fd1ed83e1e3f7cc28",
+            "239fa674b675926d21633237466a851e21ddea9635a036104083ffacc13262cc"
         },
         ["Pages/RegisterConfirmation.razor"] = new(StringComparer.Ordinal)
         {
@@ -152,13 +184,16 @@ public static class AccountPages
         {
             "12b33198dc0e38618cd889e9f475891bb7738d969350da42828006bfc3f81697",
             "32a07c6d44c0c64fd7d07fca7f79af25c46e25e2cc0eacbb8cb0477f4367733a",
-            "40955af96e0ba7064fcec07493fd1116fbebab30c8472bfae31cfcd2187a9b34"
+            "40955af96e0ba7064fcec07493fd1116fbebab30c8472bfae31cfcd2187a9b34",
+            "2c02f05d5748ad07ccd31f8153dad3bf1af4d9d63080f7bba886f813d14cfe4e",
+            "0f3fc32a9681cd62ae209217fbec6b8d146ef55861fc9a91ffcbc0ee751df04b"
         },
         ["Pages/ResetPassword.razor"] = new(StringComparer.Ordinal)
         {
             "477d1e8a2c08a010bf8570fd4cdb65464257301eb63b3c2a26a45f0ba8115266",
             "ae84c4c4a8b8f7efc53636ae86201131beb3984aec20538b239a7f801dc3bd62",
-            "c741fc9428b6d527e32c27300014292c5163939ea9946a048f6da122d70ac110"
+            "c741fc9428b6d527e32c27300014292c5163939ea9946a048f6da122d70ac110",
+            "e676cdfeab107db11f9b54a8133f344788789a82694a986486e9346c654a8db8"
         },
         ["Pages/ResetPasswordConfirmation.razor"] = new(StringComparer.Ordinal)
         {
@@ -175,7 +210,11 @@ public static class AccountPages
             "7b63158d82ddfaae90650438ec37a027a47c892e9bc85bc91d43b5e84ed3eff2",
             "ffa1e3e7a65e814feed52bd61228b29df431981a531f12cb2767408f19eab708"
         },
-        ["Shared/ExternalLoginPicker.razor"] = new(StringComparer.Ordinal) { "a4a6361e8b508209de14bf7b04fd67773697e09e83d4f93b732c187ff057ba93" },
+        ["Shared/ExternalLoginPicker.razor"] = new(StringComparer.Ordinal)
+        {
+            "a4a6361e8b508209de14bf7b04fd67773697e09e83d4f93b732c187ff057ba93",
+            "079002a54a249e957749776907240529922b78925b6c82f1529f127e7d71e6bc"
+        },
         ["Shared/ManageLayout.razor"] = new(StringComparer.Ordinal)
         {
             "07a5f54f17187dc07e9ebaf19dc57c5ae7dd63cfd650f14375f0425d56a95c20",
@@ -187,10 +226,18 @@ public static class AccountPages
             "4c2ade9171e6e75b9e17ce5db4130a188a1c7c720cc67e90b3fef10b536bf281",
             "bded26c673d0c8bfbd4904452291d2f493bfb5413e7e50201beda16ca3a681b1"
         },
-        ["Shared/PasskeySubmit.razor"] = new(StringComparer.Ordinal) { "9dae91807e527b9887350045a9c37fe3b632c5c73f6158fb5f28efdbc6fbe94d" },
+        ["Shared/PasskeySubmit.razor"] = new(StringComparer.Ordinal)
+        {
+            "9dae91807e527b9887350045a9c37fe3b632c5c73f6158fb5f28efdbc6fbe94d",
+            "8c81812fc6dcedbd36a7b2e125a00b017ae48af5ff6ef9a6d189c4fed7b1a04e"
+        },
         ["Shared/RedirectToLogin.razor"] = new(StringComparer.Ordinal) { "e8ceb9bd9cf1466f0da3292e068fcc0249fde051c753a5ae4af1277b32a8b26a" },
         ["Shared/ShowRecoveryCodes.razor"] = new(StringComparer.Ordinal) { "d93d5b74ad731c56ee72ad285df1727d833a0ffb819a216ae1403c65a7561b87" },
-        ["Shared/StatusMessage.razor"] = new(StringComparer.Ordinal) { "e271d48b5024056c4412441f89a71951360a103b84328bb3b35805bd0983410a" }
+        ["Shared/StatusMessage.razor"] = new(StringComparer.Ordinal)
+        {
+            "e271d48b5024056c4412441f89a71951360a103b84328bb3b35805bd0983410a",
+            "4dbc38dbd06d01672f1900b885f75c8ffa7224a104926a240a89c22c73224411"
+        }
     };
 
     private const string Button = "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";

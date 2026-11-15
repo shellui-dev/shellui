@@ -1,6 +1,6 @@
 # ShellUI Quick Start
 
-This quick start uses ShellUI `0.4.0` with Tailwind CSS `4.3.2`. The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9 and 10.
+This quick start uses ShellUI `0.4.0` with Tailwind CSS `4.3.2`. The CLI runs on .NET 8 or later and works in Blazor projects on .NET 8, 9, 10 and 11.
 
 ## Prerequisites
 
