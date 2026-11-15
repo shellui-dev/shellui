@@ -115,6 +115,15 @@ jobs:
 
         dotnet build -c Debug
 
+        # npm mode used to start npm through cmd, so it only worked on Windows.
+        cd "$TMPDIR/app"
+        dotnet new blazor -o NpmApp --no-restore
+        cd NpmApp
+        shellui init --tailwind npm --yes
+        test -d node_modules/@tailwindcss/cli || (echo "init --tailwind npm did not install @tailwindcss/cli"; exit 1)
+        dotnet build -c Debug
+        grep -q 'caption-bottom' wwwroot/app.css || (echo "the npm Tailwind build did not write app.css"; exit 1)
+
         cd "$TMPDIR/app"
         dotnet new blazor -o DashApp --no-restore
         cd DashApp

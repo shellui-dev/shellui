@@ -75,7 +75,7 @@ npm install -D tailwindcss@^4.3.2 @tailwindcss/cli@^4.3.2
 npx @tailwindcss/cli -i ./wwwroot/input.css -o ./wwwroot/app.css --watch
 ```
 
-The npm commands are Tailwind v4 commands. The generated `wwwroot/input.css` uses `@import "tailwindcss";`; `wwwroot/app.css` is generated output. The current CLI invokes npm through `cmd`; on non-Windows systems use standalone mode or run the npm commands manually.
+The npm commands are Tailwind v4 commands. The generated `wwwroot/input.css` uses `@import "tailwindcss";`; `wwwroot/app.css` is generated output.
 
 ## Managing CLI components
 

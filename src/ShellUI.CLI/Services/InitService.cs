@@ -264,8 +264,7 @@ public class InitService
     {
         try
         {
-            // cmd /c is the reliable way to run npm on Windows
-            var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo("cmd", "/c npm --version"));
+            var result = await ProcessRunner.RunAsync(NodeTool("npm", "--version"));
             return result is { ExitCode: 0 } && !string.IsNullOrEmpty(result.Output.Trim());
         }
         catch
@@ -274,9 +273,26 @@ public class InitService
         }
     }
 
+    // On Windows npm and npx are .cmd scripts, which only cmd can start; elsewhere they are plain executables.
+    internal static System.Diagnostics.ProcessStartInfo NodeTool(string tool, params string[] args) =>
+        NodeTool(OperatingSystem.IsWindows(), tool, args);
+
+    internal static System.Diagnostics.ProcessStartInfo NodeTool(bool windows, string tool, params string[] args)
+    {
+        if (!windows)
+        {
+            var startInfo = new System.Diagnostics.ProcessStartInfo(tool);
+            foreach (var arg in args) startInfo.ArgumentList.Add(arg);
+            return startInfo;
+        }
+        // Quoted, so cmd keeps the ^ in tailwindcss@^4.3.2 instead of reading it as its escape character.
+        static string Quote(string arg) => arg.IndexOfAny(new[] { ' ', '^', '&', '|', '<', '>', '(', ')' }) >= 0 ? $"\"{arg}\"" : arg;
+        return new System.Diagnostics.ProcessStartInfo("cmd", $"/c {tool} {string.Join(" ", args.Select(Quote))}".TrimEnd());
+    }
+
     private static async Task RunNpmCommandAsync(params string[] args)
     {
-        var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo("cmd", $"/c npm {string.Join(" ", args)}"))
+        var result = await ProcessRunner.RunAsync(NodeTool("npm", args))
             ?? throw new Exception("Failed to start npm process");
 
         if (result.ExitCode != 0)
@@ -290,7 +306,7 @@ public class InitService
         var inputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "input.css");
         var outputCssPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "app.css");
 
-        var result = await ProcessRunner.RunAsync(new System.Diagnostics.ProcessStartInfo("cmd", $"/c npx @tailwindcss/cli -i \"{inputCssPath}\" -o \"{outputCssPath}\" --minify"))
+        var result = await ProcessRunner.RunAsync(NodeTool("npx", "@tailwindcss/cli", "-i", inputCssPath, "-o", outputCssPath, "--minify"))
             ?? throw new Exception("Failed to start npx process");
 
         if (result.ExitCode != 0)

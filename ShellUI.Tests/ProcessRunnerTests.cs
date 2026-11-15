@@ -20,4 +20,22 @@ public class ProcessRunnerTests
         Assert.Contains("out 6000", result.Output);
         Assert.Contains("err 6000", result.Error);
     }
+
+    [Fact]
+    public void NodeTool_RunsNpmDirectlyOutsideWindows()
+    {
+        var startInfo = InitService.NodeTool(windows: false, "npx", "@tailwindcss/cli", "-i", "/my app/input.css");
+
+        Assert.Equal("npx", startInfo.FileName);
+        Assert.Equal(new[] { "@tailwindcss/cli", "-i", "/my app/input.css" }, startInfo.ArgumentList);
+    }
+
+    [Fact]
+    public void NodeTool_GoesThroughCmdOnWindows_AndKeepsTheCaret()
+    {
+        var startInfo = InitService.NodeTool(windows: true, "npm", "install", "-D", "tailwindcss@^4.3.2", @"C:\my app\x");
+
+        Assert.Equal("cmd", startInfo.FileName);
+        Assert.Equal(@"/c npm install -D ""tailwindcss@^4.3.2"" ""C:\my app\x""", startInfo.Arguments);
+    }
 }

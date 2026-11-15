@@ -50,7 +50,7 @@ Standalone mode downloads Tailwind `4.3.2` once per machine, into `~/.shellui/bi
 shellui init --yes --tailwind npm
 ```
 
-npm mode requires Node.js and npm. The current CLI invokes npm through `cmd`, so use standalone mode on non-Windows systems or run the npm commands manually.
+npm mode requires Node.js and npm.
 
 ## Add components
 
