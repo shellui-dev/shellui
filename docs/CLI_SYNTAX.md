@@ -16,14 +16,14 @@ shellui --version
 ## Command overview
 
 ```text
-shellui init [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
+shellui init [--force] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
 shellui add <name...>|all [--force] [--replace-layout] [--except <name...>]
 shellui list [--installed|--available]
 shellui remove <name...>
 shellui update [name...] [--all] [--force]
 shellui doctor
 shellui migrate [name...] [--dry-run] [--yes]
-shellui theme init <url-or-id> [--force] [--style <style>] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
+shellui theme init <url-or-id> [--force] [--tailwind standalone|npm] [--yes] [--dashboard 01|02|none] [--replace-layout]
 shellui theme apply <url-or-id> [--emit-override <path>]
 shellui theme update
 ```
@@ -37,7 +37,6 @@ Initializes ShellUI in the current Blazor project.
 ```bash
 shellui init
 shellui init --force
-shellui init --style new-york
 shellui init --tailwind npm --yes
 shellui init --yes --dashboard 02
 ```
@@ -45,7 +44,6 @@ shellui init --yes --dashboard 02
 Options:
 
 - `--force` reinitializes a project that already has `shellui.json`.
-- `--style <style>` selects `default`, `new-york`, or `minimal`.
 - `--tailwind standalone|npm` selects the Tailwind setup method and skips the prompt. With `--yes` and no `--tailwind`, `init` uses standalone.
 - `--yes` runs without prompts and uses the selected defaults. Without an explicit method, the default is `standalone`.
 - `--dashboard 01|02|none` sets up a dashboard layout: `02` has a sticky header, `01` a scrolling one. Without the option, `init` asks; with `--yes` alone, no dashboard is added.
@@ -222,10 +220,10 @@ Initializes a project and applies a theme in one step.
 
 ```bash
 shellui theme init <url-or-id>
-shellui theme init <url-or-id> --force --style default --tailwind standalone --yes
+shellui theme init <url-or-id> --force --tailwind standalone --yes
 ```
 
-`--style` accepts `default`, `new-york`, or `minimal`. The command uses the same initialization options as `init`.
+The command uses the same initialization options as `init`.
 
 ### `theme apply`
 
@@ -282,7 +280,7 @@ The generated `wwwroot/input.css` uses the Tailwind v4 import:
 | Property | Meaning |
 |---|---|
 | `Schema` | Schema identifier |
-| `Style` | `default`, `new-york`, or `minimal` |
+| `Style` | Always `default`; ShellUI has one style |
 | `ComponentsPath` | Usually `Components/UI` |
 | `LayoutPath` | Usually `Components/Layout` |
 | `Tailwind` | Tailwind settings |

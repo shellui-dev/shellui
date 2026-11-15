@@ -121,7 +121,7 @@ The serialized properties are PascalCase. The main fields are:
 | Field | Meaning |
 |---|---|
 | `Schema` | Schema identifier |
-| `Style` | `default`, `new-york`, or `minimal` |
+| `Style` | Always `default`; ShellUI has one style |
 | `ComponentsPath` | Usually `Components/UI` |
 | `LayoutPath` | Usually `Components/Layout` |
 | `Tailwind` | Tailwind settings |

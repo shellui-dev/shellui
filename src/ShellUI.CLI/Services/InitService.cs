@@ -26,6 +26,9 @@ public class InitService
             return;
         }
 
+        if (!string.Equals(style, "default", StringComparison.OrdinalIgnoreCase))
+            AnsiConsole.MarkupLine("[yellow]Note:[/] --style has no effect; ShellUI has one style. The option will be removed in a later release.");
+
         var projectInfo = ProjectDetector.DetectProject();
         AnsiConsole.MarkupLine($"[green]✅ Detected:[/] {projectInfo.ProjectType}");
         AnsiConsole.MarkupLine($"[dim]Project: {projectInfo.ProjectName}[/]");
@@ -85,7 +88,7 @@ public class InitService
 
         var config = new ShellUIConfig
         {
-            Style = style,
+            Style = "default",
             ComponentsPath = "Components/UI",
             LayoutPath = "Components/Layout",
             ProjectType = projectInfo.ProjectType,
