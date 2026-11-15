@@ -15,20 +15,5 @@ public static class AspectRatioTemplate
         Tags = new List<string> { "layout", "media", "ratio" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@Shell.Cn(""relative w-full overflow-hidden [&>*]:absolute [&>*]:inset-0 [&>*]:h-full [&>*]:w-full"", Class)"" style=""aspect-ratio: @RatioCss"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public double Ratio { get; set; } = 16d / 9d;
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private string RatioCss => Ratio.ToString(System.Globalization.CultureInfo.InvariantCulture);
-}
-";
+    public static string Content => ComponentSource.Read("Components/AspectRatio.razor");
 }

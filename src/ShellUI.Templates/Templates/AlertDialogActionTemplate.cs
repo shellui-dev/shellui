@@ -15,32 +15,5 @@ public class AlertDialogActionTemplate
         Tags = new List<string> { "overlay", "alert-dialog", "action" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<Button Variant=""@Variant"" Class=""@Class"" @onclick=""HandleClick"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</Button>
-
-@code {
-    [CascadingParameter] private AlertDialog? Parent { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public ButtonVariant Variant { get; set; } = ButtonVariant.Default;
-    [Parameter] public string? Class { get; set; }
-    [Parameter] public EventCallback OnClick { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private async Task HandleClick()
-    {
-        if (OnClick.HasDelegate)
-        {
-            await OnClick.InvokeAsync();
-        }
-        if (Parent != null)
-        {
-            await Parent.InvokeConfirm();
-        }
-    }
-}
-";
+    public static string Content => ComponentSource.Read("Components/AlertDialogAction.razor");
 }

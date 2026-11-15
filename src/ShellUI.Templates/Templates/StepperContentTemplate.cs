@@ -14,21 +14,5 @@ public static class StepperContentTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-@if (ParentStepper != null && ParentStepper.ActiveStep == Index)
-{
-    <div class=""mt-8"">
-        @ChildContent
-    </div>
-}
-
-@code {
-    [CascadingParameter] private Stepper? ParentStepper { get; set; }
-    [Parameter] public string Value { get; set; } = ""0"";
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-
-    private int Index => int.TryParse(Value, out var v) ? v : 0;
-}
-";
+    public static string Content => ComponentSource.Read("Components/StepperContent.razor");
 }

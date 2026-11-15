@@ -14,19 +14,5 @@ public static class SidebarGroupTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div data-sidebar=""group""
-     class=""@Shell.Cn(""relative flex w-full min-w-0 flex-col p-2"", Class)""
-     @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/SidebarGroup.razor");
 }

@@ -16,19 +16,5 @@ public class MultiSeriesChartTemplate
         Tags = new List<string> { "chart", "multi-series", "data", "visualization", "apexcharts" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using ApexCharts
-@inherits Chart<TItem>
-@typeparam TItem where TItem : class
-
-<div class=""@ComputedClass"" data-chart-theme=""@Theme.ToString().ToLower()"">
-    <ApexChart TItem=""TItem""
-               Title=""@Title""
-               Options=""@ChartOptions""
-               Height=""@Height""
-               Width=""@Width"">
-        @ChildContent
-    </ApexChart>
-</div>
-";
+    public static string Content => ComponentSource.Read("Components/MultiSeriesChart.razor");
 }

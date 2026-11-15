@@ -14,26 +14,5 @@ public static class SidebarModelsTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"namespace YourProjectNamespace.Components.UI;
-
-public enum SidebarVariant
-{
-    Sidebar,
-    Floating,
-    Inset
-}
-
-public enum SidebarCollapsible
-{
-    Offcanvas,
-    Icon,
-    None
-}
-
-public enum SidebarSide
-{
-    Left,
-    Right
-}
-";
+    public static string Content => ComponentSource.Read("Models/SidebarModels.cs");
 }

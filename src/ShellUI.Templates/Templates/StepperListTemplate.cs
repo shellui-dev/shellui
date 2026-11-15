@@ -14,14 +14,5 @@ public static class StepperListTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""flex items-start justify-between w-full"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/StepperList.razor");
 }

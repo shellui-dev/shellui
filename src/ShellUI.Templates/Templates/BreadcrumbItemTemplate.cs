@@ -15,41 +15,7 @@ public class BreadcrumbItemTemplate
         Tags = new List<string> { "navigation", "breadcrumb", "item" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<li class=""@Shell.Cn(""inline-flex items-center gap-1.5"", Class)"" @attributes=""AdditionalAttributes"">
-    @if (!string.IsNullOrEmpty(Href))
-    {
-        <a href=""@Href"" class=""transition-colors hover:text-foreground"">
-            @ChildContent
-        </a>
-    }
-    else
-    {
-        <span class=""font-normal text-foreground"">
-            @ChildContent
-        </span>
-    }
-    
-    @if (!IsLast && List == null)
-    {
-        <svg class=""h-3.5 w-3.5"" fill=""none"" viewBox=""0 0 24 24"" stroke=""currentColor"">
-            <path stroke-linecap=""round"" stroke-linejoin=""round"" stroke-width=""2"" d=""M9 5l7 7-7 7"" />
-        </svg>
-    }
-</li>
-
-@code {
-    // Inside a BreadcrumbList, separators come from BreadcrumbSeparator instead.
-    [CascadingParameter] private BreadcrumbList? List { get; set; }
-    [Parameter] public string? Href { get; set; }
-    [Parameter] public bool IsLast { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/BreadcrumbItem.razor");
 }
 
 

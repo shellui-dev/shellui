@@ -15,14 +15,5 @@ public class CommandSeparatorTemplate
         Tags = new List<string> { "command", "separator" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div role=""separator"" class=""@Shell.Cn(""-mx-1 h-px bg-border"", Class)"" @attributes=""AdditionalAttributes""></div>
-
-@code {
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/CommandSeparator.razor");
 }

@@ -15,27 +15,5 @@ public static class HoverCardTriggerTemplate
         Tags = new List<string> { "overlay", "hover-card", "trigger" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div @onmouseover=""OnMouseOver"" @onmouseout=""OnMouseOut"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [CascadingParameter] public HoverCard? Parent { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private void OnMouseOver()
-    {
-        Parent?.Show();
-    }
-
-    private void OnMouseOut()
-    {
-        Parent?.Hide();
-    }
-}
-";
+    public static string Content => ComponentSource.Read("Components/HoverCardTrigger.razor");
 }

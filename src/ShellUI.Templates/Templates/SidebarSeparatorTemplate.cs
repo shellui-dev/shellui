@@ -14,16 +14,5 @@ public static class SidebarSeparatorTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<hr data-sidebar=""separator""
-    class=""@Shell.Cn(""mx-2 w-auto bg-sidebar-border h-px border-0"", Class)""
-    @attributes=""AdditionalAttributes"" />
-
-@code {
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/SidebarSeparator.razor");
 }

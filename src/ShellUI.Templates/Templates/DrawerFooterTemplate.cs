@@ -15,17 +15,5 @@ public class DrawerFooterTemplate
         Tags = new List<string> { "overlay", "drawer", "footer" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@Shell.Cn(""mt-auto flex flex-col gap-2 p-4"", Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/DrawerFooter.razor");
 }

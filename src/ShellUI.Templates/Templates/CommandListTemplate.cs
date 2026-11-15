@@ -15,17 +15,5 @@ public class CommandListTemplate
         Tags = new List<string> { "command", "list" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div role=""listbox"" class=""@Shell.Cn(""max-h-[300px] overflow-y-auto overflow-x-hidden"", Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/CommandList.razor");
 }

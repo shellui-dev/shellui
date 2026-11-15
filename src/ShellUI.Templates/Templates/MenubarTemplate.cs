@@ -16,21 +16,7 @@ public class MenubarTemplate
         Dependencies = new List<string> { "menubar-item", "menubar-menu", "menubar-trigger", "menubar-content", "menubar-separator" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@Shell.Cn(""flex h-10 items-center space-x-1 rounded-md border border-border bg-background p-1"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    // Deprecated: use Class.
-    [Parameter] public string ClassName { get; set; } = """";
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/Menubar.razor");
 }
 
 

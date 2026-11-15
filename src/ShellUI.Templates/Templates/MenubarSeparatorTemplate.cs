@@ -15,14 +15,5 @@ public class MenubarSeparatorTemplate
         Tags = new List<string> { "navigation", "menubar", "separator" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@Shell.Cn(""-mx-1 my-1 h-px bg-muted"", Class)"" @attributes=""AdditionalAttributes""></div>
-
-@code {
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/MenubarSeparator.razor");
 }

@@ -15,22 +15,5 @@ public static class TabsContentTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-@if (ParentTabs?.CurrentValue == Value)
-{
-    <div class=""@Shell.Cn(""mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"", Class)"" @attributes=""AdditionalAttributes"">
-        @ChildContent
-    </div>
-}
-
-@code {
-    [CascadingParameter] private Tabs? ParentTabs { get; set; }
-    [Parameter] public string Value { get; set; } = """";
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/TabsContent.razor");
 }

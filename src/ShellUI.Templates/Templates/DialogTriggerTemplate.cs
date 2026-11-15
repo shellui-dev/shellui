@@ -15,27 +15,7 @@ public static class DialogTriggerTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div @onclick=""Toggle"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [CascadingParameter] public Dialog? Dialog { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private async Task Toggle()
-    {
-        if (Dialog != null)
-        {
-            await Dialog.SetOpen(!Dialog.Open);
-        }
-    }
-}
-";
+    public static string Content => ComponentSource.Read("Components/DialogTrigger.razor");
 }
 
 
