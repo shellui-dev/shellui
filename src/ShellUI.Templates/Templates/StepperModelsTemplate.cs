@@ -15,17 +15,5 @@ public static class StepperModelsTemplate
         Dependencies = new List<string>()
     };
 
-    public static string Content => @"using Microsoft.AspNetCore.Components;
-
-namespace YourProjectNamespace.Components.Models;
-
-public class StepItem
-{
-    public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public RenderFragment? Content { get; set; }
-    public bool IsCompleted { get; set; }
-    public bool IsOptional { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Models/StepperModels.cs");
 }

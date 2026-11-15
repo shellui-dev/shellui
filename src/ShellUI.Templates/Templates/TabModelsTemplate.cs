@@ -15,20 +15,7 @@ public static class TabModelsTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"using Microsoft.AspNetCore.Components;
-
-namespace YourProjectNamespace.Components.Models;
-
-public class TabItem
-{
-    public string Id { get; set; } = string.Empty;
-    public string Label { get; set; } = string.Empty;
-    public string? Icon { get; set; }
-    public string? Badge { get; set; }
-    public RenderFragment? Content { get; set; }
-    public bool Disabled { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Models/TabModels.cs");
 }
 
 

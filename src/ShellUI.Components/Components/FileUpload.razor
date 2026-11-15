@@ -5,7 +5,7 @@
 <div class="@($"relative w-full {Class}")" @ref="containerRef" id="@_dropZoneId">
     <label for="@_inputId" class="@GetDropZoneClasses()" 
      @ondragover="HandleDragOver" 
-     @ondragleave="HandleDragLeave" 
+     @ondragleave="HandleDragLeave"
      @ondrop="HandleDrop"
      @ondragover:preventDefault="true"
      @ondrop:preventDefault="true">
@@ -98,7 +98,7 @@
     }
 
     private void HandleDrop(DragEventArgs e)
-            {
+    {
         if (Disabled) return;
         _isDragOver = false;
         StateHasChanged();
@@ -110,4 +110,3 @@
         await OnChange.InvokeAsync(e);
     }
 }
-

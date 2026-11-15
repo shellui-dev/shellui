@@ -15,17 +15,5 @@ public static class ContextMenuModelsTemplate
         Dependencies = new List<string>()
     };
 
-    public static string Content => @"namespace YourProjectNamespace.Components.Models;
-
-public class ContextMenuItem
-{
-    public string Label { get; set; } = string.Empty;
-    public string? Icon { get; set; }
-    public string? Shortcut { get; set; }
-    public bool Disabled { get; set; }
-    public bool Destructive { get; set; }
-    public bool IsSeparator { get; set; }
-    public object? Data { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Models/ContextMenuModels.cs");
 }
