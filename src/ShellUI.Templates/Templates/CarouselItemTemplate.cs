@@ -15,18 +15,6 @@ public static class CarouselItemTemplate
         Tags = new List<string> { "carousel", "item", "slide", "content" }
     };
 
-    public const string Content = """
-<div class="@Shell.Cn("w-full flex-shrink-0", Class)" style="width: @(100.0 / Math.Max(1, TotalSlides))%">
-    <div class="w-full h-full flex items-center justify-center">
-        @ChildContent
-    </div>
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string Class { get; set; } = string.Empty;
-    [Parameter] public int TotalSlides { get; set; } = 1;
-}
-""";
+    public static string Content => ComponentSource.Read("Components/CarouselItem.razor");
 }
 
