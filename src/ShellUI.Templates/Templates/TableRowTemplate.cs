@@ -15,21 +15,7 @@ public class TableRowTemplate
         Tags = new List<string> { "table", "row", "tr" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<tr class=""@Shell.Cn(""border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</tr>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    // Deprecated: use Class.
-    [Parameter] public string ClassName { get; set; } = """";
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/TableRow.razor");
 }
 
 

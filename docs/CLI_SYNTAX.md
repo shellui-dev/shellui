@@ -207,6 +207,7 @@ It reads the project's `.razor` and `.cs` files (not the installed components un
 | `time-picker` | the same for `<TimePicker>`'s `SelectedTime` (0.4.0-alpha.3) |
 | `pagination` | `OnPageChange` → `CurrentPageChanged`, except on a tag that already uses `@bind-CurrentPage` (0.4.0-alpha.3) |
 | `calendar` | Reports handlers of `Calendar.SelectedDateChanged` that take a `DateTime`; they need a `DateTime?` since 0.4.0-alpha.1. Nothing is rewritten. |
+| `checkbox`, `date-picker`, `date-range-picker`, `radio-group`, `radio-group-item`, `scroll-area`, `separator`, `skeleton`, `slider`, `switch`, `table`, `table-body`, `table-cell`, `table-head`, `table-header`, `table-row`, `time-picker`, `toast`, `tooltip` | `ClassName` → `Class` on that component's tags. The CLI templates' deprecated `ClassName` alias was removed in 0.5.0. A tag that sets both is left alone and reported, to merge by hand. |
 
 Commit first, then build the app afterwards.
 

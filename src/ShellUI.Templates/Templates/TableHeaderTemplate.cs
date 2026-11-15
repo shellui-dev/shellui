@@ -15,21 +15,7 @@ public class TableHeaderTemplate
         Tags = new List<string> { "table", "header", "thead" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<thead class=""@Shell.Cn(""[&_tr]:border-b"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</thead>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    // Deprecated: use Class.
-    [Parameter] public string ClassName { get; set; } = """";
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/TableHeader.razor");
 }
 
 

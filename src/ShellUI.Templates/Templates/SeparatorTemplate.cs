@@ -15,19 +15,7 @@ public static class SeparatorTemplate
         Dependencies = new List<string>()
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@Shell.Cn(""shrink-0 bg-border"", Orientation == ""vertical"" ? ""h-full w-[1px]"" : ""h-[1px] w-full"", ClassName, Class)"" @attributes=""AdditionalAttributes""></div>
-
-@code {
-    [Parameter] public string Orientation { get; set; } = ""horizontal"";
-    [Parameter] public string? Class { get; set; }
-    // Deprecated: use Class.
-    [Parameter] public string ClassName { get; set; } = """";
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/Separator.razor");
 }
 
 

@@ -15,21 +15,7 @@ public class TableHeadTemplate
         Tags = new List<string> { "table", "header", "th" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<th class=""@Shell.Cn(""h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</th>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    // Deprecated: use Class.
-    [Parameter] public string ClassName { get; set; } = """";
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/TableHead.razor");
 }
 
 
