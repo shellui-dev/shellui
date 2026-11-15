@@ -15,21 +15,6 @@ public static class BadgeTemplate
         Dependencies = new List<string> { "badge-variants" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@ComputedClass"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public BadgeVariant Variant { get; set; } = BadgeVariant.Default;
-    [Parameter] public string? Class { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private string ComputedClass => BadgeVariants.Get(Variant, Class);
-}
-";
+    public static string Content => ComponentSource.Read("Components/Badge.razor");
 }
 
