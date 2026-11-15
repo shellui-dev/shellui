@@ -15,15 +15,5 @@ public static class KbdTemplate
         Tags = new List<string> { "kbd", "keyboard", "shortcut" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<kbd class=""@Shell.Cn(""pointer-events-none inline-flex h-5 min-w-5 select-none items-center justify-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[11px] font-medium text-muted-foreground"", Class)"" @attributes=""AdditionalAttributes"">@ChildContent</kbd>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/Kbd.razor");
 }

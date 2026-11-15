@@ -15,20 +15,5 @@ public static class HoverCardContentTemplate
         Tags = new List<string> { "overlay", "hover-card", "content" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-@if (Parent?.IsVisible == true)
-{
-    <div class=""@Shell.Cn(""absolute z-50 w-64 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in fade-in-0 zoom-in-95"", Parent.PositionClasses, Parent.Class)"" @onmouseover=""() => Parent.Show()"" @onmouseout=""() => Parent.Hide()"" @attributes=""AdditionalAttributes"">
-        @ChildContent
-    </div>
-}
-
-@code {
-    [CascadingParameter] public HoverCard? Parent { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/HoverCardContent.razor");
 }

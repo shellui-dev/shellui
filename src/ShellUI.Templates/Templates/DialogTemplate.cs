@@ -15,27 +15,6 @@ public static class DialogTemplate
         Dependencies = new List<string> { "dialog-trigger", "dialog-content", "dialog-header", "dialog-footer", "dialog-title", "dialog-description", "dialog-close" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<CascadingValue Value=""this"" IsFixed=""true"">
-    @ChildContent
-</CascadingValue>
-
-@code {
-    [Parameter] public bool Open { get; set; }
-    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-
-    public async Task SetOpen(bool value)
-    {
-        if (Open != value)
-        {
-            Open = value;
-            await OpenChanged.InvokeAsync(value);
-            StateHasChanged();
-        }
-    }
-}
-";
+    public static string Content => ComponentSource.Read("Components/Dialog.razor");
 }
 

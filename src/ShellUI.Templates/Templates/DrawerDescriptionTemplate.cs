@@ -15,17 +15,5 @@ public class DrawerDescriptionTemplate
         Tags = new List<string> { "overlay", "drawer", "description" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<p class=""@Shell.Cn(""text-sm text-muted-foreground"", Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</p>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/DrawerDescription.razor");
 }

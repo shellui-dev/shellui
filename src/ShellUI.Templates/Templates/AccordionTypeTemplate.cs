@@ -15,12 +15,5 @@ public static class AccordionTypeTemplate
         Tags = new List<string> { "accordion", "enum", "utility" }
     };
 
-    public static string Content => @"namespace YourProjectNamespace.Components.UI;
-
-public enum AccordionType
-{
-    Single,
-    Multiple
-}
-";
+    public static string Content => ComponentSource.Read("AccordionType.cs");
 }

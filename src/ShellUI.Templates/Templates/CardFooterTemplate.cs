@@ -15,19 +15,7 @@ public static class CardFooterTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@Shell.Cn(""flex items-center p-6 pt-0"", Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/CardFooter.razor");
 }
 
 

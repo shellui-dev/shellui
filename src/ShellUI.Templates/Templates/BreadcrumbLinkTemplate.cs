@@ -15,18 +15,5 @@ public class BreadcrumbLinkTemplate
         Tags = new List<string> { "navigation", "breadcrumb", "link" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<a href=""@Href"" class=""@Shell.Cn(""transition-colors hover:text-foreground"", Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</a>
-
-@code {
-    [Parameter] public string? Href { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/BreadcrumbLink.razor");
 }

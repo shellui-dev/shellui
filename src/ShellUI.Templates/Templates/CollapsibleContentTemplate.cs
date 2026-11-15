@@ -16,18 +16,5 @@ public static class CollapsibleContentTemplate
         Tags = new List<string> { "layout", "collapsible", "content", "body" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-@if (Parent?.IsOpen == true)
-{
-    <div class=""overflow-hidden transition-all"">
-        @ChildContent
-    </div>
-}
-
-@code {
-    [CascadingParameter] public Collapsible? Parent { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/CollapsibleContent.razor");
 }

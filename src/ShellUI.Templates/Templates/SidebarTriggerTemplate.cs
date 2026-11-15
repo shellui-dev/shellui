@@ -14,36 +14,5 @@ public static class SidebarTriggerTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<button type=""button""
-        data-sidebar=""trigger""
-        class=""@Shell.Cn(
-            ""inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-7 w-7"",
-            Class)""
-        @onclick=""HandleClick""
-        @attributes=""AdditionalAttributes"">
-    <svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round"" class=""size-4"">
-        <line x1=""3"" y1=""6"" x2=""21"" y2=""6"" />
-        <line x1=""3"" y1=""12"" x2=""15"" y2=""12"" />
-        <line x1=""3"" y1=""18"" x2=""18"" y2=""18"" />
-    </svg>
-    <span class=""sr-only"">Toggle Sidebar</span>
-</button>
-
-@code {
-    [CascadingParameter] public SidebarProvider? SidebarProvider { get; set; }
-
-    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private async Task HandleClick(MouseEventArgs args)
-    {
-        await OnClick.InvokeAsync(args);
-        SidebarProvider?.Toggle();
-    }
-}
-";
+    public static string Content => ComponentSource.Read("Components/SidebarTrigger.razor");
 }

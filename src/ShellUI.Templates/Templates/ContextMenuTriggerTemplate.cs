@@ -15,17 +15,5 @@ public static class ContextMenuTriggerTemplate
         Tags = new List<string> { "overlay", "context-menu", "trigger" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [CascadingParameter] public ContextMenu? Parent { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/ContextMenuTrigger.razor");
 }

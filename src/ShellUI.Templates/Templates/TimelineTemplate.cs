@@ -15,17 +15,5 @@ public static class TimelineTemplate
         Tags = new List<string> { "timeline", "history", "activity" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<ol class=""@Shell.Cn(""relative"", Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</ol>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/Timeline.razor");
 }

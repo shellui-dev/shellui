@@ -17,4 +17,12 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+  <!-- The package's component source, which ComponentSource turns into CLI templates. -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\ShellUI.Components\Components\*.razor" LogicalName="ShellUI.Components/Components/%(Filename)%(Extension)" Visible="false" />
+    <EmbeddedResource Include="..\ShellUI.Components\Variants\*.cs" LogicalName="ShellUI.Components/Variants/%(Filename)%(Extension)" Visible="false" />
+    <EmbeddedResource Include="..\ShellUI.Components\Models\*.cs" LogicalName="ShellUI.Components/Models/%(Filename)%(Extension)" Visible="false" />
+    <EmbeddedResource Include="..\ShellUI.Components\*.cs" LogicalName="ShellUI.Components/%(Filename)%(Extension)" Visible="false" />
+  </ItemGroup>
+
 </Project>

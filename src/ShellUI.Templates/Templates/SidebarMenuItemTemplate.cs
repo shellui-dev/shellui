@@ -14,19 +14,5 @@ public static class SidebarMenuItemTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<li data-sidebar=""menu-item""
-    class=""@Shell.Cn(""group/menu-item relative"", Class)""
-    @attributes=""AdditionalAttributes"">
-    @ChildContent
-</li>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/SidebarMenuItem.razor");
 }

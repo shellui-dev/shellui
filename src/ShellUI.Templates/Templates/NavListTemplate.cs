@@ -15,17 +15,5 @@ public static class NavListTemplate
         Tags = new List<string> { "navigation", "nav", "list" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""group flex flex-1 list-none items-center justify-center space-x-1"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [CascadingParameter] public NavigationMenu? Parent { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/NavList.razor");
 }

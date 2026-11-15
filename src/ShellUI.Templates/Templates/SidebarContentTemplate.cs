@@ -14,19 +14,5 @@ public static class SidebarContentTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div data-sidebar=""content""
-     class=""@Shell.Cn(""flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden"", Class)""
-     @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/SidebarContent.razor");
 }

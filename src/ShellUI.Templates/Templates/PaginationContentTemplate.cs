@@ -15,17 +15,5 @@ public class PaginationContentTemplate
         Tags = new List<string> { "navigation", "pagination", "content" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<ul class=""@Shell.Cn(""flex flex-row items-center gap-1"", Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</ul>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/PaginationContent.razor");
 }

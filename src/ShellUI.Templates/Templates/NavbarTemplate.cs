@@ -15,23 +15,7 @@ public static class NavbarTemplate
         Dependencies = new List<string>()
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<nav class=""@Shell.Cn(""sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
-    <div class=""container flex h-14 items-center"">
-        @ChildContent
-    </div>
-</nav>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    // Deprecated: use Class.
-    [Parameter] public string ClassName { get; set; } = """";
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/Navbar.razor");
 }
 
 

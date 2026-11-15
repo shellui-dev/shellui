@@ -16,23 +16,5 @@ public class ChartSeriesTemplate
         Tags = new List<string> { "chart", "series", "data", "visualization", "apexcharts" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-@using ApexCharts
-@typeparam TItem where TItem : class
-
-<ApexPointSeries TItem=""TItem""
-                 Items=""Data""
-                 Name=""@Name""
-                 SeriesType=""@SeriesType""
-                 XValue=""@XValue""
-                 YValue=""@YValue"" />
-
-@code {
-    [Parameter] public IEnumerable<TItem>? Data { get; set; }
-    [Parameter] public string Name { get; set; } = ""Series"";
-    [Parameter] public SeriesType SeriesType { get; set; } = SeriesType.Line;
-    [Parameter] public Func<TItem, object>? XValue { get; set; }
-    [Parameter] public Func<TItem, decimal?>? YValue { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/ChartSeries.razor");
 }

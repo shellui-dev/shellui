@@ -15,27 +15,5 @@ public static class PromptSuggestionsTemplate
         Tags = new List<string> { "chat", "ai", "suggestions", "prompt" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@Shell.Cn(""flex flex-wrap gap-2"", Class)"" @attributes=""AdditionalAttributes"">
-    @foreach (var suggestion in Suggestions)
-    {
-        <button type=""button""
-                disabled=""@Disabled""
-                @onclick=""() => OnSelect.InvokeAsync(suggestion)""
-                class=""inline-flex items-center rounded-full border border-border bg-background px-3 py-1.5 text-left text-sm text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"">
-            @suggestion
-        </button>
-    }
-</div>
-
-@code {
-    [Parameter] public IEnumerable<string> Suggestions { get; set; } = Array.Empty<string>();
-    [Parameter] public EventCallback<string> OnSelect { get; set; }
-    [Parameter] public bool Disabled { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/PromptSuggestions.razor");
 }

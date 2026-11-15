@@ -14,23 +14,5 @@ public static class SidebarMenuBadgeTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div data-sidebar=""menu-badge""
-     class=""@Shell.Cn(
-         ""pointer-events-none absolute right-1 flex min-w-5 select-none items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums text-sidebar-foreground"",
-         ""peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground"",
-         ""group-data-[collapsible=icon]:hidden"",
-         Class)""
-     @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/SidebarMenuBadge.razor");
 }

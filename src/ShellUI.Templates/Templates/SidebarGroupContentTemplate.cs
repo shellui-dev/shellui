@@ -14,19 +14,5 @@ public static class SidebarGroupContentTemplate
         IsAvailable = false
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div data-sidebar=""group-content""
-     class=""@Shell.Cn(""w-full text-sm"", Class)""
-     @attributes=""AdditionalAttributes"">
-    @ChildContent
-</div>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/SidebarGroupContent.razor");
 }
