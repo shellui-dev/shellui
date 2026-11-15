@@ -10,6 +10,23 @@ namespace ShellUI.Tests;
 public class PackageBehaviorTests
 {
     [Fact]
+    public void CarouselDots_ReportsTheClickedDot()
+    {
+        using var ctx = new BunitContext();
+        var clicked = new List<int>();
+
+        var dots = ctx.Render<CarouselDots>(p => p
+            .Add(c => c.TotalSlides, 3)
+            .Add(c => c.CurrentSlide, 0)
+            .Add(c => c.OnDotClick, EventCallback.Factory.Create<int>(this, clicked.Add)));
+
+        dots.FindAll("button")[1].Click();
+        dots.FindAll("button")[2].Click();
+
+        Assert.Equal(new[] { 1, 2 }, clicked);
+    }
+
+    [Fact]
     public void Command_RunsTheItemActionThenRaisesCommandSelected()
     {
         using var ctx = new BunitContext();
