@@ -16,35 +16,7 @@ public class RadioGroupTemplate
         Dependencies = new List<string> { "radio-group-item" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<div class=""@Shell.Cn(ClassName, Class)"" @attributes=""AdditionalAttributes"">
-    <CascadingValue Value=""this"">
-        @ChildContent
-    </CascadingValue>
-</div>
-
-@code {
-    [Parameter] public string? Value { get; set; }
-    [Parameter] public EventCallback<string> ValueChanged { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    // Deprecated: use Class.
-    [Parameter] public string ClassName { get; set; } = """";
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-    
-    public async Task SetValue(string value)
-    {
-        if (Value != value)
-        {
-            Value = value;
-            await ValueChanged.InvokeAsync(value);
-            StateHasChanged();
-        }
-    }
-}
-";
+    public static string Content => ComponentSource.Read("Components/RadioGroup.razor");
 }
 
 

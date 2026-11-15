@@ -15,21 +15,7 @@ public class TableBodyTemplate
         Tags = new List<string> { "table", "body", "tbody" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<tbody class=""@Shell.Cn(""[&_tr:last-child]:border-0"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</tbody>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    // Deprecated: use Class.
-    [Parameter] public string ClassName { get; set; } = """";
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/TableBody.razor");
 }
 
 

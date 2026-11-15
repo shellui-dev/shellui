@@ -15,21 +15,7 @@ public class TableCellTemplate
         Tags = new List<string> { "table", "cell", "td" }
     };
 
-    public static string Content => @"@namespace YourProjectNamespace.Components.UI
-
-<td class=""@Shell.Cn(""p-4 align-middle [&:has([role=checkbox])]:pr-0"", ClassName, Class)"" @attributes=""AdditionalAttributes"">
-    @ChildContent
-</td>
-
-@code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string? Class { get; set; }
-    // Deprecated: use Class.
-    [Parameter] public string ClassName { get; set; } = """";
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-}
-";
+    public static string Content => ComponentSource.Read("Components/TableCell.razor");
 }
 
 

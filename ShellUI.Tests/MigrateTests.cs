@@ -123,4 +123,37 @@ public class MigrateTests : IDisposable
         Assert.Empty(plan.Edits);
         Assert.Empty(plan.Notes);
     }
+
+    [Fact]
+    public void ClassName_BecomesClassOnTheComponentsThatHadTheAlias()
+    {
+        Page("Orders.razor", "<Table ClassName=\"mt-4\">\n<TableRow ClassName=\"@rowClass\" />\n</Table>\n<Switch ClassName='ml-2' />\n<Card ClassName=\"x\" />");
+
+        var edit = SingleEdit();
+
+        Assert.Equal("<Table Class=\"mt-4\">\n<TableRow Class=\"@rowClass\" />\n</Table>\n<Switch Class='ml-2' />\n<Card ClassName=\"x\" />", edit.After);
+    }
+
+    [Fact]
+    public void ClassName_OnlyTouchesTheChosenComponent()
+    {
+        Page("Orders.razor", "<Table ClassName=\"mt-4\">\n<TableRow ClassName=\"r\" />\n</Table>");
+
+        var edit = SingleEdit("table");
+
+        Assert.Equal("<Table Class=\"mt-4\">\n<TableRow ClassName=\"r\" />\n</Table>", edit.After);
+    }
+
+    [Fact]
+    public void ClassName_IsLeftAndReportedWhenTheTagAlsoSetsClass()
+    {
+        Page("Form.razor", "<p>Terms</p>\n<Checkbox ClassName=\"a\" Class=\"b\" />");
+
+        var plan = MigrateService.Plan(_root, new[] { "checkbox" });
+
+        Assert.Empty(plan.Edits);
+        var note = Assert.Single(plan.Notes);
+        Assert.Equal(2, note.Line);
+        Assert.Contains("<Checkbox> sets both ClassName and Class", note.Message);
+    }
 }

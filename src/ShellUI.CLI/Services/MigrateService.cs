@@ -17,7 +17,18 @@ public static class MigrateService
 {
     private record Migration(string Component, string Summary, Func<string, string> Rewrite);
 
-    private static readonly Migration[] Migrations =
+    // CLI templates had a deprecated ClassName alias for Class, which the package never had; it was dropped in 0.5.0.
+    private static readonly (string Component, string Tag)[] ClassNameAlias =
+    {
+        ("checkbox", "Checkbox"), ("date-picker", "DatePicker"), ("date-range-picker", "DateRangePicker"),
+        ("radio-group", "RadioGroup"), ("radio-group-item", "RadioGroupItem"), ("scroll-area", "ScrollArea"),
+        ("separator", "Separator"), ("skeleton", "Skeleton"), ("slider", "Slider"), ("switch", "Switch"),
+        ("table", "Table"), ("table-body", "TableBody"), ("table-cell", "TableCell"), ("table-head", "TableHead"),
+        ("table-header", "TableHeader"), ("table-row", "TableRow"), ("time-picker", "TimePicker"),
+        ("toast", "Toast"), ("tooltip", "Tooltip"),
+    };
+
+    private static readonly Migration[] Migrations = new Migration[]
     {
         new("input", "Input.InputVariant.X → InputVariant.X (0.4.0-alpha.3)",
             text => text.Replace("Input.InputVariant.", "InputVariant.")),
@@ -29,7 +40,10 @@ public static class MigrateService
             text => RewriteTags(text, "Pagination", tag =>
                 // @bind-CurrentPage already sets CurrentPageChanged, so a tag with both can't be renamed.
                 Regex.IsMatch(tag, @"@bind-CurrentPage\b") ? tag : Regex.Replace(tag, @"(?<=\s)OnPageChange(?=\s*=)", "CurrentPageChanged"))),
-    };
+    }.Concat(ClassNameAlias.Select(c => new Migration(c.Component, $"{c.Tag} ClassName → Class (0.5.0)",
+        // A tag that already sets Class needs the two merged by hand; Plan reports it.
+        text => RewriteTags(text, c.Tag, tag => HasParameter(tag, "Class") ? tag : RenameParameter(tag, "ClassName", "Class")))))
+    .ToArray();
 
     // calendar only reports handlers to fix by hand.
     public static IReadOnlyList<string> Components => Migrations.Select(m => m.Component).Append("calendar").Distinct().ToList();
@@ -89,6 +103,7 @@ public static class MigrateService
             ? Migrations.Where(m => list.Contains(m.Component, StringComparer.OrdinalIgnoreCase)).ToList()
             : Migrations.ToList();
         var checkCalendar = components?.Any() != true || components.Contains("calendar", StringComparer.OrdinalIgnoreCase);
+        var aliasTags = ClassNameAlias.Where(c => wanted.Any(m => m.Component == c.Component)).Select(c => c.Tag).Distinct().ToList();
 
         var edits = new List<MigrationEdit>();
         var notes = new List<MigrationNote>();
@@ -106,6 +121,7 @@ public static class MigrateService
             }
             if (after != before) edits.Add(new MigrationEdit(path, before, after, applied));
             if (checkCalendar) notes.AddRange(CalendarHandlerNotes(path, after));
+            notes.AddRange(ClassNameNotes(path, after, aliasTags));
         }
         return new MigrationPlan(edits, notes);
     }
@@ -163,6 +179,23 @@ public static class MigrateService
     // Renames Old, OldChanged, @bind-Old and @bind-Old:after (and so on) to the new name.
     private static string RenameParameter(string tag, string oldName, string newName) =>
         Regex.Replace(tag, $@"(?<=\s)(@bind-)?{oldName}(Changed)?(?=[\s:=])", m => m.Groups[1].Value + newName + m.Groups[2].Value);
+
+    private static bool HasParameter(string tag, string name) => Regex.IsMatch(tag, $@"(?<=\s){name}\s*=");
+
+    // Tags that set both ClassName and Class, which the ClassName migration leaves for a person to merge.
+    private static IEnumerable<MigrationNote> ClassNameNotes(string path, string text, IReadOnlyCollection<string> tags)
+    {
+        foreach (var tag in tags)
+        {
+            foreach (Match m in Regex.Matches(text, $@"<{tag}(?=[\s/>])"))
+            {
+                var element = text[m.Index..TagEnd(text, m.Index + m.Length)];
+                if (!HasParameter(element, "Class") || !HasParameter(element, "ClassName")) continue;
+                var line = text[..m.Index].Count(c => c == '\n') + 1;
+                yield return new MigrationNote(path, line, $"<{tag}> sets both ClassName and Class; move the ClassName classes into Class (ClassName was removed in 0.5.0).");
+            }
+        }
+    }
 
     // Calendar.SelectedDateChanged became EventCallback<DateTime?> in 0.4.0-alpha.1; a handler taking DateTime no longer compiles.
     private static IEnumerable<MigrationNote> CalendarHandlerNotes(string path, string text)
