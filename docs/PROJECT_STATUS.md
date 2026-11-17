@@ -60,9 +60,9 @@ The direct-target count is the number shown by the normal public list. The hidde
 
 ### Tests and CI
 
-`ShellUI.Tests` uses xUnit, `Microsoft.NET.Test.Sdk`, Roslyn through `Microsoft.CodeAnalysis.CSharp`, and `coverlet.collector`. The current suite covers registry/dependency checks, template parsing, template synchronization, initialization, chart assets, safelist drift, and related CLI behavior.
+`ShellUI.Tests` uses xUnit, `Microsoft.NET.Test.Sdk`, Roslyn through `Microsoft.CodeAnalysis.CSharp`, bUnit, and `coverlet.collector`. The current suite covers registry/dependency checks, template parsing, that CLI templates read the package source, rendered package components, initialization, chart assets, safelist drift, and related CLI behavior.
 
-There is currently no bUnit, FluentAssertions, rendered-component, or browser-automation suite. Accessibility behavior should be reviewed in the relevant component and consumer context, but the project does not claim an automated accessibility-conformance level.
+There is currently no FluentAssertions or browser-automation suite; package components are rendered and clicked with bUnit. Accessibility behavior should be reviewed in the relevant component and consumer context, but the project does not claim an automated accessibility-conformance level.
 
 CI restores `ShellUI.slnx`, regenerates the precompiled CSS bundle, builds the solution, runs tests, and performs CLI scaffolding and NuGet-only smoke checks. The demo remains outside that solution workflow.
 
@@ -72,7 +72,7 @@ CI restores `ShellUI.slnx`, regenerates the precompiled CSS bundle, builds the s
 - Only `ShellUI.CLI` and `ShellUI.Components` are packable in the current project configuration.
 - `ShellUI.Core` and `ShellUI.Templates` are internal; they are not consumer installation targets.
 - No stable release date, adoption target, or guaranteed delivery schedule is stated here.
-- The current test stack does not provide a browser or rendered-component test harness.
+- The current test stack does not provide a browser test harness; component rendering is tested with bUnit only.
 
 ## Unscheduled Proposals
 
