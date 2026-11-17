@@ -80,7 +80,6 @@
             await JSRuntime.InvokeVoidAsync(
                 _isDark ? "ShellUI.addClassToDocument" : "ShellUI.removeClassFromDocument",
                 "dark");
-            StateHasChanged();
         }
         catch
         {

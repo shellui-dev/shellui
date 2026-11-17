@@ -19,8 +19,6 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <!-- .NET 11's analyzer flags StateHasChanged calls it thinks are redundant; removing them is a separate cleanup. -->
-    <NoWarn>$(NoWarn);BL0012</NoWarn>
 
   </PropertyGroup>
 

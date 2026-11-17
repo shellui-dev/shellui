@@ -47,6 +47,7 @@
         StateHasChanged();
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "BL0012", Justification = "DropdownItem calls it, so the dropdown has to re-render itself.")]
     public async Task CloseAsync()
     {
         IsOpen = false;

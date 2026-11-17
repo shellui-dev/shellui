@@ -79,21 +79,25 @@
     {
         if (Disabled) return;
         _isDragOver = true;
-        StateHasChanged();
     }
 
     private void HandleDragLeave(DragEventArgs e)
     {
         if (Disabled) return;
         _isDragOver = false;
-        StateHasChanged();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !Disabled)
         {
-            await JSRuntime.InvokeVoidAsync("ShellUI.setupFileDrop", _dropZoneId, _inputId);
+            // Without shellui.js the zone still opens the file picker on click; only dropping files needs the script.
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("ShellUI.setupFileDrop", _dropZoneId, _inputId);
+            }
+            catch (JSException) { }
+            catch (JSDisconnectedException) { }
         }
     }
 
@@ -101,7 +105,6 @@
     {
         if (Disabled) return;
         _isDragOver = false;
-        StateHasChanged();
     }
 
     private async Task HandleFileSelection(InputFileChangeEventArgs e)

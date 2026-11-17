@@ -42,6 +42,7 @@
     };
 
     public async Task ToggleAsync() { IsOpen = !IsOpen; await IsOpenChanged.InvokeAsync(IsOpen); StateHasChanged(); }
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "BL0012", Justification = "Child components call it, so the popover has to re-render itself.")]
     public async Task CloseAsync() { IsOpen = false; await IsOpenChanged.InvokeAsync(IsOpen); StateHasChanged(); }
     private async Task Toggle() => await ToggleAsync();
     private async Task Close() => await CloseAsync();

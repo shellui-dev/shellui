@@ -167,7 +167,6 @@
             _activeStep = nextStep;
             await CurrentStepChanged.InvokeAsync(nextStep);
             _justNavigated = false;
-            StateHasChanged();
         }
     }
 

@@ -61,7 +61,6 @@
     {
         IsOpen = true;
         await IsOpenChanged.InvokeAsync(IsOpen);
-        StateHasChanged();
     }
 
     internal async Task SelectItem(ContextMenuItem? item)
@@ -75,6 +74,7 @@
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "BL0012", Justification = "ContextMenuOption calls it, so the menu has to re-render itself.")]
     internal async Task CloseAsync()
     {
         IsOpen = false;
