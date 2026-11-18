@@ -259,6 +259,8 @@ public static class ComponentRegistry
         { "tool-call", ToolCallTemplate.Metadata },
         { "json-viewer", JsonViewerTemplate.Metadata },
         { "json-viewer-node", JsonViewerNodeTemplate.Metadata },
+        { "code-block", CodeBlockTemplate.Metadata },
+        { "markdown", MarkdownTemplate.Metadata },
         { "command-models", CommandModelsTemplate.Metadata },
         { "stepper-models", StepperModelsTemplate.Metadata },
     };
@@ -519,6 +521,8 @@ public static class ComponentRegistry
             "tool-call" => ToolCallTemplate.Content,
             "json-viewer" => JsonViewerTemplate.Content,
             "json-viewer-node" => JsonViewerNodeTemplate.Content,
+            "code-block" => CodeBlockTemplate.Content,
+            "markdown" => MarkdownTemplate.Content,
             "command-models" => CommandModelsTemplate.Content,
             "stepper-models" => StepperModelsTemplate.Content,
             _ => null

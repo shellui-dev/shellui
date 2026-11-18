@@ -39,7 +39,7 @@ dotnet watch
 |---|---|
 | `init` | Set up ShellUI and Tailwind in the current project |
 | `add <names...>` | Install components and their dependencies (`add all` for the whole library) |
-| `list` | List the 98 components and blocks, with `--installed` or `--available` filters |
+| `list` | List the 100 components and blocks, with `--installed` or `--available` filters |
 | `remove <names...>` | Delete installed component files |
 | `update [names...]` | Rewrite installed components from the current templates (all of them when no names are given) |
 | `doctor` | Check the project's ShellUI setup and say how to fix each problem |

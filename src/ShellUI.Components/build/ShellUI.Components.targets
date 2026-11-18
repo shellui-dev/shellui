@@ -67,11 +67,13 @@
     <ShellUISafelistEntry Include="border-b" />
     <ShellUISafelistEntry Include="border-border" />
     <ShellUISafelistEntry Include="border-border/40" />
+    <ShellUISafelistEntry Include="border-collapse" />
     <ShellUISafelistEntry Include="border-dashed" />
     <ShellUISafelistEntry Include="border-destructive" />
     <ShellUISafelistEntry Include="border-green-500" />
     <ShellUISafelistEntry Include="border-input" />
     <ShellUISafelistEntry Include="border-l" />
+    <ShellUISafelistEntry Include="border-l-2" />
     <ShellUISafelistEntry Include="border-muted" />
     <ShellUISafelistEntry Include="border-primary" />
     <ShellUISafelistEntry Include="border-r" />
@@ -324,6 +326,8 @@
     <ShellUISafelistEntry Include="left-[50%]" />
     <ShellUISafelistEntry Include="left-full" />
     <ShellUISafelistEntry Include="lg:space-x-8" />
+    <ShellUISafelistEntry Include="list-decimal" />
+    <ShellUISafelistEntry Include="list-disc" />
     <ShellUISafelistEntry Include="list-none" />
     <ShellUISafelistEntry Include="max-h-48" />
     <ShellUISafelistEntry Include="max-h-60" />
@@ -333,6 +337,7 @@
     <ShellUISafelistEntry Include="max-h-screen" />
     <ShellUISafelistEntry Include="max-w-[80%]" />
     <ShellUISafelistEntry Include="max-w-[90vw]" />
+    <ShellUISafelistEntry Include="max-w-full" />
     <ShellUISafelistEntry Include="max-w-lg" />
     <ShellUISafelistEntry Include="max-w-max" />
     <ShellUISafelistEntry Include="max-w-sm" />
@@ -431,6 +436,7 @@
     <ShellUISafelistEntry Include="pl-2.5" />
     <ShellUISafelistEntry Include="pl-3" />
     <ShellUISafelistEntry Include="pl-4" />
+    <ShellUISafelistEntry Include="pl-6" />
     <ShellUISafelistEntry Include="pl-8" />
     <ShellUISafelistEntry Include="placeholder:text-muted-foreground" />
     <ShellUISafelistEntry Include="pointer-events-auto" />
@@ -527,6 +533,7 @@
     <ShellUISafelistEntry Include="space-x-2" />
     <ShellUISafelistEntry Include="space-x-4" />
     <ShellUISafelistEntry Include="space-y-0.5" />
+    <ShellUISafelistEntry Include="space-y-1" />
     <ShellUISafelistEntry Include="space-y-1.5" />
     <ShellUISafelistEntry Include="space-y-2" />
     <ShellUISafelistEntry Include="space-y-3" />
@@ -538,6 +545,7 @@
     <ShellUISafelistEntry Include="supports-[backdrop-filter]:bg-background/60" />
     <ShellUISafelistEntry Include="tabular-nums" />
     <ShellUISafelistEntry Include="text-2xl" />
+    <ShellUISafelistEntry Include="text-[0.85em]" />
     <ShellUISafelistEntry Include="text-[10px]" />
     <ShellUISafelistEntry Include="text-[11px]" />
     <ShellUISafelistEntry Include="text-[8px]" />

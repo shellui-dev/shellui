@@ -64,11 +64,13 @@ border-2
 border-b
 border-border
 border-border/40
+border-collapse
 border-dashed
 border-destructive
 border-green-500
 border-input
 border-l
+border-l-2
 border-muted
 border-primary
 border-r
@@ -321,6 +323,8 @@ left-3.5
 left-[50%]
 left-full
 lg:space-x-8
+list-decimal
+list-disc
 list-none
 max-h-48
 max-h-60
@@ -330,6 +334,7 @@ max-h-[min(360px,55vh)]
 max-h-screen
 max-w-[80%]
 max-w-[90vw]
+max-w-full
 max-w-lg
 max-w-max
 max-w-sm
@@ -428,6 +433,7 @@ pl-2
 pl-2.5
 pl-3
 pl-4
+pl-6
 pl-8
 placeholder:text-muted-foreground
 pointer-events-auto
@@ -524,6 +530,7 @@ space-x-1
 space-x-2
 space-x-4
 space-y-0.5
+space-y-1
 space-y-1.5
 space-y-2
 space-y-3
@@ -535,6 +542,7 @@ starting:scale-95
 supports-[backdrop-filter]:bg-background/60
 tabular-nums
 text-2xl
+text-[0.85em]
 text-[10px]
 text-[11px]
 text-[8px]
