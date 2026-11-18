@@ -57,7 +57,7 @@ The six nodes inside `ShellUI.slnx` are the solution projects. The demo at `NET1
 | `src/ShellUI.CLI/ShellUI.CLI.csproj` | .NET global tool and source-copy CLI | Yes |
 | `src/ShellUI.Components/ShellUI.Components.csproj` | Packable Razor class library containing the runtime component set and static assets | Yes |
 | `src/ShellUI.Core/ShellUI.Core.csproj` | Shared configuration, metadata, Tailwind constants, and models | No |
-| `src/ShellUI.Templates/ShellUI.Templates.csproj` | Internal component registry and generated source templates | No |
+| `src/ShellUI.Templates/ShellUI.Templates.csproj` | Internal component registry and the CLI templates, which read the `ShellUI.Components` source | No |
 | `tools/ShellUI.SafelistGenerator/ShellUI.SafelistGenerator.csproj` | Build-time Tailwind safelist and CSS bundle utility | No |
 | `ShellUI.Tests/ShellUI.Tests.csproj` | xUnit, Roslyn, and coverlet test project | No |
 
@@ -134,7 +134,7 @@ bash scripts/rebuild-precompiled-css.sh
 
 The generator updates the class list and package targets; the CSS script consumes those files.
 
-CI then performs a Release build and test run, followed by CLI scaffolding and NuGet-only smoke checks. The test project currently uses xUnit, `Microsoft.NET.Test.Sdk`, Roslyn (`Microsoft.CodeAnalysis.CSharp`), and `coverlet.collector`. It does not currently contain a bUnit, FluentAssertions, or browser-automation suite; tests should use the existing infrastructure or propose a new harness before assuming one.
+CI then performs a Release build and test run, followed by CLI scaffolding and NuGet-only smoke checks. The test project currently uses xUnit, `Microsoft.NET.Test.Sdk`, Roslyn (`Microsoft.CodeAnalysis.CSharp`), bUnit for rendering package components, and `coverlet.collector`. It does not currently contain a FluentAssertions or browser-automation suite; tests should use the existing infrastructure or propose a new harness before assuming one.
 
 The demo runs independently:
 

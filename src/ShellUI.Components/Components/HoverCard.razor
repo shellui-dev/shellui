@@ -34,6 +34,7 @@
     private bool _isVisible;
     private System.Timers.Timer? _timer;
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "BL0012", Justification = "HoverCardTrigger calls it, so the card has to re-render itself.")]
     public void Show()
     {
         _timer?.Stop();

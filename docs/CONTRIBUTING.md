@@ -70,9 +70,10 @@ The current `ShellUI.Tests` project uses:
 - xUnit with the Visual Studio runner.
 - `Microsoft.NET.Test.Sdk`.
 - Roslyn through `Microsoft.CodeAnalysis.CSharp`.
+- bUnit, to render package components and click through their behaviour.
 - `coverlet.collector`.
 
-The current tests cover registry and dependency integrity, template parsing, template-to-RCL synchronization, initialization and host bootstrap, chart assets, safelist drift, and related CLI behavior. There is currently no bUnit, FluentAssertions, rendered-component, or browser-automation suite. Do not add examples or tests that assume those packages or a browser runner. If rendered UI coverage is needed, propose the harness and its dependencies as part of the change.
+The current tests cover registry and dependency integrity, template parsing, that CLI templates read the package source, rendered package components (bUnit), initialization and host bootstrap, chart assets, safelist drift, and related CLI behavior. There is currently no FluentAssertions or browser-automation suite. Do not add examples or tests that assume FluentAssertions or a browser runner. If browser-level coverage is needed, propose the harness and its dependencies as part of the change.
 
 The CI workflow additionally packs the CLI, scaffolds a fresh Blazor application, runs `init` and `add`, builds the result, and verifies the NuGet-only package path. A local change should be considered ready when the solution build and test commands pass and any affected CLI smoke scenario has been checked.
 
@@ -84,14 +85,11 @@ dotnet run --project NET10/BlazorInteractiveServer/BlazorInteractiveServer.cspro
 
 ## Component Changes
 
-Component work has two representations that must remain synchronized:
-
-- The live Razor class library under `src/ShellUI.Components/Components/`.
-- The CLI source templates and registry under `src/ShellUI.Templates/`.
+A component's source lives once, in the Razor class library under `src/ShellUI.Components/`. The CLI templates in `src/ShellUI.Templates/` read that source through `ComponentSource`, so a change to the package reaches `shellui add` too. A few templates are still hand-written on purpose (the JS-interop components, the blocks, Sonner); `TemplateSyncTests` lists them in `HandWritten` and fails if any other template stops reading the package.
 
 For a component change:
 
-1. Update the live component and its generated template together.
+1. Change the component in `src/ShellUI.Components/`. For a new component, add its template with `public static string Content => ComponentSource.Read("Components/Name.razor");`, and the files it needs.
 2. Update registry metadata, dependencies, `FilePath`, variants, and NuGet dependencies when the public contract changes.
 3. Preserve the distinction between direct targets and hidden dependency entries. The current registry has 254 entries, including 98 direct targets and 156 hidden entries.
 4. Use the Tailwind `4.3.2` variable and utility conventions already used by the project.

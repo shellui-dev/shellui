@@ -134,6 +134,44 @@ public class PackageBehaviorTests
         ctx.JSInterop.VerifyInvoke("ShellUI.releaseFocus");
     }
 
+    [Theory]
+    [InlineData("overlay")]
+    [InlineData("escape")]
+    public void LegacyDrawer_ClosesAndRerendersWithoutTheDialog(string how)
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        bool? open = null;
+
+        var drawer = ctx.Render<Drawer>(p => p
+            .Add(c => c.Open, true)
+            .Add(c => c.Title, "Filters")
+            .Add(c => c.OpenChanged, EventCallback.Factory.Create<bool>(this, v => open = v))
+            .AddChildContent("Body"));
+
+        if (how == "overlay") drawer.Find("div.fixed.inset-0").Click();
+        else drawer.Find("[role=dialog]").KeyDown(new KeyboardEventArgs { Key = "Escape" });
+
+        Assert.False(open);
+        Assert.Empty(drawer.FindAll("[role=dialog]"));
+    }
+
+    [Fact]
+    public void FileUpload_HighlightsTheZoneWhileAFileIsDraggedOverIt()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var upload = ctx.Render<FileUpload>();
+        var zone = () => upload.Find("label");
+
+        zone().DragOver();
+        Assert.Contains("border-primary bg-primary/10", zone().ClassName);
+
+        zone().DragLeave();
+        Assert.DoesNotContain("bg-primary/10", zone().ClassName);
+    }
+
     [Fact]
     public void RadioGroup_SelectsTheClickedItemButNotADisabledOne()
     {
