@@ -49,7 +49,7 @@ shellui add button,input,card
 shellui add button,card dialog
 ```
 
-Use the exact names printed by `shellui list`. Dependency-only entries are installed automatically and are not counted among the 98 direct targets.
+Use the exact names printed by `shellui list`. Dependency-only entries are installed automatically and are not counted among the 100 direct targets.
 
 ### Which names should I use?
 
@@ -87,7 +87,7 @@ shellui list --installed
 shellui list --available
 ```
 
-There are 98 direct targets. Use the command output as the authoritative name list.
+There are 100 direct targets. Use the command output as the authoritative name list.
 
 ### What happens when I update a component?
 

@@ -44,9 +44,9 @@ theme update
 
 ### Registry and components
 
-`ComponentRegistry` has 254 entries:
+`ComponentRegistry` has 256 entries:
 
-- 98 direct targets with `IsAvailable = true`.
+- 100 direct targets with `IsAvailable = true`.
 - 156 hidden entries with `IsAvailable = false`, generally installed as dependencies or assets.
 
 The direct-target count is the number shown by the normal public list. The hidden count is not a second public library; it represents the sub-components, variants, models, services, and assets needed to make the direct targets work.
