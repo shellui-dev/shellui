@@ -1,0 +1,146 @@
+@namespace ShellUI.Components
+@using Markdig
+@using Markdig.Renderers.Html
+@using Md = Markdig.Syntax
+@using MdInline = Markdig.Syntax.Inlines
+@using MdTables = Markdig.Extensions.Tables
+@using MdHtmlRenderer = Markdig.Renderers.HtmlRenderer
+
+<div class="@Shell.Cn("space-y-3 text-sm leading-relaxed text-foreground break-words", Class)" @attributes="AdditionalAttributes">
+    @foreach (var part in _parts)
+    {
+        if (part.Html != null)
+        {
+            @((MarkupString)part.Html)
+        }
+        else
+        {
+            <CodeBlock Code="@part.Code" Language="@part.Language" ShowCopy="ShowCopy" />
+        }
+    }
+</div>
+
+@code {
+    // Markdown to render, for example a model's reply; safe to re-render while it streams in.
+    [Parameter] public string? Content { get; set; }
+    // Copy buttons on code blocks.
+    [Parameter] public bool ShowCopy { get; set; } = true;
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private record Part(string? Html, string? Code = null, string? Language = null);
+
+    private List<Part> _parts = new();
+    private string? _rendered;
+
+    // No UseAdvancedExtensions: its generic attributes ({onclick=...}) would let the text add any HTML attribute.
+    // DisableHtml shows raw HTML as text, so model output can't inject markup.
+    private static readonly MarkdownPipeline Pipeline = new MarkdownPipelineBuilder()
+        .UsePipeTables()
+        .UseTaskLists()
+        .UseAutoLinks()
+        .UseEmphasisExtras()
+        .DisableHtml()
+        .Build();
+
+    protected override void OnParametersSet()
+    {
+        if (Content == _rendered) return;
+        _rendered = Content;
+        _parts = Render(Content ?? "");
+    }
+
+    // Top-level code blocks become CodeBlock components (with a copy button); the rest is HTML.
+    private static List<Part> Render(string markdown)
+    {
+        var document = Markdig.Markdown.Parse(markdown, Pipeline);
+        foreach (var node in Md.MarkdownObjectExtensions.Descendants(document)) Style(node);
+
+        var parts = new List<Part>();
+        StringWriter? html = null;
+        MdHtmlRenderer? renderer = null;
+        foreach (var block in document)
+        {
+            if (block is Md.CodeBlock code)
+            {
+                if (html != null) parts.Add(new Part(html.ToString()));
+                html = null;
+                renderer = null;
+                parts.Add(new Part(null, code.Lines.ToString(), (code as Md.FencedCodeBlock)?.Info));
+                continue;
+            }
+            if (renderer == null)
+            {
+                html = new StringWriter();
+                renderer = new MdHtmlRenderer(html);
+                Pipeline.Setup(renderer);
+            }
+            renderer.Render(block);
+        }
+        if (html != null) parts.Add(new Part(html.ToString()));
+        return parts;
+    }
+
+    private static void Style(Md.MarkdownObject node)
+    {
+        switch (node)
+        {
+            case Md.HeadingBlock heading:
+                node.GetAttributes().AddClass(heading.Level switch
+                {
+                    1 => "text-2xl font-semibold tracking-tight",
+                    2 => "text-xl font-semibold tracking-tight",
+                    3 => "text-lg font-semibold",
+                    _ => "font-semibold"
+                });
+                break;
+            case Md.ListBlock list:
+                node.GetAttributes().AddClass(list.IsOrdered ? "list-decimal space-y-1 pl-6" : "list-disc space-y-1 pl-6");
+                break;
+            case Md.QuoteBlock:
+                node.GetAttributes().AddClass("border-l-2 border-border pl-4 text-muted-foreground");
+                break;
+            case Md.ThematicBreakBlock:
+                node.GetAttributes().AddClass("border-border");
+                break;
+            case Md.CodeBlock:
+                // Code blocks nested in a list or quote stay HTML.
+                node.GetAttributes().AddClass("overflow-x-auto rounded-lg border border-border bg-muted/40 p-3 font-mono text-sm");
+                break;
+            case MdTables.Table:
+                node.GetAttributes().AddClass("block w-full overflow-x-auto border-collapse text-sm");
+                break;
+            case MdTables.TableCell cell:
+                var header = cell.Parent is MdTables.TableRow { IsHeader: true };
+                node.GetAttributes().AddClass(header ? "border border-border bg-muted px-3 py-1.5 text-left font-medium" : "border border-border px-3 py-1.5 text-left");
+                break;
+            case MdInline.CodeInline:
+                node.GetAttributes().AddClass("rounded bg-muted px-1.5 py-0.5 font-mono text-[0.85em]");
+                break;
+            case MdInline.LinkInline link:
+                link.Url = SafeUrl(link.Url);
+                node.GetAttributes().AddClass(link.IsImage ? "max-w-full rounded-md" : "font-medium text-primary underline underline-offset-4");
+                if (!link.IsImage) node.GetAttributes().AddProperty("rel", "noopener noreferrer");
+                break;
+            case MdInline.AutolinkInline autolink:
+                autolink.Url = SafeUrl(autolink.Url) ?? "";
+                node.GetAttributes().AddClass("font-medium text-primary underline underline-offset-4");
+                break;
+        }
+    }
+
+    private static readonly string[] SafeSchemes = { "http", "https", "mailto", "tel" };
+
+    // Relative links and the schemes above pass; javascript:, data: and the like become an empty link.
+    internal static string? SafeUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return url;
+        var trimmed = url.Trim();
+        var colon = trimmed.IndexOf(':');
+        var firstSeparator = trimmed.IndexOfAny(new[] { '/', '?', '#' });
+        if (colon < 0 || (firstSeparator >= 0 && firstSeparator < colon)) return trimmed;
+        var scheme = trimmed[..colon].ToLowerInvariant();
+        return SafeSchemes.Contains(scheme) ? trimmed : "";
+    }
+}

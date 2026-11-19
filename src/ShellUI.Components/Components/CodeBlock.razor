@@ -1,0 +1,35 @@
+@namespace ShellUI.Components
+
+<div class="@Shell.Cn("relative overflow-hidden rounded-lg border border-border bg-muted/40", Class)" @attributes="AdditionalAttributes">
+    @if (HasHeader)
+    {
+        <div class="flex h-9 items-center justify-between gap-2 border-b border-border px-3 text-xs text-muted-foreground">
+            <span class="truncate font-mono">@(Filename ?? Language)</span>
+            @if (ShowCopy)
+            {
+                <CopyButton Text="@Code" Class="h-7 w-7 shrink-0" />
+            }
+        </div>
+    }
+    else if (ShowCopy)
+    {
+        <CopyButton Text="@Code" Class="absolute right-2 top-2 h-7 w-7 bg-background" />
+    }
+    <pre class="@Shell.Cn("p-3 text-sm leading-relaxed", Wrap ? "whitespace-pre-wrap break-words" : "overflow-x-auto")"><code class="font-mono" data-language="@Language">@Code</code></pre>
+</div>
+
+@code {
+    [Parameter] public string? Code { get; set; }
+    // Shown in the header, for example "csharp"; also set as data-language for a highlighter.
+    [Parameter] public string? Language { get; set; }
+    // Shown in the header instead of the language.
+    [Parameter] public string? Filename { get; set; }
+    [Parameter] public bool ShowCopy { get; set; } = true;
+    // Wraps long lines instead of scrolling sideways.
+    [Parameter] public bool Wrap { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool HasHeader => !string.IsNullOrEmpty(Filename) || !string.IsNullOrEmpty(Language);
+}

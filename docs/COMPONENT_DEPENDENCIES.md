@@ -4,10 +4,10 @@
 
 ## Registry snapshot
 
-- **254** total registry entries
-- **98** direct CLI targets (`IsAvailable = true`)
+- **256** total registry entries
+- **100** direct CLI targets (`IsAvailable = true`)
 - **156** hidden entries (`IsAvailable = false`)
-- `shellui list` displays the 98 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
+- `shellui list` displays the 100 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
 `Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
 
@@ -32,6 +32,7 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `chart` | `chart-variants`, `chart-styles` | `Blazor-ApexCharts` `6.0.2` |
 | `chart-series` | `chart` | — |
 | `chat` | `chat-message`, `chat-input` | — |
+| `code-block` | `copy-button` | — |
 | `collapsible` | `collapsible-trigger`, `collapsible-content` | — |
 | `command` | `command-models`, `command-input`, `command-list`, `command-group`, `command-option`, `command-empty`, `command-separator` | — |
 | `command-palette` | `command`, `shellui-js` | — |
@@ -53,6 +54,7 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `input-otp` | `shellui-js` | — |
 | `json-viewer` | `json-viewer-node`, `copy-button` | — |
 | `line-chart` | `chart` | — |
+| `markdown` | `code-block` | `Markdig` `1.6.0` |
 | `menubar` | `menubar-item`, `menubar-menu`, `menubar-trigger`, `menubar-content`, `menubar-separator` | — |
 | `multi-series-chart` | `chart`, `chart-series` | — |
 | `navigation-menu` | `navigation-menu-item`, `nav-list`, `nav-item`, `nav-trigger`, `nav-content` | — |
