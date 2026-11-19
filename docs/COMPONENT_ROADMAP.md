@@ -6,15 +6,15 @@
 
 ## Current inventory
 
-`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **256 entries**:
+`ComponentRegistry` is the source of truth for component availability, names, and dependencies. The current registry contains **259 entries**:
 
-- **100 direct CLI targets** shown by `shellui list`
-- **156 hidden entries** for sub-components, variants, models, services, and support assets
+- **101 direct CLI targets** shown by `shellui list`
+- **158 hidden entries** for sub-components, variants, models, services, and support assets
 - **Packable projects:** `ShellUI.CLI` and `ShellUI.Components`
 
 Hidden entries are not counted as direct targets. They can still be installed recursively when a parent target declares them.
 
-### Implemented direct targets (100)
+### Implemented direct targets (101)
 
 The following categories describe the direct targets in the current registry, not a promise about future scope.
 
@@ -23,7 +23,7 @@ The following categories describe the direct targets in the current registry, no
 - [x] **Feedback (9):** Alert, Callout, EmptyState, Loading, Progress, Skeleton, Sonner, Toast, Tooltip
 - [x] **Overlay (9):** AlertDialog, Command, CommandPalette, Dialog, Drawer, Dropdown, HoverCard, Popover, Sheet
 - [x] **Navigation (8):** ContextMenu, Menubar, NavigationMenu, Pagination, PrevNextNav, Stepper, Tabs, TreeView
-- [x] **Data Display (27):** AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, Chat, ChatMessage, CodeBlock, DataTable, DonutChart, JsonViewer, LineChart, Markdown, MultiSeriesChart, PieChart, PromptSuggestions, QrCode, RadarChart, RadialChart, Reasoning, StatCard, Table, Timeline, ToolCall
+- [x] **Data Display (28):** AreaChart, Avatar, Badge, BarChart, Calendar, Carousel, Chart, ChartSeries, Chat, ChatMessage, ChatMessageActions, CodeBlock, DataTable, DonutChart, JsonViewer, LineChart, Markdown, MultiSeriesChart, PieChart, PromptSuggestions, QrCode, RadarChart, RadialChart, Reasoning, StatCard, Table, Timeline, ToolCall
 - [x] **Typography (1):** Kbd
 - [x] **Media (1):** ImageViewer
 - [x] **Utility (2):** CopyButton, ThemeToggle
@@ -51,6 +51,8 @@ The following categories describe the direct targets in the current registry, no
 
 - [x] **Markdown** — renders Markdown such as a model's reply, safely (raw HTML shown as text, unsafe link schemes dropped) and in the theme's styles; code blocks become CodeBlock (Markdig)
 - [x] **CodeBlock** — code with a language label, optional filename, copy button and optional line wrapping
+- [x] **ChatMessageActions** — Copy and Regenerate buttons for a message, plus your own as `ChatMessageAction`
+- [x] **ChatInput attachments** — `AllowAttachments`: an attach button, removable file chips, size and count limits; `OnSend` gets the text and files
 
 ## ShellDocs (done)
 
