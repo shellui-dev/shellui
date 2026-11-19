@@ -1,44 +1,90 @@
 @namespace ShellUI.Components
+@using Microsoft.AspNetCore.Components.Forms
+@using ShellUI.Components.Models
 
 <form @onsubmit="SubmitAsync"
-      class="@Shell.Cn("flex w-full items-end gap-2 rounded-lg border border-input bg-background p-2 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2", Class)"
+      class="@Shell.Cn("flex w-full flex-col gap-2 rounded-lg border border-input bg-background p-2 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2", Class)"
       @attributes="AdditionalAttributes">
-    @if (Actions != null)
+    @if (_files.Count > 0)
     {
-        <div class="flex shrink-0 items-center gap-1 pb-0.5">@Actions</div>
+        <ul class="flex flex-wrap gap-2" aria-label="Attachments">
+            @foreach (var file in _files)
+            {
+                <li class="flex max-w-full items-center gap-1.5 rounded-md border border-border bg-muted px-2 py-1 text-xs">
+                    <span class="truncate">@file.Name</span>
+                    <span class="shrink-0 text-muted-foreground">@FormatSize(file.Size)</span>
+                    <button type="button" aria-label="@($"Remove {file.Name}")" @onclick="() => _files.Remove(file)"
+                            class="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"></path>
+                            <path d="m6 6 12 12"></path>
+                        </svg>
+                    </button>
+                </li>
+            }
+        </ul>
     }
-    <textarea @key="_inputKey"
-              @ref="_textarea"
-              rows="@Rows"
-              value="@Value"
-              placeholder="@Placeholder"
-              aria-label="@Placeholder"
-              disabled="@Disabled"
-              @oninput="HandleInputAsync"
-              @onkeydown="HandleKeyDownAsync"
-              class="max-h-48 min-h-10 flex-1 resize-none bg-transparent px-2 py-2 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"></textarea>
-    <button type="submit" aria-label="Send" disabled="@(!CanSubmit)"
-            class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50">
-        @if (IsLoading)
+    @if (_attachError != null)
+    {
+        <p class="px-1 text-xs text-destructive" role="alert">@_attachError</p>
+    }
+    <div class="flex items-end gap-2">
+        @if (AllowAttachments)
         {
-            <svg class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-            </svg>
+            <label aria-label="Attach files" title="Attach files"
+                   class="@Shell.Cn("inline-flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-within:ring-2 focus-within:ring-ring", Disabled || IsLoading ? "pointer-events-none opacity-50" : null)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                </svg>
+                <InputFile @key="_fileInputKey" class="sr-only" multiple accept="@Accept" disabled="@(Disabled || IsLoading)" OnChange="AddFiles" />
+            </label>
         }
-        else
+        @if (Actions != null)
         {
-            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            <div class="flex shrink-0 items-center gap-1 pb-0.5">@Actions</div>
         }
-    </button>
+        <textarea @key="_inputKey"
+                  @ref="_textarea"
+                  rows="@Rows"
+                  value="@Value"
+                  placeholder="@Placeholder"
+                  aria-label="@Placeholder"
+                  disabled="@Disabled"
+                  @oninput="HandleInputAsync"
+                  @onkeydown="HandleKeyDownAsync"
+                  class="max-h-48 min-h-10 flex-1 resize-none bg-transparent px-2 py-2 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"></textarea>
+        <button type="submit" aria-label="Send" disabled="@(!CanSubmit)"
+                class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50">
+            @if (IsLoading)
+            {
+                <svg class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+            }
+            else
+            {
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            }
+        </button>
+    </div>
 </form>
 
 @code {
     [Parameter] public string? Value { get; set; }
     [Parameter] public EventCallback<string?> ValueChanged { get; set; }
     [Parameter] public EventCallback<string> OnSubmit { get; set; }
+    // The text and any attached files; raised with OnSubmit.
+    [Parameter] public EventCallback<ChatSubmission> OnSend { get; set; }
+    // Shows an attach button; chosen files appear as chips and are sent with the message.
+    [Parameter] public bool AllowAttachments { get; set; }
+    // File types the picker offers, for example "image/*,.pdf".
+    [Parameter] public string? Accept { get; set; }
+    [Parameter] public int MaxFiles { get; set; } = 5;
+    // Bytes per file; larger files aren't attached.
+    [Parameter] public long MaxFileSize { get; set; } = 10 * 1024 * 1024;
     [Parameter] public string Placeholder { get; set; } = "Send a message...";
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public bool IsLoading { get; set; }
@@ -52,8 +98,39 @@
     private int _inputKey;
     private bool _ignoreNextInput;
     private bool _refocus;
+    private readonly List<IBrowserFile> _files = new();
+    private string? _attachError;
+    private int _fileInputKey;
 
-    private bool CanSubmit => !Disabled && !IsLoading && !string.IsNullOrWhiteSpace(Value);
+    private bool CanSubmit => !Disabled && !IsLoading && (!string.IsNullOrWhiteSpace(Value) || _files.Count > 0);
+
+    private void AddFiles(InputFileChangeEventArgs e)
+    {
+        _attachError = null;
+        foreach (var file in e.GetMultipleFiles(Math.Max(e.FileCount, 1)))
+        {
+            if (_files.Count >= MaxFiles)
+            {
+                _attachError = $"You can attach up to {MaxFiles} files.";
+                break;
+            }
+            if (file.Size > MaxFileSize)
+            {
+                _attachError = $"{file.Name} is larger than {FormatSize(MaxFileSize)}.";
+                continue;
+            }
+            _files.Add(file);
+        }
+        // A new input, so choosing the same file again still raises OnChange.
+        _fileInputKey++;
+    }
+
+    private static string FormatSize(long bytes) => bytes switch
+    {
+        < 1024 => $"{bytes} B",
+        < 1024 * 1024 => $"{bytes / 1024.0:0.#} KB",
+        _ => $"{bytes / (1024.0 * 1024):0.#} MB"
+    };
 
     // Enter sends; the browser's newline still arrives as the next input event, so it is dropped and the textarea re-created.
     private async Task HandleKeyDownAsync(KeyboardEventArgs e)
@@ -79,10 +156,14 @@
     private async Task SubmitAsync()
     {
         if (!CanSubmit) return;
-        var text = Value!.Trim();
+        var text = (Value ?? "").Trim();
+        var files = _files.ToList();
+        _files.Clear();
+        _attachError = null;
         Value = "";
         await ValueChanged.InvokeAsync(Value);
         await OnSubmit.InvokeAsync(text);
+        await OnSend.InvokeAsync(new ChatSubmission(text, files));
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

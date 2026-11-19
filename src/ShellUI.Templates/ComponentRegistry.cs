@@ -261,6 +261,9 @@ public static class ComponentRegistry
         { "json-viewer-node", JsonViewerNodeTemplate.Metadata },
         { "code-block", CodeBlockTemplate.Metadata },
         { "markdown", MarkdownTemplate.Metadata },
+        { "chat-message-actions", ChatMessageActionsTemplate.Metadata },
+        { "chat-message-action", ChatMessageActionTemplate.Metadata },
+        { "chat-models", ChatModelsTemplate.Metadata },
         { "command-models", CommandModelsTemplate.Metadata },
         { "stepper-models", StepperModelsTemplate.Metadata },
     };
@@ -523,6 +526,9 @@ public static class ComponentRegistry
             "json-viewer-node" => JsonViewerNodeTemplate.Content,
             "code-block" => CodeBlockTemplate.Content,
             "markdown" => MarkdownTemplate.Content,
+            "chat-message-actions" => ChatMessageActionsTemplate.Content,
+            "chat-message-action" => ChatMessageActionTemplate.Content,
+            "chat-models" => ChatModelsTemplate.Content,
             "command-models" => CommandModelsTemplate.Content,
             "stepper-models" => StepperModelsTemplate.Content,
             _ => null
