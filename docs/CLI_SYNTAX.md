@@ -137,7 +137,7 @@ shellui list --installed
 shellui list --available
 ```
 
-There are 100 direct targets. Registry entries used only as dependencies are not counted as direct targets. Choose either `--installed` or `--available` to filter the output.
+There are 101 direct targets. Registry entries used only as dependencies are not counted as direct targets. Choose either `--installed` or `--available` to filter the output.
 
 ## `remove`
 
