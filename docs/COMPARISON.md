@@ -6,7 +6,7 @@ This is a qualitative comparison, not a benchmark report. Library features, pack
 
 - **Target framework:** .NET 8, 9, 10 and 11
 - **Tailwind CSS:** `4.3.2`
-- **CLI inventory:** 100 direct targets, 256 registry entries, and 156 hidden entries
+- **CLI inventory:** 101 direct targets, 259 registry entries, and 158 hidden entries
 - **Distribution:** the CLI copies source into an application; the repository also contains the packable `ShellUI.Components` package
 - **Packaging boundary:** only `ShellUI.CLI` and `ShellUI.Components` are packable. `ShellUI.Core` and `ShellUI.Templates` are internal/non-packable projects.
 
@@ -18,7 +18,7 @@ The direct-target count is the number users invoke with `shellui add`. It is not
 |---|---|---|---|---|---|---|
 | Distribution | CLI source-copy workflow; `ShellUI.Components` is packable | NuGet package | NuGet package | NuGet package | NuGet package | NuGet package |
 | CSS model | Tailwind CSS `4.3.2` | Material-oriented component styling | Project-specific component styling | Provider-based CSS options | Ant Design styling | Project-specific styling |
-| Direct component count | 100 CLI targets; 256 registry entries; 156 hidden | Not audited here | Not audited here | Not audited here | Not audited here | Not audited here |
+| Direct component count | 101 CLI targets; 259 registry entries; 158 hidden | Not audited here | Not audited here | Not audited here | Not audited here | Not audited here |
 | Source customization | Copied component source can be edited | Package/API customization | Package/API customization | Package/API customization | Package/API customization | Package/API customization |
 | CLI workflow | Yes | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison | No CLI in this comparison |
 | Accessibility status | Semantic markup is used; no current WCAG conformance claim | Not audited here | Not audited here | Not audited here | Not audited here | Not audited here |
@@ -39,7 +39,7 @@ ShellUI templates use Tailwind utility classes and CSS variables. ShellUI pins T
 
 ### Registry-driven dependencies
 
-`ComponentRegistry` is authoritative for the 100 direct targets, 156 hidden support entries, source dependencies, and NuGet dependencies. A component's visible sub-components or support files do not imply that it is a standalone package.
+`ComponentRegistry` is authoritative for the 101 direct targets, 158 hidden support entries, source dependencies, and NuGet dependencies. A component's visible sub-components or support files do not imply that it is a standalone package.
 
 ### Compositional APIs
 

@@ -1,0 +1,32 @@
+@namespace ShellUI.Components
+
+<div class="@Shell.Cn("flex items-center gap-1", Class)" @attributes="AdditionalAttributes">
+    @if (!string.IsNullOrEmpty(CopyText))
+    {
+        <CopyButton Text="@CopyText" aria-label="Copy message" Class="h-7 w-7 text-muted-foreground" />
+    }
+    @if (OnRegenerate.HasDelegate)
+    {
+        <ChatMessageAction Label="Regenerate" Disabled="Disabled" OnClick="() => OnRegenerate.InvokeAsync()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+            </svg>
+        </ChatMessageAction>
+    }
+    @* More buttons, for example feedback, as ChatMessageAction. *@
+    @ChildContent
+</div>
+
+@code {
+    // The message text the Copy button copies; no Copy button when empty.
+    [Parameter] public string? CopyText { get; set; }
+    // Shows a Regenerate button when set.
+    [Parameter] public EventCallback OnRegenerate { get; set; }
+    // Disables Regenerate, for example while the reply is still streaming.
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

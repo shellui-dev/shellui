@@ -4,10 +4,10 @@
 
 ## Registry snapshot
 
-- **256** total registry entries
-- **100** direct CLI targets (`IsAvailable = true`)
-- **156** hidden entries (`IsAvailable = false`)
-- `shellui list` displays the 100 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
+- **259** total registry entries
+- **101** direct CLI targets (`IsAvailable = true`)
+- **158** hidden entries (`IsAvailable = false`)
+- `shellui list` displays the 101 direct targets; hidden sub-components, variants, models, services, and support assets are omitted from the public list.
 
 `Dependencies` contains registry-declared source/template dependencies. `NuGetDependencies` is separate and is used by the installer to add package references. A relationship visible in rendered markup is not automatically a registry dependency, so do not infer a dependency graph from component names or visual composition.
 
@@ -32,6 +32,8 @@ The following table summarizes the non-empty `Dependencies` declared by the curr
 | `chart` | `chart-variants`, `chart-styles` | `Blazor-ApexCharts` `6.0.2` |
 | `chart-series` | `chart` | — |
 | `chat` | `chat-message`, `chat-input` | — |
+| `chat-input` | `chat-models` | — |
+| `chat-message-actions` | `copy-button`, `chat-message-action` | — |
 | `code-block` | `copy-button` | — |
 | `collapsible` | `collapsible-trigger`, `collapsible-content` | — |
 | `command` | `command-models`, `command-input`, `command-list`, `command-group`, `command-option`, `command-empty`, `command-separator` | — |
